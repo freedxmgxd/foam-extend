@@ -58,7 +58,7 @@
     const oversetMesh& om = oversetMesh::New(mesh);
     label pRefCell = 0;
     scalar pRefValue = 0.0;
-    om.setRefCell(p, piso.dict(), pRefCell, pRefValue);
+    om.setRefCell(p, potential.dict(), pRefCell, pRefValue);
 
     mesh.schemesDict().setFluxRequired(p.name());
 

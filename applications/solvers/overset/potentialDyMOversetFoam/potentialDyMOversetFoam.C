@@ -35,7 +35,7 @@ Author
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
-#include "pisoControl.H"
+#include "potentialControl.H"
 
 #include "oversetMesh.H"
 #include "oversetFvPatchFields.H"
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 #   include "createTime.H"
 #   include "createDynamicFvMesh.H"
 
-    pisoControl piso(mesh);
+    potentialControl potential(mesh);
 
 #   include "createFields.H"
 #   include "initTotalVolume.H"
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
         oversetAdjustPhi(phi, U); // Fringe flux adjustment
         globalOversetAdjustPhi(phi, U, p); // Global flux adjustment
 
-        while (piso.correctNonOrthogonal())
+        while (potential.correctNonOrthogonal())
         {
             p.storePrevIter();
 
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
             pEqn.setReference(pRefCell, pRefValue);
             pEqn.solve();
 
-            if (piso.finalNonOrthogonalIter())
+            if (potential.finalNonOrthogonalIter())
             {
                 phi -= pEqn.flux();
 #               include "oversetContinuityErrs.H"

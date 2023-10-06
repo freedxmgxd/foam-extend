@@ -33,7 +33,7 @@ Author
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "simpleControl.H"
+#include "potentialControl.H"
 
 #include "oversetMesh.H"
 #include "oversetFvPatchFields.H"
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 #   include "createTime.H"
 #   include "createMesh.H"
 
-    simpleControl simple(mesh);
+    potentialControl potential(mesh);
 
 #   include "createOversetMasks.H"
 #   include "createFields.H"
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     Info<< nl << "Calculating potential flow" << endl;
 
     // Do correctors over the complete set
-    while (simple.correctNonOrthogonal())
+    while (potential.correctNonOrthogonal())
     {
         phi = (linearInterpolate(U) & mesh.Sf());
 
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
         // Perform overset interpolation (after flux reconstruction)
         oversetFvPatchScalarField::oversetInterpolate(p);
 
-        if (!simple.finalNonOrthogonalIter())
+        if (!potential.finalNonOrthogonalIter())
         {
             p.relax();
         }
