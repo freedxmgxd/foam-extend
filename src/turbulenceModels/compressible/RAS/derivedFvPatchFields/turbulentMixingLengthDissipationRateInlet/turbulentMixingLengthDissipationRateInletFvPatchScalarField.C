@@ -127,6 +127,17 @@ turbulentMixingLengthDissipationRateInletFvPatchScalarField::updateCoeffs()
         return;
     }
 
+    if (!db().objectRegistry::found("RASProperties"))
+    {
+        InfoInFunction
+            << "RASProperties not found.  Returning."
+            << endl;
+
+        inletOutletFvPatchScalarField::updateCoeffs();
+
+        return;
+    }
+
     // Lookup Cmu corresponding to the turbulence model selected
     const RASModel& rasModel = db().lookupObject<RASModel>("RASProperties");
 

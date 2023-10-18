@@ -135,6 +135,23 @@ updateCoeffs()
         return;
     }
 
+    if
+    (
+        !this->db().objectRegistry::found(UName_)
+     || !this->db().objectRegistry::found(phiName_)
+    )
+    {
+        // Flux not available, do not update
+        InfoInFunction
+            << "Flux field " << phiName_ << " of  "
+            << "velocity field " << UName_ << " not found.  "
+            << "Performing inletOutlet update" << endl;
+
+        inletOutletFvPatchScalarField::updateCoeffs();
+
+        return;
+    }
+            
     const fvPatchVectorField& Up =
         lookupPatchField<volVectorField, vector>(UName_);
 
