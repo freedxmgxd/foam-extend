@@ -139,10 +139,16 @@ inletOutletIbFvPatchField<Type>::inletOutletIbFvPatchField
             << exit(FatalIOError);
     }
 
-    // Re-interpolate the data related to immersed boundary
-    this->updateIbValues();
-
     this->setPatchType(ptf);
+
+    // Re-interpolate the data related to immersed boundary is not safe
+    // during decompose/reconstruct.  Set a value to avoid uninitialised
+    // memory
+    // this->updateIbValues();
+
+    this->refValue() = pTraits<Type>::zero;
+    this->refGrad() = pTraits<Type>::zero;
+    this->valueFraction() = 1;
 
     // On creation of the mapped field, the internal field is dummy and
     // cannot be used.  Initialise the value to avoid errors

@@ -93,7 +93,15 @@ movingImmersedBoundaryVelocityFvPatchVectorField
     // Copy the patch type since mixed data was not mapped
     this->setPatchType(ptf);
 
-    updateIbValues();
+    // Re-interpolate the data related to immersed boundary is not safe
+    // during decompose/reconstruct.  Set a value to avoid uninitialised
+    // memory
+    // this->updateIbValues();
+
+    // On creation of the mapped field, the internal field is dummy and
+    // cannot be used.  Initialise the value to avoid errors
+    // HJ, 1/Dec/2017
+    vectorField::operator=(vector::zero);
 }
 
 

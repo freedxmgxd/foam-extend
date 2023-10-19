@@ -126,8 +126,10 @@ Foam::fixedValueIbFvPatchField<Type>::fixedValueIbFvPatchField
     // Copy the patch type since mixed data was not mapped
     this->setPatchType(ptf);
 
-    // Re-interpolate the data related to immersed boundary
-    this->updateIbValues();
+    // Re-interpolate the data related to immersed boundary is not safe
+    // during decompose/reconstruct.  Set a value to avoid uninitialised
+    // memory
+    // this->updateIbValues();
 
     // On creation of the mapped field, the internal field is dummy and
     // cannot be used.  Initialise the value to avoid errors
