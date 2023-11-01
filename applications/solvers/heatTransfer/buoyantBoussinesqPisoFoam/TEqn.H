@@ -5,7 +5,7 @@
 
     fvScalarMatrix TEqn
     (
-        fvm::ddt(T)
+        rho*Cp*fvm::ddt(T)
       + fvm::div(rhoCpPhi, T)
       - fvm::laplacian(kappaEff, T)
     );
