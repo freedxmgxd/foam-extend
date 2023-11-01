@@ -1,41 +1,30 @@
-IOdictionary transportProperties
-(
-    IOobject
+    // Read transport properties
+
+    IOdictionary transportProperties
     (
-        "transportProperties",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE
-    )
-);
+        IOobject
+        (
+            "transportProperties",
+            runTime.constant(),
+            mesh,
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE
+        )
+    );
 
-dimensionedScalar mug
-(
-    transportProperties.lookup("mug")
-);
+    // Surface tension coefficient
+    dimensionedScalar sigma
+    (
+        transportProperties.lookup("sigma")
+    );
 
-dimensionedScalar mul
-(
-    transportProperties.lookup("mul")
-);
+    // Density
+    dimensionedScalar rhol
+    (
+        transportProperties.lookup("rhol")
+    );
 
-dimensionedScalar sigma
-(
-    transportProperties.lookup("sigma")
-);
-
-dimensionedScalar rhol
-(
-    transportProperties.lookup("rhol")
-);
-
-dimensionedScalar rhog
-(
-    transportProperties.lookup("rhog")
-);
-
-dimensionedScalar h0
-(
-    transportProperties.lookup("h0")
-);
+    dimensionedScalar h0
+    (
+        transportProperties.lookup("h0")
+    );

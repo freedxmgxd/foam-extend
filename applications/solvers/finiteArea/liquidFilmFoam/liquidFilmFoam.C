@@ -135,8 +135,8 @@ int main(int argc, char *argv[])
 
         if (runTime.outputTime())
         {
-            vsm.mapToVolume(h, H.boundaryField());
-            vsm.mapToVolume(Us, U.boundaryField());
+            vsm.mapToVolume(h, faH.boundaryField());
+            vsm.mapToVolume(Us, faUs.boundaryField());
 
             runTime.write();
         }

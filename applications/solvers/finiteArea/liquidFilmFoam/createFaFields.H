@@ -12,6 +12,7 @@
         aMesh
     );
 
+#   include "boundH.H"
 
     Info << "Reading field Us" << endl;
     areaVectorField Us
@@ -27,7 +28,6 @@
         aMesh
     );
 
-
     edgeScalarField phis
     (
         IOobject
@@ -41,7 +41,6 @@
         fac::interpolate(Us) & aMesh.Le()
     );
 
-
     edgeScalarField phi2s
     (
         IOobject
@@ -54,7 +53,6 @@
         ),
         fac::interpolate(h*Us) & aMesh.Le()
     );
-
 
     const areaVectorField& Ns = aMesh.faceAreaNormals();
     areaVectorField Gs = g - Ns*(Ns & g);
@@ -90,21 +88,6 @@
         dimensionedScalar("Sd", dimLength/dimTime, 0)
     );
 
-    areaVectorField Ug
-    (
-        IOobject
-        (
-            "Sg",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        aMesh,
-        dimensionedVector("Ug", dimVelocity, vector::zero)
-    );
-
-
     // Surface pressure
     areaScalarField ps
     (
@@ -120,14 +103,6 @@
     );
 
     // Friction factor
-    areaScalarField dotProduct
-    (
-        aMesh.faceAreaNormals() & (g/mag(g))
-    );
-
-    Info<< "View factor: min = " << min(dotProduct.internalField())
-        << " max = " << max(dotProduct.internalField()) << endl;
-
     areaScalarField manningField
     (
         IOobject
