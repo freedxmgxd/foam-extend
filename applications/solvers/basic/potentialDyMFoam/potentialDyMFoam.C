@@ -25,7 +25,7 @@ Application
     potentialDyMFoam
 
 Description
-    Transient solver for potential flow with dynamic mesh.
+    Transient solver for potential flow with dynamic mesh support.
 
 Author
     Hrvoje Jasak, Wikki Ltd.  All rights reserved.
