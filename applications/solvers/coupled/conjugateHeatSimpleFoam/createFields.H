@@ -73,7 +73,7 @@
         incompressible::RASModel::New(U, phi, laminarTransport)
     );
 
-#   include "attachPatches.H"
+#   include "attachChtPatches.H"
 
     Info<< "Reading field kappaEff\n" << endl;
     volScalarField kappaEff

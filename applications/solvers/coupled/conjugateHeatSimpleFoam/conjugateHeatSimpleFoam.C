@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Detach coupled CHT patches
-#       include "detachPatches.H"
+#       include "detachChtPatches.H"
 
         p_rgh.storePrevIter();
 
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
         kSolid = solidThermalModel.k();
 
         // Attached coupled CHT patches
-#       include "attachPatches.H"
+#       include "attachChtPatches.H"
 
         kappaEff.correctBoundaryConditions();
         kSolid.correctBoundaryConditions();

@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 #       include "setDeltaT.H"
 
         // Detach coupled CHT patches
-#       include "detachPatches.H"
+#       include "detachChtPatches.H"
 
 #       include "UEqn.H"
 
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
         rhoCpsolid = solidThermalModel.rho()*solidThermalModel.C();
 
         // Attached coupled CHT patches
-#       include "attachPatches.H"
+#       include "attachChtPatches.H"
 
         kappaEff.correctBoundaryConditions();
         kSolid.correctBoundaryConditions();
