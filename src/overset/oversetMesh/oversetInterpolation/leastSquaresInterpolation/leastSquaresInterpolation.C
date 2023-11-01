@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "leastSquareInterpolation.H"
+#include "leastSquaresInterpolation.H"
 #include "oversetInterpolation.H"
 #include "oversetMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -32,24 +32,24 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(leastSquareInterpolation, 0);
+    defineTypeNameAndDebug(leastSquaresInterpolation, 0);
     addToRunTimeSelectionTable
     (
         oversetInterpolation,
-        leastSquareInterpolation,
+        leastSquaresInterpolation,
         dictionary
     );
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::leastSquareInterpolation::calcAddressing() const
+void Foam::leastSquaresInterpolation::calcAddressing() const
 {
     if (addressingPtr_ || weightsPtr_)
     {
         FatalErrorIn
         (
-            "void leastSquareInterpolation::calcAddressing() const"
+            "void leastSquaresInterpolation::calcAddressing() const"
         )   << "Addressing already calculated"
             << abort(FatalError);
     }
@@ -135,7 +135,7 @@ void Foam::leastSquareInterpolation::calcAddressing() const
 }
 
 
-void Foam::leastSquareInterpolation::clearAddressing() const
+void Foam::leastSquaresInterpolation::clearAddressing() const
 {
     deleteDemandDrivenData(addressingPtr_);
     deleteDemandDrivenData(weightsPtr_);
@@ -144,7 +144,7 @@ void Foam::leastSquareInterpolation::clearAddressing() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::leastSquareInterpolation::leastSquareInterpolation
+Foam::leastSquaresInterpolation::leastSquaresInterpolation
 (
     const oversetMesh& overset,
     const dictionary& dict
@@ -158,7 +158,7 @@ Foam::leastSquareInterpolation::leastSquareInterpolation
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::leastSquareInterpolation::~leastSquareInterpolation()
+Foam::leastSquaresInterpolation::~leastSquaresInterpolation()
 {
     clearAddressing();
 }
@@ -166,19 +166,19 @@ Foam::leastSquareInterpolation::~leastSquareInterpolation()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::labelList& Foam::leastSquareInterpolation::localDonors() const
+const Foam::labelList& Foam::leastSquaresInterpolation::localDonors() const
 {
     return overset().localDonors();
 }
 
 
-const Foam::labelList& Foam::leastSquareInterpolation::remoteDonors() const
+const Foam::labelList& Foam::leastSquaresInterpolation::remoteDonors() const
 {
     return overset().remoteDonors();
 }
 
 
-const Foam::labelListList& Foam::leastSquareInterpolation::addressing() const
+const Foam::labelListList& Foam::leastSquaresInterpolation::addressing() const
 {
     if (!addressingPtr_)
     {
@@ -190,7 +190,7 @@ const Foam::labelListList& Foam::leastSquareInterpolation::addressing() const
 
 
 const Foam::FieldField<Foam::Field, Foam::scalar>&
-Foam::leastSquareInterpolation::weights() const
+Foam::leastSquaresInterpolation::weights() const
 {
     if (!weightsPtr_)
     {
@@ -201,9 +201,9 @@ Foam::leastSquareInterpolation::weights() const
 }
 
 
-void Foam::leastSquareInterpolation::update()
+void Foam::leastSquaresInterpolation::update()
 {
-    Info<< "leastSquareInterpolation::update()" << endl;
+    Info<< "leastSquaresInterpolation::update()" << endl;
 }
 
 

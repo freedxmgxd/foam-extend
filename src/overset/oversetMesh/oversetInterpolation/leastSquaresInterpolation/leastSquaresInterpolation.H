@@ -22,7 +22,7 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    leastSquareInterpolation
+    leastSquaresInterpolation
 
 Description
     Least squares overset interpolation algorithm
@@ -33,12 +33,12 @@ Author
     Hrvoje Jasak, Wikki Ltd.  All rights reserved.
 
 SourceFiles
-    leastSquareInterpolation.C
+    leastSquaresInterpolation.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef leastSquareInterpolation_H
-#define leastSquareInterpolation_H
+#ifndef leastSquaresInterpolation_H
+#define leastSquaresInterpolation_H
 
 #include "oversetInterpolation.H"
 
@@ -48,10 +48,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class leastSquareInterpolation Declaration
+                     Class leastSquaresInterpolation Declaration
 \*---------------------------------------------------------------------------*/
 
-class leastSquareInterpolation
+class leastSquaresInterpolation
 :
     public oversetInterpolation
 {
@@ -69,10 +69,10 @@ class leastSquareInterpolation
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        leastSquareInterpolation(const leastSquareInterpolation&);
+        leastSquaresInterpolation(const leastSquaresInterpolation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const leastSquareInterpolation&);
+        void operator=(const leastSquaresInterpolation&) = delete;
 
 
         //- Calculate addressing
@@ -91,7 +91,7 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        leastSquareInterpolation
+        leastSquaresInterpolation
         (
             const oversetMesh& overset,
             const dictionary& dict
@@ -99,7 +99,7 @@ public:
 
 
     //- Destructor
-    virtual ~leastSquareInterpolation();
+    virtual ~leastSquaresInterpolation();
 
 
     // Member Functions

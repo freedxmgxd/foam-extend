@@ -81,10 +81,10 @@ class leastSquaresGradientInterpolation
         leastSquaresGradientInterpolation
         (
             const leastSquaresGradientInterpolation&
-        );
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const leastSquaresGradientInterpolation&);
+        void operator=(const leastSquaresGradientInterpolation&) = delete;
 
 
         //- Calculate weights

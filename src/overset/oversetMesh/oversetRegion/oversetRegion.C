@@ -37,7 +37,7 @@ void Foam::oversetRegion::calcDonorRegions() const
 {
     if (donorRegionsPtr_)
     {
-        FatalErrorIn("void oversetRegion::calcDonorRegions() const")
+        FatalErrorInFunction
             << "Donor regions already calculated"
             << abort(FatalError);
     }
@@ -59,10 +59,8 @@ void Foam::oversetRegion::calcDonorRegions() const
         // issue an error
         if (name_ == curName)
         {
-            FatalErrorIn
-            (
-                "void oversetRegion::calcDonorRegions() const"
-            )   << "Region " << name_ << " specified as the donor "
+            FatalErrorInFunction
+                << "Region " << name_ << " specified as the donor "
                 << "of itself.  List of donor regions: "
                 << donorRegionNames_ << nl
                 << "This is not allowed: check oversetMesh definition"
@@ -84,7 +82,7 @@ void Foam::oversetRegion::calcDonorRegions() const
 
         if (!found)
         {
-            FatalErrorIn("void oversetRegion::calcDonorRegions() const")
+            FatalErrorInFunction
                 << "For region " << name() << " cannot find donor region "
                 << curName << ".  Please check overset definition"
                 << abort(FatalError);
@@ -97,7 +95,7 @@ void Foam::oversetRegion::calcAcceptorRegions() const
 {
     if (acceptorRegionsPtr_)
     {
-        FatalErrorIn("void oversetRegion::calcAcceptorRegions() const")
+        FatalErrorInFunction
             << "Acceptor regions already calculated"
             << abort(FatalError);
     }
@@ -142,7 +140,7 @@ void Foam::oversetRegion::calcDonorAcceptorCells() const
 {
     if (donorCellsPtr_ || acceptorCellsPtr_)
     {
-        FatalErrorIn("void oversetRegion::calcDonorAcceptorCells() const")
+        FatalErrorInFunction
             << "Donor/acceptor cells already calculated"
             << abort(FatalError);
     }
@@ -213,7 +211,7 @@ void Foam::oversetRegion::calcCutHoleCells() const
 {
     if (cutHoleCellsPtr_)
     {
-        FatalErrorIn("void oversetRegion::calcCutHoleCells() const")
+        FatalErrorInFunction
             << "Cut hole cells already calculated"
             << abort(FatalError);
     }
@@ -315,7 +313,7 @@ void Foam::oversetRegion::calcHoleCells() const
 {
     if (holeCellsPtr_)
     {
-        FatalErrorIn("void oversetRegion::calcHoleCells() const")
+        FatalErrorInFunction
             << "Hole cells already calculated"
             << abort(FatalError);
     }
@@ -376,7 +374,7 @@ void Foam::oversetRegion::calcEligibleDonorCells() const
 {
     if (eligibleDonorCellsPtr_)
     {
-        FatalErrorIn("void oversetRegion::calcEligibleDonorCells() const")
+        FatalErrorInFunction
             << "Eligible donor cells already calculated"
             << abort(FatalError);
     }
@@ -440,7 +438,7 @@ void Foam::oversetRegion::calcHoleTriMesh() const
 {
     if (holeTriMeshPtr_)
     {
-        FatalErrorIn("void oversetRegion::calcHoleTriMesh() const")
+        FatalErrorInFunction
             << "Hole tri mesh already calculated"
             << abort(FatalError);
     }
@@ -496,7 +494,7 @@ void Foam::oversetRegion::calcHoleTriMesh() const
                 }
                 else if (nFound > 0)
                 {
-                    WarningIn("void oversetRegion::calcHoleTriMesh() const")
+                    WarningInFunction
                         << "Patch " << holePatchNames[nameI]
                         << " seems to be split between multiple regions.  "
                         << "Please check overset region structure.  "
@@ -508,10 +506,8 @@ void Foam::oversetRegion::calcHoleTriMesh() const
         }
         else
         {
-            FatalErrorIn
-            (
-                "const triSurfaceMesh& oversetRegion::holeTriMesh() const"
-            )   << "Patch "  << holePatchNames[nameI]
+            FatalErrorInFunction
+                << "Patch "  << holePatchNames[nameI]
                 << " cannot be found.  Available patch names: "
                 << mesh().boundaryMesh().names()
                 << abort(FatalError);
@@ -650,7 +646,7 @@ void Foam::oversetRegion::calcBounds() const
 {
     if (localBoundsPtr_ || globalBoundsPtr_)
     {
-        FatalErrorIn("void oversetRegion::calcBounds() const")
+        FatalErrorInFunction
             << "Bounds already calculated"
             << abort(FatalError);
     }
@@ -715,7 +711,7 @@ void Foam::oversetRegion::calcCellSearch() const
 {
     if (cellSearchPtr_)
     {
-        FatalErrorIn("void oversetRegion::calcCellSearch() const")
+        FatalErrorInFunction
             << "Cell tree already calculated"
             << abort(FatalError);
     }
@@ -751,7 +747,7 @@ void Foam::oversetRegion::calcProcBoundBoxes() const
 {
     if (procBoundBoxesPtr_)
     {
-        FatalErrorIn("void oversetRegion::calcProcBoundBoxes() const")
+        FatalErrorInFunction
             << "Processor bounding boxes already calculated"
             << abort(FatalError);
     }
@@ -1199,10 +1195,8 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             {
                 // This donor is not valid and I did not find a hit in
                 // octree, issue a warning
-                WarningIn
-                (
-                    "void oversetRegion::updateDonorAcceptors() const"
-                )   << "Could not find a hit for acceptor,"
+                WarningInFunction
+                    << "Could not find a hit for acceptor,"
                     << "donor may remain invalid."
                     << endl;
             }
@@ -1296,7 +1290,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
              != Pstream::myProcNo()
             )
             {
-                FatalErrorIn("void oversetRegion::updateDonorAcceptors() const")
+                FatalErrorInFunction
                     << "Received donor/acceptor pair where acceptor belongs to "
                     << "a different processor. " << nl
                     << "My processor number: " << Pstream::myProcNo()
@@ -1314,7 +1308,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
     // indicating an orphan cell) from different processors.
     if (a.size() > completeDonorAcceptorList.size())
     {
-        FatalErrorIn("void oversetRegion::updateDonorAcceptors() const")
+        FatalErrorInFunction
             << "Size of initial acceptor set: " << a.size()
             << " is larger than the size of the distributed "
             << " donor/acceptor list: " << completeDonorAcceptorList.size()
@@ -1407,7 +1401,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
         {
             if (!useLocalBoundBoxes_)
             {
-                FatalErrorIn("void oversetRegion::updateDonorAcceptors() const")
+                FatalErrorInFunction
                     << "Did not visit all acceptors when recombining data..."
                     << nl
                     << "... and we did not use local processor bounding boxes."
@@ -1417,7 +1411,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             }
             else
             {
-                FatalErrorIn("void oversetRegion::updateDonorAcceptors() const")
+                FatalErrorInFunction
                     << "Did not visit all acceptors when recombining data..."
                     << nl
                     << "Try switching off useLocalBoundingBoxes for all regions"
@@ -1477,7 +1471,7 @@ void Foam::oversetRegion::finaliseDonorAcceptors() const
     // member function other than calcDonorAcceptorCells)
     if (donorCellsPtr_ || acceptorCellsPtr_)
     {
-        FatalErrorIn("void oversetRegion::finaliseDonorAcceptors() const")
+        FatalErrorInFunction
             << "Donor/acceptor cells already calculated. Make sure you have "
             << "called this function from calcAcceptorsDonors only."
             << abort(FatalError);
@@ -1519,7 +1513,7 @@ void Foam::oversetRegion::finaliseDonorAcceptors() const
     {
         if (!acceptorCells[accI].donorFound())
         {
-            FatalErrorIn("void oversetRegion::finaliseDonorAcceptors() const")
+            FatalErrorInFunction
                 << "Did not find a donor for acceptor at: "
                 << acceptorCells[accI].acceptorPoint()
                 << nl
@@ -1696,16 +1690,8 @@ Foam::oversetRegion::oversetRegion
     // Check zone index
     if (zoneIndex_ < 0)
     {
-        FatalErrorIn
-        (
-            "oversetRegion::oversetRegion\n"
-            "(\n"
-            "    const word& name,\n"
-            "    const fvMesh& mesh,\n"
-            "    const oversetMesh& oversetMesh,\n"
-            "    const dictionary& dict\n"
-            ")"
-        )   << "Cannot find cell zone for region " << name << nl
+        FatalErrorInFunction
+            << "Cannot find cell zone for region " << name << nl
             << "Available cell zones: " << mesh_.cellZones().names()
             << abort(FatalError);
     }
@@ -1735,7 +1721,7 @@ const Foam::oversetFringe& Foam::oversetRegion::fringe() const
 {
     if (fringePtr_.empty())
     {
-        FatalErrorIn("const oversetFringe& oversetRegion::fringe() const")
+        FatalErrorInFunction
             << "Fringe pointer not allocated. It should have been initialized"
             << " properly at construction. Something went wrong..."
             << abort(FatalError);

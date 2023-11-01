@@ -71,10 +71,10 @@ class injectionInterpolation
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        injectionInterpolation(const injectionInterpolation&);
+        injectionInterpolation(const injectionInterpolation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const injectionInterpolation&);
+        void operator=(const injectionInterpolation&) = delete;
 
 
         // Functions for calculating/clearing weights

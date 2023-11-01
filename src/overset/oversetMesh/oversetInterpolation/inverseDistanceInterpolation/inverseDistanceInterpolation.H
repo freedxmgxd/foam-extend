@@ -48,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class inverseDistanceInterpolation Declaration
+                Class inverseDistanceInterpolation Declaration
 \*---------------------------------------------------------------------------*/
 
 class inverseDistanceInterpolation
@@ -69,10 +69,13 @@ class inverseDistanceInterpolation
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        inverseDistanceInterpolation(const inverseDistanceInterpolation&);
+        inverseDistanceInterpolation
+        (
+            const inverseDistanceInterpolation&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const inverseDistanceInterpolation&);
+        void operator=(const inverseDistanceInterpolation&) = delete;
 
 
         // Functions for calculating/clearing weights

@@ -86,10 +86,10 @@ private:
     // Private Member Functions
 
         //- Disallow copy construct
-        oversetInterpolation(const oversetInterpolation&);
+        oversetInterpolation(const oversetInterpolation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const oversetInterpolation&);
+        void operator=(const oversetInterpolation&) = delete;
 
 
 public:
@@ -134,8 +134,7 @@ public:
 
 
     //- Destructor
-    virtual ~oversetInterpolation()
-    {}
+    virtual ~oversetInterpolation() = default;
 
 
     // Member Functions

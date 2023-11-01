@@ -41,16 +41,15 @@ namespace Foam
     );
 }
 
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::injectionInterpolation::calcWeights() const
 {
     if (weightsPtr_)
     {
-        FatalErrorIn
-        (
-            "void injectionInterpolation::calcWeights() const"
-        )   << "Weights already calculated."
+        FatalErrorInFunction
+            << "Weights already calculated."
             << abort(FatalError);
     }
 
