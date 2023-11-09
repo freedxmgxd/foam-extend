@@ -573,7 +573,7 @@ void Foam::fvMesh::mapOldVolumes(const mapPolyMesh& meshMap)
     {
         if (debug)
         {
-            InfoIn("void fvMesh::mapOldVolumes(const mapPolyMesh& meshMap)")
+            InfoInFunction
                 << "Mapping old cell volumes." << endl;
         }
 
