@@ -33,6 +33,8 @@ Description
 #include "transformField.H"
 #include "faBoundaryMesh.H"
 #include "faMesh.H"
+#include "faPatchFields.H"
+#include "faePatchFields.H"
 #include "globalMeshData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -84,7 +86,7 @@ void processorFaPatch::makeNonGlobalPatchPoints() const
     {
         nonGlobalPatchPointsPtr_ = new labelList(nPoints());
         labelList& ngpp = *nonGlobalPatchPointsPtr_;
-        forAll(ngpp, i)
+        forAll (ngpp, i)
         {
             ngpp[i] = i;
         }
@@ -177,13 +179,14 @@ void processorFaPatch::initGeometry()
         (
             Pstream::blocking,
             neighbProcNo(),
-            3*(sizeof(label) + size()*sizeof(vector))
+            4*(sizeof(label) + size()*sizeof(vector))
         );
 
         toNeighbProc
             << edgeCentres()
             << edgeLengths()
-            << edgeFaceCentres();
+            << edgeFaceCentres()
+            << edgeNormals();
     }
 }
 
@@ -197,27 +200,26 @@ void processorFaPatch::calcGeometry()
             (
                 Pstream::blocking,
                 neighbProcNo(),
-                3*(sizeof(label) + size()*sizeof(vector))
+                4*(sizeof(label) + size()*sizeof(vector))
             );
             fromNeighbProc
                 >> neighbEdgeCentres_
                 >> neighbEdgeLengths_
-                >> neighbEdgeFaceCentres_;
+                >> neighbEdgeFaceCentres_
+                >> neighbEdgeFaceNormals_;
         }
 
         const scalarField& magEl = magEdgeLengths();
 
-        forAll(magEl, edgei)
+        forAll (magEl, edgei)
         {
             scalar nmagEl = mag(neighbEdgeLengths_[edgei]);
             scalar maxEl = Foam::max(magEl[edgei], nmagEl);
 
             if (mag(magEl[edgei] - nmagEl) > faPatch::matchTol_()*maxEl)
             {
-                FatalErrorIn
-                (
-                    "processorFaPatch::makeWeights(scalarField& w) const"
-                )   << "edge " << edgei
+                FatalErrorInFunction
+                    << "edge " << edgei
                     << " length does not match neighbour by "
                     << 100*mag(magEl[edgei] - nmagEl)/maxEl
                     << "% -- possible edge ordering problem." << nl
@@ -339,7 +341,7 @@ void processorFaPatch::updateMesh()
             const edgeList::subList patchEdges =
                 patchSlice(boundaryMesh().mesh().edges());
 
-            forAll(nbrPatchEdge, nbrPointI)
+            forAll (nbrPatchEdge, nbrPointI)
             {
                 // Find edge and index in edge on this side.
                 const edge& e = patchEdges[nbrPatchEdge[nbrPointI]];
@@ -370,7 +372,7 @@ const labelList& processorFaPatch::neighbPoints() const
         // sides of the processor patch since one side might have
         // it merged with another bit of geometry
 
-        FatalErrorIn("processorFaPatch::neighbPoints() const")
+        FatalErrorInFunction
             << "No extended addressing calculated for patch " << name()
             << nl
             << "This can happen if the number of points  on both"
@@ -385,7 +387,7 @@ const labelList& processorFaPatch::neighbPoints() const
 
 
 // Make patch weighting factors
-void processorFaPatch::makeWeights(scalarField& w) const
+void processorFaPatch::makeWeights(faePatchScalarField& w) const
 {
     if (Pstream::parRun())
     {
@@ -415,7 +417,7 @@ void processorFaPatch::makeWeights(scalarField& w) const
 
 
 // Make patch edge - neighbour face distances
-void processorFaPatch::makeDeltaCoeffs(scalarField& dc) const
+void processorFaPatch::makeDeltaCoeffs(faePatchScalarField& dc) const
 {
     if (Pstream::parRun())
     {
@@ -424,6 +426,133 @@ void processorFaPatch::makeDeltaCoeffs(scalarField& dc) const
     else
     {
         dc = 1.0/(edgeNormals() & faPatch::delta());
+    }
+}
+
+
+void processorFaPatch::makeSkewCorrectionVectors
+(
+    faePatchVectorField& skv
+) const
+{
+    const vectorField& ec = edgeCentres();
+    vectorField efc = edgeFaceCentres();
+
+    const edgeList& edges = boundaryMesh().mesh().edges();
+    const edgeList::subList patchEdges = this->patchSlice(edges);
+
+    const pointField& points = boundaryMesh().mesh().points();
+    
+    const vectorField& ngbC = neighbEdgeCentres();
+
+    forAll (skv, edgeI)
+    {
+        vector P = efc[edgeI];
+        vector N = ngbC[edgeI];
+        vector S = points[patchEdges[edgeI].start()];
+        vector e = patchEdges[edgeI].vec(points);
+
+        scalar alpha = - ( ( (N - P)^(S - P) )&( (N - P)^e ) )/
+            ( ( (N - P)^e )&( (N - P)^e ) );
+
+        vector E = S + alpha*e;
+
+        skv[edgeI] = ec[edgeI] - E;
+    }
+}
+
+
+void processorFaPatch::makeEdgeTransformTensors
+(
+    const bool& meshIsSkew,
+    FieldField<Field, tensor>& edgeTransformTensors
+) const
+{
+    // Rewrite by Hrvoje Jasak: use local data
+    
+    const unallocLabelList& ef = edgeFaces();
+
+    const vectorField& ec = edgeCentres();
+
+    vectorField efc = edgeFaceCentres();
+
+    vectorField en = edgeNormals();
+
+    vectorField efn = edgeFaceNormals();
+
+    vectorField ngbCf = neighbEdgeFaceCentres();
+
+    vectorField ngbNf = neighbEdgeFaceNormals();
+
+    forAll (ef, edgeI)
+    {
+        edgeTransformTensors.set
+        (
+            start() + edgeI,
+            new Field<tensor>(3, I)
+        );
+
+        vector E = ec[edgeI];
+
+        if (meshIsSkew)
+        {
+            E -= skewCorrectionVectors()[edgeI];
+        }
+
+        // Edge transformation tensor
+        vector il = E - efc[edgeI];
+
+        il -= en[edgeI]*(en[edgeI] & il);
+
+        il /= mag(il);
+
+        vector kl = en[edgeI];
+        vector jl = kl ^ il;
+
+        edgeTransformTensors[start() + edgeI][0] =
+            tensor
+            (
+                il.x(), il.y(), il.z(),
+                jl.x(), jl.y(), jl.z(),
+                kl.x(), kl.y(), kl.z()
+            );
+
+        // Owner transformation tensor
+        il = E - efc[edgeI];
+
+        il -= efn[edgeI]*(efn[edgeI] & il);
+
+        il /= mag(il);
+
+        kl = efn[edgeI];
+        jl = kl ^ il;
+
+        edgeTransformTensors[start() + edgeI][1] =
+            tensor
+            (
+                il.x(), il.y(), il.z(),
+                jl.x(), jl.y(), jl.z(),
+                kl.x(), kl.y(), kl.z()
+            );
+
+        // Neighbour transformation tensor
+        il = ngbCf[edgeI] - E;
+
+        il -= ngbNf[edgeI]*(ngbNf[edgeI] & il);
+
+        il /= mag(il);
+
+        kl = ngbNf[edgeI];
+
+        jl = kl ^ il;
+
+        edgeTransformTensors[start() + edgeI][2] =
+            tensor
+            (
+                il.x(), il.y(), il.z(),
+                jl.x(), jl.y(), jl.z(),
+                kl.x(), kl.y(), kl.z()
+            );
     }
 }
 

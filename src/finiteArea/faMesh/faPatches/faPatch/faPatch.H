@@ -39,8 +39,10 @@ SourceFiles
 #include "patchIdentifier.H"
 #include "labelList.H"
 #include "pointField.H"
+#include "FieldField.H"
 #include "typeInfo.H"
 #include "faPatchFieldsFwd.H"
+#include "faePatchFieldsFwd.H"
 #include "autoPtr.H"
 #include "runTimeSelectionTables.H"
 #include "tolerancesSwitch.H"
@@ -92,10 +94,10 @@ private:
     // Private Member Functions
 
         //- Disallow construct as copy
-        faPatch(const faPatch&);
+        faPatch(const faPatch&) = delete;
 
         //- Disallow assignment
-        void operator=(const faPatch&);
+        void operator=(const faPatch&) = delete;
 
 
        //- Clear out topological patch data
@@ -114,7 +116,9 @@ protected:
     // Protected Member functions
 
         // The faPatch geometry initialisation is called by faBoundaryMesh
+        friend class faMesh;
         friend class faBoundaryMesh;
+        friend class edgeInterpolation;
 
         //- Calculate patch point labels
         void calcPointLabels() const;
@@ -144,6 +148,26 @@ protected:
         //- Update of the patch topology
         virtual void updateMesh()
         {}
+
+
+        //- Make patch weighting factors
+        virtual void makeWeights(faePatchScalarField&) const;
+
+        //- Make patch edge - neighbour face distances
+        virtual void makeDeltaCoeffs(faePatchScalarField&) const;
+
+        //- Make skew correction vectors
+        virtual void makeSkewCorrectionVectors
+        (
+            faePatchVectorField&
+        ) const;
+
+        //- Make edge transform tensors
+        virtual void makeEdgeTransformTensors
+        (
+            const bool& ,
+            FieldField<Field, tensor>&
+        ) const;
 
 
 public:
@@ -312,6 +336,9 @@ public:
             //- Return neighbour face centres
             tmp<vectorField> edgeFaceCentres() const;
 
+            //- Return neighbour face normals
+            tmp<vectorField> edgeFaceNormals() const;
+
             //- Return cell-centre to face-centre vector
             //  except for coupled patches for which the cell-centre
             //  to coupled-cell-centre vector is returned
@@ -320,17 +347,14 @@ public:
 
         // Access functions for demand driven data
 
-            //- Make patch weighting factors
-            virtual void makeWeights(scalarField&) const;
-
             //- Return patch weighting factors
             const scalarField& weights() const;
 
-            //- Make patch edge - neighbour face distances
-            virtual void makeDeltaCoeffs(scalarField&) const;
-
             //- Return patch edge - neighbour face distances
             const scalarField& deltaCoeffs() const;
+
+            //- Return skew correction vectors
+            const vectorField& skewCorrectionVectors() const;
 
 
         // Topological changes

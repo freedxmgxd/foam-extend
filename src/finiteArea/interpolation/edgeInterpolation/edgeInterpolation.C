@@ -133,7 +133,7 @@ const edgeVectorField& edgeInterpolation::correctionVectors() const
 {
     if (orthogonal())
     {
-        FatalErrorIn("edgeInterpolation::correctionVectors()")
+        FatalErrorInFunction
             << "cannot return correctionVectors; mesh is orthogonal"
             << abort(FatalError);
     }
@@ -157,7 +157,7 @@ const edgeVectorField& edgeInterpolation::skewCorrectionVectors() const
 {
     if (!skew())
     {
-        FatalErrorIn("edgeInterpolation::skewCorrectionVectors()")
+        FatalErrorInFunction
             << "cannot return skewCorrectionVectors; mesh is now skewed"
             << abort(FatalError);
     }
@@ -238,16 +238,21 @@ void edgeInterpolation::makeLPN() const
     // Set local references to mesh data
     const edgeVectorField& edgeCentres = mesh().edgeCentres();
     const areaVectorField& faceCentres = mesh().areaCentres();
+
     const unallocLabelList& owner = mesh().owner();
     const unallocLabelList& neighbour = mesh().neighbour();
 
     scalarField& lPNIn = lPN.internalField();
 
-    forAll(owner, edgeI)
+    // Check for skewness.  Cannot check in look because it tangles
+    // parallel communication.  HJ, 6/Nov/2023
+    const bool meshIsSkew = skew();
+
+    forAll (owner, edgeI)
     {
         vector curSkewCorrVec = vector::zero;
 
-        if (skew())
+        if (meshIsSkew)
         {
             curSkewCorrVec = skewCorrectionVectors()[edgeI];
         }
@@ -272,7 +277,7 @@ void edgeInterpolation::makeLPN() const
     }
 
 
-    forAll(lPN.boundaryField(), patchI)
+    forAll (lPN.boundaryField(), patchI)
     {
         mesh().boundary()[patchI].makeDeltaCoeffs
         (
@@ -285,7 +290,7 @@ void edgeInterpolation::makeLPN() const
 
     if (debug)
     {
-        Info<< "edgeInterpolation::makeLPN() : "
+        InfoInFunction
             << "Finished constructing geodesic distance PN"
             << endl;
     }
@@ -296,11 +301,10 @@ void edgeInterpolation::makeWeights() const
 {
     if (debug)
     {
-        Info<< "edgeInterpolation::makeWeights() : "
+        InfoInFunction
             << "Constructing weighting factors for edge interpolation"
             << endl;
     }
-
 
     weightingFactors_ = new edgeScalarField
     (
@@ -322,16 +326,21 @@ void edgeInterpolation::makeWeights() const
     // Set local references to mesh data
     const edgeVectorField& edgeCentres = mesh().edgeCentres();
     const areaVectorField& faceCentres = mesh().areaCentres();
+
     const unallocLabelList& owner = mesh().owner();
     const unallocLabelList& neighbour = mesh().neighbour();
 
     scalarField& weightingFactorsIn = weightingFactors.internalField();
 
-    forAll(owner, edgeI)
+    // Check for skewness.  Cannot check in look because it tangles
+    // parallel communication.  HJ, 6/Nov/2023
+    const bool meshIsSkew = skew();
+
+    forAll (owner, edgeI)
     {
         vector curSkewCorrVec = vector::zero;
 
-        if (skew())
+        if (meshIsSkew)
         {
             curSkewCorrVec = skewCorrectionVectors()[edgeI];
         }
@@ -363,7 +372,7 @@ void edgeInterpolation::makeWeights() const
             );
     }
 
-    forAll(mesh().boundary(), patchI)
+    forAll (mesh().boundary(), patchI)
     {
         mesh().boundary()[patchI].makeWeights
         (
@@ -373,7 +382,7 @@ void edgeInterpolation::makeWeights() const
 
     if (debug)
     {
-        Info<< "edgeInterpolation::makeWeights() : "
+        InfoInFunction
             << "Finished constructing weighting factors for face interpolation"
             << endl;
     }
@@ -384,7 +393,7 @@ void edgeInterpolation::makeDeltaCoeffs() const
 {
     if (debug)
     {
-        Info<< "edgeInterpolation::makeDeltaCoeffs() : "
+        InfoInFunction
             << "Constructing differencing factors array for edge gradient"
             << endl;
     }
@@ -420,8 +429,11 @@ void edgeInterpolation::makeDeltaCoeffs() const
     const edgeList& edges = mesh().edges();
     const pointField& points = mesh().points();
 
+    // Check for skewness.  Cannot check in look because it tangles
+    // parallel communication.  HJ, 6/Nov/2023
+    const bool meshIsSkew = skew();
 
-    forAll(owner, edgeI)
+    forAll (owner, edgeI)
     {
         // Edge normal - area normal
         vector edgeNormal = lengths[edgeI]^edges[edgeI].vec(points);
@@ -442,7 +454,7 @@ void edgeInterpolation::makeDeltaCoeffs() const
         // Calc PN arc length
         vector curSkewCorrVec = vector::zero;
 
-        if (skew())
+        if (meshIsSkew)
         {
             curSkewCorrVec = skewCorrectionVectors()[edgeI];
         }
@@ -477,7 +489,7 @@ void edgeInterpolation::makeDeltaCoeffs() const
     }
 
 
-    forAll(DeltaCoeffs.boundaryField(), patchI)
+    forAll (DeltaCoeffs.boundaryField(), patchI)
     {
         mesh().boundary()[patchI].makeDeltaCoeffs
         (
@@ -491,7 +503,7 @@ void edgeInterpolation::makeCorrectionVectors() const
 {
     if (debug)
     {
-        Info<< "edgeInterpolation::makeCorrectionVectors() : "
+        InfoInFunction
             << "Constructing non-orthogonal correction vectors"
             << endl;
     }
@@ -528,7 +540,7 @@ void edgeInterpolation::makeCorrectionVectors() const
 
     vectorField& CorrVecsIn = CorrVecs.internalField();
 
-    forAll(owner, edgeI)
+    forAll (owner, edgeI)
     {
         // Edge normal - area normal
         vector edgeNormal = lengths[edgeI] ^ edges[edgeI].vec(points);
@@ -555,7 +567,7 @@ void edgeInterpolation::makeCorrectionVectors() const
           - deltaCoeffs[edgeI]*unitDelta;
     }
 
-    forAll(CorrVecs.boundaryField(), patchI)
+    forAll (CorrVecs.boundaryField(), patchI)
     {
         faePatchVectorField& patchCorrVecs = CorrVecs.boundaryField()[patchI];
 
@@ -568,7 +580,7 @@ void edgeInterpolation::makeCorrectionVectors() const
     {
         scalarField sinAlpha = deltaCoeffs*mag(CorrVecs.internalField());
 
-        forAll(sinAlpha, edgeI)
+        forAll (sinAlpha, edgeI)
         {
             sinAlpha[edgeI] = max(-1, min(sinAlpha[edgeI], 1));
         }
@@ -581,7 +593,7 @@ void edgeInterpolation::makeCorrectionVectors() const
 
     if (debug)
     {
-        Info<< "edgeInterpolation::makeCorrectionVectors() : "
+        InfoInFunction
             << "non-orthogonality coefficient = " << NonOrthogCoeff << " deg."
             << endl;
     }
@@ -598,7 +610,7 @@ void edgeInterpolation::makeCorrectionVectors() const
 
     if (debug)
     {
-        Info<< "edgeInterpolation::makeCorrectionVectors() : "
+        InfoInFunction
             << "Finished constructing non-orthogonal correction vectors"
             << endl;
     }
@@ -641,7 +653,7 @@ void edgeInterpolation::makeSkewCorrectionVectors() const
     const edgeList& edges = mesh().edges();
 
 
-    forAll(neighbour, edgeI)
+    forAll (neighbour, edgeI)
     {
         vector P = C[owner[edgeI]];
         vector N = C[neighbour[edgeI]];
@@ -657,44 +669,13 @@ void edgeInterpolation::makeSkewCorrectionVectors() const
     }
 
 
-    forAll(SkewCorrVecs.boundaryField(), patchI)
+    forAll (mesh().boundary(), patchI)
     {
-        faePatchVectorField& patchSkewCorrVecs =
-            SkewCorrVecs.boundaryField()[patchI];
-
-        if (patchSkewCorrVecs.coupled())
-        {
-            const unallocLabelList& edgeFaces =
-                mesh().boundary()[patchI].edgeFaces();
-
-            const edgeList::subList patchEdges =
-                mesh().boundary()[patchI].patchSlice(edges);
-
-            vectorField ngbC =
-                C.boundaryField()[patchI].patchNeighbourField();
-
-            forAll (patchSkewCorrVecs, edgeI)
-            {
-                vector P = C[edgeFaces[edgeI]];
-                vector N = ngbC[edgeI];
-                vector S = points[patchEdges[edgeI].start()];
-                vector e = patchEdges[edgeI].vec(points);
-
-                scalar alpha = - ( ( (N - P)^(S - P) )&( (N - P)^e ) )/
-                    ( ( (N - P)^e )&( (N - P)^e ) );
-
-                vector E = S + alpha*e;
-
-                patchSkewCorrVecs[edgeI] =
-                    Ce.boundaryField()[patchI][edgeI] - E;
-            }
-        }
-        else
-        {
-            patchSkewCorrVecs = vector::zero;
-        }
+        mesh().boundary()[patchI].makeSkewCorrectionVectors
+        (
+            SkewCorrVecs.boundaryField()[patchI]
+        );                
     }
-
 
     scalar skewCoeff = 0.0;
 
@@ -725,23 +706,25 @@ void edgeInterpolation::makeSkewCorrectionVectors() const
 
     if (debug)
     {
-        Info<< "edgeInterpolation::makeSkewCorrectionVectors() : "
+        InfoInFunction
             << "skew coefficient = " << skewCoeff << endl;
     }
 
     if (skewCoeff < 0.1)
     {
         skew_ = false;
-        deleteDemandDrivenData(skewCorrectionVectors_);
     }
-    else
+
+    reduce(skew_, orOp<bool>());
+
+    if (!skew_)
     {
-        skew_ = true;
+        deleteDemandDrivenData(skewCorrectionVectors_);
     }
 
     if (debug)
     {
-        Info<< "edgeInterpolation::makeSkewCorrectionVectors() : "
+        InfoInFunction
             << "Finished constructing skew correction vectors"
             << endl;
     }

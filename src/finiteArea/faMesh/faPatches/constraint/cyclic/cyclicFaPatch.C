@@ -25,8 +25,10 @@ License
 
 #include "cyclicFaPatch.H"
 #include "coupledPolyPatch.H"
-#include "addToRunTimeSelectionTable.H"
 #include "faMesh.H"
+#include "faPatchFields.H"
+#include "faePatchFields.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -100,10 +102,8 @@ void Foam::cyclicFaPatch::calcTransforms()
             scalar nbrMagLe = mag(half1Normals[errorEdge]);
             scalar avLe = (magLe + nbrMagLe)/2.0;
 
-            FatalErrorIn
-            (
-                "cyclicFaPatch::calcTransforms()"
-            )   << "edge " << errorEdge
+            FatalErrorInFunction
+                << "edge " << errorEdge
                 << " area does not match neighbour "
                 << nbrEdgei << " by "
                 << 100*mag(magLe - nbrMagLe)/avLe
@@ -136,10 +136,8 @@ void Foam::cyclicFaPatch::calcTransforms()
         {
             if (forwardT().size() > 1 || reverseT().size() > 1)
             {
-                SeriousErrorIn
-                (
-                    "void cyclicFaPatch::calcTransforms()"
-                )   << "Transformation tensor is not constant for the cyclic "
+                SeriousErrorInFunction
+                    << "Transformation tensor is not constant for the cyclic "
                     << "patch.  Please reconsider your setup and definition of "
                     << "cyclic boundaries." << endl;
             }
@@ -149,7 +147,7 @@ void Foam::cyclicFaPatch::calcTransforms()
 
 
 // Make patch weighting factors
-void cyclicFaPatch::makeWeights(scalarField& w) const
+void cyclicFaPatch::makeWeights(faePatchScalarField& w) const
 {
     const scalarField& magL = magEdgeLengths();
 
@@ -192,7 +190,7 @@ void cyclicFaPatch::makeWeights(scalarField& w) const
     {
         scalar avL = (magL[errorEdge] + magL[errorEdge + sizeby2])/2.0;
 
-        FatalErrorIn("cyclicFaPatch::makeWeights(scalarField& w) const")
+        FatalErrorInFunction
             << "edge " << errorEdge << " and " << errorEdge + sizeby2
             <<  " areas do not match by "
             << 100*mag(magL[errorEdge] - magL[errorEdge + sizeby2])/avL
@@ -205,7 +203,7 @@ void cyclicFaPatch::makeWeights(scalarField& w) const
 
 
 // Make patch edge - neighbour cell distances
-void cyclicFaPatch::makeDeltaCoeffs(scalarField& dc) const
+void cyclicFaPatch::makeDeltaCoeffs(faePatchScalarField& dc) const
 {
     scalarField deltas = edgeNormals() & faPatch::delta();
     label sizeby2 = deltas.size()/2;
@@ -218,6 +216,31 @@ void cyclicFaPatch::makeDeltaCoeffs(scalarField& dc) const
         dc[edgei] = 1.0/(di + dni);
         dc[edgei + sizeby2] = dc[edgei];
     }
+}
+
+
+void cyclicFaPatch::makeSkewCorrectionVectors(faePatchVectorField& skv) const
+{
+    // See processorFaPatch and do equivalent.  HJ, 10/Nov/2023
+    skv = vector::zero;
+
+    FatalErrorInFunction
+        << "Code missing"
+        << abort(FatalError);
+}
+
+
+void cyclicFaPatch::makeEdgeTransformTensors
+(
+    const bool& meshIsSkew,
+    FieldField<Field, tensor>& ett
+) const
+{
+    // See processorFaPatch and do equivalent.  HJ, 10/Nov/2023
+
+    FatalErrorInFunction
+        << "Code missing"
+        << abort(FatalError);
 }
 
 

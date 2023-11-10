@@ -69,6 +69,9 @@ class processorFaPatch
         //- Processor-neighbbour patch neighbour face centres
         vectorField neighbEdgeFaceCentres_;
 
+        //- Processor-neighbbour patch neighbour face normals
+        vectorField neighbEdgeFaceNormals_;
+
         //- Corresponding neighbouring local point label for every local point
         //  (so localPoints()[i] == neighb.localPoints()[neighbPoints_[i]])
         mutable labelList* neighbPointsPtr_;
@@ -83,12 +86,25 @@ protected:
     // Protected Member functions
 
         //- Make patch weighting factors
-        void makeWeights(scalarField&) const;
+        void makeWeights(faePatchScalarField&) const;
 
         //- Make patch face - neighbour cell distances
-        void makeDeltaCoeffs(scalarField&) const;
+        void makeDeltaCoeffs(faePatchScalarField&) const;
 
-        //- Find non-globa patch points
+        //- Make skew correction vectors
+        virtual void makeSkewCorrectionVectors
+        (
+            faePatchVectorField&
+        ) const;
+
+        //- Make edge transform tensors
+        virtual void makeEdgeTransformTensors
+        (
+            const bool& meshIsSkew,
+            FieldField<Field, tensor>&
+        ) const;
+    
+        //- Find non-global patch points
         void makeNonGlobalPatchPoints() const;
 
 
@@ -140,6 +156,7 @@ public:
             neighbEdgeCentres_(),
             neighbEdgeLengths_(),
             neighbEdgeFaceCentres_(),
+            neighbEdgeFaceNormals_(),
             neighbPointsPtr_(nullptr),
             nonGlobalPatchPointsPtr_(nullptr)
         {}
@@ -159,6 +176,7 @@ public:
             neighbEdgeCentres_(),
             neighbEdgeLengths_(),
             neighbEdgeFaceCentres_(),
+            neighbEdgeFaceNormals_(),
             neighbPointsPtr_(nullptr),
             nonGlobalPatchPointsPtr_(nullptr)
         {}
@@ -188,6 +206,15 @@ public:
             return neighbProcNo_;
         }
 
+        // Communications support
+
+            //- Return communicator used for communication
+            virtual label comm() const;
+
+            //- Return message tag to use for communication
+            virtual int tag() const;
+
+
         //- Return true if running parallel
         virtual bool coupled() const
         {
@@ -206,16 +233,6 @@ public:
         {
             return (myProcNo_ < neighbProcNo_);
         }
-
-
-        // Communications support
-
-            //- Return communicator used for communication
-            virtual int comm() const;
-
-            //- Return message tag to use for communication
-            virtual int tag() const;
-
 
         //- Return face transformation tensor
         virtual const tensorField& forwardT() const
@@ -243,6 +260,12 @@ public:
         const vectorField& neighbEdgeFaceCentres() const
         {
             return neighbEdgeFaceCentres_;
+        }
+
+        //- Return processor-neighbbour patch neighbour face centres
+        const vectorField& neighbEdgeFaceNormals() const
+        {
+            return neighbEdgeFaceNormals_;
         }
 
         //- Return neighbour point labels. This is for my local point the

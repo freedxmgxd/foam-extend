@@ -53,22 +53,31 @@ class cyclicFaPatch
     public coupledFaPatch,
     public cyclicLduInterface
 {
-    // Private data
-
     // Private member functions
 
     void calcTransforms();
+
 
 protected:
 
     // Protected Member functions
 
         //- Make patch weighting factors
-        void makeWeights(scalarField&) const;
+        void makeWeights(faePatchScalarField&) const;
 
         //- Make patch face - neighbour cell distances
-        void makeDeltaCoeffs(scalarField&) const;
+        void makeDeltaCoeffs(faePatchScalarField&) const;
 
+        //- Make skew correction vectors
+        virtual void makeSkewCorrectionVectors(faePatchVectorField&) const;
+
+        //- Make edge transform tensors
+        virtual void makeEdgeTransformTensors
+        (
+            const bool& meshIsSkew,
+            FieldField<Field, tensor>&
+        ) const;
+    
 
 public:
 

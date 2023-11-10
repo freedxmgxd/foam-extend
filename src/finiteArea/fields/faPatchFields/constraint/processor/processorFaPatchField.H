@@ -59,6 +59,25 @@ class processorFaPatchField
         //- Local reference cast into the processor patch
         const processorFaPatch& procPatch_;
 
+            //- Outstanding request
+            mutable label outstandingSendRequest_;
+
+            //- Outstanding request
+            mutable label outstandingRecvRequest_;
+
+            //- Send buffer.
+            mutable Field<Type> sendBuf_;
+
+            //- Receive buffer.
+            mutable Field<Type> receiveBuf_;
+
+            //- Scalar send buffer
+            mutable Field<scalar> scalarSendBuf_;
+
+            //- Scalar receive buffer
+            mutable Field<scalar> scalarReceiveBuf_;
+
+
         //- Cached patch neighbour field
         mutable Field<Type> pnf_;
 

@@ -58,6 +58,108 @@ void Foam::faPatch::clearOut()
 }
 
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+void Foam::faPatch::makeWeights(faePatchScalarField& w) const
+{
+    // Bugfix: incorrect interpretation of face weights on a patch
+    // phi_f = f_x \phi_P + (1 - fx) \phi_N
+    // Thus, patch weight is zero, not one
+    // HJ, 2/Dec/2022
+    w = 0;
+}
+
+
+// Make delta coefficients as patch face - neighbour cell distances
+void Foam::faPatch::makeDeltaCoeffs(faePatchScalarField& dc) const
+{
+    dc = 1.0/(edgeNormals() & delta());
+}
+
+
+void Foam::faPatch::makeSkewCorrectionVectors
+(
+    faePatchVectorField& skv
+) const
+{
+    skv = vector::zero;
+}
+
+
+void Foam::faPatch::makeEdgeTransformTensors
+(
+    const bool& meshIsSkew,
+    FieldField<Field, tensor>& edgeTransformTensors
+) const
+{
+    // Rewrite by Hrvoje Jasak: use local data
+
+    // Regular patches
+
+    const unallocLabelList& ef = edgeFaces();
+
+    const vectorField& ec = edgeCentres();
+
+    vectorField efc = edgeFaceCentres();
+
+    vectorField en = edgeNormals();
+
+    vectorField efn = edgeFaceNormals();
+
+    forAll (ef, edgeI)
+    {
+        edgeTransformTensors.set
+        (
+            start() + edgeI,
+            new Field<tensor>(3, I)
+        );
+
+        vector E = ec[edgeI];
+
+        if (meshIsSkew)
+        {
+            E -= skewCorrectionVectors()[edgeI];
+        }
+
+        // Edge transformation tensor
+        vector il = E - efc[edgeI];
+
+        il -= en[edgeI]*(en[edgeI] & il);
+
+        il /= mag(il);
+
+        vector kl = en[edgeI];
+        vector jl = kl ^ il;
+
+        edgeTransformTensors[start() + edgeI][0] =
+            tensor
+            (
+                il.x(), il.y(), il.z(),
+                jl.x(), jl.y(), jl.z(),
+                kl.x(), kl.y(), kl.z()
+            );
+
+        // Owner transformation tensor
+        il = E - efc[edgeI];
+
+        il -= efn[edgeI]*(efn[edgeI] & il);
+
+        il /= mag(il);
+
+        kl = efn[edgeI];
+        jl = kl ^ il;
+
+        edgeTransformTensors[start() + edgeI][1] =
+            tensor
+            (
+                il.x(), il.y(), il.z(),
+                jl.x(), jl.y(), jl.z(),
+                kl.x(), kl.y(), kl.z()
+            );
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from components
@@ -125,6 +227,7 @@ Foam::label Foam::faPatch::ngbPolyPatchIndex() const
     return ngbPolyPatchIndex_;
 }
 
+
 const Foam::faBoundaryMesh& Foam::faPatch::boundaryMesh() const
 {
     return boundaryMesh_;
@@ -167,23 +270,23 @@ void Foam::faPatch::calcPointLabels() const
             ++iter
         )
         {
-            if(*iter == edges[edgeI].start())
+            if (*iter == edges[edgeI].start())
             {
                 existStart = true;
             }
 
-            if(*iter == edges[edgeI].end())
+            if (*iter == edges[edgeI].end())
             {
                 existEnd = true;
             }
         }
 
-        if(!existStart)
+        if (!existStart)
         {
             labels.append(edges[edgeI].start());
         }
 
-        if(!existEnd)
+        if (!existEnd)
         {
             labels.append(edges[edgeI].end());
         }
@@ -253,7 +356,7 @@ Foam::labelList Foam::faPatch::ngbPolyPatchFaces() const
 {
     labelList ngbFaces;
 
-    if(ngbPolyPatchIndex() == -1)
+    if (ngbPolyPatchIndex() == -1)
     {
         return ngbFaces;
     }
@@ -303,9 +406,9 @@ Foam::labelList Foam::faPatch::ngbPolyPatchFaces() const
             }
         }
 
-        if(ngbFaces[edgeI] == -1)
+        if (ngbFaces[edgeI] == -1)
         {
-            Info<< "faPatch::edgeNgbPolyPatchFaces(): "
+            InfoInFunction
                 << "Problem with determination of edge ngb faces!" << endl;
         }
     }
@@ -423,7 +526,7 @@ Foam::tmp<Foam::vectorField> Foam::faPatch::edgeFaceCentres() const
     tmp<vectorField> tfc(new vectorField(size()));
     vectorField& fc = tfc();
 
-    // get reference to global face centres
+    // Get reference to global face centres
     const vectorField& gfc =
         boundaryMesh().mesh().areaCentres().internalField();
 
@@ -438,6 +541,27 @@ Foam::tmp<Foam::vectorField> Foam::faPatch::edgeFaceCentres() const
 }
 
 
+// Return the patch edge neighbour face normals
+Foam::tmp<Foam::vectorField> Foam::faPatch::edgeFaceNormals() const
+{
+    tmp<vectorField> tfn(new vectorField(size()));
+    vectorField& fn = tfn();
+
+    // Get reference to global face normals
+    const vectorField& gfn =
+        boundaryMesh().mesh().faceAreaNormals().internalField();
+
+    const unallocLabelList& faceLabels = edgeFaces();
+
+    forAll (faceLabels, edgeI)
+    {
+        fn[edgeI] = gfn[faceLabels[edgeI]];
+    }
+
+    return tfn;
+}
+
+
 // Return cell-centre to face-centre vector
 Foam::tmp<Foam::vectorField> Foam::faPatch::delta() const
 {
@@ -445,10 +569,9 @@ Foam::tmp<Foam::vectorField> Foam::faPatch::delta() const
 }
 
 
-// Make delta coefficients as patch face - neighbour cell distances
-void Foam::faPatch::makeDeltaCoeffs(scalarField& dc) const
+const Foam::scalarField& Foam::faPatch::weights() const
 {
-    dc = 1.0/(edgeNormals() & delta());
+    return boundaryMesh().mesh().weights().boundaryField()[index()];
 }
 
 
@@ -459,15 +582,11 @@ const Foam::scalarField& Foam::faPatch::deltaCoeffs() const
 }
 
 
-void Foam::faPatch::makeWeights(scalarField& w) const
+// Return skew correction vectors
+const Foam::vectorField& Foam::faPatch::skewCorrectionVectors() const
 {
-    w = 1.0;
-}
-
-
-const Foam::scalarField& Foam::faPatch::weights() const
-{
-    return boundaryMesh().mesh().weights().boundaryField()[index()];
+    return
+        boundaryMesh().mesh().skewCorrectionVectors().boundaryField()[index()];
 }
 
 
@@ -477,7 +596,9 @@ void Foam::faPatch::movePoints(const pointField& points)
 
 void Foam::faPatch::resetEdges(const labelList& newEdges)
 {
-    Info<< "Resetting patch edges" << endl;
+    InfoInFunction
+        << "Resetting patch edges" << endl;
+
     labelList::operator=(newEdges);
 
     clearOut();

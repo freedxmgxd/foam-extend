@@ -41,6 +41,10 @@ Foam::processorFaPatchField<Type>::processorFaPatchField
 :
     coupledFaPatchField<Type>(p, iF),
     procPatch_(refCast<const processorFaPatch>(p)),
+    sendBuf_(),
+    receiveBuf_(),
+    scalarSendBuf_(),
+    scalarReceiveBuf_(),
     pnf_()
 {}
 
@@ -55,6 +59,10 @@ Foam::processorFaPatchField<Type>::processorFaPatchField
 :
     coupledFaPatchField<Type>(p, iF, f),
     procPatch_(refCast<const processorFaPatch>(p)),
+    sendBuf_(),
+    receiveBuf_(),
+    scalarSendBuf_(),
+    scalarReceiveBuf_(),
     pnf_()
 {}
 
@@ -71,6 +79,10 @@ Foam::processorFaPatchField<Type>::processorFaPatchField
 :
     coupledFaPatchField<Type>(ptf, p, iF, mapper),
     procPatch_(refCast<const processorFaPatch>(p)),
+    sendBuf_(),
+    receiveBuf_(),
+    scalarSendBuf_(),
+    scalarReceiveBuf_(),
     pnf_()
 {
     if (!isType<processorFaPatch>(this->patch()))
@@ -96,6 +108,10 @@ Foam::processorFaPatchField<Type>::processorFaPatchField
 :
     coupledFaPatchField<Type>(p, iF, dict),
     procPatch_(refCast<const processorFaPatch>(p)),
+    sendBuf_(),
+    receiveBuf_(),
+    scalarSendBuf_(),
+    scalarReceiveBuf_(),
     pnf_()
 {
     if (!isType<processorFaPatch>(p))
@@ -120,6 +136,10 @@ Foam::processorFaPatchField<Type>::processorFaPatchField
     processorLduInterfaceField(),
     coupledFaPatchField<Type>(ptf),
     procPatch_(refCast<const processorFaPatch>(ptf.patch())),
+    sendBuf_(),
+    receiveBuf_(),
+    scalarSendBuf_(),
+    scalarReceiveBuf_(),
     pnf_()
 {}
 
@@ -133,6 +153,10 @@ Foam::processorFaPatchField<Type>::processorFaPatchField
 :
     coupledFaPatchField<Type>(ptf, iF),
     procPatch_(refCast<const processorFaPatch>(ptf.patch())),
+    sendBuf_(),
+    receiveBuf_(),
+    scalarSendBuf_(),
+    scalarReceiveBuf_(),
     pnf_()
 {}
 
@@ -180,7 +204,44 @@ void Foam::processorFaPatchField<Type>::initEvaluate
 {
     if (Pstream::parRun())
     {
-        procPatch_.send(commsType, this->patchInternalField()());
+        // Set field size for receive
+        pnf_.setSize(this->size());
+
+        // Collect data into send buffer
+        sendBuf_ = this->patchInternalField();
+
+        if (commsType == Pstream::nonBlocking)
+        {
+            // Fast path. Receive into pnf_.  HJ, 9/Sep/2021
+
+            outstandingRecvRequest_ = Pstream::nRequests();
+
+            IPstream::read
+            (
+                Pstream::nonBlocking,
+                procPatch_.neighbProcNo(),
+                reinterpret_cast<char*>(pnf_.begin()),
+                this->byteSize(),
+                procPatch_.tag(),
+                procPatch_.comm()
+            );
+
+            outstandingSendRequest_ = Pstream::nRequests();
+
+            OPstream::write
+            (
+                Pstream::nonBlocking,
+                procPatch_.neighbProcNo(),
+                reinterpret_cast<const char*>(sendBuf_.begin()),
+                this->byteSize(),
+                procPatch_.tag(),
+                procPatch_.comm()
+            );
+        }
+        else
+        {
+            procPatch_.send(commsType, sendBuf_);
+        }
     }
 
     // Signal completion not needed
@@ -204,9 +265,26 @@ void Foam::processorFaPatchField<Type>::evaluate
 
     if (Pstream::parRun())
     {
-        pnf_.setSize(this->size());
+        if (commsType == Pstream::nonBlocking)
+        {
+            // Fast path. Received into *this
 
-        procPatch_.receive<Type>(commsType, pnf_);
+            if
+            (
+                outstandingRecvRequest_ >= 0
+             && outstandingRecvRequest_ < Pstream::nRequests()
+            )
+            {
+                Pstream::waitRequest(outstandingRecvRequest_);
+            }
+            outstandingSendRequest_ = -1;
+            outstandingRecvRequest_ = -1;
+        }
+        else
+        {
+            // Receive into pnf_.  HJ, 9/Sep/2021
+            procPatch_.receive<Type>(commsType, pnf_);
+        }
 
         if (doTransform())
         {

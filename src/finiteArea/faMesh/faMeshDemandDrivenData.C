@@ -304,24 +304,9 @@ void faMesh::calcAreaCentres() const
         }
     }
 
-    // HJ: bug fix to be completed
-    centres.boundaryField().updateCoupledPatchFields();
-    
-    // forAll (centres.boundaryField(), patchI)
-    // {
-    //     //HJ: this is wrong!  5/Aug/2011
-    //     if
-    //     (
-    //         isA<processorFaPatchVectorField>
-    //         (
-    //             centres.boundaryField()[patchI]
-    //         )
-    //     )
-    //     {
-    //         centres.boundaryField()[patchI].initEvaluate();
-    //         centres.boundaryField()[patchI].evaluate();
-    //     }
-    // }
+    // Note
+    // Cannot call updateCoupledPatchFields because this requires weights()
+    // and weights depend on cell centres.
 }
 
 
@@ -471,20 +456,9 @@ void faMesh::calcFaceAreaNormals() const
             edgeAreaNormals().boundaryField()[patchI];
     }
 
-    forAll(faceAreaNormals.boundaryField(), patchI)
-    {
-        if
-        (
-            isA<processorFaPatchVectorField>
-            (
-                faceAreaNormals.boundaryField()[patchI]
-            )
-        )
-        {
-            faceAreaNormals.boundaryField()[patchI].initEvaluate();
-            faceAreaNormals.boundaryField()[patchI].evaluate();
-        }
-    }
+    // Note
+    // Cannot call updateCoupledPatchFields because this requires weights()
+    // and weights depend on cell centres.
 }
 
 
@@ -694,14 +668,16 @@ void faMesh::calcEdgeTransformTensors() const
     const edgeVectorField& Ne = edgeAreaNormals();
     const edgeVectorField& Ce = edgeCentres();
 
+    const bool meshIsSkew = skew();
+    
     // Internal edges transformation tensors
-    for (label edgeI=0; edgeI<nInternalEdges(); edgeI++)
+    for (label edgeI = 0; edgeI < nInternalEdges(); edgeI++)
     {
         edgeTransformTensors.set(edgeI, new Field<tensor>(3, I));
 
         vector E = Ce.internalField()[edgeI];
 
-        if (skew())
+        if (meshIsSkew)
         {
             E -= skewCorrectionVectors().internalField()[edgeI];
         }
@@ -767,150 +743,11 @@ void faMesh::calcEdgeTransformTensors() const
     // Boundary edges transformation tensors
     forAll (boundary(), patchI)
     {
-        if (boundary()[patchI].coupled())
-        {
-            const unallocLabelList& edgeFaces =
-                boundary()[patchI].edgeFaces();
-
-            vectorField ngbCf =
-                Cf.boundaryField()[patchI].patchNeighbourField();
-
-            vectorField ngbNf =
-                Nf.boundaryField()[patchI].patchNeighbourField();
-
-            forAll(edgeFaces, edgeI)
-            {
-                edgeTransformTensors.set
-                (
-                    boundary()[patchI].start() + edgeI,
-                    new Field<tensor>(3, I)
-                );
-
-                vector E = Ce.boundaryField()[patchI][edgeI];
-
-                if (skew())
-                {
-                    E -= skewCorrectionVectors()
-                        .boundaryField()[patchI][edgeI];
-                }
-
-                // Edge transformation tensor
-                vector il = E - Cf.internalField()[edgeFaces[edgeI]];
-
-                il -= Ne.boundaryField()[patchI][edgeI]
-                   *(Ne.boundaryField()[patchI][edgeI]&il);
-
-                il /= mag(il);
-
-                vector kl = Ne.boundaryField()[patchI][edgeI];
-                vector jl = kl^il;
-
-                edgeTransformTensors[boundary()[patchI].start() + edgeI][0] =
-                    tensor
-                    (
-                        il.x(), il.y(), il.z(),
-                        jl.x(), jl.y(), jl.z(),
-                        kl.x(), kl.y(), kl.z()
-                    );
-
-                // Owner transformation tensor
-                il = E - Cf.internalField()[edgeFaces[edgeI]];
-
-                il -= Nf.internalField()[edgeFaces[edgeI]]
-                   *(Nf.internalField()[edgeFaces[edgeI]]&il);
-
-                il /= mag(il);
-
-                kl = Nf.internalField()[edgeFaces[edgeI]];
-                jl = kl^il;
-
-                edgeTransformTensors[boundary()[patchI].start() + edgeI][1] =
-                    tensor
-                    (
-                        il.x(), il.y(), il.z(),
-                        jl.x(), jl.y(), jl.z(),
-                        kl.x(), kl.y(), kl.z()
-                    );
-
-                // Neighbour transformation tensor
-                il = ngbCf[edgeI] - E;
-
-                il -= ngbNf[edgeI]*(ngbNf[edgeI]&il);
-
-                il /= mag(il);
-
-                kl = ngbNf[edgeI];
-
-                jl = kl^il;
-
-                edgeTransformTensors[boundary()[patchI].start() + edgeI][2] =
-                    tensor
-                    (
-                        il.x(), il.y(), il.z(),
-                        jl.x(), jl.y(), jl.z(),
-                        kl.x(), kl.y(), kl.z()
-                    );
-            }
-        }
-        else
-        {
-            const unallocLabelList& edgeFaces = boundary()[patchI].edgeFaces();
-
-            forAll(edgeFaces, edgeI)
-            {
-                edgeTransformTensors.set
-                (
-                    boundary()[patchI].start() + edgeI,
-                    new Field<tensor>(3, I)
-                );
-
-                vector E = Ce.boundaryField()[patchI][edgeI];
-
-                if (skew())
-                {
-                    E -= skewCorrectionVectors()
-                        .boundaryField()[patchI][edgeI];
-                }
-
-                // Edge transformation tensor
-                vector il = E - Cf.internalField()[edgeFaces[edgeI]];
-
-                il -= Ne.boundaryField()[patchI][edgeI]
-                   *(Ne.boundaryField()[patchI][edgeI]&il);
-
-                il /= mag(il);
-
-                vector kl = Ne.boundaryField()[patchI][edgeI];
-                vector jl = kl^il;
-
-                edgeTransformTensors[boundary()[patchI].start() + edgeI][0] =
-                    tensor
-                    (
-                        il.x(), il.y(), il.z(),
-                        jl.x(), jl.y(), jl.z(),
-                        kl.x(), kl.y(), kl.z()
-                    );
-
-                // Owner transformation tensor
-                il = E - Cf.internalField()[edgeFaces[edgeI]];
-
-                il -= Nf.internalField()[edgeFaces[edgeI]]
-                   *(Nf.internalField()[edgeFaces[edgeI]]&il);
-
-                il /= mag(il);
-
-                kl = Nf.internalField()[edgeFaces[edgeI]];
-                jl = kl^il;
-
-                edgeTransformTensors[boundary()[patchI].start() + edgeI][1] =
-                    tensor
-                    (
-                        il.x(), il.y(), il.z(),
-                        jl.x(), jl.y(), jl.z(),
-                        kl.x(), kl.y(), kl.z()
-                    );
-            }
-        }
+        boundary()[patchI].makeEdgeTransformTensors
+        (
+            meshIsSkew,
+            edgeTransformTensors
+        );
     }
 }
 
@@ -1307,12 +1144,12 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
     const faceList& faces = patch().localFaces();
     const labelListList& pointFaces = patch().pointFaces();
 
-    forAll(intPoints, pointI)
+    forAll (intPoints, pointI)
     {
         label curPoint = intPoints[pointI];
 
         labelHashSet faceSet;
-        forAll(pointFaces[curPoint], faceI)
+        forAll (pointFaces[curPoint], faceI)
         {
             faceSet.insert(pointFaces[curPoint][faceI]);
         }
@@ -1343,17 +1180,17 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
             }
 
             labelHashSet faceSet;
-            forAll(pointFaces[curPoint], faceI)
+            forAll (pointFaces[curPoint], faceI)
             {
                 faceSet.insert(pointFaces[curPoint][faceI]);
             }
             labelList curFaces = faceSet.toc();
-            forAll(curFaces, faceI)
+            forAll (curFaces, faceI)
             {
                 const labelList& curFaceFaces =
                     patch().faceFaces()[curFaces[faceI]];
 
-                forAll(curFaceFaces, fI)
+                forAll (curFaceFaces, fI)
                 {
                     label curFaceFace = curFaceFaces[fI];
 
@@ -1400,7 +1237,7 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
         dir /= mag(dir);
         coordinateSystem cs("cs", origin, axis, dir);
 
-        forAll(allPoints, pI)
+        forAll (allPoints, pI)
         {
             allPoints[pI] = cs.localPosition(allPoints[pI]);
         }
@@ -1480,7 +1317,7 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
                 toNgbProcLsPointStarts[pointI] = nPoints;
 
                 labelHashSet faceSet;
-                forAll(pointFaces[curPoint], faceI)
+                forAll (pointFaces[curPoint], faceI)
                 {
                     faceSet.insert(pointFaces[curPoint][faceI]);
                 }
@@ -1557,7 +1394,7 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
             const labelList& nonGlobalPatchPoints =
                 procPatch.nonGlobalPatchPoints();
 
-            forAll(nonGlobalPatchPoints, pointI)
+            forAll (nonGlobalPatchPoints, pointI)
             {
                 label curPoint =
                     patchPointLabels[nonGlobalPatchPoints[pointI]];
@@ -1565,7 +1402,7 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
                     procPatch.neighbPoints()[nonGlobalPatchPoints[pointI]];
 
                 labelHashSet faceSet;
-                forAll(pointFaces[curPoint], faceI)
+                forAll (pointFaces[curPoint], faceI)
                 {
                     faceSet.insert(pointFaces[curPoint][faceI]);
                 }
@@ -1641,7 +1478,7 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
                 scalar tol = 0.001*mag(bb.max() - bb.min());
 
                 nAllPoints = 0;
-                forAll(allPointsExt, pI)
+                forAll (allPointsExt, pI)
                 {
                     bool duplicate = false;
                     for (label i=0; i<nAllPoints; i++)
@@ -1688,7 +1525,7 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
 
                 scalarField W(allPoints.size(), 1.0);
 
-                forAll(allPoints, pI)
+                forAll (allPoints, pI)
                 {
                     W[pI] = 1.0/magSqr(allPoints[pI] - points[curPoint]);
 
@@ -1769,7 +1606,7 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
                 label curPoint = spLabels[curSharedPointIndex];
 
                 labelHashSet faceSet;
-                forAll(pointFaces[curPoint], faceI)
+                forAll (pointFaces[curPoint], faceI)
                 {
                     faceSet.insert(pointFaces[curPoint][faceI]);
                 }
@@ -1807,7 +1644,7 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
                 label curPoint = spLabels[curSharedPointIndex];
 
                 label nAllPoints = 0;
-                forAll(procLsPoints, procI)
+                forAll (procLsPoints, procI)
                 {
                     nAllPoints += procLsPoints[procI].size();
                 }
@@ -1815,9 +1652,9 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
                 vectorField allPoints(nAllPoints, vector::zero);
 
                 nAllPoints = 0;
-                forAll(procLsPoints, procI)
+                forAll (procLsPoints, procI)
                 {
-                    forAll(procLsPoints[procI], pointI)
+                    forAll (procLsPoints[procI], pointI)
                     {
                         bool duplicate = false;
                         for (label i=0; i<nAllPoints; i++)
@@ -1865,7 +1702,7 @@ void faMesh::calcPointAreaNormalsByQuadricsFit() const
 
                 scalarField W(allPoints.size(), 1.0);
 
-                forAll(allPoints, pointI)
+                forAll (allPoints, pointI)
                 {
                     W[pointI]=
                         1.0/magSqr(allPoints[pointI] - points[curPoint]);

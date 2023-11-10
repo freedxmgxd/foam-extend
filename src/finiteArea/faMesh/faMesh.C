@@ -244,7 +244,7 @@ Foam::faMesh::faMesh(const polyMesh& pMesh)
 {
     if (debug)
     {
-        Info<< "faMesh::faMesh(...) : "
+        InfoInFunction
             << "Creating faMesh from IOobject" << endl;
     }
 
@@ -259,6 +259,12 @@ Foam::faMesh::faMesh(const polyMesh& pMesh)
     // Calculate topology for the patches (processor-processor comms etc.)
     boundary_.updateMesh();
 
+    // Before calcGeometry, force calculation of basic data
+    // HJ, 9/Nov/2023 TESTING!!!!
+    edgeCentres();
+    Le();
+    magLe();
+    
     // Calculate the geometry for the patches (transformation tensors etc.)
     boundary_.calcGeometry();
 

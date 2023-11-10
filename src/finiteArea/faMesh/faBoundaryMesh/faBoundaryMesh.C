@@ -39,9 +39,6 @@ namespace Foam
 defineTypeNameAndDebug(faBoundaryMesh, 0);
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from dictionary
@@ -208,10 +205,8 @@ label faBoundaryMesh::whichPatch(const label edgeIndex) const
     // if it is off the end of the list, abort
     if (edgeIndex >= mesh().nEdges())
     {
-        FatalErrorIn
-        (
-            "faBoundaryMesh::whichPatch(const label edgeIndex) const"
-        )   << "given label greater than the number of edges"
+        FatalErrorInFunction
+            << "given label greater than the number of edges"
             << abort(FatalError);
     }
 
@@ -236,10 +231,8 @@ label faBoundaryMesh::whichPatch(const label edgeIndex) const
     }
 
     // If not in any of above, it's trouble!
-    FatalErrorIn
-    (
-        "label faBoundaryMesh::whichPatch(const label edgeIndex) const"
-    )   << "error in patch search algorithm"
+    FatalErrorInFunction
+        << "error in patch search algorithm"
         << abort(FatalError);
 
     return -1;

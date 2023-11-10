@@ -74,10 +74,13 @@ protected:
     // Protected Member Functions
 
         //- Make patch weighting factors
-        virtual void makeWeights(scalarField&) const = 0;
+        virtual void makeWeights(faePatchScalarField&) const = 0;
 
         //- Make patch face - neighbour cell distances
-        virtual void makeDeltaCoeffs(scalarField&) const = 0;
+        virtual void makeDeltaCoeffs(faePatchScalarField&) const = 0;
+
+        //- Make skew correction vectors
+        virtual void makeSkewCorrectionVectors(faePatchVectorField&) const = 0;
 
         //- Calculate the uniform transformation tensors
         void calcTransformTensors
