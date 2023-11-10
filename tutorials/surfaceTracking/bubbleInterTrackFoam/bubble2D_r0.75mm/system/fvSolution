@@ -40,7 +40,7 @@ PIMPLE
     nCorrectors                 2;
     nNonOrthogonalCorrectors    1;
 
-    pRefPoint (0 0 0);
+    pRefPoint (0.0001 0.0001 0);
     pRefValue 0;
 }
 
