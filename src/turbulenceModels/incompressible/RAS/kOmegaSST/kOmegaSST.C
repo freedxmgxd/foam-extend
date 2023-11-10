@@ -349,7 +349,7 @@ tmp<fvVectorMatrix> kOmegaSST::divDevReff() const
     return
     (
       - fvm::laplacian(nuEffective, U_)
-      - (fvc::grad(U_) & fvc::grad(nuEffective))
+      - fvc::div(nuEffective*dev2(T(fvc::grad(U_))))
     );
 }
 

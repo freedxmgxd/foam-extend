@@ -271,7 +271,7 @@ tmp<fvVectorMatrix> NonlinearKEShih::divDevReff() const
     (
         fvc::div(nonlinearStress_)
       - fvm::laplacian(nuEffective, U_)
-      - (fvc::grad(U_) & fvc::grad(nuEffective))
+      - fvc::div(nuEffective*dev2(T(fvc::grad(U_))))
     );
 }
 

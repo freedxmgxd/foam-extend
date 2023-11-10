@@ -292,12 +292,12 @@ tmp<volSymmTensorField> SpalartAllmaras::devRhoReff() const
 
 tmp<fvVectorMatrix> SpalartAllmaras::divDevRhoReff() const
 {
-    volScalarField muEff_ = muEff();
+    volScalarField muEffective = muEff();
 
     return
     (
-      - fvm::laplacian(muEff_, U_)
-      - fvc::div(muEff_*dev2(T(fvc::grad(U_))))
+      - fvm::laplacian(muEffective, U_)
+      - fvc::div(muEffective*dev2(T(fvc::grad(U_))))
     );
 }
 

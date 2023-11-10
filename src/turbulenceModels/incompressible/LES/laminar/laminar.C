@@ -144,9 +144,12 @@ tmp<volSymmTensorField> laminar::devBeff() const
 
 tmp<fvVectorMatrix> laminar::divDevBeff() const
 {
+    const volScalarField nuEffective = nu();
+
     return
     (
-      - fvm::laplacian(nu(), U_) - fvc::div(nu()*dev(T(fvc::grad(U_))))
+      - fvm::laplacian(nuEffective, U_)
+      - fvc::div(nuEffective*dev2(T(fvc::grad(U_))))
     );
 }
 

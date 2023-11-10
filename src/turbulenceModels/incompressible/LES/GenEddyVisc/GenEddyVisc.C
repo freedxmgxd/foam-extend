@@ -88,9 +88,12 @@ tmp<volSymmTensorField> GenEddyVisc::devBeff() const
 
 tmp<fvVectorMatrix> GenEddyVisc::divDevBeff() const
 {
+    const volScalarField nuEffective = nuEff();
+
     return
     (
-      - fvm::laplacian(nuEff(), U_) - fvc::div(nuEff()*dev(T(fvc::grad(U_))))
+      - fvm::laplacian(nuEffective, U_)
+      - fvc::div(nuEffective*dev2(T(fvc::grad(U_))))
     );
 }
 

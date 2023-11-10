@@ -83,15 +83,18 @@ tmp<volSymmTensorField> Smagorinsky2::B() const
 
 tmp<fvVectorMatrix> Smagorinsky2::divDevBeff() const
 {
+    const volScalarField nuEffective = nuEff();
+
     volSymmTensorField aniNuEff
     (
         "aniNuEff",
-        I*nuEff() + cD2_*delta()*symm(fvc::grad(U_))
+        I*nuEffective + cD2_*delta()*symm(fvc::grad(U_))
     );
 
     return
     (
-      - fvm::laplacian(aniNuEff, U_) - fvc::div(nuEff()*dev(T(fvc::grad(U_))))
+      - fvm::laplacian(aniNuEff, U_)
+      - fvc::div(nuEffective*dev2(T(fvc::grad(U_))))
     );
 }
 
