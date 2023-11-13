@@ -188,10 +188,8 @@ public:
             {}
 
 
-        // Destructor
-
-            virtual ~patchFieldInterpolator()
-            {}
+        //- Destructor
+        virtual ~patchFieldInterpolator() = default;
 
 
         // Member Functions

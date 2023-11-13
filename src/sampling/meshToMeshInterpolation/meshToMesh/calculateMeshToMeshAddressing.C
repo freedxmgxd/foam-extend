@@ -172,7 +172,7 @@ void meshToMesh::calcAddressing()
 
             if (fromPatch.empty())
             {
-                WarningIn("meshToMesh::calcAddressing()")
+                WarningInFunction
                     << "Source patch " << fromPatch.name()
                     << " has no faces. Not performing mapping for it."
                     << endl;
@@ -229,7 +229,7 @@ void meshToMesh::calcAddressing()
 
     if (debug)
     {
-        Info<< "meshToMesh::calculateAddressing() : "
+        InfoInFunction
             << "finished calculating mesh-to-mesh acell ddressing" << endl;
     }
 }

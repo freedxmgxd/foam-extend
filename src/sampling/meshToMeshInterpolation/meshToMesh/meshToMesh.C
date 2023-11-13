@@ -91,13 +91,8 @@ meshToMesh::meshToMesh
         }
         else
         {
-            WarningIn
-            (
-                "meshToMesh::meshToMesh"
-                "(const fvMesh& meshFrom, const fvMesh& meshTo,"
-                "const HashTable<word>& patchMap,"
-                "const wordList& cuttingPatchNames)"
-            )   << "Cannot find cutting-patch " << cuttingPatchNames[i]
+            WarningInFunction
+                << "Cannot find cutting-patch " << cuttingPatchNames[i]
                 << " in destination mesh" << endl;
         }
     }
@@ -135,11 +130,8 @@ meshToMesh::meshToMesh
     // of boundary patches
     if (fromMesh_.boundary().size() != toMesh_.boundary().size())
     {
-        FatalErrorIn
-        (
-            "meshToMesh::meshToMesh"
-            "(const fvMesh& meshFrom, const fvMesh& meshTo)"
-        )   << "Incompatible meshes: different number of patches, "
+        FatalErrorInFunction
+            << "Incompatible meshes: different number of patches, "
             << "fromMesh = " << fromMesh_.boundary().size()
             << ", toMesh = " << toMesh_.boundary().size()
             << exit(FatalError);
@@ -153,11 +145,8 @@ meshToMesh::meshToMesh
          != toMesh_.boundaryMesh()[patchi].name()
         )
         {
-            FatalErrorIn
-            (
-                "meshToMesh::meshToMesh"
-                "(const fvMesh& meshFrom, const fvMesh& meshTo)"
-            )   << "Incompatible meshes: different patch names for patch "
+            FatalErrorInFunction
+                << "Incompatible meshes: different patch names for patch "
                 << patchi
                 << ", fromMesh = " << fromMesh_.boundary()[patchi].name()
                 << ", toMesh = " << toMesh_.boundary()[patchi].name()
@@ -170,11 +159,8 @@ meshToMesh::meshToMesh
          != toMesh_.boundaryMesh()[patchi].type()
         )
         {
-            FatalErrorIn
-            (
-                "meshToMesh::meshToMesh"
-                "(const fvMesh& meshFrom, const fvMesh& meshTo)"
-            )   << "Incompatible meshes: different patch types for patch "
+            FatalErrorInFunction
+                << "Incompatible meshes: different patch types for patch "
                 << patchi
                 << ", fromMesh = " << fromMesh_.boundary()[patchi].type()
                 << ", toMesh = " << toMesh_.boundary()[patchi].type()
