@@ -176,8 +176,7 @@ const Type& Foam::objectRegistry::lookupObject(const word& name) const
             return *vpsiPtr_;
         }
 
-        FatalErrorIn("objectRegistry::lookupObject<Type>(const word&) const")
-            << nl
+        FatalErrorInFunction
             << "    lookup of " << name << " from objectRegistry "
             << this->name()
             << " successful\n    but it is not a " << Type::typeName
@@ -192,10 +191,7 @@ const Type& Foam::objectRegistry::lookupObject(const word& name) const
         }
         else
         {
-            FatalErrorIn
-            (
-                "objectRegistry::lookupObject<Type>(const word&) const"
-            )   << nl
+            FatalErrorInFunction
                 << "    request for " << Type::typeName
                 << " " << name << " from objectRegistry " << this->name()
                 << " failed\n    available objects of type " << Type::typeName

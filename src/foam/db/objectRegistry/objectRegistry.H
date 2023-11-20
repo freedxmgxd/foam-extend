@@ -75,10 +75,10 @@ class objectRegistry
         bool parentNotTime() const;
 
         //- Disallow Copy constructor
-        objectRegistry(const objectRegistry&);
+        objectRegistry(const objectRegistry&) = delete;
 
         //- Disallow default bitwise copy construct and assignment
-        void operator=(const objectRegistry&);
+        void operator=(const objectRegistry&) = delete;
 
 
 public:
@@ -114,9 +114,8 @@ public:
             const label nIoObjects = 128
         );
 
-    // Destructor
-
-        virtual ~objectRegistry();
+    //- Destructor
+    virtual ~objectRegistry();
 
 
     // Member functions

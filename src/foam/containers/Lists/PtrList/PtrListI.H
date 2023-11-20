@@ -105,7 +105,7 @@ const T& Foam::PtrList<T>::operator[](const label i) const
 {
     if (!ptrs_[i])
     {
-        FatalErrorIn("PtrList::operator[] const")
+        FatalErrorInFunction
             << "hanging pointer, cannot dereference"
             << abort(FatalError);
     }
@@ -119,7 +119,7 @@ T& Foam::PtrList<T>::operator[](const label i)
 {
     if (!ptrs_[i])
     {
-        FatalErrorIn("PtrList::operator[]")
+        FatalErrorInFunction
             << "hanging pointer, cannot dereference"
             << abort(FatalError);
     }
