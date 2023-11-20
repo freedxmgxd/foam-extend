@@ -38,9 +38,6 @@ SourceFiles
 #include "refCount.H"
 #include <cstddef>
 
-#if defined(__GNUC__) && !defined(__INTEL_COMPILER) && !defined(darwin) && !defined(ARM_CLANG)
-#   define ConstructFromTmp
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

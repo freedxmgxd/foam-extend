@@ -35,7 +35,7 @@ License
 #define checkField(gf1, gf2, op)                                    \
 if ((gf1).mesh() != (gf2).mesh())                                   \
 {                                                                   \
-    FatalErrorIn("checkField(gf1, gf2, op)")                        \
+    FatalErrorInFunction                                            \
         << "different mesh for fields "                             \
         << (gf1).name() << " and " << (gf2).name()                  \
         << " during operation " <<  op                              \
@@ -472,39 +472,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     this->writeOpt() = IOobject::NO_WRITE;
 }
 
-// construct as copy of tmp<GeometricField> deleting argument
-#ifdef ConstructFromTmp
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
-(
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
-)
-:
-    DimensionedField<Type, GeoMesh>
-    (
-        const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
-        tgf.isTmp()
-    ),
-    timeIndex_(tgf().timeIndex()),
-    field0Ptr_(nullptr),
-    fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, tgf().boundaryField_)
-{
-    if (debug)
-    {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy"
-            << endl << this->info() << endl;
-    }
 
-    this->writeOpt() = IOobject::NO_WRITE;
-
-    tgf.clear();
-}
-#endif
-
-
-// construct as copy resetting IO parameters
+// Construct as copy resetting IO parameters
 template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (
@@ -567,37 +536,6 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     }
 }
 
-
-// construct as copy resetting name
-#ifdef ConstructFromTmp
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
-(
-    const word& newName,
-    const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf
-)
-:
-    DimensionedField<Type, GeoMesh>
-    (
-        newName,
-        const_cast<GeometricField<Type, PatchField, GeoMesh>&>(tgf()),
-        tgf.isTmp()
-    ),
-    timeIndex_(tgf().timeIndex()),
-    field0Ptr_(nullptr),
-    fieldPrevIterPtr_(nullptr),
-    boundaryField_(*this, tgf().boundaryField_)
-{
-    if (debug)
-    {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing from tmp resetting name"
-            << endl << this->info() << endl;
-    }
-
-    tgf.clear();
-}
-#endif
 
 // construct as copy resetting IO parameters and patch type
 template<class Type, template<class> class PatchField, class GeoMesh>

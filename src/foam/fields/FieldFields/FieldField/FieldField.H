@@ -107,11 +107,6 @@ public:
         //- Construct as copy of a PtrList<Field, Type>
         FieldField(const PtrList<Field<Type> >&);
 
-        //- Construct as copy of tmp<FieldField>
-#       ifdef ConstructFromTmp
-        FieldField(const tmp<FieldField<Field, Type> >&);
-#       endif
-
         //- Construct from Istream
         FieldField(Istream&);
 

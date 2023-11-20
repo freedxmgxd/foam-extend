@@ -185,18 +185,6 @@ Field<Type>::Field(const UList<Type>& list)
 {}
 
 
-// Construct as copy of tmp<Field>
-#ifdef ConstructFromTmp
-template<class Type>
-Field<Type>::Field(const tmp<Field<Type> >& tf)
-:
-    List<Type>(const_cast<Field<Type>&>(tf()), tf.isTmp())
-{
-    const_cast<Field<Type>&>(tf()).resetRefCount();
-}
-#endif
-
-
 template<class Type>
 Field<Type>::Field(Istream& is)
 :

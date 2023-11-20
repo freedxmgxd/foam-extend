@@ -179,14 +179,6 @@ public:
             const Xfer<DimensionedField<Type, GeoMesh> >&
         );
 
-        //- Construct as copy of tmp<DimensionedField> deleting argument
-#       ifdef ConstructFromTmp
-        DimensionedField
-        (
-            const tmp<DimensionedField<Type, GeoMesh> >&
-        );
-#       endif
-
         //- Construct as copy resetting IO parameters
         DimensionedField
         (
@@ -215,15 +207,6 @@ public:
             const word& newName,
             const Xfer<DimensionedField<Type, GeoMesh> >&
         );
-
-        //- Construct as copy resetting name
-#       ifdef ConstructFromTmp
-        DimensionedField
-        (
-            const word& newName,
-            const tmp<DimensionedField<Type, GeoMesh> >&
-        );
-#       endif
 
         //- Clone
         tmp<DimensionedField<Type, GeoMesh> > clone() const;

@@ -369,14 +369,6 @@ public:
             const GeometricField<Type, PatchField, GeoMesh>&
         );
 
-        //- Construct as copy of tmp<GeometricField> deleting argument
-#       ifdef ConstructFromTmp
-        GeometricField
-        (
-            const tmp<GeometricField<Type, PatchField, GeoMesh> >&
-        );
-#       endif
-
         //- Construct as copy resetting IO parameters
         GeometricField
         (
@@ -390,15 +382,6 @@ public:
             const word& newName,
             const GeometricField<Type, PatchField, GeoMesh>&
         );
-
-        //- Construct as copy resetting name
-#       ifdef ConstructFromTmp
-        GeometricField
-        (
-            const word& newName,
-            const tmp<GeometricField<Type, PatchField, GeoMesh> >&
-        );
-#       endif
 
         //- Construct as copy resetting IO parameters and patch type
         GeometricField

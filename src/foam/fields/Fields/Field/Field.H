@@ -187,11 +187,6 @@ public:
         //- Construct as copy of subField
         Field(const typename Field<Type>::subField&);
 
-        //- Construct as copy of tmp<Field>
-#       ifdef ConstructFromTmp
-        Field(const tmp<Field<Type> >&);
-#       endif
-
         //- Construct from Istream
         Field(Istream&);
 

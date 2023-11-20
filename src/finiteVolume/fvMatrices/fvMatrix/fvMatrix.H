@@ -199,11 +199,6 @@ public:
         //- Construct as copy
         fvMatrix(const fvMatrix<Type>&);
 
-        //- Construct as copy of tmp<fvMatrix<Type> > deleting argument
-#       ifdef ConstructFromTmp
-        fvMatrix(const tmp<fvMatrix<Type> >&);
-#       endif
-
         //- Construct from Istream given field to solve for
         fvMatrix
         (
