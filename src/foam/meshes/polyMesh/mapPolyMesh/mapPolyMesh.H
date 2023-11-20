@@ -281,10 +281,10 @@ class mapPolyMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        mapPolyMesh(const mapPolyMesh&);
+        mapPolyMesh(const mapPolyMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const mapPolyMesh&);
+        void operator=(const mapPolyMesh&) = delete;
 
 
 public:
@@ -518,7 +518,7 @@ public:
                     }
                     else
                     {
-                        FatalErrorIn("mergedPoint(const label) const")
+                        FatalErrorInFunction
                             << "old point label " << oldPointI
                             << " has reverseMap " << i << endl
                             << "Only call mergedPoint for removed points."
@@ -550,7 +550,7 @@ public:
                     }
                     else
                     {
-                        FatalErrorIn("mergedFace(const label) const")
+                        FatalErrorInFunction
                             << "old face label " << oldFaceI
                             << " has reverseMap " << i << endl
                             << "Only call mergedFace for removed faces."
@@ -582,7 +582,7 @@ public:
                     }
                     else
                     {
-                        FatalErrorIn("mergedCell(const label) const")
+                        FatalErrorInFunction
                             << "old cell label " << oldCellI
                             << " has reverseMap " << i << endl
                             << "Only call mergedCell for removed cells."

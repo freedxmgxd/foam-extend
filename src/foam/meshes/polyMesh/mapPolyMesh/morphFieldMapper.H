@@ -48,20 +48,16 @@ class morphFieldMapper
 :
     public FieldMapper
 {
-
 public:
 
     // Constructors
 
-        //- Null constructor
-        morphFieldMapper()
-        {}
+        //- Default construct
+        morphFieldMapper() = default;
 
 
-    // Destructor
-
-        virtual ~morphFieldMapper()
-        {}
+    //- Destructor
+    virtual ~morphFieldMapper() = default;
 
 
     // Member Functions

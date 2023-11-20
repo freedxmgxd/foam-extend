@@ -90,7 +90,7 @@ public:
 
         // Utility functions
 
-            //- labels of added patches
+            //- Labels of added patches
             labelList addedPatches() const
             {
                 labelList added(patchMap_.size());

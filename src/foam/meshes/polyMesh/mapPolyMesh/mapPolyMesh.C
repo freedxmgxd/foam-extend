@@ -122,7 +122,7 @@ Foam::mapPolyMesh::mapPolyMesh
     {
         if (min(oldPatchSizes_) < 0)
         {
-            FatalErrorIn("mapPolyMesh::mapPolyMesh(...)")
+            FatalErrorInFunction
                 << "Calculated negative old patch size.  Error in mapping data"
                 << abort(FatalError);
         }
@@ -211,15 +211,12 @@ Foam::mapPolyMesh::mapPolyMesh
     {
         if (min(oldPatchSizes_) < 0)
         {
-            FatalErrorIn("mapPolyMesh::mapPolyMesh(...)")
+            FatalErrorInFunction
                 << "Calculated negative old patch size.  Error in mapping data"
                 << abort(FatalError);
         }
     }
 }
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //

@@ -89,10 +89,10 @@ class pointMapper
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        pointMapper(const pointMapper&);
+        pointMapper(const pointMapper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const pointMapper&);
+        void operator=(const pointMapper&) = delete;
 
 
         //- Calculate addressing for mapping with inserted points
@@ -111,8 +111,7 @@ public:
 
 
     // Destructor
-
-        virtual ~pointMapper();
+    virtual ~pointMapper();
 
 
     // Member Functions

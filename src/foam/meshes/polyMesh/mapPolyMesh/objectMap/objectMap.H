@@ -101,7 +101,6 @@ public:
     // IOstream Operators
 
         friend Ostream& operator<<(Ostream&, const objectMap&);
-
         friend Istream& operator>>(Istream&, objectMap&);
 };
 

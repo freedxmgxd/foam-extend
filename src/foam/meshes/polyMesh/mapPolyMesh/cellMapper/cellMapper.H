@@ -89,10 +89,10 @@ class cellMapper
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        cellMapper(const cellMapper&);
+        cellMapper(const cellMapper&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cellMapper&);
+        void operator=(const cellMapper&) = delete;
 
 
         //- Calculate addressing for mapping with inserted cells
@@ -112,9 +112,8 @@ public:
         cellMapper(const mapPolyMesh& mpm);
 
 
-    // Destructor
-
-        virtual ~cellMapper();
+    //- Destructor
+    virtual ~cellMapper();
 
 
     // Member Functions

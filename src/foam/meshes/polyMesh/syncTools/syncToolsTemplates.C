@@ -316,12 +316,8 @@ void Foam::syncTools::syncPointMap
     {
         if (hasTransformation)
         {
-            WarningIn
-            (
-                "syncTools<class T, class CombineOp>::syncPointMap"
-                "(const polyMesh&, Map<T>&, const CombineOp&"
-                ", const bool)"
-            )   << "There are decomposed cyclics in this mesh with"
+            WarningInFunction
+                << "There are decomposed cyclics in this mesh with"
                 << " transformations." << endl
                 << "This is not supported. The result will be incorrect"
                 << endl;
@@ -857,12 +853,8 @@ void Foam::syncTools::syncPointList
 {
     if (pointValues.size() != mesh.nPoints())
     {
-        FatalErrorIn
-        (
-            "syncTools<class T, class CombineOp>::syncPointList"
-            "(const polyMesh&, UList<T>&, const CombineOp&, const T&"
-            ", const bool)"
-        )   << "Number of values " << pointValues.size()
+        FatalErrorInFunction
+            << "Number of values " << pointValues.size()
             << " is not equal to the number of points in the mesh "
             << mesh.nPoints() << abort(FatalError);
     }
@@ -1028,12 +1020,8 @@ void Foam::syncTools::syncPointList
     {
         if (hasTransformation)
         {
-            WarningIn
-            (
-                "syncTools<class T, class CombineOp>::syncPointList"
-                "(const polyMesh&, UList<T>&, const CombineOp&, const T&"
-                ", const bool)"
-            )   << "There are decomposed cyclics in this mesh with"
+            WarningInFunction
+                << "There are decomposed cyclics in this mesh with"
                 << " transformations." << endl
                 << "This is not supported. The result will be incorrect"
                 << endl;
@@ -1078,12 +1066,8 @@ void Foam::syncTools::syncPointList
 {
     if (pointValues.size() != meshPoints.size())
     {
-        FatalErrorIn
-        (
-            "syncTools<class T, class CombineOp>::syncPointList"
-            "(const polyMesh&, const labelList&, UList<T>&, const CombineOp&"
-            ", const T&, const bool)"
-        )   << "Number of values " << pointValues.size()
+        FatalErrorInFunction
+            << "Number of values " << pointValues.size()
             << " is not equal to the number of points "
             << meshPoints.size() << abort(FatalError);
     }
@@ -1128,12 +1112,8 @@ void Foam::syncTools::syncEdgeList
 {
     if (edgeValues.size() != mesh.nEdges())
     {
-        FatalErrorIn
-        (
-            "syncTools<class T, class CombineOp>::syncEdgeList"
-            "(const polyMesh&, UList<T>&, const CombineOp&, const T&"
-            ", const bool)"
-        )   << "Number of values " << edgeValues.size()
+        FatalErrorInFunction
+            << "Number of values " << edgeValues.size()
             << " is not equal to the number of edges in the mesh "
             << mesh.nEdges() << abort(FatalError);
     }
@@ -1303,12 +1283,8 @@ void Foam::syncTools::syncEdgeList
     {
         if (hasTransformation)
         {
-            WarningIn
-            (
-                "syncTools<class T, class CombineOp>::syncEdgeList"
-                "(const polyMesh&, UList<T>&, const CombineOp&, const T&"
-                ", const bool)"
-            )   << "There are decomposed cyclics in this mesh with"
+            WarningInFunction
+                << "There are decomposed cyclics in this mesh with"
                 << " transformations." << endl
                 << "This is not supported. The result will be incorrect"
                 << endl;
@@ -1353,12 +1329,8 @@ void Foam::syncTools::syncBoundaryFaceList
 
     if (faceValues.size() != nBFaces)
     {
-        FatalErrorIn
-        (
-            "syncTools<class T, class CombineOp>::syncBoundaryFaceList"
-            "(const polyMesh&, UList<T>&, const CombineOp&"
-            ", const bool)"
-        )   << "Number of values " << faceValues.size()
+        FatalErrorInFunction
+            << "Number of values " << faceValues.size()
             << " is not equal to the number of boundary faces in the mesh "
             << nBFaces << abort(FatalError);
     }
@@ -1523,12 +1495,8 @@ void Foam::syncTools::syncFaceList
 {
     if (faceValues.size() != mesh.nFaces())
     {
-        FatalErrorIn
-        (
-            "syncTools<class T, class CombineOp>::syncFaceList"
-            "(const polyMesh&, UList<T>&, const CombineOp&"
-            ", const bool)"
-        )   << "Number of values " << faceValues.size()
+        FatalErrorInFunction
+            << "Number of values " << faceValues.size()
             << " is not equal to the number of faces in the mesh "
             << mesh.nFaces() << abort(FatalError);
     }
@@ -1584,11 +1552,8 @@ void Foam::syncTools::syncFaceList
 {
     if (faceValues.size() != mesh.nFaces())
     {
-        FatalErrorIn
-        (
-            "syncTools<unsigned nBits, class CombineOp>::syncFaceList"
-            "(const polyMesh&, PackedList<nBits>&, const CombineOp&)"
-        )   << "Number of values " << faceValues.size()
+        FatalErrorInFunction
+            << "Number of values " << faceValues.size()
             << " is not equal to the number of faces in the mesh "
             << mesh.nFaces() << abort(FatalError);
     }
@@ -1717,12 +1682,8 @@ void Foam::syncTools::syncPointList
 {
     if (pointValues.size() != mesh.nPoints())
     {
-        FatalErrorIn
-        (
-            "syncTools<unsigned nBits, class CombineOp>::syncPointList"
-            "(const polyMesh&, PackedList<nBits>&, const CombineOp&"
-            ", const unsigned int&)"
-        )   << "Number of values " << pointValues.size()
+        FatalErrorInFunction
+            << "Number of values " << pointValues.size()
             << " is not equal to the number of points in the mesh "
             << mesh.nPoints() << abort(FatalError);
     }
@@ -1885,12 +1846,8 @@ void Foam::syncTools::syncEdgeList
 {
     if (edgeValues.size() != mesh.nEdges())
     {
-        FatalErrorIn
-        (
-            "syncTools<unsigned nBits, class CombineOp>::syncEdgeList"
-            "(const polyMesh&, PackedList<nBits>&, const CombineOp&"
-            ", const unsigned int&)"
-        )   << "Number of values " << edgeValues.size()
+        FatalErrorInFunction
+            << "Number of values " << edgeValues.size()
             << " is not equal to the number of edges in the mesh "
             << mesh.nEdges() << abort(FatalError);
     }

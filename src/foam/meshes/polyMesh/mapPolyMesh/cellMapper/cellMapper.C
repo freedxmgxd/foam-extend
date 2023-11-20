@@ -28,9 +28,6 @@ License
 #include "polyMesh.H"
 #include "mapPolyMesh.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::cellMapper::calcAddressing() const
@@ -43,7 +40,7 @@ void Foam::cellMapper::calcAddressing() const
      || insertedCellLabelsPtr_
     )
     {
-        FatalErrorIn("void cellMapper::calcAddressing() const")
+        FatalErrorInFunction
             << "Addressing already calculated."
             << abort(FatalError);
     }
@@ -258,7 +255,7 @@ Foam::cellMapper::cellMapper(const mapPolyMesh& mpm)
     // HJ, different criterion in faces: this is due to the fact that
     // I can retire faces but cannot retire cells
     // HJ, 5/Sep/2007
-    if (direct_ && (mpm_.cellMap().size() == 0 || min(mpm_.cellMap()) > -1))
+    if (direct_ && (mpm_.cellMap().empty() || min(mpm_.cellMap()) > -1))
     {
         insertedCells_ = false;
     }
@@ -333,10 +330,8 @@ const Foam::unallocLabelList& Foam::cellMapper::directAddressing() const
 {
     if (!direct())
     {
-        FatalErrorIn
-        (
-            "const unallocLabelList& cellMapper::directAddressing() const"
-        )   << "Requested direct addressing for an interpolative mapper."
+        FatalErrorInFunction
+            << "Requested direct addressing for an interpolative mapper."
             << abort(FatalError);
     }
 
@@ -361,10 +356,8 @@ const Foam::labelListList& Foam::cellMapper::addressing() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const labelListList& cellMapper::addressing() const"
-        )   << "Requested interpolative addressing for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative addressing for a direct mapper."
             << abort(FatalError);
     }
 
@@ -381,10 +374,8 @@ const Foam::scalarListList& Foam::cellMapper::weights() const
 {
     if (direct())
     {
-        FatalErrorIn
-        (
-            "const scalarListList& cellMapper::weights() const"
-        )   << "Requested interpolative weights for a direct mapper."
+        FatalErrorInFunction
+            << "Requested interpolative weights for a direct mapper."
             << abort(FatalError);
     }
 
