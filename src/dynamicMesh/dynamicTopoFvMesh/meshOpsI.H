@@ -332,11 +332,13 @@ inline void cellCentreAndVolume
         {
             forAll(checkFace, pI)
             {
+                point C = checkFace.centre(points);
+                
                 tetPointRef tpr
                 (
                     points[checkFace[pI]],
                     points[checkFace.prevLabel(pI)],
-                    checkFace.centre(points),
+                    C,
                     cEst
                 );
 
