@@ -43,22 +43,20 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const BoundaryMesh&, "
-               "const Field<Type>&, const word&)"
+        InfoInFunction
+            << "copy single type"
             << endl;
     }
 
-    forAll(bmesh_, patchi)
+    forAll(bmesh_, patchI)
     {
         this->set
         (
-            patchi,
+            patchI,
             PatchField<Type>::New
             (
                 patchFieldType,
-                bmesh_[patchi],
+                bmesh_[patchI],
                 field
             )
         );
@@ -80,10 +78,8 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const BoundaryMesh&, "
-               "const Field<Type>&, const wordList&)"
+        InfoInFunction
+            << "copy with list of types"
             << endl;
     }
 
@@ -97,15 +93,15 @@ GeometricBoundaryField
             << abort(FatalError);
     }
 
-    forAll(bmesh_, patchi)
+    forAll(bmesh_, patchI)
     {
         this->set
         (
-            patchi,
+            patchI,
             PatchField<Type>::New
             (
-                patchFieldTypes[patchi],
-                bmesh_[patchi],
+                patchFieldTypes[patchI],
+                bmesh_[patchI],
                 field
             )
         );
@@ -127,16 +123,23 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const BoundaryMesh&, "
-               "const Field<Type>&, const PatchField<Type>List&)"
+        InfoInFunction
+            << "copy boundary field"
             << endl;
     }
 
-    forAll(bmesh_, patchi)
+    forAll(bmesh_, patchI)
     {
-        this->set(patchi, ptfl[patchi].clone(field));
+        if (ptfl.set(patchI))
+        {
+            this->set(patchI, ptfl[patchI].clone(field));
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "ptfl not set for index " << patchI
+                << abort(FatalError);
+        }
     }
 }
 
@@ -155,16 +158,23 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField(const GeometricBoundaryField<Type, "
-               "PatchField, BoundaryMesh>&)"
+        InfoInFunction
+            << "copy with boundary field with new internal field"
             << endl;
     }
 
-    forAll(bmesh_, patchi)
+    forAll(bmesh_, patchI)
     {
-        this->set(patchi, btf[patchi].clone(field));
+        if (btf.set(patchI))
+        {
+            this->set(patchI, btf[patchI].clone(field));
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "btf not set for index " << patchI
+                << abort(FatalError);
+        }
     }
 }
 
@@ -208,25 +218,22 @@ GeometricBoundaryField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-               "GeometricBoundaryField::"
-               "GeometricBoundaryField"
-               "(const BoundaryMesh&, const Field<Type>&, const dictionary&)"
+        InfoInFunction
             << endl;
     }
 
-    forAll(bmesh_, patchi)
+    forAll(bmesh_, patchI)
     {
-        if (bmesh_[patchi].type() != emptyPolyPatch::typeName)
+        if (bmesh_[patchI].type() != emptyPolyPatch::typeName)
         {
             this->set
             (
-                patchi,
+                patchI,
                 PatchField<Type>::New
                 (
-                    bmesh_[patchi],
+                    bmesh_[patchI],
                     field,
-                    dict.subDict(bmesh_[patchi].name())
+                    dict.subDict(bmesh_[patchI].name())
                 )
             );
         }
@@ -234,11 +241,11 @@ GeometricBoundaryField
         {
             this->set
             (
-                patchi,
+                patchI,
                 PatchField<Type>::New
                 (
                     emptyPolyPatch::typeName,
-                    bmesh_[patchi],
+                    bmesh_[patchI],
                     field
                 )
             );
@@ -260,9 +267,9 @@ updateCoeffs()
             << endl;
     }
 
-    forAll(*this, patchi)
+    forAll(*this, patchI)
     {
-        this->operator[](patchi).updateCoeffs();
+        this->operator[](patchI).updateCoeffs();
     }
 }
 
@@ -286,9 +293,9 @@ evaluate()
     {
         label nReq = Pstream::nRequests();
 
-        forAll(*this, patchi)
+        forAll(*this, patchI)
         {
-            this->operator[](patchi).initEvaluate
+            this->operator[](patchI).initEvaluate
             (
                 Pstream::defaultComms()
             );
@@ -300,9 +307,9 @@ evaluate()
             Pstream::waitRequests(nReq);
         }
 
-        forAll(*this, patchi)
+        forAll(*this, patchI)
         {
-            this->operator[](patchi).evaluate
+            this->operator[](patchI).evaluate
             (
                 Pstream::defaultComms()
             );
@@ -350,11 +357,11 @@ updateCoupledPatchFields() const
 
     bool couplesUpdated = true;
 
-    forAll (*this, patchi)
+    forAll (*this, patchI)
     {
-        if (this->operator[](patchi).coupled())
+        if (this->operator[](patchI).coupled())
         {
-            couplesUpdated &= this->operator[](patchi).couplesUpdated();
+            couplesUpdated &= this->operator[](patchI).couplesUpdated();
         }
     }
 
@@ -381,11 +388,11 @@ updateCoupledPatchFields() const
         {
             label nReq = Pstream::nRequests();
 
-            forAll (*this, patchi)
+            forAll (*this, patchI)
             {
-                if (this->operator[](patchi).coupled())
+                if (this->operator[](patchI).coupled())
                 {
-                    const_cast<PatchField<Type>&>(this->operator[](patchi))
+                    const_cast<PatchField<Type>&>(this->operator[](patchI))
                         .initEvaluate(Pstream::defaultComms());
                 }
             }
@@ -396,11 +403,11 @@ updateCoupledPatchFields() const
                 Pstream::waitRequests(nReq);
             }
 
-            forAll (*this, patchi)
+            forAll (*this, patchI)
             {
-                if (this->operator[](patchi).coupled())
+                if (this->operator[](patchI).coupled())
                 {
-                    const_cast<PatchField<Type>&>(this->operator[](patchi))
+                    const_cast<PatchField<Type>&>(this->operator[](patchI))
                         .evaluate(Pstream::defaultComms());
                 }
             }
@@ -462,9 +469,9 @@ types() const
 
     wordList Types(pff.size());
 
-    forAll(pff, patchi)
+    forAll(pff, patchI)
     {
-        Types[patchi] = pff[patchi].type();
+        Types[patchI] = pff[patchI].type();
     }
 
     return Types;
@@ -480,10 +487,10 @@ boundaryInternalField() const
     typename GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField
         BoundaryInternalField(*this);
 
-    forAll(BoundaryInternalField, patchi)
+    forAll(BoundaryInternalField, patchI)
     {
-        BoundaryInternalField[patchi] ==
-            this->operator[](patchi).patchInternalField();
+        BoundaryInternalField[patchI] ==
+            this->operator[](patchI).patchInternalField();
     }
 
     return BoundaryInternalField;
@@ -497,14 +504,14 @@ interfaces() const
 {
     lduInterfaceFieldPtrsList interfaces(this->size());
 
-    forAll (interfaces, patchi)
+    forAll (interfaces, patchI)
     {
-        if (isA<lduInterfaceField>(this->operator[](patchi)))
+        if (isA<lduInterfaceField>(this->operator[](patchI)))
         {
             interfaces.set
             (
-                patchi,
-                &refCast<const lduInterfaceField>(this->operator[](patchi))
+                patchI,
+                &refCast<const lduInterfaceField>(this->operator[](patchI))
             );
         }
     }
@@ -523,16 +530,16 @@ blockInterfaces() const
         this->size()
     );
 
-    forAll (interfaces, patchi)
+    forAll (interfaces, patchI)
     {
-        if (isA<BlockLduInterfaceField<Type> >(this->operator[](patchi)))
+        if (isA<BlockLduInterfaceField<Type> >(this->operator[](patchI)))
         {
             interfaces.set
             (
-                patchi,
+                patchI,
                 &refCast<const BlockLduInterfaceField<Type> >
                 (
-                    this->operator[](patchi)
+                    this->operator[](patchI)
                 )
             );
         }
@@ -548,9 +555,9 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField::
 clearCaches() const
 {
     // Clear caches on all boundary patches
-    forAll(*this, patchi)
+    forAll(*this, patchI)
     {
-        this->operator[](patchi).clearCaches();
+        this->operator[](patchI).clearCaches();
     }
 }
 
@@ -561,11 +568,11 @@ writeEntry(const word& keyword, Ostream& os) const
 {
     os  << keyword << nl << token::BEGIN_BLOCK << incrIndent << nl;
 
-    forAll(*this, patchi)
+    forAll(*this, patchI)
     {
-        os  << indent << this->operator[](patchi).patch().name() << nl
+        os  << indent << this->operator[](patchI).patch().name() << nl
             << indent << token::BEGIN_BLOCK << nl
-            << incrIndent << this->operator[](patchi) << decrIndent
+            << incrIndent << this->operator[](patchI) << decrIndent
             << indent << token::END_BLOCK << endl;
     }
 
