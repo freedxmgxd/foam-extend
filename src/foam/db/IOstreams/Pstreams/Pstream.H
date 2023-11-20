@@ -329,9 +329,15 @@ public:
             //- Communicator identifier
             label comm_;
 
-            //- Disallow copy and assignment
-            communicator(const communicator&);
-            void operator=(const communicator&);
+
+            // Private Member Functions
+
+                //- Disallow default bitwise copy construct
+                communicator(const communicator&) = delete;
+
+                //- Disallow default bitwise assignment
+                void operator=(const communicator&) = delete;
+
 
         public:
 
