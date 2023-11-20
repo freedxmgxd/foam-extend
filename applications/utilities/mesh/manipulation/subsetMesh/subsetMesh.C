@@ -38,6 +38,14 @@ Description
 #include "IOobjectList.H"
 #include "volFields.H"
 
+#include "labelIOField.H"
+#include "scalarIOField.H"
+#include "vectorIOField.H"
+#include "sphericalTensorIOField.H"
+#include "symmTensorIOField.H"
+#include "tensorIOField.H"
+#include "lagrangianFieldDecomposer.H"
+
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -53,11 +61,11 @@ void subsetVolFields
 {
     const fvMesh& baseMesh = meshSubset.baseMesh();
 
-    forAll(fieldNames, i)
+    forAll (fieldNames, i)
     {
         const word& fieldName = fieldNames[i];
 
-        Info<< "Subsetting field " << fieldName << endl;
+        Info<< "Subsetting volume field " << fieldName << endl;
 
         GeometricField<Type, fvPatchField, volMesh> fld
         (
@@ -87,11 +95,11 @@ void subsetSurfaceFields
 {
     const fvMesh& baseMesh = meshSubset.baseMesh();
 
-    forAll(fieldNames, i)
+    forAll (fieldNames, i)
     {
         const word& fieldName = fieldNames[i];
 
-        Info<< "Subsetting field " << fieldName << endl;
+        Info<< "Subsetting surface field " << fieldName << endl;
 
         GeometricField<Type, fvsPatchField, surfaceMesh> fld
         (
@@ -122,11 +130,11 @@ void subsetPointFields
 {
     const fvMesh& baseMesh = meshSubset.baseMesh();
 
-    forAll(fieldNames, i)
+    forAll (fieldNames, i)
     {
         const word& fieldName = fieldNames[i];
 
-        Info<< "Subsetting field " << fieldName << endl;
+        Info<< "Subsetting point field " << fieldName << endl;
 
         GeometricField<Type, pointPatchField, pointMesh> fld
         (
@@ -216,6 +224,7 @@ int main(int argc, char *argv[])
 
     // Read vol fields and subset
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Info<< "Volume fields" << nl << endl;
 
     wordList scalarNames(objects.names(volScalarField::typeName));
     PtrList<volScalarField> scalarFlds(scalarNames.size());
@@ -246,6 +255,7 @@ int main(int argc, char *argv[])
 
     // Read surface fields and subset
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Info<< "Surface fields" << nl << endl;
 
     wordList surfScalarNames(objects.names(surfaceScalarField::typeName));
     PtrList<surfaceScalarField> surfScalarFlds(surfScalarNames.size());
@@ -287,6 +297,7 @@ int main(int argc, char *argv[])
 
     // Read point fields and subset
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Info<< "Point fields" << nl << endl;
 
     const pointMesh& pMesh = pointMesh::New(mesh);
 
@@ -334,7 +345,179 @@ int main(int argc, char *argv[])
     PtrList<pointTensorField> pointTensorFlds(pointTensorNames.size());
     subsetPointFields(meshSubset, pMesh, pointTensorNames, pointTensorFlds);
 
+    // Lagrangian fields
+    fileNameList cloudDirs
+    (
+        readDir(runTime.timePath()/cloud::prefix, fileName::DIRECTORY)
+    );
+    Info<< "READ " << cloudDirs.size() << " clouds" << endl;
+    // Particles
+    PtrList<Cloud<indexedParticle> > lagrangianPositions(cloudDirs.size());
+    // Particles per cell
+    PtrList< List<SLList<indexedParticle*>*> > cellParticles(cloudDirs.size());
 
+    PtrList<PtrList<labelIOField> > lagrangianLabelFields(cloudDirs.size());
+    PtrList<PtrList<scalarIOField> > lagrangianScalarFields(cloudDirs.size());
+    PtrList<PtrList<vectorIOField> > lagrangianVectorFields(cloudDirs.size());
+    PtrList<PtrList<sphericalTensorIOField> > lagrangianSphericalTensorFields
+    (
+        cloudDirs.size()
+    );
+    PtrList<PtrList<symmTensorIOField> > lagrangianSymmTensorFields
+    (
+        cloudDirs.size()
+    );
+    PtrList<PtrList<tensorIOField> > lagrangianTensorFields
+    (
+        cloudDirs.size()
+    );
+
+    label cloudI = 0;
+
+    forAll (cloudDirs, i)
+    {
+        IOobjectList sprayObjs
+        (
+            mesh,
+            runTime.timeName(),
+            cloud::prefix/cloudDirs[i]
+        );
+
+        IOobject* positionsPtr = sprayObjs.lookup("positions");
+
+        if (positionsPtr)
+        {
+            // Read lagrangian particles
+            // ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            Info<< "Identified lagrangian data set: " << cloudDirs[i] << endl;
+
+            lagrangianPositions.set
+            (
+                cloudI,
+                new Cloud<indexedParticle>
+                (
+                    mesh,
+                    cloudDirs[i],
+                    false
+                )
+            );
+
+
+            // Sort particles per cell
+            // ~~~~~~~~~~~~~~~~~~~~~~~
+
+            cellParticles.set
+            (
+                cloudI,
+                new List<SLList<indexedParticle*>*>
+                (
+                    mesh.nCells(),
+                    static_cast<SLList<indexedParticle*>*>(nullptr)
+                )
+            );
+
+            label i = 0;
+
+            forAllIter
+            (
+                Cloud<indexedParticle>,
+                lagrangianPositions[cloudI],
+                iter
+            )
+            {
+                iter().index() = i++;
+
+                label celli = iter().cell();
+
+                // Check
+                if (celli < 0 || celli >= mesh.nCells())
+                {
+                    FatalErrorIn(args.executable())
+                        << "Illegal cell number " << celli
+                        << " for particle with index " << iter().index()
+                        << " at position " << iter().position() << nl
+                        << "Cell number should be between 0 and "
+                        << mesh.nCells()-1 << nl
+                        << "On this mesh the particle should be in cell "
+                        << mesh.findCell(iter().position())
+                        << exit(FatalError);
+                }
+
+                if (!cellParticles[cloudI][celli])
+                {
+                    cellParticles[cloudI][celli] =
+                        new SLList<indexedParticle*>();
+                }
+
+                cellParticles[cloudI][celli]->append(&iter());
+            }
+
+            // Read fields
+            // ~~~~~~~~~~~
+
+            IOobjectList lagrangianObjects
+            (
+                mesh,
+                runTime.timeName(),
+                cloud::prefix/cloudDirs[cloudI]
+            );
+
+            lagrangianFieldDecomposer::readFields
+            (
+                cloudI,
+                lagrangianObjects,
+                lagrangianLabelFields
+            );
+
+            lagrangianFieldDecomposer::readFields
+            (
+                cloudI,
+                lagrangianObjects,
+                lagrangianScalarFields
+            );
+
+            lagrangianFieldDecomposer::readFields
+            (
+                cloudI,
+                lagrangianObjects,
+                lagrangianVectorFields
+            );
+
+            lagrangianFieldDecomposer::readFields
+            (
+                cloudI,
+                lagrangianObjects,
+                lagrangianSphericalTensorFields
+            );
+
+            lagrangianFieldDecomposer::readFields
+            (
+                cloudI,
+                lagrangianObjects,
+                lagrangianSymmTensorFields
+            );
+
+            lagrangianFieldDecomposer::readFields
+            (
+                cloudI,
+                lagrangianObjects,
+                lagrangianTensorFields
+            );
+
+            cloudI++;
+        }
+    }
+
+    lagrangianPositions.setSize(cloudI);
+    cellParticles.setSize(cloudI);
+    lagrangianLabelFields.setSize(cloudI);
+    lagrangianScalarFields.setSize(cloudI);
+    lagrangianVectorFields.setSize(cloudI);
+    lagrangianSphericalTensorFields.setSize(cloudI);
+    lagrangianSymmTensorFields.setSize(cloudI);
+    lagrangianTensorFields.setSize(cloudI);
+    
 
     // Write mesh and fields to new time
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -416,31 +599,31 @@ int main(int argc, char *argv[])
 
 
     // Subsetting adds 'subset' prefix. Rename field to be like original.
-    forAll(scalarFlds, i)
+    forAll (scalarFlds, i)
     {
         scalarFlds[i].rename(scalarNames[i]);
 
         scalarFlds[i].write();
     }
-    forAll(vectorFlds, i)
+    forAll (vectorFlds, i)
     {
         vectorFlds[i].rename(vectorNames[i]);
 
         vectorFlds[i].write();
     }
-    forAll(sphericalTensorFlds, i)
+    forAll (sphericalTensorFlds, i)
     {
         sphericalTensorFlds[i].rename(sphericalTensorNames[i]);
 
         sphericalTensorFlds[i].write();
     }
-    forAll(symmTensorFlds, i)
+    forAll (symmTensorFlds, i)
     {
         symmTensorFlds[i].rename(symmTensorNames[i]);
 
         symmTensorFlds[i].write();
     }
-    forAll(tensorFlds, i)
+    forAll (tensorFlds, i)
     {
         tensorFlds[i].rename(tensorNames[i]);
 
@@ -448,31 +631,31 @@ int main(int argc, char *argv[])
     }
 
     // Surface ones.
-    forAll(surfScalarFlds, i)
+    forAll (surfScalarFlds, i)
     {
         surfScalarFlds[i].rename(surfScalarNames[i]);
 
         surfScalarFlds[i].write();
     }
-    forAll(surfVectorFlds, i)
+    forAll (surfVectorFlds, i)
     {
         surfVectorFlds[i].rename(surfVectorNames[i]);
 
         surfVectorFlds[i].write();
     }
-    forAll(surfSphericalTensorFlds, i)
+    forAll (surfSphericalTensorFlds, i)
     {
         surfSphericalTensorFlds[i].rename(surfSphericalTensorNames[i]);
 
         surfSphericalTensorFlds[i].write();
     }
-    forAll(surfSymmTensorFlds, i)
+    forAll (surfSymmTensorFlds, i)
     {
         surfSymmTensorFlds[i].rename(surfSymmTensorNames[i]);
 
         surfSymmTensorFlds[i].write();
     }
-    forAll(surfTensorNames, i)
+    forAll (surfTensorNames, i)
     {
         surfTensorFlds[i].rename(surfTensorNames[i]);
 
@@ -480,37 +663,99 @@ int main(int argc, char *argv[])
     }
 
     // Point ones
-    forAll(pointScalarFlds, i)
+    forAll (pointScalarFlds, i)
     {
         pointScalarFlds[i].rename(pointScalarNames[i]);
 
         pointScalarFlds[i].write();
     }
-    forAll(pointVectorFlds, i)
+    forAll (pointVectorFlds, i)
     {
         pointVectorFlds[i].rename(pointVectorNames[i]);
 
         pointVectorFlds[i].write();
     }
-    forAll(pointSphericalTensorFlds, i)
+    forAll (pointSphericalTensorFlds, i)
     {
         pointSphericalTensorFlds[i].rename(pointSphericalTensorNames[i]);
 
         pointSphericalTensorFlds[i].write();
     }
-    forAll(pointSymmTensorFlds, i)
+    forAll (pointSymmTensorFlds, i)
     {
         pointSymmTensorFlds[i].rename(pointSymmTensorNames[i]);
 
         pointSymmTensorFlds[i].write();
     }
-    forAll(pointTensorNames, i)
+    forAll (pointTensorNames, i)
     {
         pointTensorFlds[i].rename(pointTensorNames[i]);
 
         pointTensorFlds[i].write();
     }
 
+
+    // If there is lagrangian data write it out
+    Info<< "Lagrangian data" << nl << endl;
+    
+    forAll (lagrangianPositions, cloudI)
+    {
+        if (lagrangianPositions[cloudI].size())
+        {
+            lagrangianFieldDecomposer fieldDecomposer
+            (
+                mesh,
+                meshSubset.subMesh(),
+                cellMap,
+                cloudDirs[cloudI],
+                lagrangianPositions[cloudI],
+                cellParticles[cloudI]
+            );
+
+            // Lagrangian fields
+            if
+            (
+                lagrangianLabelFields[cloudI].size()
+             || lagrangianScalarFields[cloudI].size()
+             || lagrangianVectorFields[cloudI].size()
+             || lagrangianSphericalTensorFields[cloudI].size()
+             || lagrangianSymmTensorFields[cloudI].size()
+             || lagrangianTensorFields[cloudI].size()
+            )
+            {
+                fieldDecomposer.decomposeFields
+                (
+                    cloudDirs[cloudI],
+                    lagrangianLabelFields[cloudI]
+                );
+                fieldDecomposer.decomposeFields
+                (
+                    cloudDirs[cloudI],
+                    lagrangianScalarFields[cloudI]
+                );
+                fieldDecomposer.decomposeFields
+                (
+                    cloudDirs[cloudI],
+                    lagrangianVectorFields[cloudI]
+                );
+                fieldDecomposer.decomposeFields
+                (
+                    cloudDirs[cloudI],
+                    lagrangianSphericalTensorFields[cloudI]
+                );
+                fieldDecomposer.decomposeFields
+                (
+                    cloudDirs[cloudI],
+                    lagrangianSymmTensorFields[cloudI]
+                );
+                fieldDecomposer.decomposeFields
+                (
+                    cloudDirs[cloudI],
+                    lagrangianTensorFields[cloudI]
+                );
+            }
+        }
+    }
 
     Info << nl << "End" << endl;
 
