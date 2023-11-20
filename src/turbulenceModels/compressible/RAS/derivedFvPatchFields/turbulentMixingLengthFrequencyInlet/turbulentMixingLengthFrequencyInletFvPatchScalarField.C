@@ -56,20 +56,6 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
     this->valueFraction() = 0.0;
 }
 
-turbulentMixingLengthFrequencyInletFvPatchScalarField::
-turbulentMixingLengthFrequencyInletFvPatchScalarField
-(
-    const turbulentMixingLengthFrequencyInletFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    inletOutletFvPatchScalarField(ptf, p, iF, mapper),
-    mixingLength_(ptf.mixingLength_),
-    phiName_(ptf.phiName_),
-    kName_(ptf.kName_)
-{}
 
 turbulentMixingLengthFrequencyInletFvPatchScalarField::
 turbulentMixingLengthFrequencyInletFvPatchScalarField
@@ -90,6 +76,23 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
     this->refGrad() = 0.0;
     this->valueFraction() = 0.0;
 }
+
+
+turbulentMixingLengthFrequencyInletFvPatchScalarField::
+turbulentMixingLengthFrequencyInletFvPatchScalarField
+(
+    const turbulentMixingLengthFrequencyInletFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    inletOutletFvPatchScalarField(ptf, p, iF, mapper),
+    mixingLength_(ptf.mixingLength_),
+    phiName_(ptf.phiName_),
+    kName_(ptf.kName_)
+{}
+
 
 turbulentMixingLengthFrequencyInletFvPatchScalarField::
 turbulentMixingLengthFrequencyInletFvPatchScalarField

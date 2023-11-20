@@ -145,10 +145,10 @@ class meshSearch
 
 
         //- Disallow default bitwise copy construct
-        meshSearch(const meshSearch&);
+        meshSearch(const meshSearch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const meshSearch&);
+        void operator=(const meshSearch&) = delete;
 
 
 public:
@@ -169,9 +169,8 @@ public:
         meshSearch(const polyMesh& mesh, const bool faceDecomp = true);
 
 
-    // Destructor
-
-        ~meshSearch();
+    //- Destructor
+    ~meshSearch();
 
 
     // Member Functions

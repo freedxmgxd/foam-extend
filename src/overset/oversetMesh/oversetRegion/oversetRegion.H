@@ -213,10 +213,10 @@ class oversetRegion
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        oversetRegion(const oversetRegion&);
+        oversetRegion(const oversetRegion&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const oversetRegion&);
+        void operator=(const oversetRegion&) = delete;
 
 
         //- Prepare hole triangular mesh

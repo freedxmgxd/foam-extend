@@ -87,9 +87,4 @@ Foam::topoChangerFvMesh::topoChangerFvMesh
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::topoChangerFvMesh::~topoChangerFvMesh()
-{}
-
 // ************************************************************************* //

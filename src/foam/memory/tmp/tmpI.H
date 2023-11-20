@@ -151,7 +151,7 @@ inline T* Foam::tmp<T>::ptr() const
     {
          if (!ptr_)
          {
-             FatalErrorIn("Foam::tmp<T>::ptr() const")
+             FatalErrorInFunction
                  << "temporary of type " << typeid(T).name() << " deallocated"
                  << abort(FatalError);
          }
@@ -190,7 +190,7 @@ inline T& Foam::tmp<T>::operator()()
     {
         if (!ptr_)
         {
-            FatalErrorIn("T& Foam::tmp<T>::operator()()")
+            FatalErrorInFunction
                 << "temporary of type " << typeid(T).name() << " deallocated"
                 << abort(FatalError);
         }
@@ -219,7 +219,7 @@ inline const T& Foam::tmp<T>::operator()() const
     {
         if (!ptr_)
         {
-            FatalErrorIn("const T& Foam::tmp<T>::operator()() const")
+            FatalErrorInFunction
                 << "temporary of type " << typeid(T).name() << " deallocated"
                 << abort(FatalError);
         }
@@ -247,7 +247,7 @@ inline T* Foam::tmp<T>::operator->()
     {
          if (!ptr_)
          {
-             FatalErrorIn("Foam::tmp<T>::operator->()")
+             FatalErrorInFunction
                  << "temporary of type " << typeid(T).name() << " deallocated"
                  << abort(FatalError);
          }
@@ -295,7 +295,7 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
         }
         else
         {
-            FatalErrorIn("Foam::tmp<T>::operator=(const tmp<T>&)")
+            FatalErrorInFunction
                 << "attempted copy of a deallocated temporary"
                 << " of type " << typeid(T).name()
                 << abort(FatalError);
@@ -303,7 +303,7 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
     }
     else
     {
-        FatalErrorIn("Foam::tmp<T>::operator=(const tmp<T>&)")
+        FatalErrorInFunction
             << "attempted to assign to a const reference to constant object"
             << " of type " << typeid(T).name()
             << abort(FatalError);

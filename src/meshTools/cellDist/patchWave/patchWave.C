@@ -42,13 +42,13 @@ void Foam::patchWave::setChangedFaces
 
     label nChangedFaces = 0;
 
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll (mesh.boundaryMesh(), patchI)
     {
         if (patchIDs.found(patchI))
         {
             const polyPatch& patch = mesh.boundaryMesh()[patchI];
 
-            forAll(patch.faceCentres(), patchFaceI)
+            forAll (patch.faceCentres(), patchFaceI)
             {
                 label meshFaceI = patch.start() + patchFaceI;
 
@@ -78,7 +78,7 @@ Foam::label Foam::patchWave::getValues(const MeshWave<wallPoint>& waveInfo)
     // Copy cell values
     distance_.setSize(cellInfo.size());
 
-    forAll(cellInfo, cellI)
+    forAll (cellInfo, cellI)
     {
         scalar dist = cellInfo[cellI].distSqr();
 
@@ -95,7 +95,7 @@ Foam::label Foam::patchWave::getValues(const MeshWave<wallPoint>& waveInfo)
     }
 
     // Copy boundary values
-    forAll(patchDistance_, patchI)
+    forAll (patchDistance_, patchI)
     {
         const polyPatch& patch = mesh().boundaryMesh()[patchI];
 
@@ -106,7 +106,7 @@ Foam::label Foam::patchWave::getValues(const MeshWave<wallPoint>& waveInfo)
 
         scalarField& patchField = *patchDistPtr;
 
-        forAll(patchField, patchFaceI)
+        forAll (patchField, patchFaceI)
         {
             label meshFaceI = patch.start() + patchFaceI;
 
@@ -195,7 +195,7 @@ void Foam::patchWave::correct()
 
     if (correctWalls_)
     {
-        Map<label> nearestFace(2 * nWalls);
+        Map<label> nearestFace(2*nWalls);
 
         correctBoundaryFaceCells
         (

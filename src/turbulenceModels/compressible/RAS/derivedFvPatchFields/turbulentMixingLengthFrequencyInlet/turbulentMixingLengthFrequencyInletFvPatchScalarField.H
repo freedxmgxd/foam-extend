@@ -184,6 +184,10 @@ public:
         }
 
 
+    //- Destructor
+    virtual ~turbulentMixingLengthFrequencyInletFvPatchScalarField() = default;
+
+
     // Member functions
 
         //- Update the coefficients associated with the patch field
