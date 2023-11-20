@@ -159,22 +159,6 @@ FieldField<Field, Type>::FieldField(const PtrList<Field<Type> >& tl)
 {}
 
 
-// Construct as copy of tmp<FieldField>
-#ifdef ConstructFromTmp
-template<template<class> class Field, class Type>
-FieldField<Field, Type>::FieldField(const tmp<FieldField<Field, Type> >& tf)
-:
-    PtrList<Field<Type> >
-    (
-        const_cast<FieldField<Field, Type>&>(tf()),
-        tf.isTmp()
-    )
-{
-    const_cast<FieldField<Field, Type>&>(tf()).resetRefCount();
-}
-#endif
-
-
 template<template<class> class Field, class Type>
 FieldField<Field, Type>::FieldField(Istream& is)
 :
