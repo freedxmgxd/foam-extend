@@ -22,25 +22,25 @@ boundaryField
 {
     floor
     {
-        type            fixedFluxPressure;
+        type            zeroGradient;
         value           uniform 1e5;
     }
 
     ceiling
     {
-        type            fixedFluxPressure;
+        type            zeroGradient;
         value           uniform 1e5;
     }
 
     fixedWalls
     {
-        type            fixedFluxPressure;
+        type            zeroGradient;
         value           uniform 1e5;
     }
 
     inlet
     {
-        type            fixedFluxPressure;
+        type            zeroGradient;
         value           uniform 1e5;
     }
     outlet
