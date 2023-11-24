@@ -33,9 +33,9 @@ endTime         2000;
 
 deltaT          2;
 
-writeControl    timeStep;
+writeControl    adjustableRunTime;
 
-writeInterval   10;
+writeInterval   50;
 
 purgeWrite      0;
 
@@ -43,7 +43,7 @@ writeFormat     ascii;
 
 writePrecision  6;
 
-writeCompression uncompressed;
+writeCompression compressed;
 
 timeFormat      general;
 

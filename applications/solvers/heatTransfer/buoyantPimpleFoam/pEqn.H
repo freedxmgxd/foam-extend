@@ -1,8 +1,8 @@
 {
-    volScalarField rUA = 1.0/UEqn.A();
-    surfaceScalarField rhorUAf("(rho*(1|A(U)))", fvc::interpolate(rho*rUA));
+    volScalarField rAU("rAU", 1.0/UEqn.A());
+    surfaceScalarField rhorAUf("(rho*(1|A(U)))", fvc::interpolate(rho*rAU));
 
-    U = rUA*UEqn.H();
+    U = rAU*UEqn.H();
     U.boundaryField().updateCoupledPatchFields();
 
     surfaceScalarField phiU
@@ -14,7 +14,7 @@
         )
     );
 
-    phi = phiU - ghf*fvc::snGrad(rho)*rhorUAf*mesh.magSf();
+    phi = phiU - ghf*fvc::snGrad(rho)*rhorAUf*mesh.magSf();
 
     while (pimple.correctNonOrthogonal())
     {
@@ -22,7 +22,7 @@
         (
             fvm::ddt(psi, p_rgh)
           + fvc::div(phi)
-          - fvm::laplacian(rhorUAf, p_rgh)
+          - fvm::laplacian(rhorAUf, p_rgh)
         );
 
         p_rghEqn.solve
@@ -36,7 +36,7 @@
         }
     }
 
-    U += rUA*fvc::reconstruct((phi - phiU)/rhorUAf);
+    U += rAU*fvc::reconstruct((phi - phiU)/rhorAUf);
     U.correctBoundaryConditions();
 
     // Update pressure

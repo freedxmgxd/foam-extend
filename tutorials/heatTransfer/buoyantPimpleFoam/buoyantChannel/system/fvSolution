@@ -17,30 +17,28 @@ FoamFile
 
 solvers
 {
-    "rho"
-    {
-        solver          CG;
-        preconditioner  DIC;
-        tolerance       0;
-        relTol          0;
-    }
+    rho
+    {}
     "p_rgh|p_rghFinal"
     {
         solver          CG;
         preconditioner  DIC;
-        tolerance       1e-8;
+        tolerance       1e-08;
         relTol          0;
     }
-    "U|h"
+    "U|UFinal"
     {
         solver          BiCGStab;
         preconditioner  DILU;
-        tolerance       1e-6;
+        tolerance       1e-08;
         relTol          0;
     }
-    "(U|h)Final"
+    "h|hFinal"
     {
-        $U;
+        solver          BiCGStab;
+        preconditioner  DILU;
+        minIter         1;
+        tolerance       1e-08;
         relTol          0;
     }
 }
@@ -50,8 +48,10 @@ PIMPLE
     nOuterCorrectors 1;
     nCorrectors 2;
     nNonOrthogonalCorrectors 0;
+
     pRefCell 0;
     pRefValue 1e5;
+
     closedVolume no;
 }
 

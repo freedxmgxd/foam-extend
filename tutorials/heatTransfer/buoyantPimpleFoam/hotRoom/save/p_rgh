@@ -22,16 +22,23 @@ boundaryField
 {
     floor
     {
-        type            zeroGradient;
+        type            fixedFluxPressure;
+        rAU             rAU;
+        value           uniform 1e5;
     }
     ceiling
     {
-        type            zeroGradient;
+        type            fixedFluxPressure;
+        rAU             rAU;
+        value           uniform 1e5;
     }
     fixedWalls
     {
-        type            zeroGradient;
+        type            fixedFluxPressure;
+        rAU             rAU;
+        value           uniform 1e5;
     }
 }
+
 
 // ************************************************************************* //
