@@ -72,10 +72,10 @@ class MeshWave
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MeshWave(const MeshWave&);
+        MeshWave(const MeshWave&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MeshWave&);
+        void operator=(const MeshWave&) = delete;
 
 public:
 
@@ -104,6 +104,10 @@ public:
             const List<Type>& allCellInfo,
             const label maxIter
         );
+
+
+    //- Destructor
+    ~MeshWave() = default;
 
 
     // Member Functions

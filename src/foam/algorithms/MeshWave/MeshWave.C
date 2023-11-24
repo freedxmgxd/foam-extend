@@ -35,9 +35,6 @@ Description
 #include "debug.H"
 #include "typeInfo.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Iterate, propagating changedFacesInfo across mesh, until no change (or
@@ -89,9 +86,6 @@ Foam::MeshWave<Type>::MeshWave
         maxIter
     )
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
 // ************************************************************************* //
