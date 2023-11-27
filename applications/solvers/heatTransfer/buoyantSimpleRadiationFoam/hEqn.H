@@ -1,7 +1,7 @@
 {
     // Storing alphaH for post-processing function objects
     alphaH = turbulence->alphaEff();
-    
+
     fvScalarMatrix hEqn
     (
         fvm::div(phi, h)
@@ -23,7 +23,6 @@
     }
 
     hEqn.relax();
-
     hEqn.solve();
 
     thermo.correct();
