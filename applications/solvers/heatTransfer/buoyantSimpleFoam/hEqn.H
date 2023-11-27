@@ -26,4 +26,5 @@
     hEqn.solve();
 
     thermo.correct();
+    rho = thermo.rho();
 }

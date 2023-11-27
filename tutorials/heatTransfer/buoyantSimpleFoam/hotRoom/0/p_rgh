@@ -9,20 +9,37 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      thermophysicalProperties;
+    class       volScalarField;
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType      hRhoThermo<pureMixture<constTransport<specieThermo<hConstThermo<perfectGas>>>>>;
+dimensions      [1 -1 -2 0 0 0 0];
 
-mixture         air 1 28.9 1000 0 1.8e-05 0.7;
+internalField   uniform 1e+05;
 
-pRef            1e5;
+boundaryField
+{
+    floor
+    {
+        type            fixedFluxPressure;
+        rAU             rAU;
+        value           uniform 1e5;
+    }
 
-sources
-(
-);
+    ceiling
+    {
+        type            fixedFluxPressure;
+        rAU             rAU;
+        value           uniform 1e5;
+    }
 
+    fixedWalls
+    {
+        type            fixedFluxPressure;
+        rAU             rAU;
+        value           uniform 1e5;
+    }
+}
 
 // ************************************************************************* //

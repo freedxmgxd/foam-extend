@@ -3,7 +3,6 @@
     surfaceScalarField rhorAUf("(rho*(1|A(U)))", fvc::interpolate(rho*rAU));
 
     U = rAU*UEqn.H();
-    U.boundaryField().updateCoupledPatchFields();
 
     surfaceScalarField phiU
     (
@@ -43,11 +42,6 @@
     p = p_rgh + rho*gh;
     p.correctBoundaryConditions();
 
-    DpDt = fvc::DDt(surfaceScalarField("phiU", phi/fvc::interpolate(rho)), p);
-
-#   include "rhoEqn.H"
-#   include "compressibleContinuityErrs.H"
-
     // For closed-volume cases adjust the pressure and density levels
     // to obey overall mass continuity
 
@@ -57,9 +51,17 @@
             /fvc::domainIntegrate(psi);
         p.correctBoundaryConditions();
 
-        rho = thermo.rho();
-
         p_rgh = p - rho*gh;
         p_rgh.correctBoundaryConditions();
     }
+
+    DpDt = fvc::DDt(surfaceScalarField("phiU", phi/fvc::interpolate(rho)), p);
+
+#   include "rhoEqn.H"
+#   include "compressibleContinuityErrs.H"
+
+    rho = thermo.rho();
+
+    Info<< "rho max/min : " << max(rho).value() << " " << min(rho).value()
+        << endl;
 }
