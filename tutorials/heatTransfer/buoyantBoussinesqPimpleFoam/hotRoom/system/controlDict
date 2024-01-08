@@ -10,25 +10,47 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      transportProperties;
+    location    "system";
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-transportModel Newtonian;
+libs
+(
+    "libincompressibleRASModels.so"
+    "liblduSolvers.so"
+)
 
-// Laminar viscosity
-nu              nu [0 2 -1 0 0 0 0] 1e-05;
+application     buoyantBoussinesqPimpleFoam;
 
-// Thermal expansion coefficient
-beta            beta [0 0 0 -1 0 0 0] 3e-03;
+startFrom       startTime;
 
-// Reference temperature
-TRef            TRef [0 0 0 1 0 0 0] 300;
+startTime       0;
 
-// Laminar Prandtl number
-Pr              Pr [0 0 0 0 0 0 0] 0.7;
+stopAt          endTime;
 
-// Turbulent Prandtl number
-Prt             Prt [0 0 0 0 0 0 0] 0.9;
+endTime         1000;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   100;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression uncompressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+maxCo           0.5;
 
 // ************************************************************************* //

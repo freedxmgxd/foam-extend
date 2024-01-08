@@ -11,46 +11,39 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs
-(
-    "libincompressibleRASModels.so"
-    "liblduSolvers.so"
-)
+ddtSchemes
+{
+    default Euler;
+}
+gradSchemes
+{
+    default Gauss linear;
+}
+divSchemes
+{
+    default none;
+    div(phi,U) Gauss upwind;
+    div(rhoCpPhi,T) Gauss upwind;
+    div(phi,k) Gauss upwind;
+    div(phi,epsilon) Gauss upwind;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+}
+laplacianSchemes
+{
+    default Gauss linear corrected;
+}
+interpolationSchemes
+{
+    default linear;
+}
+snGradSchemes
+{
+    default corrected;
+}
 
-application     buoyantBoussinesqPisoFoam;
-
-startFrom       startTime;
-
-startTime       0;
-
-stopAt          endTime;
-
-endTime         1000;
-
-deltaT          1;
-
-writeControl    timeStep;
-
-writeInterval   100;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression uncompressed;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
-
-maxCo           0.5;
 
 // ************************************************************************* //
