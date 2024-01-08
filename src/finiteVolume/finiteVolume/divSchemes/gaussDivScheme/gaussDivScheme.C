@@ -48,7 +48,7 @@ namespace fv
 // gaussDivScheme<Type>::fvcDiv
 // (
 //     const GeometricField<Type, fvPatchField, volMesh>& vf
-// )
+// ) const
 // {
 //     tmp
 //     <
@@ -78,7 +78,7 @@ tmp
 gaussDivScheme<Type>::fvcDiv
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     typedef typename innerProduct<vector, Type>::type DivType;
 
@@ -106,7 +106,7 @@ gaussDivScheme<Type>::fvcDiv
             extrapolatedCalculatedFvPatchField<DivType>::typeName
         )
     );
-    GeometricField<DivType, fvPatchField, volMesh>& gDiv = tgDiv();
+    GeometricField<DivType, fvPatchField, volMesh>& gDiv = tgDiv.ref();
 
     // Get weights
     surfaceScalarField w = this->tinterpScheme_().weights(vf);
@@ -126,8 +126,8 @@ gaussDivScheme<Type>::fvcDiv
     const scalarField& wIn = w.internalField();
     const vectorField& SfIn = Sf.internalField();
 
-    const unallocLabelList& own = mesh.owner();
-    const unallocLabelList& nei = mesh.neighbour();
+    const labelUList& own = mesh.owner();
+    const labelUList& nei = mesh.neighbour();
 
     label ownFaceI, neiFaceI;
 
@@ -151,7 +151,7 @@ gaussDivScheme<Type>::fvcDiv
 
         const vectorField& patchSf = Sf.boundaryField()[patchI];
 
-        const unallocLabelList& faceCells =
+        const labelUList& faceCells =
             gDiv.boundaryField()[patchI].patch().faceCells();
 
         if (vf.boundaryField()[patchI].coupled())

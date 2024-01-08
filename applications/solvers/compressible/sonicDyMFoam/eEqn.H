@@ -19,7 +19,10 @@
 
     eEqn.relax
     (
-        mesh.solutionDict().equationRelaxationFactor(e.select(pimple.finalIter()))
+        mesh.solutionDict().equationRelaxationFactor
+        (
+            e.select(pimple.finalIter())
+        )
     );
 
     eEqn.solve();

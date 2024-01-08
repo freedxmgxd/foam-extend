@@ -118,10 +118,8 @@ void buoyantPressureFvPatchScalarField::updateCoeffs()
      || !db().foundObject<volScalarField>(rhoName_)
     )
     {
-        InfoIn
-        (
-            "void buoyantPressureFvPatchScalarField::updateCoeffs()"
-        )   << "Fields required for evaluation not found for patch "
+        InfoInFunction
+            << "Fields required for evaluation not found for patch "
             << patch().name() << endl;
 
         gradient() = 0;

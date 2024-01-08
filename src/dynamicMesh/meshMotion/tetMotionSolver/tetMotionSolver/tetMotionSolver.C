@@ -94,7 +94,7 @@ Foam::tetMotionSolver::curPoints() const
 
     // Grab all point locations
     tmp<pointField> tcurPoints(new pointField(tetMesh_().allPoints()));
-    pointField& cp = tcurPoints();
+    pointField& cp = tcurPoints.ref();
 
     // Move live points from mesh motion
     vectorField mp
@@ -113,7 +113,7 @@ Foam::tetMotionSolver::curPoints() const
         cp[i] += mp[i];
     }
 
-    twoDCorrectPoints(tcurPoints());
+    twoDCorrectPoints(cp);
 
     return tcurPoints;
 }
@@ -170,7 +170,7 @@ Foam::tetMotionSolver::distortionEnergy() const
         )
     );
 
-    elementScalarField& Ud = tUd();
+    elementScalarField& Ud = tUd.ref();
 
     elementTensorField gradU =
         tetFec::elementGrad(motionU_)*tetMesh().time().deltaT();
@@ -202,7 +202,7 @@ Foam::tetMotionSolver::deformationEnergy() const
         )
     );
 
-    elementScalarField& Ud = tUd();
+    elementScalarField& Ud = tUd.ref();
 
     elementTensorField gradU =
         tetFec::elementGrad(motionU_)*tetMesh().time().deltaT();
@@ -237,14 +237,12 @@ Foam::tetMotionSolver::totDistortionEnergy() const
         )
     );
 
-    elementScalarField& Ud = tUd();
+    elementScalarField& Ud = tUd.ref();
 
     if (!needTotDisplacement())
     {
-        FatalErrorIn
-        (
-            "tetMotionSolver::totDeformationEnergy()"
-        )   << "Total displacement field is not stored "
+        FatalErrorInFunction
+            << "Total displacement field is not stored "
             << "in tetMotionSolver object." << endl
             << exit(FatalError);
     }
@@ -279,14 +277,12 @@ Foam::tetMotionSolver::totDeformationEnergy() const
         )
     );
 
-    elementScalarField& Ud = tUd();
+    elementScalarField& Ud = tUd.ref();
 
     if (!needTotDisplacement())
     {
-        FatalErrorIn
-        (
-            "tetMotionSolver::totDistortionEnergy()"
-        )   << "Total displacement field is not stored." << endl
+        FatalErrorInFunction
+            << "Total displacement field is not stored." << endl
             << exit(FatalError);
     }
 

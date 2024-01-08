@@ -57,7 +57,7 @@ Foam::tmp<Foam::scalarField> Foam::multiMaterialCohesiveLaw::indicator
     const scalarField& mat = materials_.internalField();
 
     tmp<scalarField> tresult(new scalarField(mat.size(), 0.0));
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     forAll (mat, matI)
     {
@@ -339,7 +339,7 @@ Foam::multiMaterialCohesiveLaw::sigmaMax() const
         dimensionedScalar("zero", dimForce/dimArea, 0)
     )
     );
-    surfaceScalarField& result = tresult();
+    surfaceScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<cohesiveLaw>& laws = *this;
@@ -469,7 +469,7 @@ Foam::multiMaterialCohesiveLaw::tauMax() const
         dimensionedScalar("zero", dimForce/dimArea, 0)
     )
     );
-    surfaceScalarField& result = tresult();
+    surfaceScalarField& result = tresult.ref();
 
     const PtrList<cohesiveLaw>& laws = *this;
     volScalarField indic
@@ -594,7 +594,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::multiMaterialCohesiveLaw::GIc() const
         dimensionedScalar("zero", dimForce*dimLength/dimArea, 0)
     )
     );
-    surfaceScalarField& result = tresult();
+    surfaceScalarField& result = tresult.ref();
 
     const PtrList<cohesiveLaw>& laws = *this;
     volScalarField indic
@@ -710,7 +710,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::multiMaterialCohesiveLaw::GIIc() const
         dimensionedScalar("zero", dimForce*dimLength/dimArea, 0)
     )
     );
-    surfaceScalarField& result = tresult();
+    surfaceScalarField& result = tresult.ref();
 
     const PtrList<cohesiveLaw>& laws = *this;
     volScalarField indic
@@ -902,23 +902,23 @@ Foam::multiMaterialCohesiveLaw::interfaceTraction
  volScalarField lambda
  ) const
 {
-  tmp<surfaceVectorField> tresult
+    tmp<surfaceVectorField> tresult
     (
         new surfaceVectorField
         (
             IOobject
             (
-            "traction",
-            mesh().time().timeName(),
+                "traction",
+                mesh().time().timeName(),
+                mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
             mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-            mesh(),
-        dimensionedVector("zero", dimForce/dimArea, vector::zero)
-    )
+            dimensionedVector("zero", dimForce/dimArea, vector::zero)
+        )
     );
-    surfaceVectorField& result = tresult();
+    surfaceVectorField& result = tresult.ref();
 
     surfaceScalarField mu1 = fvc::interpolate(mu);
     surfaceScalarField lambda1 = fvc::interpolate(lambda);

@@ -65,12 +65,12 @@ skewCorrectedSnGrad<scalar>::correction
             vf.dimensions()*mesh.deltaCoeffs().dimensions()
         )
     );
-    GeometricField<scalar, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<scalar, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     ssf = dimensioned<scalar>("0", ssf.dimensions(), 0);
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const vectorField& Sf = mesh.Sf().internalField();
 //     const scalarField& magSf = mesh.magSf().internalField();
@@ -303,12 +303,12 @@ skewCorrectedSnGrad<vector>::correction
             vf.dimensions()*mesh.deltaCoeffs().dimensions()
         )
     );
-    GeometricField<vector, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<vector, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     ssf = dimensioned<vector>("0", ssf.dimensions(), vector::zero);
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const vectorField& Sf = mesh.Sf().internalField();
 //     const scalarField& magSf = mesh.magSf().internalField();

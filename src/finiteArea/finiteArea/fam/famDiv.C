@@ -60,7 +60,7 @@ div
             vf.mesh().schemesDict().divScheme(name)
         )().famDiv(flux, vf)
     );
-    faMatrix<Type>& M = tM();
+    faMatrix<Type>& M = tM.ref();
 
     GeometricField<Type, faPatchField, areaMesh> v
     (

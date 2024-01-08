@@ -148,7 +148,7 @@ const Foam::tensorField& Foam::mixingPlaneAMGInterface::reverseT() const
 void Foam::mixingPlaneAMGInterface::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     labelTransferBuffer_ = interfaceData;
@@ -158,7 +158,7 @@ void Foam::mixingPlaneAMGInterface::initTransfer
 Foam::tmp<Foam::labelField> Foam::mixingPlaneAMGInterface::transfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     return this->shadowInterface().labelTransferBuffer();
@@ -168,7 +168,7 @@ Foam::tmp<Foam::labelField> Foam::mixingPlaneAMGInterface::transfer
 void Foam::mixingPlaneAMGInterface::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     // NOTE: Change this: requires fast reduce.  HJ, 13/Jun/20106
@@ -190,7 +190,7 @@ Foam::tmp<Foam::labelField>
 Foam::mixingPlaneAMGInterface::internalFieldTransfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList&
+    const labelUList&
 ) const
 {
     return shadowInterface().labelTransferBuffer();

@@ -7,7 +7,7 @@
       + fvm::SuSp(-fvc::div(phi), U)
     );
 
-    UEqn().relax();
+    UEqn.ref().relax();
 
     solve
     (

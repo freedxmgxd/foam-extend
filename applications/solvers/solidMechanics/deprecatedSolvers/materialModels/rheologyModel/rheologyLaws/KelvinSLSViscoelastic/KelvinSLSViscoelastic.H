@@ -67,13 +67,14 @@ class KelvinSLSViscoelastic
         //- Poisson's ratio
         dimensionedScalar nu_;
 
+
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        KelvinSLSViscoelastic(const KelvinSLSViscoelastic&);
+        KelvinSLSViscoelastic(const KelvinSLSViscoelastic&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const KelvinSLSViscoelastic&);
+        void operator=(const KelvinSLSViscoelastic&) = delete;
 
 
 public:
@@ -95,9 +96,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~KelvinSLSViscoelastic();
+    //- Destructor
+    virtual ~KelvinSLSViscoelastic() = default;
 
 
     // Member Functions

@@ -107,10 +107,10 @@ tmp<volVectorField> cellLimitedGrad<scalar>::calcGrad
         return tGrad;
     }
 
-    volVectorField& g = tGrad();
+    volVectorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
@@ -140,7 +140,7 @@ tmp<volVectorField> cellLimitedGrad<scalar>::calcGrad
     {
         const fvPatchScalarField& psf = bsf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
 
         if (psf.coupled())
         {
@@ -211,7 +211,7 @@ tmp<volVectorField> cellLimitedGrad<scalar>::calcGrad
 
     forAll(bsf, patchi)
     {
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         forAll(pOwner, pFacei)
@@ -260,10 +260,10 @@ tmp<volTensorField> cellLimitedGrad<vector>::calcGrad
         return tGrad;
     }
 
-    volTensorField& g = tGrad();
+    volTensorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
@@ -292,7 +292,7 @@ tmp<volTensorField> cellLimitedGrad<vector>::calcGrad
     forAll(bsf, patchi)
     {
         const fvPatchVectorField& psf = bsf[patchi];
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
 
         if (psf.coupled())
         {
@@ -363,7 +363,7 @@ tmp<volTensorField> cellLimitedGrad<vector>::calcGrad
 
     forAll(bsf, patchi)
     {
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         forAll(pOwner, pFacei)
@@ -424,7 +424,7 @@ tmp<BlockLduSystem<vector, vector> > cellLimitedGrad<scalar>::fvmGrad
         return tbs;
     }
 
-    BlockLduSystem<vector, vector>& bs = tbs();
+    BlockLduSystem<vector, vector>& bs = tbs.ref();
 
     // Calculate current gradient for explicit limiting
     // In fvm::grad the current gradient may be cached
@@ -432,8 +432,8 @@ tmp<BlockLduSystem<vector, vector> > cellLimitedGrad<scalar>::fvmGrad
     tmp<volVectorField> tGrad = basicGradScheme_().grad(vsf);
     const volVectorField& g = tGrad();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
@@ -463,7 +463,7 @@ tmp<BlockLduSystem<vector, vector> > cellLimitedGrad<scalar>::fvmGrad
     {
         const fvPatchScalarField& psf = bsf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
 
         if (psf.coupled())
         {
@@ -545,7 +545,7 @@ tmp<BlockLduSystem<vector, vector> > cellLimitedGrad<scalar>::fvmGrad
 
     forAll(bsf, patchi)
     {
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         forAll(pOwner, pFacei)

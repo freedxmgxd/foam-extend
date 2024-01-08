@@ -73,10 +73,10 @@ class PronyViscoelastic
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        PronyViscoelastic(const PronyViscoelastic&);
+        PronyViscoelastic(const PronyViscoelastic&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const PronyViscoelastic&);
+        void operator=(const PronyViscoelastic&) = delete;
 
 
 public:
@@ -98,9 +98,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~PronyViscoelastic();
+    //- Destructor
+    virtual ~PronyViscoelastic() = default;
 
 
     // Member Functions

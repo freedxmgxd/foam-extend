@@ -52,6 +52,7 @@ void stabilise
     }
 }
 
+
 template<template<class> class Field>
 tmp<FieldField<Field, scalar> > stabilise
 (
@@ -63,9 +64,10 @@ tmp<FieldField<Field, scalar> > stabilise
     (
         FieldField<Field, scalar>::NewCalculatedType(f1)
     );
-    stabilise(tf(), f1, s);
+    stabilise(tf.ref(), f1, s);
     return tf;
 }
+
 
 template<template<class> class Field>
 tmp<FieldField<Field, scalar> > stabilise
@@ -75,7 +77,7 @@ tmp<FieldField<Field, scalar> > stabilise
 )
 {
     tmp<FieldField<Field, scalar> > tf(tf1.ptr());
-    stabilise(tf(), tf(), s);
+    stabilise(tf.ref(), tf(), s);
     return tf;
 }
 
@@ -158,7 +160,7 @@ tmp<FieldField<Field, scalar> > func                                          \
     (                                                                         \
         FieldField<Field, scalar>::NewCalculatedType(sf)                      \
     );                                                                        \
-    func(tRes(), n, sf);                                                      \
+    func(tRes.ref(), n, sf);                                                  \
     return tRes;                                                              \
 }                                                                             \
                                                                               \
@@ -173,8 +175,8 @@ tmp<FieldField<Field, scalar> > func                                          \
     (                                                                         \
         reuseTmpFieldField<Field, scalar, scalar>::New(tsf)                   \
     );                                                                        \
-    func(tRes(), n, tsf());                                                   \
-    reuseTmpFieldField<Field, scalar, scalar>::clear(tsf);                    \
+    func(tRes.ref(), n, tsf());                                               \
+    tsf.clear();                                                              \
     return tRes;                                                              \
 }
 

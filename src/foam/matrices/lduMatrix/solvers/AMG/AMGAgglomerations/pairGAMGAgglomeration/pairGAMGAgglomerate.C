@@ -37,8 +37,8 @@ Foam::tmp<Foam::labelField> Foam::pairGAMGAgglomeration::agglomerate
 {
     const label nFineCells = fineMatrixAddressing.size();
 
-    const unallocLabelList& upperAddr = fineMatrixAddressing.upperAddr();
-    const unallocLabelList& lowerAddr = fineMatrixAddressing.lowerAddr();
+    const labelUList& upperAddr = fineMatrixAddressing.upperAddr();
+    const labelUList& lowerAddr = fineMatrixAddressing.lowerAddr();
 
     // For each cell calculate faces
     labelList cellFaces(upperAddr.size() + lowerAddr.size());
@@ -92,7 +92,7 @@ Foam::tmp<Foam::labelField> Foam::pairGAMGAgglomeration::agglomerate
     // go through the faces and create clusters
 
     tmp<labelField> tcoarseCellMap(new labelField(nFineCells, -1));
-    labelField& coarseCellMap = tcoarseCellMap();
+    labelField& coarseCellMap = tcoarseCellMap.ref();
 
     nCoarseCells = 0;
 

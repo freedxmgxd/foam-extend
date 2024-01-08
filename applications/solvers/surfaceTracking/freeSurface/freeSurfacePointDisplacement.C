@@ -56,7 +56,7 @@ tmp<vectorField> freeSurface::pointDisplacement(const scalarField& deltaH)
             vector::zero
         )
     );
-    vectorField& displacement = tdisplacement();
+    vectorField& displacement = tdisplacement.ref();
 
     // Calculate displacement of internal points
     const vectorField& pointNormals = aMesh().pointAreaNormals();
@@ -535,15 +535,16 @@ tmp<vectorField> freeSurface::lsPlanePointAndNormal
     vector p0 = vector(0, 0, MtR[2]);
     p0 = cs.globalPosition(p0);
 
-    tmp<vectorField> pointAndNormal
+    tmp<vectorField> tpointAndNormal
     (
         new vectorField(2, vector::zero)
     );
+    vectorField& pointAndNormal = tpointAndNormal.ref();
 
-    pointAndNormal()[0] = p0;
-    pointAndNormal()[1] = n0;
+    pointAndNormal[0] = p0;
+    pointAndNormal[1] = n0;
 
-    return pointAndNormal;
+    return tpointAndNormal;
 }
 
 

@@ -227,8 +227,10 @@ public:
         //- Return non-const access to dimensions
         inline dimensionSet& dimensions();
 
+        //- Return field
         inline const Field<Type>& field() const;
 
+        //- Return non-const access to field
         inline Field<Type>& field();
 
         //- Return a component field of the field

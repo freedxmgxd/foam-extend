@@ -86,7 +86,7 @@ void BlockConstraint<Type>::setMatrix
         matrix.lduAddr().losortStartAddr()[rowID_ + 1];
     const label nbrSize = endFaceNbr - startFaceNbr;
 
-    const unallocLabelList& losort = matrix.lduAddr().losortAddr();
+    const labelUList& losort = matrix.lduAddr().losortAddr();
 
     // Create losort addressing
     labelList losortAddr(nbrSize);
@@ -155,9 +155,9 @@ void BlockConstraint<Type>::eliminateEquation
         matrix.lduAddr().losortStartAddr()[rowID_ + 1];
     const label nbrSize = endFaceNbr - startFaceNbr;
 
-    const unallocLabelList& owner = matrix.lduAddr().lowerAddr();
-    const unallocLabelList& neighbour = matrix.lduAddr().upperAddr();
-    const unallocLabelList& losort = matrix.lduAddr().losortAddr();
+    const labelUList& owner = matrix.lduAddr().lowerAddr();
+    const labelUList& neighbour = matrix.lduAddr().upperAddr();
+    const labelUList& losort = matrix.lduAddr().losortAddr();
 
     // Create losort addressing
     labelList losortAddr(nbrSize);
@@ -291,7 +291,7 @@ void BlockConstraint<Type>::reconstructMatrix
         matrix.lduAddr().losortStartAddr()[rowID_ + 1];
     const label nbrSize = endFaceNbr - startFaceNbr;
 
-    const unallocLabelList& losort = matrix.lduAddr().losortAddr();
+    const labelUList& losort = matrix.lduAddr().losortAddr();
 
     // Create losort addressing
     labelList losortAddr(nbrSize);

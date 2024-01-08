@@ -88,13 +88,13 @@ void Foam::BlockMatrixClustering<Type>::calcClustering()
     const label nRows = matrix_.lduAddr().size();
 
     // Get matrix addressing
-    const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
-    const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-    const unallocLabelList& losortAddr = matrix_.lduAddr().losortAddr();
+    const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
+    const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+    const labelUList& losortAddr = matrix_.lduAddr().losortAddr();
 
-    const unallocLabelList& ownerStartAddr =
+    const labelUList& ownerStartAddr =
         matrix_.lduAddr().ownerStartAddr();
-    const unallocLabelList& losortStartAddr =
+    const labelUList& losortStartAddr =
         matrix_.lduAddr().losortStartAddr();
 
 
@@ -628,8 +628,8 @@ void Foam::BlockMatrixClustering<Type>::agglomerateCoeffs
     bool soloEqns = nSolo_ > 0;
 
     // Get addressing
-    const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
+    const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
 
     // Reset coefficients to zero.  Cannot touch the diagonal
     activeCoarseUpper = pTraits<ULType>::zero;
@@ -680,8 +680,8 @@ void Foam::BlockMatrixClustering<Type>::agglomerateCoeffs
     bool soloEqns = nSolo_ > 0;
 
     // Get addressing
-    const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
+    const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
 
     // Reset coefficients to zero.  Cannot touch the diagonal
     activeCoarseUpper = pTraits<ULType>::zero;
@@ -842,8 +842,8 @@ Foam::BlockMatrixClustering<Type>::restrictMatrix() const
     // 4) Agglomerate the diagonal by summing up the fine diagonal
 
     // Get addressing
-    const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
+    const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
 
 #   ifdef FULLDEBUG
     if (agglomIndex_.size() != matrix_.lduAddr().size())

@@ -169,7 +169,7 @@ tmp<volScalarField> RASModel::nuEff() const
     );
 
     // Apply nut limiter
-    tnuEff().internalField() =
+    tnuEff.ref().internalField() =
         Foam::min(tnuEff().internalField(), nuRatio_*nu().internalField());
 
     return tnuEff;
@@ -181,7 +181,7 @@ tmp<scalarField> RASModel::yPlus(const label patchNo, const scalar Cmu) const
     const fvPatch& curPatch = mesh_.boundary()[patchNo];
 
     tmp<scalarField> tYp(new scalarField(curPatch.size()));
-    scalarField& Yp = tYp();
+    scalarField& Yp = tYp.ref();
 
     if (curPatch.isWall())
     {

@@ -276,7 +276,7 @@ tmp<vectorField> cyclicFaPatch::delta() const
     label sizeby2 = patchD.size()/2;
 
     tmp<vectorField> tpdv(new vectorField(patchD.size()));
-    vectorField& pdv = tpdv();
+    vectorField& pdv = tpdv.ref();
 
     // Do the transformation if necessary
     if (parallel())
@@ -308,7 +308,7 @@ tmp<vectorField> cyclicFaPatch::delta() const
 
 tmp<labelField> cyclicFaPatch::interfaceInternalField
 (
-    const unallocLabelList& internalData
+    const labelUList& internalData
 ) const
 {
     return patchInternalField(internalData);
@@ -318,11 +318,11 @@ tmp<labelField> cyclicFaPatch::interfaceInternalField
 tmp<labelField> cyclicFaPatch::transfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     tmp<labelField> tpnf(new labelField(this->size()));
-    labelField& pnf = tpnf();
+    labelField& pnf = tpnf.ref();
 
     label sizeby2 = this->size()/2;
 
@@ -339,13 +339,13 @@ tmp<labelField> cyclicFaPatch::transfer
 tmp<labelField> cyclicFaPatch::internalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
-    const unallocLabelList& edgeCells = this->faceCells();
+    const labelUList& edgeCells = this->faceCells();
 
     tmp<labelField> tpnf(new labelField(this->size()));
-    labelField& pnf = tpnf();
+    labelField& pnf = tpnf.ref();
 
     label sizeby2 = this->size()/2;
 

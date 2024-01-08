@@ -55,7 +55,7 @@ tmp<scalarField> mutURoughWallFunctionFvPatchScalarField::calcYPlus
     const fvPatchScalarField& rho = turbModel.rho().boundaryField()[patchI];
 
     tmp<scalarField> tyPlus(new scalarField(patch().size(), 0.0));
-    scalarField& yPlus = tyPlus();
+    scalarField& yPlus = tyPlus.ref();
 
     if (roughnessHeight_ > 0.0)
     {
@@ -183,10 +183,10 @@ tmp<scalarField> mutURoughWallFunctionFvPatchScalarField::calcMut() const
     const scalarField magUp(mag(Uw.patchInternalField() - Uw));
 
     tmp<scalarField> tyPlus = calcYPlus(magUp);
-    const scalarField& yPlus = tyPlus();
+    const scalarField& yPlus = tyPlus.ref();
 
     tmp<scalarField> tmutw(new scalarField(patch().size(), 0.0));
-    scalarField& mutw = tmutw();
+    scalarField& mutw = tmutw.ref();
 
     forAll(yPlus, faceI)
     {

@@ -179,7 +179,7 @@ void Foam::processorAMGInterfaceField::updateInterfaceMatrix
 
     // Multiply the field by coefficients and add into the result
 
-    const unallocLabelList& faceCells = procInterface_.faceCells();
+    const labelUList& faceCells = procInterface_.faceCells();
 
     if (switchToLhs)
     {

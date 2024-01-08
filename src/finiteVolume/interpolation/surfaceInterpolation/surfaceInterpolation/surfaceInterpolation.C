@@ -177,8 +177,8 @@ void Foam::surfaceInterpolation::makeWeights() const
     // (note that we should not use fvMesh sliced fields at this point yet
     //  since this causes a loop when generating weighting factors in
     //  coupledFvPatchField evaluation phase)
-    const unallocLabelList& owner = mesh_.owner();
-    const unallocLabelList& neighbour = mesh_.neighbour();
+    const labelUList& owner = mesh_.owner();
+    const labelUList& neighbour = mesh_.neighbour();
 
     const vectorField& Cf = mesh_.faceCentres();
     const vectorField& C = mesh_.cellCentres();
@@ -252,8 +252,8 @@ void Foam::surfaceInterpolation::makeDeltaCoeffs() const
 
     // Set local references to mesh data
     const volVectorField& C = mesh_.C();
-    const unallocLabelList& owner = mesh_.owner();
-    const unallocLabelList& neighbour = mesh_.neighbour();
+    const labelUList& owner = mesh_.owner();
+    const labelUList& neighbour = mesh_.neighbour();
     const surfaceVectorField& Sf = mesh_.Sf();
     const surfaceScalarField& magSf = mesh_.magSf();
 
@@ -326,8 +326,8 @@ void Foam::surfaceInterpolation::makeMagLongDeltas() const
     surfaceScalarField& magLongDeltas = *magLongDeltasPtr_;
 
     // Set local references to mesh data
-    const unallocLabelList& owner = mesh_.owner();
-    const unallocLabelList& neighbour = mesh_.neighbour();
+    const labelUList& owner = mesh_.owner();
+    const labelUList& neighbour = mesh_.neighbour();
 
     const vectorField& C = mesh_.C().internalField();
     const vectorField& Cf = mesh_.Cf().internalField();
@@ -394,8 +394,8 @@ void Foam::surfaceInterpolation::makeCorrectionVectors() const
 
     // Set local references to mesh data
     const volVectorField& C = mesh_.C();
-    const unallocLabelList& owner = mesh_.owner();
-    const unallocLabelList& neighbour = mesh_.neighbour();
+    const labelUList& owner = mesh_.owner();
+    const labelUList& neighbour = mesh_.neighbour();
     const surfaceVectorField& Sf = mesh_.Sf();
     const surfaceScalarField& magSf = mesh_.magSf();
     const surfaceScalarField& DeltaCoeffs = deltaCoeffs();

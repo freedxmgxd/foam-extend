@@ -34,6 +34,7 @@ SourceFiles
     combineGatherScatter.C
     gatherScatterList.C
     PstreamExchange.C
+    PstreamAllToAll.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -528,6 +529,36 @@ public:
 
         //- Abort program
         static void abort();
+
+
+        // All-to-all communications
+
+            //- Exchange label with all processors (in the communicator).
+            //  sendData[procI] is the label to send to procI.
+            //  After return recvData contains the data from other processors
+            static void allToAll
+            (
+                const labelUList& sendData,
+                labelUList& recvData,
+                const label communicator = 0
+            );
+
+            //- Exchange data with all processors (in the communicator)
+            //  sendSizes, sendOffsets give (per processor) the slice of
+            //  sendData to send, similarly recvSizes, recvOffsets give slice
+            //  of recvData to receive
+            static void allToAll
+            (
+                const char* sendData,
+                const UList<int>& sendSizes,
+                const UList<int>& sendOffsets,
+
+                char* recvData,
+                const UList<int>& recvSizes,
+                const UList<int>& recvOffsets,
+
+                const label communicator = 0
+            );
 
 
         // Gather and scatter

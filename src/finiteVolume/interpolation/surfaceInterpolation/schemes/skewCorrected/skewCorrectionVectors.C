@@ -82,8 +82,8 @@ void Foam::skewCorrectionVectors::makeSkewCorrectionVectors() const
     const surfaceVectorField& Cf = mesh().Cf();
     const surfaceVectorField& Sf = mesh().Sf();
 
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     // Build the d-vectors.  Changed to exact vectors.  HJ, 24/Apr/2010
 
@@ -118,7 +118,7 @@ void Foam::skewCorrectionVectors::makeSkewCorrectionVectors() const
         else
         {
             const fvPatch& p = patchSkewCorrVecs.patch();
-            const unallocLabelList& faceCells = p.faceCells();
+            const labelUList& faceCells = p.faceCells();
             const vectorField& patchFaceCentres = Cf.boundaryField()[patchI];
             const vectorField& patchSf = Sf.boundaryField()[patchI];
 

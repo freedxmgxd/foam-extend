@@ -156,7 +156,7 @@ tmp<pointField> triSurfaceSearch::calcNearest
     const scalar nearestDistSqr = 0.25*magSqr(span);
 
     tmp<pointField> tnearest(new pointField(samples.size()));
-    pointField& nearest = tnearest();
+    pointField& nearest = tnearest.ref();
 
     pointIndexHit hitInfo;
 

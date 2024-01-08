@@ -288,7 +288,7 @@ void PDRkEpsilon::correct()
     volScalarField GR = drag.Gk();
 
     // Dissipation equation
-    tmp<fvScalarMatrix> epsEqn
+    fvScalarMatrix epsEqn
     (
         betav*fvm::ddt(rho_, epsilon_)
       + fvm::div(phi_, epsilon_)
@@ -299,7 +299,7 @@ void PDRkEpsilon::correct()
       - fvm::Sp(C2_*betav*rho_*epsilon_/k_, epsilon_)
     );
 
-    epsEqn().relax();
+    epsEqn.relax();
 
     // No longer needed: matrix completes at the point of solution
     // HJ, 17/Apr/2012
@@ -311,7 +311,7 @@ void PDRkEpsilon::correct()
 
     // Turbulent kinetic energy equation
 
-    tmp<fvScalarMatrix> kEqn
+    fvScalarMatrix kEqn
     (
         betav*fvm::ddt(rho_, k_)
       + fvm::div(phi_, k_)
@@ -322,7 +322,7 @@ void PDRkEpsilon::correct()
       - fvm::Sp(betav*rho_*epsilon_/k_, k_)
     );
 
-    kEqn().relax();
+    kEqn.relax();
     solve(kEqn);
     bound(k_, k0_);
 

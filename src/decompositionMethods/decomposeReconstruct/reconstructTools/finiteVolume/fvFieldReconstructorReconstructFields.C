@@ -382,7 +382,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
     // Reconstruct field
     this->reconstructField
     (
-        treconField(),
+        treconField.ref(),
         procFields
     );
 
@@ -519,7 +519,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
     // Reconstruct field
     reconstructField
     (
-        treconField(),
+        treconField.ref(),
         procFields
     );
 

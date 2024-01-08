@@ -64,10 +64,10 @@ tmp<volVectorField> faceMDLimitedGrad<scalar>::calcGrad
         return tGrad;
     }
 
-    volVectorField& g = tGrad();
+    volVectorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
@@ -117,7 +117,7 @@ tmp<volVectorField> faceMDLimitedGrad<scalar>::calcGrad
     {
         const fvPatchScalarField& psf = bsf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         if (psf.coupled())
@@ -203,10 +203,10 @@ tmp<volTensorField> faceMDLimitedGrad<vector>::calcGrad
         return tGrad;
     }
 
-    volTensorField& g = tGrad();
+    volTensorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
@@ -258,7 +258,7 @@ tmp<volTensorField> faceMDLimitedGrad<vector>::calcGrad
     {
         const fvPatchVectorField& psf = bvf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         if (psf.coupled())

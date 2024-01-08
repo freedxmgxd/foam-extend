@@ -264,8 +264,8 @@ void Foam::cuttingPatchFringe::calcAddressing() const
 
     // Get necessary mesh data (from polyMesh/primitiveMesh)
     const cellList& meshCells = mesh.cells();
-    const unallocLabelList& owner = mesh.faceOwner();
-    const unallocLabelList& neighbour = mesh.faceNeighbour();
+    const labelUList& owner = mesh.faceOwner();
+    const labelUList& neighbour = mesh.faceNeighbour();
 
     // Bool list for collecting faces with at least one unmarked
     // cell (to determine the acceptors for the first iteration)

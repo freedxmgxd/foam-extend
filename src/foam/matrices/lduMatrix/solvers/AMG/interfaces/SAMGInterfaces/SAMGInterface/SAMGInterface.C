@@ -38,7 +38,7 @@ namespace Foam
 
 Foam::tmp<Foam::labelField> Foam::SAMGInterface::interfaceInternalField
 (
-    const unallocLabelList& internalData
+    const labelUList& internalData
 ) const
 {
     return interfaceInternalField<label>(internalData);
@@ -51,7 +51,7 @@ Foam::tmp<Foam::scalarField> Foam::SAMGInterface::selectCoeffs
 ) const
 {
     tmp<scalarField> tcoarseCoeffs(new scalarField(size(), 0.0));
-    scalarField& coarseCoeffs = tcoarseCoeffs();
+    scalarField& coarseCoeffs = tcoarseCoeffs.ref();
 
     // Added weights to account for non-integral matching
     forAll (restrictAddressing_, ffi)

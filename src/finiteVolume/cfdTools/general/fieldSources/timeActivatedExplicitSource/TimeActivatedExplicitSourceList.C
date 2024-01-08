@@ -110,7 +110,7 @@ Foam::TimeActivatedExplicitSourceList<Type>::Su(const label fieldI) const
        )
     );
 
-    DimensionedField<Type, volMesh>& Su = tSu();
+    DimensionedField<Type, volMesh>& Su = tSu.ref();
 
     forAll (*this, i)
     {
@@ -142,7 +142,7 @@ Foam::TimeActivatedExplicitSourceList<Type>::SuTot() const
        )
     );
 
-    DimensionedField<Type, volMesh>& SuTot = tSuTot();
+    DimensionedField<Type, volMesh>& SuTot = tSuTot.ref();
 
     forAll (fieldNames_, fieldI)
     {

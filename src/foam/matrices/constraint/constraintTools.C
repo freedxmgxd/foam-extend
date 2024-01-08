@@ -74,7 +74,7 @@ void constraint<Type>::setMatrix
     const label endFaceNbr =
         matrix.psi().mesh().lduAddr().losortStartAddr()[rowID_ + 1];
 
-    const unallocLabelList& losort = matrix.psi().mesh().lduAddr().losortAddr();
+    const labelUList& losort = matrix.psi().mesh().lduAddr().losortAddr();
 
     if (matrix.hasUpper())
     {
@@ -172,10 +172,10 @@ void constraint<Type>::eliminateEquation
     const label endFaceNbr =
         matrix.psi().mesh().lduAddr().losortStartAddr()[rowID + 1];
 
-    const unallocLabelList& owner = matrix.psi().mesh().lduAddr().lowerAddr();
-    const unallocLabelList& neighbour =
+    const labelUList& owner = matrix.psi().mesh().lduAddr().lowerAddr();
+    const labelUList& neighbour =
         matrix.psi().mesh().lduAddr().upperAddr();
-    const unallocLabelList& losort =
+    const labelUList& losort =
         matrix.psi().mesh().lduAddr().losortAddr();
 
     // My index =  rowID
@@ -300,11 +300,11 @@ void constraint<Type>::eliminateEquation
         const label endFaceNbr =
             matrix.psi().mesh().lduAddr().losortStartAddr()[rowID_ + 1];
 
-        const unallocLabelList& owner =
+        const labelUList& owner =
             matrix.psi().mesh().lduAddr().lowerAddr();
-        const unallocLabelList& neighbour =
+        const labelUList& neighbour =
             matrix.psi().mesh().lduAddr().upperAddr();
-        const unallocLabelList& losort =
+        const labelUList& losort =
             matrix.psi().mesh().lduAddr().losortAddr();
 
         // My index =  rowID_
@@ -472,7 +472,7 @@ void constraint<Type>::reconstructMatrix
     const label startFaceNbr =
         matrix.psi().mesh().lduAddr().losortStartAddr()[rowID_];
 
-    const unallocLabelList& losort = matrix.psi().mesh().lduAddr().losortAddr();
+    const labelUList& losort = matrix.psi().mesh().lduAddr().losortAddr();
 
     if (matrix.hasUpper())
     {

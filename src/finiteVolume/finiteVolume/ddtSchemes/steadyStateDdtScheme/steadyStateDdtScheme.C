@@ -44,7 +44,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> >
 steadyStateDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
-)
+) const
 {
     return tmp<GeometricField<Type, fvPatchField, volMesh> >
     (
@@ -53,10 +53,10 @@ steadyStateDdtScheme<Type>::fvcDdt
             IOobject
             (
                 "ddt("+dt.name()+')',
-                mesh().time().timeName(),
-                mesh()
+                this->mesh().time().timeName(),
+                this->mesh()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -73,7 +73,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> >
 steadyStateDdtScheme<Type>::fvcDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, fvPatchField, volMesh> >
     (
@@ -82,10 +82,10 @@ steadyStateDdtScheme<Type>::fvcDdt
             IOobject
             (
                 "ddt("+vf.name()+')',
-                mesh().time().timeName(),
-                mesh()
+                this->mesh().time().timeName(),
+                this->mesh()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -103,7 +103,7 @@ steadyStateDdtScheme<Type>::fvcDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, fvPatchField, volMesh> >
     (
@@ -112,10 +112,10 @@ steadyStateDdtScheme<Type>::fvcDdt
             IOobject
             (
                 "ddt("+rho.name()+','+vf.name()+')',
-                mesh().time().timeName(),
-                mesh()
+                this->mesh().time().timeName(),
+                this->mesh()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -133,7 +133,7 @@ steadyStateDdtScheme<Type>::fvcDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, fvPatchField, volMesh> >
     (
@@ -142,10 +142,10 @@ steadyStateDdtScheme<Type>::fvcDdt
             IOobject
             (
                 "ddt("+rho.name()+','+vf.name()+')',
-                mesh().time().timeName(),
-                mesh()
+                this->mesh().time().timeName(),
+                this->mesh()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -162,7 +162,7 @@ tmp<fvMatrix<Type> >
 steadyStateDdtScheme<Type>::fvmDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -183,7 +183,7 @@ steadyStateDdtScheme<Type>::fvmDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -204,7 +204,7 @@ steadyStateDdtScheme<Type>::fvmDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -226,7 +226,7 @@ steadyStateDdtScheme<Type>::fvcDdtPhiCorr
     const volScalarField& rA,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi
-)
+) const
 {
     return tmp<fluxFieldType>
     (
@@ -236,10 +236,10 @@ steadyStateDdtScheme<Type>::fvcDdtPhiCorr
             (
                 "ddtPhiCorr("
               + rA.name() + ',' + U.name() + ',' + phi.name() + ')',
-                mesh().time().timeName(),
-                mesh()
+                this->mesh().time().timeName(),
+                this->mesh()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<typename flux<Type>::type>
             (
                 "zero",
@@ -259,7 +259,7 @@ steadyStateDdtScheme<Type>::fvcDdtPhiCorr
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi
-)
+) const
 {
     if
     (
@@ -276,10 +276,10 @@ steadyStateDdtScheme<Type>::fvcDdtPhiCorr
                     "ddtPhiCorr("
                   + rA.name() + ',' + rho.name()
                   + ',' + U.name() + ',' + phi.name() + ')',
-                    mesh().time().timeName(),
-                    mesh()
+                    this->mesh().time().timeName(),
+                    this->mesh()
                 ),
-                mesh(),
+                this->mesh(),
                 dimensioned<typename flux<Type>::type>
                 (
                     "zero",
@@ -304,10 +304,10 @@ steadyStateDdtScheme<Type>::fvcDdtPhiCorr
                     "ddtPhiCorr("
                   + rA.name() + ',' + rho.name()
                   + ',' + U.name() + ',' + phi.name() + ')',
-                    mesh().time().timeName(),
-                    mesh()
+                    this->mesh().time().timeName(),
+                    this->mesh()
                 ),
-                mesh(),
+                this->mesh(),
                 dimensioned<typename flux<Type>::type>
                 (
                     "zero",
@@ -337,7 +337,7 @@ steadyStateDdtScheme<Type>::fvcDdtConsistentPhiCorr
     const GeometricField<Type, fvsPatchField, surfaceMesh>& faceU,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const surfaceScalarField& rAUf
-)
+) const
 {
     return tmp<fluxFieldType>
     (
@@ -347,10 +347,10 @@ steadyStateDdtScheme<Type>::fvcDdtConsistentPhiCorr
             (
                 "ddtConsistentPhiCorr("
               + faceU.name() + "," + rAUf.name() + ')',
-                mesh().time().timeName(),
-                mesh()
+                this->mesh().time().timeName(),
+                this->mesh()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<typename flux<Type>::type>
             (
                 "zero",
@@ -366,7 +366,7 @@ template<class Type>
 tmp<surfaceScalarField> steadyStateDdtScheme<Type>::meshPhi
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     return tmp<surfaceScalarField>
     (
@@ -375,10 +375,10 @@ tmp<surfaceScalarField> steadyStateDdtScheme<Type>::meshPhi
             IOobject
             (
                 "meshPhi",
-                mesh().time().timeName(),
-                mesh()
+                this->mesh().time().timeName(),
+                this->mesh()
             ),
-            mesh(),
+            this->mesh(),
             dimensionedScalar("0", dimVolume/dimTime, 0.0)
         )
     );

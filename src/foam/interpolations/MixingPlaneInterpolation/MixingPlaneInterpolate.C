@@ -206,11 +206,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::masterToSlave
 {
     if (patchFF.size() != masterPatch_.size())
     {
-        FatalErrorIn
-        (
-            "MixingPlaneInterpolation::masterToSlave("
-            "const Field<Type> ff) const"
-        )   << "given field does not correspond to patch. Patch size: "
+        FatalErrorInFunction
+            << "given field does not correspond to patch. Patch size: "
             << masterPatch_.size() << " field size: " << patchFF.size()
             << abort(FatalError);
     }
@@ -229,7 +226,7 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::masterToSlave
         )
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     interpolate
     (
@@ -273,11 +270,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::slaveToMaster
 {
     if (patchFF.size() != slavePatch_.size())
     {
-        FatalErrorIn
-        (
-            "MixingPlaneInterpolation::slaveToMaster("
-            "const Field<Type> ff) const"
-        )   << "given field does not correspond to patch. Patch size: "
+        FatalErrorInFunction
+            << "given field does not correspond to patch. Patch size: "
             << slavePatch_.size() << " field size: " << patchFF.size()
             << abort(FatalError);
     }
@@ -295,7 +289,7 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::slaveToMaster
         )
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     interpolate
     (
@@ -339,11 +333,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::masterToProfile
 {
     if (patchFF.size() != masterPatch_.size())
     {
-        FatalErrorIn
-        (
-            "MixingPlaneInterpolation::masterToProfile("
-            "const Field<Type> ff) const"
-        )   << "given field does not correspond to patch. Patch size: "
+        FatalErrorInFunction
+            << "given field does not correspond to patch. Patch size: "
             << masterPatch_.size() << " field size: " << patchFF.size()
             << abort(FatalError);
     }
@@ -361,7 +352,7 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::masterToProfile
         )
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     toProfile
     (
@@ -399,11 +390,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::slaveToProfile
 {
     if (patchFF.size() != slavePatch_.size())
     {
-        FatalErrorIn
-        (
-            "MixingPlaneInterpolation::slaveToProfile("
-            "const Field<Type> ff) const"
-        )   << "given field does not correspond to patch. Patch size: "
+        FatalErrorInFunction
+            << "given field does not correspond to patch. Patch size: "
             << slavePatch_.size() << " field size: " << patchFF.size()
             << abort(FatalError);
     }
@@ -421,7 +409,7 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::slaveToProfile
         )
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     toProfile
     (
@@ -459,11 +447,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::profileToMaster
 {
     if (profileFF.size() != nProfileBands())
     {
-        FatalErrorIn
-        (
-            "MixingPlaneInterpolation::profileToMaster("
-            "const Field<Type> ff) const"
-        )   << "given field does not correspond to profile.  Profile size: "
+        FatalErrorInFunction
+            << "given field does not correspond to profile.  Profile size: "
             << nProfileBands() << " field size: " << profileFF.size()
             << abort(FatalError);
     }
@@ -478,7 +463,7 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::profileToMaster
         )
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     fromProfile
     (
@@ -521,16 +506,8 @@ void MixingPlaneInterpolation<MasterPatch, SlavePatch>::maskedProfileToMaster
 {
     if (profileFF.size() != nProfileBands() || result.size() != mask.size())
     {
-        FatalErrorIn
-        (
-            "bvoid MixingPlaneInterpolation<MasterPatch, SlavePatch>::"
-            "maskedProfileToMaster\n"
-            "(\n"
-            "    const Field<Type>& profileFF,\n"
-            "    Field<Type>& result,\n"
-            "    const labelList& mask\n"
-            ") const"
-        )   << "given field does not correspond to profile.  Profile size: "
+        FatalErrorInFunction
+            << "given field does not correspond to profile.  Profile size: "
             << nProfileBands() << " field size: " << profileFF.size()
             << " result size: " << result.size()
             << " mask size: " << mask.size()
@@ -563,11 +540,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::profileToSlave
 {
     if (profileFF.size() != nProfileBands())
     {
-        FatalErrorIn
-        (
-            "MixingPlaneInterpolation::profileToSlave("
-            "const Field<Type> ff) const"
-        )   << "given field does not correspond to profile.  Profile size: "
+        FatalErrorInFunction
+            << "given field does not correspond to profile.  Profile size: "
             << nProfileBands() << " field size: " << profileFF.size()
             << abort(FatalError);
     }
@@ -582,7 +556,7 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::profileToSlave
         )
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     fromProfile
     (
@@ -625,16 +599,8 @@ void MixingPlaneInterpolation<MasterPatch, SlavePatch>::maskedProfileToSlave
 {
     if (profileFF.size() != nProfileBands() || result.size() != mask.size())
     {
-        FatalErrorIn
-        (
-            "void MixingPlaneInterpolation<MasterPatch, SlavePatch>::"
-            "maskedProfileToSlave\n"
-            "(\n"
-            "    const Field<Type>& profileFF,\n"
-            "    Field<Type>& result,\n"
-            "    const labelList& mask\n"
-            ") const"
-        )   << "given field does not correspond to profile.  Profile size: "
+        FatalErrorInFunction
+            << "given field does not correspond to profile.  Profile size: "
             << nProfileBands() << " field size: " << profileFF.size()
             << " result size: " << result.size()
             << " mask size: " << mask.size()
@@ -666,11 +632,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::masterToMaster
 {
     if (patchFF.size() != masterPatch_.size())
     {
-        FatalErrorIn
-        (
-            "MixingPlaneInterpolation::masterToMaster("
-            "const Field<Type> ff)"
-        )   << "given field does not correspond to patch. Patch size: "
+        FatalErrorInFunction
+            << "given field does not correspond to patch. Patch size: "
             << masterPatch_.size() << " field size: " << patchFF.size()
             << abort(FatalError);
     }
@@ -688,7 +651,7 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::masterToMaster
         )
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     interpolate
     (
@@ -732,11 +695,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::slaveToSlave
 {
     if (patchFF.size() != slavePatch_.size())
     {
-        FatalErrorIn
-        (
-            "MixingPlaneInterpolation::slaveToSlave("
-            "const Field<Type> ff)"
-        )   << "given field does not correspond to patch. Patch size: "
+        FatalErrorInFunction
+            << "given field does not correspond to patch. Patch size: "
             << slavePatch_.size() << " field size: " << patchFF.size()
             << abort(FatalError);
     }
@@ -754,7 +714,7 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::slaveToSlave
         )
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     interpolate
     (

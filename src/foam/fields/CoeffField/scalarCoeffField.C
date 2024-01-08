@@ -341,7 +341,7 @@ Foam::tmp<Foam::CoeffField<Foam::scalar> >
 Foam::inv(const CoeffField<scalar>& f)
 {
     tmp<CoeffField<scalar> > tresult(new CoeffField<scalar>(f.size()));
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
     result = 1.0/f;
 
     return tresult;

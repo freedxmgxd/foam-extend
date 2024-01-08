@@ -353,13 +353,13 @@ const Foam::labelList& Foam::faAreaMapper::newFaceLabelsMap() const
 }
 
 
-const Foam::unallocLabelList& Foam::faAreaMapper::directAddressing() const
+const Foam::labelUList& Foam::faAreaMapper::directAddressing() const
 {
     if (!direct())
     {
         FatalErrorIn
         (
-            "const unallocLabelList& faAreaMapper::"
+            "const labelUList& faAreaMapper::"
             "directAddressing() const"
         )   << "Requested direct addressing for an interpolative mapper."
             << abort(FatalError);

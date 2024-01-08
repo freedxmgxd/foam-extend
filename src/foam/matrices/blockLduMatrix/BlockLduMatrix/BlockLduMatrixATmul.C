@@ -63,8 +63,8 @@ void Foam::BlockLduMatrix<Type>::AmulCore
     typedef typename TypeCoeffField::linearTypeField linearTypeField;
     typedef typename TypeCoeffField::squareTypeField squareTypeField;
 
-    const unallocLabelList& u = lduAddr().upperAddr();
-    const unallocLabelList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
 
     const TypeCoeffField& Diag = this->diag();
     const TypeCoeffField& Upper = this->upper();
@@ -207,8 +207,8 @@ void Foam::BlockLduMatrix<Type>::TmulCore
     typedef typename TypeCoeffField::linearTypeField linearTypeField;
     typedef typename TypeCoeffField::squareTypeField squareTypeField;
 
-    const unallocLabelList& u = lduAddr().upperAddr();
-    const unallocLabelList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
 
     const TypeCoeffField& Diag = this->diag();
     const TypeCoeffField& Upper = this->upper();
@@ -333,8 +333,8 @@ void Foam::BlockLduMatrix<Type>::segregateB
     typedef typename TypeCoeffField::linearTypeField linearTypeField;
     typedef typename TypeCoeffField::squareTypeField squareTypeField;
 
-    const unallocLabelList& u = lduAddr().upperAddr();
-    const unallocLabelList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
 
     // Diagonal multiplication
     if (thereIsDiag())

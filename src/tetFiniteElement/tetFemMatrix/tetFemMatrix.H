@@ -169,9 +169,18 @@ public:
         );
 
 
-    // Destructor
+        //- Clone
+        tmp<tetFemMatrix<Type> > clone() const
+        {
+            return tmp<tetFemMatrix<Type> >
+            (
+                new tetFemMatrix<Type>(*this)
+            );
+        }
 
-        virtual ~tetFemMatrix();
+
+    //-Destructor
+    virtual ~tetFemMatrix();
 
 
     // Member functions

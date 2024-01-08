@@ -45,7 +45,7 @@ gaussLaplacianScheme<Type>::famLaplacian
 (
     const edgeScalarField& gamma,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     tmp<edgeScalarField> tdeltaCoeffs = this->tlnGradScheme_().deltaCoeffs(vf);
     const edgeScalarField& deltaCoeffs = tdeltaCoeffs();
@@ -60,7 +60,7 @@ gaussLaplacianScheme<Type>::famLaplacian
             deltaCoeffs.dimensions()*gammaMagSf.dimensions()*vf.dimensions()
         )
     );
-    faMatrix<Type>& fam = tfam();
+    faMatrix<Type>& fam = tfam.ref();
 
     fam.upper() = deltaCoeffs.internalField()*gammaMagSf.internalField();
     fam.negSumDiag();
@@ -113,14 +113,14 @@ tmp<GeometricField<Type, faPatchField, areaMesh> >
 gaussLaplacianScheme<Type>::facLaplacian
 (
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     tmp<GeometricField<Type, faPatchField, areaMesh> > tLaplacian
     (
         fac::div(this->tlnGradScheme_().lnGrad(vf)*vf.mesh().magLe())
     );
 
-    tLaplacian().rename("laplacian(" + vf.name() + ')');
+    tLaplacian.ref().rename("laplacian(" + vf.name() + ')');
 
     return tLaplacian;
 }
@@ -132,14 +132,17 @@ gaussLaplacianScheme<Type>::facLaplacian
 (
     const edgeScalarField& gamma,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     tmp<GeometricField<Type, faPatchField, areaMesh> > tLaplacian
     (
         fac::div(gamma*this->tlnGradScheme_().lnGrad(vf)*vf.mesh().magLe())
     );
 
-    tLaplacian().rename("laplacian(" + gamma.name() + ',' + vf.name() + ')');
+    tLaplacian.ref().rename
+    (
+        "laplacian(" + gamma.name() + ',' + vf.name() + ')'
+    );
 
     return tLaplacian;
 }

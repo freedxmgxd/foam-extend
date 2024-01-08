@@ -129,7 +129,7 @@ Foam::pointVolInterpolation::interpolate
     );
 
     // Perform interpolation
-    interpolate(pf, tvf());
+    interpolate(pf, tvf.ref());
 
     return tvf;
 }

@@ -305,7 +305,7 @@ solidContactFvPatchVectorField::solidContactFvPatchVectorField
     // check shadow patch exists
     if (shadowPatchID_ == -1)
     {
-        FatalError
+        FatalErrorInFunction
             << "\nCannot find shadowPatch called " << dict.lookup("shadowPatch")
             << " for patch " << patch().name() << exit(FatalError);
     }
@@ -933,7 +933,7 @@ tmp<vectorField> solidContactFvPatchVectorField::interpolateSlaveToMaster
   }
   else
   {
-      FatalErrorIn("solidContactFvPatchVectorField::interpolateSlaveToMaster()")
+      FatalErrorInFunction
           << "interpolationMethod is not patchToPatch or GGI!"
           << abort(FatalError);
   }
@@ -943,10 +943,10 @@ tmp<vectorField> solidContactFvPatchVectorField::interpolateSlaveToMaster
     = mesh.boundaryMesh()[patch().index()].start();
 
   tmp<vectorField> tmasterInterpField
-      (
+  (
           new vectorField(masterFaceZonePatchPtr_->size(),vector::zero)
           );
-  vectorField& masterInterpField = tmasterInterpField();
+  vectorField& masterInterpField = tmasterInterpField.ref();
 
   forAll(masterInterpField, i)
     {
@@ -1328,7 +1328,7 @@ snGrad() const
 tmp<scalarField> solidContactFvPatchVectorField::Qc() const
 {
     tmp<scalarField> tQc(new scalarField(patch().size(), 0.0));
-    scalarField& Qc = tQc();
+    scalarField& Qc = tQc.ref();
 
     // Integrate energy using trapezoidal rule
     // 0.5*averageForce*incrementOfDisplacement

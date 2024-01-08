@@ -79,10 +79,10 @@ class localTimeStep
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        localTimeStep(const localTimeStep&);
+        localTimeStep(const localTimeStep&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const localTimeStep&);
+        void operator=(const localTimeStep&) = delete;
 
 
 public:
@@ -96,6 +96,10 @@ public:
             const basicThermo& thermo,
             compressible::turbulenceModel& turbModel
         );
+
+
+    //- Destructor
+    ~localTimeStep() = default;
 
 
     // Member Functions

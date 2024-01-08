@@ -34,9 +34,9 @@ Foam::tmp<Foam::Field<Type> > Foam::faPatch::patchInternalField
 ) const
 {
     tmp<Field<Type> > tpif(new Field<Type>(size()));
-    Field<Type>& pif = tpif();
+    Field<Type>& pif = tpif.ref();
 
-    const unallocLabelList& edgeFaces = this->edgeFaces();
+    const labelUList& edgeFaces = this->edgeFaces();
 
     forAll(pif, facei)
     {

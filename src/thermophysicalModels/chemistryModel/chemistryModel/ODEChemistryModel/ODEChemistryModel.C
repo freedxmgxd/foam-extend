@@ -491,7 +491,7 @@ Foam::ODEChemistryModel<CompType, ThermoType>::tc() const
         )
     );
 
-    scalarField& tc = ttc();
+    scalarField& tc = ttc.ref();
 
     label nReaction = reactions_.size();
 
@@ -532,7 +532,7 @@ Foam::ODEChemistryModel<CompType, ThermoType>::tc() const
         }
     }
 
-    ttc().correctBoundaryConditions();
+    ttc.ref().correctBoundaryConditions();
 
     return ttc;
 }
@@ -563,7 +563,7 @@ Foam::ODEChemistryModel<CompType, ThermoType>::Sh() const
 
     if (this->chemistry_)
     {
-        scalarField& Sh = tSh();
+        scalarField& Sh = tSh.ref();
 
         forAll (Y_, i)
         {
@@ -604,7 +604,7 @@ Foam::ODEChemistryModel<CompType, ThermoType>::dQ() const
 
     if (this->chemistry_)
     {
-        volScalarField& dQ = tdQ();
+        volScalarField& dQ = tdQ.ref();
         dQ.dimensionedInternalField() = this->mesh().V()*Sh()();
     }
 

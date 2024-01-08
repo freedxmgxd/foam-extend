@@ -65,8 +65,8 @@ void Foam::mgMeshLevel::makeCompactAddressingAndWeights
     scalarField& boundaryAreas
 ) const
 {
-    const unallocLabelList& upperAddr = owner();
-    const unallocLabelList& lowerAddr = neighbour();
+    const labelUList& upperAddr = owner();
+    const labelUList& lowerAddr = neighbour();
 
     const label nFineCells = nCells();
     const label nFineFaces = nInternalFaces();

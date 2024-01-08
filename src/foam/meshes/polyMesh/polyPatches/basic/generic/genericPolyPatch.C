@@ -104,12 +104,6 @@ Foam::genericPolyPatch::genericPolyPatch
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::genericPolyPatch::~genericPolyPatch()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::genericPolyPatch::write(Ostream& os) const

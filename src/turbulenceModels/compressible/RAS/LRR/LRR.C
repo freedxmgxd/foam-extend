@@ -353,7 +353,7 @@ void LRR::correct()
     epsilon_.boundaryField().updateCoeffs();
 
     // Dissipation equation
-    tmp<fvScalarMatrix> epsEqn
+    fvScalarMatrix epsEqn
     (
         fvm::ddt(rho_, epsilon_)
       + fvm::div(phi_, epsilon_)
@@ -364,7 +364,7 @@ void LRR::correct()
       - fvm::Sp(C2_*rho_*epsilon_/k_, epsilon_)
     );
 
-    epsEqn().relax();
+    epsEqn.relax();
 
     // No longer needed: matrix completes at the point of solution
     // HJ, 17/Apr/2012
@@ -399,7 +399,7 @@ void LRR::correct()
     }
 
 
-    tmp<fvSymmTensorMatrix> REqn
+    fvSymmTensorMatrix REqn
     (
         fvm::ddt(rho_, R_)
       + fvm::div(phi_, R_)
@@ -412,7 +412,7 @@ void LRR::correct()
       - Clrr2_*rho_*dev(P)
     );
 
-    REqn().relax();
+    REqn.relax();
     solve(REqn);
 
     R_.max

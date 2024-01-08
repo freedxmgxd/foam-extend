@@ -80,10 +80,10 @@ protected:
     // Private Member Functions
 
         //- Disallow copy construct
-        laplacianScheme(const laplacianScheme&);
+        laplacianScheme(const laplacianScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const laplacianScheme&);
+        void operator=(const laplacianScheme&) = delete;
 
 
 public:
@@ -156,9 +156,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~laplacianScheme();
+    //- Destructor
+    virtual ~laplacianScheme() = default;
 
 
     // Member Functions
@@ -173,30 +172,30 @@ public:
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<fvMatrix<Type> > fvmLaplacian
         (
             const GeometricField<GType, fvPatchField, volMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
         virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
         (
             const GeometricField<GType, fvPatchField, volMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 };
 
 

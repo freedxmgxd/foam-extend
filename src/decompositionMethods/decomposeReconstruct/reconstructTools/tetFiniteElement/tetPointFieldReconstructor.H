@@ -145,9 +145,9 @@ public:
                     return true;
                 }
 
-                virtual const unallocLabelList& directAddressing() const
+                virtual const labelUList& directAddressing() const
                 {
-                    return unallocLabelList::null();
+                    return labelUList::null();
                 }
         };
 

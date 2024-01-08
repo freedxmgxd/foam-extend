@@ -40,23 +40,18 @@ Foam::tetPolyPatchInterpolation::faceToPointInterpolate
 {
     if (ff.size() != patch_.patch().size())
     {
-        FatalErrorIn
-        (
-            "tmp<Foam::Field<Type> >\n"
-            "tetPolyPatchInterpolation::faceToPointInterpolate\n"
-            "(\n"
-            "    const Field<Type>& ff\n"
-            ") const"
-        )  << "Field size: " << ff.size() << " does not match number of faces: "
-           << patch_.patch().size()
-           << abort(FatalError);
+        FatalErrorInFunction
+            << "Field size: " << ff.size()
+            << " does not match number of faces: "
+            << patch_.patch().size()
+            << abort(FatalError);
     }
 
     tmp<Field<Type> > tresult
     (
         new Field<Type>(patch_.size())
     );
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     // Insert the point values first
     label i = 0;
@@ -102,24 +97,18 @@ Foam::tetPolyPatchInterpolation::pointToPointInterpolate
 {
     if (ff.size() != patch_.patch().nPoints())
     {
-        FatalErrorIn
-        (
-            "tmp<Foam::Field<Type> >\n"
-            "tetPolyPatchInterpolation::pointToPointInterpolate\n"
-            "(\n"
-            "    const Field<Type>& ff\n"
-            ") const"
-        )  << "Field size: " << ff.size()
-           << " does not match number of points: "
-           << patch_.patch().nPoints()
-           << abort(FatalError);
+        FatalErrorInFunction
+            << "Field size: " << ff.size()
+            << " does not match number of points: "
+            << patch_.patch().nPoints()
+            << abort(FatalError);
     }
 
     tmp<Field<Type> > tresult
     (
         new Field<Type>(patch_.size())
     );
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     // Insert the point values first; no interpolation necessary
     label i = 0;

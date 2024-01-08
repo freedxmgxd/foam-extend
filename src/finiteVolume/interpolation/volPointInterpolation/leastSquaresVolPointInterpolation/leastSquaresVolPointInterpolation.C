@@ -1010,7 +1010,7 @@ void leastSquaresVolPointInterpolation::makeProcCells() const
 
             const labelList& meshPoints = procPatch.meshPoints();
 
-            const unallocLabelList& patchCells = procPatch.faceCells();
+            const labelUList& patchCells = procPatch.faceCells();
 
             labelHashSet cellSet;
             labelHashSet pointSet;
@@ -1444,7 +1444,7 @@ void leastSquaresVolPointInterpolation::makeWeights() const
             label start = mesh().boundaryMesh()[patchID].start();
             label localFaceID = faceID - start;
 
-            const unallocLabelList& faceCells =
+            const labelUList& faceCells =
                 mesh().boundary()[patchID].faceCells();
 
             const cyclicFvPatch& cycPatch =
@@ -2029,7 +2029,7 @@ void leastSquaresVolPointInterpolation::makeOrigins() const
             label start = mesh().boundaryMesh()[patchID].start();
             label localFaceID = faceID - start;
 
-            const unallocLabelList& faceCells =
+            const labelUList& faceCells =
                 mesh().boundary()[patchID].faceCells();
 
             const cyclicFvPatch& cycPatch =
@@ -2155,7 +2155,7 @@ void leastSquaresVolPointInterpolation::makeOrigins() const
 //             label start = mesh().boundaryMesh()[patchID].start();
 //             label localFaceID = faceID - start;
 
-//             const unallocLabelList& faceCells =
+//             const labelUList& faceCells =
 //                 mesh().boundary()[patchID].faceCells();
 
 //             label sizeby2 = faceCells.size()/2;
@@ -2674,7 +2674,7 @@ void leastSquaresVolPointInterpolation::makeInvLsMatrices() const
             label start = mesh().boundaryMesh()[patchID].start();
             label localFaceID = faceID - start;
 
-            const unallocLabelList& faceCells =
+            const labelUList& faceCells =
                 mesh().boundary()[patchID].faceCells();
 
             const cyclicFvPatch& cycPatch =
@@ -2800,7 +2800,7 @@ void leastSquaresVolPointInterpolation::makeInvLsMatrices() const
 //             label start = mesh().boundaryMesh()[patchID].start();
 //             label localFaceID = faceID - start;
 
-//             const unallocLabelList& faceCells =
+//             const labelUList& faceCells =
 //                 mesh().boundary()[patchID].faceCells();
 
 //             label sizeby2 = faceCells.size()/2;

@@ -273,14 +273,14 @@ bool Foam::tetPolyPatchMapper::direct() const
 }
 
 
-const Foam::unallocLabelList&
+const Foam::labelUList&
 Foam::tetPolyPatchMapper::directAddressing() const
 {
     if (!direct())
     {
         FatalErrorIn
         (
-            "const unallocLabelList& tetPolyPatchMapper::"
+            "const labelUList& tetPolyPatchMapper::"
             "directAddressing() const"
         )   << "Requested direct addressing for an interpolative mapper."
             << abort(FatalError);

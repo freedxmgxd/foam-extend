@@ -68,11 +68,11 @@ class backwardDualDdtScheme
         //- Name of old field
         word oldName_;
 
-        //- current physical time-step
-        scalar physDeltaT_;
+        //- Current physical time-step
+        mutable scalar physDeltaT_;
 
-        //- previous physical time-step
-        scalar physDeltaT0_;
+        //- Previous physical time-step
+        mutable scalar physDeltaT0_;
 
         //- Return the current time-step
         scalar deltaT_() const;
@@ -95,11 +95,12 @@ class backwardDualDdtScheme
         template<class GeoField>
         scalar deltaT0_(const GeoField&) const;
 
+
         //- Disallow default bitwise copy construct
-        backwardDualDdtScheme(const backwardDualDdtScheme&);
+        backwardDualDdtScheme(const backwardDualDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const backwardDualDdtScheme&);
+        void operator=(const backwardDualDdtScheme&) = delete;
 
 
 public:
@@ -133,6 +134,10 @@ public:
         {}
 
 
+    //- Destructor
+    virtual ~backwardDualDdtScheme() = default;
+
+
     // Member Functions
 
         //- Return mesh reference
@@ -141,61 +146,61 @@ public:
             return fv::ddtScheme<Type>::mesh();
         }
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const dimensioned<Type>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
-        (
-            const dimensionedScalar&,
-            const GeometricField<Type, fvPatchField, volMesh>&
-        );
-
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
-        (
-            const volScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
-        );
-
-        tmp<fvMatrix<Type> > fvmDdt
-        (
-            const GeometricField<Type, fvPatchField, volMesh>&
-        );
-
-        tmp<fvMatrix<Type> > fvmDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<fvMatrix<Type> > fvmDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
+
+        virtual tmp<fvMatrix<Type> > fvmDdt
+        (
+            const GeometricField<Type, fvPatchField, volMesh>&
+        ) const;
+
+        virtual tmp<fvMatrix<Type> > fvmDdt
+        (
+            const dimensionedScalar&,
+            const GeometricField<Type, fvPatchField, volMesh>&
+        ) const;
+
+        virtual tmp<fvMatrix<Type> > fvmDdt
+        (
+            const volScalarField&,
+            const GeometricField<Type, fvPatchField, volMesh>&
+        ) const;
 
         typedef typename ddtScheme<Type>::fluxFieldType fluxFieldType;
 
-        tmp<fluxFieldType> fvcDdtPhiCorr
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
             const volScalarField& rA,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
-        );
+        ) const;
 
-        tmp<fluxFieldType> fvcDdtPhiCorr
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
             const volScalarField& rA,
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
-        );
+        ) const;
 
 
         // Member functions for the new time consistent formulation
@@ -204,13 +209,13 @@ public:
             const GeometricField<Type, fvsPatchField, surfaceMesh>& faceU,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const surfaceScalarField& rAUf
-        );
+        ) const;
 
 
         tmp<surfaceScalarField> meshPhi
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 };
 
 
@@ -220,7 +225,7 @@ tmp<surfaceScalarField> backwardDualDdtScheme<scalar>::fvcDdtPhiCorr
     const volScalarField& rA,
     const volScalarField& U,
     const surfaceScalarField& phi
-);
+) const;
 
 
 template<>
@@ -230,7 +235,7 @@ tmp<surfaceScalarField> backwardDualDdtScheme<scalar>::fvcDdtPhiCorr
     const volScalarField& rho,
     const volScalarField& U,
     const surfaceScalarField& phi
-);
+) const;
 
 
 template<>
@@ -239,7 +244,7 @@ tmp<surfaceScalarField> backwardDualDdtScheme<scalar>::fvcDdtConsistentPhiCorr
     const surfaceScalarField& faceU,
     const volScalarField& U,
     const surfaceScalarField& rAUf
-);
+) const;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

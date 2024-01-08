@@ -33,6 +33,42 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+template<class TypeR, class GeoMesh>
+tmp<DimensionedField<TypeR, GeoMesh>> New
+(
+    const tmp<DimensionedField<TypeR, GeoMesh>>& tdf1,
+    const word& name,
+    const dimensionSet& dimensions
+)
+{
+    DimensionedField<TypeR, GeoMesh>& df1 =
+        const_cast<DimensionedField<TypeR, GeoMesh>& >(tdf1());
+
+    if (tdf1.isTmp())
+    {
+        df1.rename(name);
+        df1.dimensions().reset(dimensions);
+        return tdf1;
+    }
+    else
+    {
+        return tmp<DimensionedField<TypeR, GeoMesh> >
+        (
+            new DimensionedField<TypeR, GeoMesh>
+            (
+                IOobject
+                (
+                    name,
+                    df1.instance(),
+                    df1.db()
+                ),
+                df1.mesh(),
+                dimensions
+            )
+        );    }
+}
+
+
 template<class TypeR, class Type1, class GeoMesh>
 class reuseTmpDimensionedField
 {
@@ -61,11 +97,6 @@ public:
                 dimensions
             )
         );
-    }
-
-    static void clear(const tmp<DimensionedField<Type1, GeoMesh> >& tdf1)
-    {
-        tdf1.clear();
     }
 };
 
@@ -111,18 +142,10 @@ public:
             );
         }
     }
-
-    static void clear(const tmp<DimensionedField<TypeR, GeoMesh> >& tdf1)
-    {
-        if (tdf1.isTmp())
-        {
-            tdf1.ptr();
-        }
-    }
 };
 
 
-template<class TypeR, class Type1, class Type12, class Type2, class GeoMesh>
+template<class TypeR, class Type1, class Type2, class GeoMesh>
 class reuseTmpTmpDimensionedField
 {
 public:
@@ -152,21 +175,11 @@ public:
             )
         );
     }
-
-    static void clear
-    (
-        const tmp<DimensionedField<Type1, GeoMesh> >& tdf1,
-        const tmp<DimensionedField<Type2, GeoMesh> >& tdf2
-    )
-    {
-        tdf1.clear();
-        tdf2.clear();
-    }
 };
 
 
-template<class TypeR, class Type1, class Type12, class GeoMesh>
-class reuseTmpTmpDimensionedField<TypeR, Type1, Type12, TypeR, GeoMesh>
+template<class TypeR, class Type1, class GeoMesh>
+class reuseTmpTmpDimensionedField<TypeR, Type1, TypeR, GeoMesh>
 {
 public:
 
@@ -208,24 +221,11 @@ public:
             );
         }
     }
-
-    static void clear
-    (
-        const tmp<DimensionedField<Type1, GeoMesh> >& tdf1,
-        const tmp<DimensionedField<TypeR, GeoMesh> >& tdf2
-    )
-    {
-        tdf1.clear();
-        if (tdf2.isTmp())
-        {
-            tdf2.ptr();
-        }
-    }
 };
 
 
 template<class TypeR, class Type2, class GeoMesh>
-class reuseTmpTmpDimensionedField<TypeR, TypeR, TypeR, Type2, GeoMesh>
+class reuseTmpTmpDimensionedField<TypeR, TypeR, Type2, GeoMesh>
 {
 public:
 
@@ -266,24 +266,11 @@ public:
             );
         }
     }
-
-    static void clear
-    (
-        const tmp<DimensionedField<TypeR, GeoMesh> >& tdf1,
-        const tmp<DimensionedField<Type2, GeoMesh> >& tdf2
-    )
-    {
-        if (tdf1.isTmp())
-        {
-            tdf1.ptr();
-        }
-        tdf2.clear();
-    }
 };
 
 
 template<class TypeR, class GeoMesh>
-class reuseTmpTmpDimensionedField<TypeR, TypeR, TypeR, TypeR, GeoMesh>
+class reuseTmpTmpDimensionedField<TypeR, TypeR, TypeR, GeoMesh>
 {
 public:
 
@@ -332,24 +319,6 @@ public:
                     dimensions
                 )
             );
-        }
-    }
-
-    static void clear
-    (
-        const tmp<DimensionedField<TypeR, GeoMesh> >& tdf1,
-        const tmp<DimensionedField<TypeR, GeoMesh> >& tdf2
-    )
-    {
-        if (tdf1.isTmp())
-        {
-            tdf1.ptr();
-            tdf2.clear();
-        }
-        else if (tdf2.isTmp())
-        {
-            tdf1.clear();
-            tdf2.ptr();
         }
     }
 };

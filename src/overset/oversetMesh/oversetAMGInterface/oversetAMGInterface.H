@@ -153,7 +153,7 @@ public:
             //  the interface as a field
             virtual tmp<labelField> interfaceInternalField
             (
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const;
 
 
@@ -203,14 +203,14 @@ public:
             virtual void initTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const;
 
             //- Transfer and return neighbour field (face field).  Dummy
             virtual tmp<labelField> transfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const;
 
             //- Initialise transfer of internal field adjacent to the interface
@@ -218,7 +218,7 @@ public:
             virtual void initInternalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& iF
+                const labelUList& iF
             ) const;
 
             //- Transfer and return internal field adjacent to the interface
@@ -226,7 +226,7 @@ public:
             virtual tmp<labelField> internalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& iF
+                const labelUList& iF
             ) const;
 
             //- Initialise transfer of internal field adjacent to the interface

@@ -83,7 +83,7 @@ leastSquaresFaGrad<Type>::grad
             zeroGradientFaPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, faPatchField, areaMesh>& lsGrad = tlsGrad();
+    GeometricField<GradType, faPatchField, areaMesh>& lsGrad = tlsGrad.ref();
 
     // Get reference to least square vectors
     const leastSquaresFaVectors& lsv = leastSquaresFaVectors::New(mesh);
@@ -91,8 +91,8 @@ leastSquaresFaGrad<Type>::grad
     const edgeVectorField& ownLs = lsv.pVectors();
     const edgeVectorField& neiLs = lsv.nVectors();
 
-    const unallocLabelList& own = mesh.owner();
-    const unallocLabelList& nei = mesh.neighbour();
+    const labelUList& own = mesh.owner();
+    const labelUList& nei = mesh.neighbour();
 
     forAll(own, edgei)
     {
@@ -110,7 +110,7 @@ leastSquaresFaGrad<Type>::grad
     {
         const faePatchVectorField& patchOwnLs = ownLs.boundaryField()[patchi];
 
-        const unallocLabelList& edgeFaces =
+        const labelUList& edgeFaces =
             lsGrad.boundaryField()[patchi].patch().edgeFaces();
 
         if (vsf.boundaryField()[patchi].coupled())

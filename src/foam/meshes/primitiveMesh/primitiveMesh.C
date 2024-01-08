@@ -197,11 +197,8 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMesh::movePoints
 {
     if (newPoints.size() <  nPoints() || oldPoints.size() < nPoints())
     {
-        FatalErrorIn
-        (
-            "primitiveMesh::movePoints(const pointField& newPoints, "
-            "const pointField& oldPoints)"
-        )   << "Cannot move points: size of given point list smaller "
+        FatalErrorInFunction
+            << "Cannot move points: size of given point list smaller "
             << "than the number of active points" << nl
             << "newPoints: " << newPoints.size()
             << " oldPoints: " << oldPoints.size()
@@ -213,7 +210,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMesh::movePoints
     const faceList& f = faces();
 
     tmp<scalarField> tsweptVols(new scalarField(f.size()));
-    scalarField& sweptVols = tsweptVols();
+    scalarField& sweptVols = tsweptVols.ref();
 
     forAll(f, faceI)
     {

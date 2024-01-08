@@ -165,7 +165,7 @@ void Foam::decompositionMethod::calcCSR
     {
         if (isA<cyclicPolyPatch>(pbm[patchi]))
         {
-            const unallocLabelList& faceCells = pbm[patchi].faceCells();
+            const labelUList& faceCells = pbm[patchi].faceCells();
 
             label sizeby2 = faceCells.size()/2;
 
@@ -388,7 +388,7 @@ void Foam::decompositionMethod::fixCyclics
         {
             if (isA<cyclicPolyPatch>(pbm[patchi]))
             {
-                const unallocLabelList& faceCells = pbm[patchi].faceCells();
+                const labelUList& faceCells = pbm[patchi].faceCells();
 
                 const label sizeby2 = faceCells.size()/2;
 

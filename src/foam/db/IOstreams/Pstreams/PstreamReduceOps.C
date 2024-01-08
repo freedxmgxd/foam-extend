@@ -23,12 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mpi.h"
-
 #include "label.H"
 #include "Pstream.H"
 #include "PstreamReduceOps.H"
 #include "allReduce.H"
+
+#include <mpi.h>
 
 // Check type of label for use in MPI calls
 #if WM_LABEL_SIZE == 32

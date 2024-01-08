@@ -77,7 +77,7 @@ tmp<Field<diagTensorType> > transformFieldMask<diagTensorType>                  
 )                                                                                   \
 {                                                                                   \
     tmp<Field<diagTensorType> > tRes( new Field<diagTensorType>(stf.size()) );      \
-    Field<diagTensorType>& res = tRes();                                            \
+    Field<diagTensorType>& res = tRes.ref();                                        \
     TFOR_ALL_F_OP_F(diagTensorType, res, =, sphericalTensorType, stf)               \
     return tRes;                                                                    \
 }

@@ -106,19 +106,19 @@ public:
         }
 
         //- Return lower addressing (i.e. lower label = upper triangle)
-        virtual const unallocLabelList& lowerAddr() const
+        virtual const labelUList& lowerAddr() const
         {
             return lowerAddr_;
         }
 
         //- Return upper addressing (i.e. upper label)
-        virtual const unallocLabelList& upperAddr() const
+        virtual const labelUList& upperAddr() const
         {
             return upperAddr_;
         }
 
         //- Return patch addressing
-        virtual const unallocLabelList& patchAddr(const label i) const
+        virtual const labelUList& patchAddr(const label i) const
         {
             FatalErrorIn
             (
@@ -127,7 +127,7 @@ public:
                 << " Illegal request. "
                 << abort(FatalError);
 
-            return unallocLabelList::null();
+            return labelUList::null();
         }
 
         // Return patch field evaluation schedule

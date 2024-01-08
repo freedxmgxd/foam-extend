@@ -326,7 +326,7 @@ GGIInterpolation<MasterPatch, SlavePatch>::masterToSlave
     );
 
     // Do interpolation
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     if (this->doTransform() && pTraits<Type>::rank > 0)
     {
@@ -481,7 +481,7 @@ GGIInterpolation<MasterPatch, SlavePatch>::slaveToMaster
     );
 
     // Do interpolation
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     if (this->doTransform() && pTraits<Type>::rank > 0)
     {

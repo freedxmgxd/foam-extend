@@ -226,19 +226,19 @@ public:
         // Addressing
 
             //- Return owner addressing
-            virtual const unallocLabelList& owner() const
+            virtual const labelUList& owner() const
             {
                 return owner_;
             }
 
             //- Return neighbour addressing
-            const unallocLabelList& neighbour() const
+            const labelUList& neighbour() const
             {
                 return neighbour_;
             }
 
             //- Return face-cell addressing for all patches
-            virtual const unallocLabelList& faceCells
+            virtual const labelUList& faceCells
             (
                 const label patchNo
             ) const

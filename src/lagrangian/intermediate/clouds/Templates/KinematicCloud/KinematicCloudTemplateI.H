@@ -244,7 +244,7 @@ Foam::KinematicCloud<ParcelType>::SU() const
         )
     );
 
-    vectorField& SU = tSU().field();
+    vectorField& SU = tSU.ref().field();
     SU = UTrans_/(mesh_.V()*this->db().time().deltaT());
 
     return tSU;

@@ -169,7 +169,7 @@ public:
             }
 
             //- Return faceCells next to the IB surface
-            virtual const unallocLabelList& faceCells() const;
+            virtual const labelUList& faceCells() const;
 
 
         // Access functions for geometrical data

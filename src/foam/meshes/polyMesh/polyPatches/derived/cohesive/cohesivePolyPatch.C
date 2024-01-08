@@ -96,12 +96,6 @@ cohesivePolyPatch::cohesivePolyPatch
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-cohesivePolyPatch::~cohesivePolyPatch()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void cohesivePolyPatch::initOrder(const primitivePatch& pp) const

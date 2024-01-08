@@ -77,7 +77,7 @@ Foam::faEdgeMapper::~faEdgeMapper()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::unallocLabelList& Foam::faEdgeMapper::directAddressing() const
+const Foam::labelUList& Foam::faEdgeMapper::directAddressing() const
 {
     if (!directAddrPtr_)
     {

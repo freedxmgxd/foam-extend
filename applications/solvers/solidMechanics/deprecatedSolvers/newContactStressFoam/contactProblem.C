@@ -270,8 +270,7 @@ tmp<volScalarField> contactProblem::contactArea() const
             dimensionedScalar(0)
         )
     );
-
-    volScalarField& ca = tca();
+    volScalarField& ca = tca.ref();
 
     // Set contact area boundary
     const contactPatchPairList& contacts = *this;

@@ -46,7 +46,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> >
 noLaplacianScheme<Type, GType>::fvcLaplacian
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     const surfaceScalarField& deltaCoeffs = this->mesh().deltaCoeffs();
     const surfaceScalarField& magSf = this->mesh().magSf();
@@ -79,7 +79,7 @@ noLaplacianScheme<Type, GType>::fvmLaplacian
 (
     const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     const surfaceScalarField& deltaCoeffs = this->mesh().deltaCoeffs();
     const surfaceScalarField& magSf = this->mesh().magSf();
@@ -95,7 +95,7 @@ noLaplacianScheme<Type, GType>::fvmLaplacian
     );
 
     // Create dummy diagonal
-    tfvm().diag() = 0;
+    tfvm.ref().diag() = 0;
 
     return tfvm;
 }
@@ -107,7 +107,7 @@ noLaplacianScheme<Type, GType>::fvcLaplacian
 (
     const GeometricField<GType, fvsPatchField, surfaceMesh>& gamma,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     const surfaceScalarField& deltaCoeffs = this->mesh().deltaCoeffs();
     const surfaceScalarField& magSf = this->mesh().magSf();

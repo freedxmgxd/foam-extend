@@ -268,7 +268,7 @@ void Foam::layeredOverlapFringe::calcAddressing() const
                     chipf.patchNeighbourField();
 
                 // Get face cells
-                const unallocLabelList& fc = chipf.patch().faceCells();
+                const labelUList& fc = chipf.patch().faceCells();
 
                 // Loop through neighbouring processor field
                 forAll (nbrProcIndicator, pfaceI)

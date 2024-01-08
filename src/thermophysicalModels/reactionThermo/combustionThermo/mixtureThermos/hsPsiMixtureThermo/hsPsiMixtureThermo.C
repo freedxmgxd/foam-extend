@@ -178,7 +178,7 @@ Foam::hsPsiMixtureThermo<MixtureType>::hc() const
         )
     );
 
-    volScalarField& hcf = thc();
+    volScalarField& hcf = thc.ref();
     scalarField& hcCells = hcf.internalField();
 
     forAll(hcCells, celli)
@@ -209,7 +209,7 @@ Foam::hsPsiMixtureThermo<MixtureType>::hs
 ) const
 {
     tmp<scalarField> ths(new scalarField(T.size()));
-    scalarField& hs = ths();
+    scalarField& hs = ths.ref();
 
     forAll(T, celli)
     {
@@ -229,7 +229,7 @@ Foam::hsPsiMixtureThermo<MixtureType>::hs
 ) const
 {
     tmp<scalarField> ths(new scalarField(T.size()));
-    scalarField& hs = ths();
+    scalarField& hs = ths.ref();
 
     forAll(T, facei)
     {
@@ -250,7 +250,7 @@ Foam::hsPsiMixtureThermo<MixtureType>::Cp
 {
     tmp<scalarField> tCp(new scalarField(T.size()));
 
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, facei)
     {
@@ -270,7 +270,7 @@ Foam::hsPsiMixtureThermo<MixtureType>::Cp
 ) const
 {
     tmp<scalarField> tCp(new scalarField(T.size()));
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, celli)
     {
@@ -304,7 +304,7 @@ Foam::hsPsiMixtureThermo<MixtureType>::Cp() const
         )
     );
 
-    volScalarField& cp = tCp();
+    volScalarField& cp = tCp.ref();
 
     scalarField& cpCells = cp.internalField();
     const scalarField& TCells = T_.internalField();
@@ -333,7 +333,7 @@ Foam::hsPsiMixtureThermo<MixtureType>::Cv
 {
     tmp<scalarField> tCv(new scalarField(T.size()));
 
-    scalarField& cp = tCv();
+    scalarField& cp = tCv.ref();
 
     forAll(T, facei)
     {
@@ -367,19 +367,19 @@ Foam::hsPsiMixtureThermo<MixtureType>::Cv() const
         )
     );
 
-    volScalarField& cp = tCv();
+    volScalarField& cv = tCv.ref();
 
-    scalarField& cpCells = cp.internalField();
+    scalarField& cvCells = cv.internalField();
     const scalarField& TCells = T_.internalField();
 
     forAll(TCells, celli)
     {
-        cpCells[celli] = this->cellMixture(celli).Cv(TCells[celli]);
+        cvCells[celli] = this->cellMixture(celli).Cv(TCells[celli]);
     }
 
     forAll(T_.boundaryField(), patchi)
     {
-        cp.boundaryField()[patchi] = Cv(T_.boundaryField()[patchi], patchi);
+        cv.boundaryField()[patchi] = Cv(T_.boundaryField()[patchi], patchi);
     }
 
     return tCv;

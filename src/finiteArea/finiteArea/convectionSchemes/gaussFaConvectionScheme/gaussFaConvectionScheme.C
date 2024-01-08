@@ -72,7 +72,7 @@ gaussConvectionScheme<Type>::famDiv
             faceFlux.dimensions()*vf.dimensions()
         )
     );
-    faMatrix<Type>& fam = tfam();
+    faMatrix<Type>& fam = tfam.ref();
 
     fam.lower() = -weights.internalField()*faceFlux.internalField();
     fam.upper() = fam.lower() + faceFlux.internalField();
@@ -117,7 +117,7 @@ gaussConvectionScheme<Type>::facDiv
         fac::edgeIntegrate(flux(faceFlux, vf))
     );
 
-    tConvection().rename
+    tConvection.ref().rename
     (
         "convection(" + faceFlux.name() + ',' + vf.name() + ')'
     );

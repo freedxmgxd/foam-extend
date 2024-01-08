@@ -175,7 +175,7 @@ Foam::tmp<Foam::scalarField> Foam::hsRhoThermo<MixtureType>::hs
 ) const
 {
     tmp<scalarField> ths(new scalarField(T.size()));
-    scalarField& hs = ths();
+    scalarField& hs = ths.ref();
 
     forAll(T, celli)
     {
@@ -194,7 +194,7 @@ Foam::tmp<Foam::scalarField> Foam::hsRhoThermo<MixtureType>::hs
 ) const
 {
     tmp<scalarField> ths(new scalarField(T.size()));
-    scalarField& hs = ths();
+    scalarField& hs = ths.ref();
 
     forAll(T, facei)
     {
@@ -213,7 +213,7 @@ Foam::tmp<Foam::scalarField> Foam::hsRhoThermo<MixtureType>::Cp
 ) const
 {
     tmp<scalarField> tCp(new scalarField(T.size()));
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, facei)
     {
@@ -232,7 +232,7 @@ Foam::tmp<Foam::scalarField> Foam::hsRhoThermo<MixtureType>::Cp
 ) const
 {
     tmp<scalarField> tCp(new scalarField(T.size()));
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, celli)
     {
@@ -265,7 +265,7 @@ Foam::tmp<Foam::volScalarField> Foam::hsRhoThermo<MixtureType>::Cp() const
         )
     );
 
-    volScalarField& cp = tCp();
+    volScalarField& cp = tCp.ref();
 
     forAll(this->T_, celli)
     {
@@ -295,7 +295,7 @@ Foam::tmp<Foam::scalarField> Foam::hsRhoThermo<MixtureType>::Cv
 ) const
 {
     tmp<scalarField> tCv(new scalarField(T.size()));
-    scalarField& cv = tCv();
+    scalarField& cv = tCv.ref();
 
     forAll(T, facei)
     {
@@ -328,7 +328,7 @@ Foam::tmp<Foam::volScalarField> Foam::hsRhoThermo<MixtureType>::Cv() const
         )
     );
 
-    volScalarField& cv = tCv();
+    volScalarField& cv = tCv.ref();
 
     forAll(this->T_, celli)
     {

@@ -41,6 +41,7 @@ SourceFiles
 #include "label.H"
 #include "scalar.H"
 #include "tensor.H"
+#include "contiguous.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -203,6 +204,13 @@ public:
         friend Ostream& operator<<(Ostream&, const wallPoint&);
         friend Istream& operator>>(Istream&, wallPoint&);
 };
+
+
+// * * * * * * * * * * * * * * * * * Traits  * * * * * * * * * * * * * * * * //
+
+//- Contiguous data for volumeType
+template<>
+inline bool contiguous<wallPoint>() {return true;}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

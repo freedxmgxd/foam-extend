@@ -1,12 +1,7 @@
 rho = thermo.rho();
 
-volScalarField rUA = 1.0/UEqn().A();
-U = rUA*UEqn().H();
-
-if (pimple.nCorrPISO() <= 1)
-{
-    UEqn.clear();
-}
+volScalarField rUA = 1.0/UEqn.A();
+U = rUA*UEqn.H();
 
 if (pimple.transonic())
 {

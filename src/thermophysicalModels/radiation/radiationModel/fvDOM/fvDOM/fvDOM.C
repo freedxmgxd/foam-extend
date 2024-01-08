@@ -428,12 +428,6 @@ Foam::radiation::fvDOM::fvDOM
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::radiation::fvDOM::~fvDOM()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField::GeometricBoundaryField>
@@ -448,7 +442,7 @@ Foam::radiation::fvDOM::Qin() const
             calculatedFvPatchScalarField::typeName
         )
     );
-    volScalarField::GeometricBoundaryField& sumQin = tQin();
+    volScalarField::GeometricBoundaryField& sumQin = tQin.ref();
 
     sumQin = 0;
 
@@ -473,7 +467,7 @@ Foam::radiation::fvDOM::Qem() const
             calculatedFvPatchScalarField::typeName
         )
     );
-    volScalarField::GeometricBoundaryField& sumQem = tsumQem();
+    volScalarField::GeometricBoundaryField& sumQem = tsumQem.ref();
 
     sumQem = 0;
 

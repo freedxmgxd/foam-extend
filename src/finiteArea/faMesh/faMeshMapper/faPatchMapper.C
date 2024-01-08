@@ -114,7 +114,7 @@ Foam::faPatchMapper::~faPatchMapper()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::unallocLabelList& Foam::faPatchMapper::directAddressing() const
+const Foam::labelUList& Foam::faPatchMapper::directAddressing() const
 {
     if (!directAddrPtr_)
     {

@@ -48,7 +48,7 @@ Foam::tmp<Foam::vectorField> Foam::transform
 )
 {
     tmp<vectorField > tranf(new vectorField(tf.size()));
-    transform(tranf(), q, tf);
+    transform(tranf.ref(), q, tf);
     return tranf;
 }
 
@@ -60,8 +60,8 @@ Foam::tmp<Foam::vectorField> Foam::transform
 )
 {
     tmp<vectorField > tranf = reuseTmp<vector, vector>::New(ttf);
-    transform(tranf(), q, ttf());
-    reuseTmp<vector, vector>::clear(ttf);
+    transform(tranf.ref(), q, ttf());
+    ttf.clear();
     return tranf;
 }
 
@@ -106,7 +106,7 @@ Foam::tmp<Foam::vectorField> Foam::transform
 )
 {
     tmp<vectorField > tranf(new vectorField(tf.size()));
-    transform(tranf(), tr, tf);
+    transform(tranf.ref(), tr, tf);
     return tranf;
 }
 
@@ -118,8 +118,8 @@ Foam::tmp<Foam::vectorField> Foam::transform
 )
 {
     tmp<vectorField > tranf = reuseTmp<vector, vector>::New(ttf);
-    transform(tranf(), tr, ttf());
-    reuseTmp<vector, vector>::clear(ttf);
+    transform(tranf.ref(), tr, ttf());
+    ttf.clear();
     return tranf;
 }
 

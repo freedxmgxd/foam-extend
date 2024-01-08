@@ -40,7 +40,7 @@ Foam::tmp<Foam::Field<Type> > Foam::lduMatrix::H(const Field<Type>& psi) const
 
     if (lowerPtr_ || upperPtr_)
     {
-        Field<Type> & Hpsi = tHpsi();
+        Field<Type> & Hpsi = tHpsi.ref();
 
         Type* __restrict__ HpsiPtr = Hpsi.begin();
 
@@ -83,15 +83,15 @@ Foam::lduMatrix::faceH(const Field<Type>& psi) const
     (
         new Field<Type> (lduAddr().lowerAddr().size())
     );
-    Field<Type>& faceHpsi = tfaceHpsi();
+    Field<Type>& faceHpsi = tfaceHpsi.ref();
 
     if (lowerPtr_ || upperPtr_)
     {
         const scalarField& Lower = const_cast<const lduMatrix&>(*this).lower();
         const scalarField& Upper = const_cast<const lduMatrix&>(*this).upper();
 
-        const unallocLabelList& l = lduAddr().lowerAddr();
-        const unallocLabelList& u = lduAddr().upperAddr();
+        const labelUList& l = lduAddr().lowerAddr();
+        const labelUList& u = lduAddr().upperAddr();
 
         for (label face=0; face<l.size(); face++)
         {

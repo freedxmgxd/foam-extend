@@ -105,17 +105,18 @@ class CrankNicolsonDdtScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        CrankNicolsonDdtScheme(const CrankNicolsonDdtScheme&);
+        CrankNicolsonDdtScheme(const CrankNicolsonDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const CrankNicolsonDdtScheme&);
+        void operator=(const CrankNicolsonDdtScheme&) = delete;
 
+    
         template<class GeoField>
         DDt0Field<GeoField>& ddt0_
         (
             const word& name,
             const dimensionSet& dims
-        );
+        ) const;
 
         //- Check if the ddt0 needs to be evaluated for this time-step
         template<class GeoField>
@@ -169,80 +170,75 @@ public:
         {
             if (ocCoeff_ < 0 || ocCoeff_ > 1)
             {
-                FatalIOErrorIn
-                (
-                    "CrankNicolsonDdtScheme(const fvMesh& mesh, Istream& is)",
-                    is
-                )   << "coefficient = " << ocCoeff_
+                FatalIOErrorInFunction(is)
+                    << "coefficient = " << ocCoeff_
                     << " should be >= 0 and <= 1"
                     << exit(FatalIOError);
             }
         }
 
 
+    //- Destructor
+    virtual ~CrankNicolsonDdtScheme() = default;
+
+
     // Member Functions
 
-        //- Return mesh reference
-        const fvMesh& mesh() const
-        {
-            return fv::ddtScheme<Type>::mesh();
-        }
-
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const dimensioned<Type>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
-        (
-            const dimensionedScalar&,
-            const GeometricField<Type, fvPatchField, volMesh>&
-        );
-
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
-        (
-            const volScalarField&,
-            const GeometricField<Type, fvPatchField, volMesh>&
-        );
-
-        tmp<fvMatrix<Type> > fvmDdt
-        (
-            const GeometricField<Type, fvPatchField, volMesh>&
-        );
-
-        tmp<fvMatrix<Type> > fvmDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<fvMatrix<Type> > fvmDdt
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
+
+        virtual tmp<fvMatrix<Type> > fvmDdt
+        (
+            const GeometricField<Type, fvPatchField, volMesh>&
+        ) const;
+
+        virtual tmp<fvMatrix<Type> > fvmDdt
+        (
+            const dimensionedScalar&,
+            const GeometricField<Type, fvPatchField, volMesh>&
+        ) const;
+
+        virtual tmp<fvMatrix<Type> > fvmDdt
+        (
+            const volScalarField&,
+            const GeometricField<Type, fvPatchField, volMesh>&
+        ) const;
 
         typedef typename ddtScheme<Type>::fluxFieldType fluxFieldType;
 
-        tmp<fluxFieldType> fvcDdtPhiCorr
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
             const volScalarField& rA,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
-        );
+        ) const;
 
-        tmp<fluxFieldType> fvcDdtPhiCorr
+        virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
             const volScalarField& rA,
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
-        );
+        ) const;
 
 
         // Member functions for the new time consistent formulation
@@ -251,13 +247,13 @@ public:
             const GeometricField<Type, fvsPatchField, surfaceMesh>& faceU,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const surfaceScalarField& rAUf
-        );
+        ) const;
 
-
-        tmp<surfaceScalarField> meshPhi
+        //- Time scheme consistemt mesh flux
+        virtual tmp<surfaceScalarField> meshPhi
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 };
 
 
@@ -267,7 +263,7 @@ tmp<surfaceScalarField> CrankNicolsonDdtScheme<scalar>::fvcDdtPhiCorr
     const volScalarField& rA,
     const volScalarField& U,
     const surfaceScalarField& phi
-);
+) const;
 
 
 template<>
@@ -277,7 +273,7 @@ tmp<surfaceScalarField> CrankNicolsonDdtScheme<scalar>::fvcDdtPhiCorr
     const volScalarField& rho,
     const volScalarField& U,
     const surfaceScalarField& phi
-);
+) const;
 
 
 template<>
@@ -286,7 +282,7 @@ tmp<surfaceScalarField> CrankNicolsonDdtScheme<scalar>::fvcDdtConsistentPhiCorr
     const surfaceScalarField& faceU,
     const volScalarField& U,
     const surfaceScalarField& rAUf
-);
+) const;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

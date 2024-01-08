@@ -58,8 +58,11 @@ class localMin
 {
     // Private Member Functions
 
+        //- Disallow default bitwise copy construct
+        localMin(const localMin&) = delete;
+
         //- Disallow default bitwise assignment
-        void operator=(const localMin&);
+        void operator=(const localMin&) = delete;
 
 
 public:
@@ -140,15 +143,15 @@ public:
                     vf.dimensions()
                 )
             );
-            GeometricField<Type, fvsPatchField, surfaceMesh>& vff = tvff();
+            GeometricField<Type, fvsPatchField, surfaceMesh>& vff = tvff.ref();
 
             forAll(vff.boundaryField(), patchi)
             {
                 vff.boundaryField()[patchi] = vf.boundaryField()[patchi];
             }
 
-            const unallocLabelList& own = mesh.owner();
-            const unallocLabelList& nei = mesh.neighbour();
+            const labelUList& own = mesh.owner();
+            const labelUList& nei = mesh.neighbour();
 
             forAll(vff, facei)
             {

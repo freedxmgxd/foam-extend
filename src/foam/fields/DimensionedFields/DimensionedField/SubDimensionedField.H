@@ -112,9 +112,6 @@ public:
             const direction
         ) const;
 
-        //- Return the field transpose (only defined for second rank tensors)
-        tmp<DimensionedField<Type, GeoMesh> > T() const;
-
 
     // Member operators
 

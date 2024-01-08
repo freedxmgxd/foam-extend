@@ -206,7 +206,7 @@ Foam::pointFieldReconstructor::reconstructField
     // Reconstruct field
     reconstructField
     (
-        treconField(),
+        treconField.ref(),
         procFields
     );
 

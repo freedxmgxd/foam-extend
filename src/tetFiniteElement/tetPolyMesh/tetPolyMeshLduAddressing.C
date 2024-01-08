@@ -112,8 +112,8 @@ Foam::tetPolyMeshLduAddressing::tetPolyMeshLduAddressing
     }
 
     // Loop through all internal faces and add owner and neighbour of the face
-    const unallocLabelList& meshOwner = mesh().faceOwner();
-    const unallocLabelList& meshNeighbour = mesh().faceNeighbour();
+    const labelUList& meshOwner = mesh().faceOwner();
+    const labelUList& meshNeighbour = mesh().faceNeighbour();
 
     forAll (meshOwner, faceI)
     {

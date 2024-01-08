@@ -7,13 +7,13 @@ tmp<fvVectorMatrix> UEqn
   + turbulence->divDevRhoReff()
 );
 
-UEqn().relax
+UEqn.ref().relax
 (
     mesh.solutionDict().equationRelaxationFactor(U.select(pimple.finalIter()))
 );
 
-mrfZones.addCoriolis(rho, UEqn());
-pZones.addResistance(UEqn());
+mrfZones.addCoriolis(rho, UEqn.ref());
+pZones.addResistance(UEqn.ref());
 
 volScalarField rUA = 1.0/UEqn().A();
 

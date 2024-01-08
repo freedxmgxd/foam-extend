@@ -201,7 +201,7 @@ tmp<Field<Type> > regionCouplingFvPatchField<Type>::patchNeighbourField() const
          )
     );
 
-    Field<Type>& pnf = tpnf();
+    Field<Type>& pnf = tpnf.ref();
 
     if (regionCouplePatch_.bridgeOverlap())
     {
@@ -450,7 +450,7 @@ void regionCouplingFvPatchField<Type>::updateInterfaceMatrix
         scalarField pnf = this->shadowPatchField().matrixUpdateBuffer();
 
         // Multiply the field by coefficients and add into the result
-        const unallocLabelList& fc = regionCouplePatch_.faceCells();
+        const labelUList& fc = regionCouplePatch_.faceCells();
 
         if (switchToLhs)
         {

@@ -433,10 +433,10 @@ Foam::oversetAMGInterface::oversetAMGInterface
 
         // Get mesh owner-neighbour addressing to visit cells around fringe
         // faces
-        const unallocLabelList& own =
+        const labelUList& own =
             fineOversetInterface_.ldu().lduAddr().lowerAddr();
 
-        const unallocLabelList& nei =
+        const labelUList& nei =
             fineOversetInterface_.ldu().lduAddr().upperAddr();
 
         const labelList& fringeFaces =
@@ -878,7 +878,7 @@ Foam::oversetAMGInterface::~oversetAMGInterface()
 
 Foam::tmp<Foam::labelField> Foam::oversetAMGInterface::interfaceInternalField
 (
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     // Return complete field: needed for both donors and acceptors
@@ -900,7 +900,7 @@ Foam::tmp<Foam::scalarField> Foam::oversetAMGInterface::agglomerateCoeffs
     }
 
     tmp<scalarField> tcoarseCoeffs(new scalarField(size(), 0.0));
-    scalarField& coarseCoeffs = tcoarseCoeffs();
+    scalarField& coarseCoeffs = tcoarseCoeffs.ref();
 
     // Added weights to account for non-integral matching
     forAll (restrictAddressing_, ffi)
@@ -963,7 +963,7 @@ const Foam::mapDistribute& Foam::oversetAMGInterface::map() const
 void Foam::oversetAMGInterface::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {}
 
@@ -971,7 +971,7 @@ void Foam::oversetAMGInterface::initTransfer
 Foam::tmp<Foam::labelField> Foam::oversetAMGInterface::transfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     return labelField::null();
@@ -981,7 +981,7 @@ Foam::tmp<Foam::labelField> Foam::oversetAMGInterface::transfer
 void Foam::oversetAMGInterface::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     // Repackage donor data to acceptors
@@ -1002,7 +1002,7 @@ void Foam::oversetAMGInterface::initInternalFieldTransfer
 Foam::tmp<Foam::labelField> Foam::oversetAMGInterface::internalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList&
+    const labelUList&
 ) const
 {
     return tmp<labelField>(new labelField(labelTransferBuffer_));

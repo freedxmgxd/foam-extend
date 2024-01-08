@@ -177,7 +177,7 @@ Foam::tmp<Foam::vectorField> Foam::overlapGgiFvPatch::delta() const
 
 Foam::tmp<Foam::labelField> Foam::overlapGgiFvPatch::interfaceInternalField
 (
-    const unallocLabelList& internalData
+    const labelUList& internalData
 ) const
 {
     return patchInternalField(internalData);
@@ -187,13 +187,13 @@ Foam::tmp<Foam::labelField> Foam::overlapGgiFvPatch::interfaceInternalField
 Foam::tmp<Foam::labelField> Foam::overlapGgiFvPatch::transfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     notImplemented
     (
         "overlapGgiFvPatchField<Type>::"
-        "transfer(const unallocLabelList& interfaceData) const"
+        "transfer(const labelUList& interfaceData) const"
     );
 
     return labelField::null();
@@ -203,7 +203,7 @@ Foam::tmp<Foam::labelField> Foam::overlapGgiFvPatch::transfer
 Foam::tmp<Foam::labelField> Foam::overlapGgiFvPatch::internalFieldTransfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     return shadow().patchInternalField(iF);

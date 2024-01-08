@@ -148,21 +148,21 @@ public:
             //  the interface as a field.  For overset, this is fringe cell data
             virtual tmp<labelField> interfaceInternalField
             (
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const;
 
             //- Initialise interface data transfer (face field).  Dummy
             virtual void initTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const;
 
             //- Transfer and return neighbour field (face field).  Dummy
             virtual tmp<labelField> transfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const;
 
             //- Initialise neighbour field transfer
@@ -170,7 +170,7 @@ public:
             virtual void initInternalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const;
 
             //- Return neighbour field
@@ -178,7 +178,7 @@ public:
             virtual tmp<labelField> internalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const;
 };
 

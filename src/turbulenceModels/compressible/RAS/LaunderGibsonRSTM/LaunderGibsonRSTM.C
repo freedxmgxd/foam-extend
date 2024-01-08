@@ -392,7 +392,7 @@ void LaunderGibsonRSTM::correct()
     epsilon_.boundaryField().updateCoeffs();
 
     // Dissipation equation
-    tmp<fvScalarMatrix> epsEqn
+    fvScalarMatrix epsEqn
     (
         fvm::ddt(rho_, epsilon_)
       + fvm::div(phi_, epsilon_)
@@ -403,7 +403,7 @@ void LaunderGibsonRSTM::correct()
       - fvm::Sp(C2_*rho_*epsilon_/k_, epsilon_)
     );
 
-    epsEqn().relax();
+    epsEqn.relax();
 
     // No longer needed: matrix completes at the point of solution
     // HJ, 17/Apr/2012
@@ -435,7 +435,7 @@ void LaunderGibsonRSTM::correct()
 
     volSymmTensorField reflect = C1Ref_*epsilon_/k_*R_ - C2Ref_*Clg2_*dev(P);
 
-    tmp<fvSymmTensorMatrix> REqn
+    fvSymmTensorMatrix REqn
     (
         fvm::ddt(rho_, R_)
       + fvm::div(phi_, R_)
@@ -459,7 +459,7 @@ void LaunderGibsonRSTM::correct()
         )*pow(Cmu_, 0.75)*rho_*pow(k_, 1.5)/(kappa_*y_*epsilon_)
     );
 
-    REqn().relax();
+    REqn.relax();
     solve(REqn);
 
     R_.max

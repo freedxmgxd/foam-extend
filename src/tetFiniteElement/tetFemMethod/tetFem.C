@@ -79,7 +79,7 @@ tmp<tetFemMatrix<Type> > tetFem::laplacian
             gamma.dimensions()*vf.dimensions()/dimLength/dimLength
         )
     );
-    tetFemMatrix<Type>& fem = tfem();
+    tetFemMatrix<Type>& fem = tfem.ref();
 
     // Get reference to upper and diagonal
     scalarField& u = fem.upper();
@@ -91,8 +91,8 @@ tmp<tetFemMatrix<Type> > tetFem::laplacian
 
     // Get reference to ldu addressing
     const lduAddressing& lduAddr = fem.lduAddr();
-    const unallocLabelList& ownerStart = lduAddr.ownerStartAddr();
-    const unallocLabelList& neighbour = lduAddr.upperAddr();
+    const labelUList& ownerStart = lduAddr.ownerStartAddr();
+    const labelUList& neighbour = lduAddr.upperAddr();
 
     // Create local-to-global and global-to-local addressing arrays
     labelList localToGlobalBuffer(mesh.maxNPointsForCell());
@@ -193,7 +193,7 @@ tmp<tetFemMatrix<Type> > tetFem::smoother
             vf.dimensions()
         )
     );
-    tetFemMatrix<Type>& fem = tfem();
+    tetFemMatrix<Type>& fem = tfem.ref();
 
     fem.upper() = 1.0;
 
@@ -267,7 +267,7 @@ tmp<tetFemMatrix<Type> > tetFem::laplacianTranspose
             gamma.dimensions()*vf.dimensions()/dimLength/dimLength
         )
     );
-    tetFemMatrix<Type>& fem = tfem();
+    tetFemMatrix<Type>& fem = tfem.ref();
 
     // Get reference to internal field
     const Field<Type>& psi = fem.psi().internalField();
@@ -283,8 +283,8 @@ tmp<tetFemMatrix<Type> > tetFem::laplacianTranspose
 
     // Get reference to ldu addressing
     const lduAddressing& lduAddr = fem.lduAddr();
-    const unallocLabelList& ownerStart = lduAddr.ownerStartAddr();
-    const unallocLabelList& neighbour = lduAddr.upperAddr();
+    const labelUList& ownerStart = lduAddr.ownerStartAddr();
+    const labelUList& neighbour = lduAddr.upperAddr();
 
     // Create local-to-global and global-to-local addressing arrays
     labelList localToGlobalBuffer(mesh.maxNPointsForCell());
@@ -436,7 +436,7 @@ tmp<tetFemMatrix<Type> > tetFem::laplacianTrace
             gamma.dimensions()*vf.dimensions()/dimLength/dimLength
         )
     );
-    tetFemMatrix<Type>& fem = tfem();
+    tetFemMatrix<Type>& fem = tfem.ref();
 
     // Get reference to internal field
     const Field<Type>& psi = fem.psi().internalField();
@@ -452,8 +452,8 @@ tmp<tetFemMatrix<Type> > tetFem::laplacianTrace
 
     // Get reference to ldu addressing
     const lduAddressing& lduAddr = fem.lduAddr();
-    const unallocLabelList& ownerStart = lduAddr.ownerStartAddr();
-    const unallocLabelList& neighbour = lduAddr.upperAddr();
+    const labelUList& ownerStart = lduAddr.ownerStartAddr();
+    const labelUList& neighbour = lduAddr.upperAddr();
 
     // Create local-to-global and global-to-local addressing arrays
     labelList localToGlobalBuffer(mesh.maxNPointsForCell());

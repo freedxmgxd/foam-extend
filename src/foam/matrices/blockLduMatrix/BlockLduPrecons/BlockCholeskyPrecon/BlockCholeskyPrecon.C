@@ -56,7 +56,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -84,7 +84,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -112,7 +112,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -144,7 +144,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -172,7 +172,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -200,7 +200,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -232,7 +232,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -260,7 +260,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -288,7 +288,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -330,7 +330,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -359,7 +359,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -388,7 +388,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -420,7 +420,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -449,7 +449,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -478,7 +478,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -510,7 +510,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -539,7 +539,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -568,7 +568,7 @@ void Foam::BlockCholeskyPrecon<Type>::calcPreconDiag()
                     if (interfaces.set(patchI))
                     {
                         // Get face-cells addressing
-                        const unallocLabelList& fc =
+                        const labelUList& fc =
                             interfaces[patchI].coupledInterface().faceCells();
 
                         diagInterfaceMultiply
@@ -608,8 +608,8 @@ void Foam::BlockCholeskyPrecon<Type>::diagMultiply
     // Precondition the diagonal
 
     // Get addressing
-    const unallocLabelList& upperAddr = this->matrix_.lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
+    const labelUList& upperAddr = this->matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
 
     // Create multiplication function object
     typename BlockCoeff<Type>::multiply mult;
@@ -638,8 +638,8 @@ void Foam::BlockCholeskyPrecon<Type>::diagMultiplyCoeffT
     // Precondition the diagonal
 
     // Get addressing
-    const unallocLabelList& upperAddr = this->matrix_.lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
+    const labelUList& upperAddr = this->matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
 
     // Create multiplication function object
     typename BlockCoeff<Type>::multiply mult;
@@ -669,8 +669,8 @@ void Foam::BlockCholeskyPrecon<Type>::diagMultiply
     // Precondition the diagonal
 
     // Get addressing
-    const unallocLabelList& upperAddr = this->matrix_.lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
+    const labelUList& upperAddr = this->matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
 
     // Create multiplication function object
     typename BlockCoeff<Type>::multiply mult;
@@ -692,7 +692,7 @@ template<class Type>
 template<class DiagType, class ULType>
 void Foam::BlockCholeskyPrecon<Type>::diagInterfaceMultiply
 (
-    const unallocLabelList& fc,
+    const labelUList& fc,
     Field<DiagType>& dDiag,
     const Field<ULType>& bouCoeffs,
     const Field<ULType>& intCoeffs
@@ -735,8 +735,8 @@ void Foam::BlockCholeskyPrecon<Type>::ILUmultiply
         x[i] = mult(dDiag[i], b[i]);
     }
 
-    const unallocLabelList& upperAddr = this->matrix_.lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
+    const labelUList& upperAddr = this->matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
 
     forAll (upper, coeffI)
     {
@@ -778,8 +778,8 @@ void Foam::BlockCholeskyPrecon<Type>::ILUmultiplyCoeffT
         x[i] = mult(dDiag[i], b[i]);
     }
 
-    const unallocLabelList& upperAddr = this->matrix_.lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
+    const labelUList& upperAddr = this->matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
 
     forAll (upper, coeffI)
     {
@@ -822,9 +822,9 @@ void Foam::BlockCholeskyPrecon<Type>::ILUmultiply
         x[i] = mult(dDiag[i], b[i]);
     }
 
-    const unallocLabelList& upperAddr = this->matrix_.lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
-    const unallocLabelList& losortAddr = this->matrix_.lduAddr().losortAddr();
+    const labelUList& upperAddr = this->matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
+    const labelUList& losortAddr = this->matrix_.lduAddr().losortAddr();
 
     label losortCoeff;
 
@@ -871,9 +871,9 @@ void Foam::BlockCholeskyPrecon<Type>::ILUmultiplyTranspose
         x[i] = mult(dDiag[i], b[i]);
     }
 
-    const unallocLabelList& upperAddr = this->matrix_.lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
-    const unallocLabelList& losortAddr = this->matrix_.lduAddr().losortAddr();
+    const labelUList& upperAddr = this->matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = this->matrix_.lduAddr().lowerAddr();
+    const labelUList& losortAddr = this->matrix_.lduAddr().losortAddr();
 
     label losortCoeff;
 

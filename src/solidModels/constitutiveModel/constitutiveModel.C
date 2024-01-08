@@ -465,7 +465,7 @@ tmp<surfaceScalarField> constitutiveModel::muf() const
             fvc::interpolate(mu(), "mu")
         )
     );
-    surfaceScalarField& muf = tresult();
+    surfaceScalarField& muf = tresult.ref();
 
     if (solidInterfaceActive_)
     {
@@ -492,7 +492,7 @@ tmp<surfaceScalarField> constitutiveModel::lambdaf() const
             fvc::interpolate(lambda(), "lambda")
         )
     );
-    surfaceScalarField& lambdaf = tresult();
+    surfaceScalarField& lambdaf = tresult.ref();
 
     if (solidInterfaceActive_)
     {
@@ -519,7 +519,7 @@ tmp<surfaceScalarField> constitutiveModel::threeKf() const
             fvc::interpolate(threeK(), "threeK")
         )
     );
-    surfaceScalarField& threeKf = tresult();
+    surfaceScalarField& threeKf = tresult.ref();
 
     if (solidInterfaceActive_)
     {
@@ -546,7 +546,7 @@ tmp<surfaceDiagTensorField> constitutiveModel::Kf() const
             fvc::interpolate(K(), "K")
         )
     );
-    surfaceDiagTensorField& Kf = tresult();
+    surfaceDiagTensorField& Kf = tresult.ref();
 
     if (solidInterfaceActive_)
     {
@@ -573,7 +573,7 @@ tmp<surfaceSymmTensor4thOrderField> constitutiveModel::Cf() const
             fvc::interpolate(C(), "C")
         )
     );
-    surfaceSymmTensor4thOrderField& Cf = tresult();
+    surfaceSymmTensor4thOrderField& Cf = tresult.ref();
 
     if (solidInterfaceActive_)
     {

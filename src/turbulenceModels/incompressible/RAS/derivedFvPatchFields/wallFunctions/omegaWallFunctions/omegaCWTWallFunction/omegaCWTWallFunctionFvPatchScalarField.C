@@ -299,7 +299,7 @@ void omegaCWTWallFunctionFvPatchScalarField::updateCoeffs()
 
 
     // Get face cells
-    const unallocLabelList& fc = patch().faceCells();
+    const labelUList& fc = patch().faceCells();
 
     // Set omega and G
     forAll(nutw, faceI)

@@ -58,7 +58,7 @@ tmp<surfaceScalarField> PhiScheme<Type, PhiLimiter>::limiter
             dimless
         )
     );
-    surfaceScalarField& Limiter = tLimiter();
+    surfaceScalarField& Limiter = tLimiter.ref();
 
     // Make sure coupled patches are synced
     // HJ and MH, 14/Sep/2021
@@ -69,8 +69,8 @@ tmp<surfaceScalarField> PhiScheme<Type, PhiLimiter>::limiter
     const surfaceVectorField& Sf = mesh.Sf();
     const surfaceScalarField& magSf = mesh.magSf();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     tmp<surfaceScalarField> tUflux = this->faceFlux_;
 

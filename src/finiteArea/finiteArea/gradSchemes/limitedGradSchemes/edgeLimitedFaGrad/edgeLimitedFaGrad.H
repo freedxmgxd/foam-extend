@@ -81,10 +81,10 @@ class edgeLimitedGrad
 
 
         //- Disallow default bitwise copy construct
-        edgeLimitedGrad(const edgeLimitedGrad&);
+        edgeLimitedGrad(const edgeLimitedGrad&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const edgeLimitedGrad&);
+        void operator=(const edgeLimitedGrad&) = delete;
 
 
 public:
@@ -104,20 +104,21 @@ public:
         {
             if (k_ < 0 || k_ > 1)
             {
-                FatalIOErrorIn
-                (
-                    "edgeLimitedGrad(const faMesh& mesh, Istream& schemeData)",
-                    schemeData
-                )   << "coefficient = " << k_
+                FatalIOErrorInFunction(schemeData)
+                    << "coefficient = " << k_
                     << " should be >= 0 and <= 1"
                     << exit(FatalIOError);
             }
         }
 
 
+    //- Destructor
+    virtual ~edgeLimitedGrad() = default;
+
+
     // Member Functions
 
-        tmp
+        virtual tmp
         <
             GeometricField
             <typename outerProduct<vector, Type>::type, faPatchField, areaMesh>

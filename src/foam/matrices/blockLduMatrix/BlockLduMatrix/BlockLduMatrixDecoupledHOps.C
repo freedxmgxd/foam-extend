@@ -42,10 +42,10 @@ Foam::BlockLduMatrix<Type>::decoupledH(const Field<Type>& x) const
     (
         new Field<Type>(lduAddr().size(), pTraits<Type>::zero)
     );
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
-    const unallocLabelList& u = lduAddr().upperAddr();
-    const unallocLabelList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
 
     const TypeCoeffField& Upper = this->upper();
 
@@ -132,12 +132,12 @@ Foam::BlockLduMatrix<Type>::decoupledFaceH(const Field<Type>& x) const
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
     typedef typename TypeCoeffField::linearTypeField linearTypeField;
 
-    const unallocLabelList& u = lduAddr().upperAddr();
-    const unallocLabelList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
 
     // Create result
     tmp<Field<Type> > tresult(new Field<Type>(u.size(), pTraits<Type>::zero));
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     const TypeCoeffField& Upper = this->upper();
 

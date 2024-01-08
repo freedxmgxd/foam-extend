@@ -82,7 +82,7 @@ tmp<DimensionedField<scalar, GeoMesh> > stabilise
 
     stabilise(tRes().field(), dsf.field(), ds.value());
 
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf);
+    tdsf.clear();
 
     return tRes;
 }
@@ -126,7 +126,7 @@ tmp<DimensionedField<scalar, GeoMesh> > pow
         )
     );
 
-    pow(tPow().field(), dsf1.field(), dsf2.field());
+    pow(tPow.ref().field(), dsf1.field(), dsf2.field());
 
     return tPow;
 }
@@ -153,9 +153,9 @@ tmp<DimensionedField<scalar, GeoMesh> > pow
             )
         );
 
-    pow(tPow().field(), dsf1.field(), dsf2.field());
+    pow(tPow.ref().field(), dsf1.field(), dsf2.field());
 
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf1);
+    tdsf1.clear();
 
     return tPow;
 }
@@ -182,9 +182,9 @@ tmp<DimensionedField<scalar, GeoMesh> > pow
             )
         );
 
-    pow(tPow().field(), dsf1.field(), dsf2.field());
+    pow(tPow.ref().field(), dsf1.field(), dsf2.field());
 
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf2);
+    tdsf2.clear();
 
     return tPow;
 }
@@ -200,7 +200,7 @@ tmp<DimensionedField<scalar, GeoMesh> > pow
     const DimensionedField<scalar, GeoMesh>& dsf2 = tdsf2();
 
     tmp<DimensionedField<scalar, GeoMesh> > tPow =
-        reuseTmpTmpDimensionedField<scalar, scalar, scalar, scalar, GeoMesh>::
+        reuseTmpTmpDimensionedField<scalar, scalar, scalar, GeoMesh>::
         New
         (
             tdsf1,
@@ -213,13 +213,10 @@ tmp<DimensionedField<scalar, GeoMesh> > pow
             )
         );
 
-    pow(tPow().field(), dsf1.field(), dsf2.field());
+    pow(tPow.ref().field(), dsf1.field(), dsf2.field());
 
-    reuseTmpTmpDimensionedField<scalar, scalar, scalar, scalar, GeoMesh>::clear
-    (
-        tdsf1,
-        tdsf2
-    );
+    tdsf1.clear();
+    tdsf2.clear();
 
     return tPow;
 }
@@ -247,7 +244,7 @@ tmp<DimensionedField<scalar, GeoMesh> > pow
         )
     );
 
-    pow(tPow().field(), dsf.field(), ds.value());
+    pow(tPow.ref().field(), dsf.field(), ds.value());
 
     return tPow;
 }
@@ -269,9 +266,9 @@ tmp<DimensionedField<scalar, GeoMesh> > pow
             pow(dsf.dimensions(), ds)
         );
 
-    pow(tPow().field(), dsf.field(), ds.value());
+    pow(tPow.ref().field(), dsf.field(), ds.value());
 
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf);
+    tdsf.clear();
 
     return tPow;
 }
@@ -319,7 +316,7 @@ tmp<DimensionedField<scalar, GeoMesh> > pow
         )
     );
 
-    pow(tPow().field(), ds.value(), dsf.field());
+    pow(tPow.ref().field(), ds.value(), dsf.field());
 
     return tPow;
 }
@@ -342,9 +339,9 @@ tmp<DimensionedField<scalar, GeoMesh> > pow
             pow(ds, dsf.dimensions())
         );
 
-    pow(tPow().field(), ds.value(), dsf.field());
+    pow(tPow.ref().field(), ds.value(), dsf.field());
 
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf);
+    tdsf.clear();
 
     return tPow;
 }
@@ -476,7 +473,7 @@ tmp<DimensionedField<scalar, GeoMesh> > func                                \
                                                                             \
     func(tFunc().field(), n, dsf.field());                                  \
                                                                             \
-    reuseTmpDimensionedField<scalar, scalar, GeoMesh>::clear(tdsf);         \
+    tdsf.clear();                                                           \
                                                                             \
     return tFunc;                                                           \
 }

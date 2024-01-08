@@ -127,7 +127,7 @@ public:
             virtual void initInternalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& iF
+                const labelUList& iF
             ) const = 0;
 
             //- Transfer and return internal field adjacent to the interface
@@ -135,7 +135,7 @@ public:
             virtual tmp<labelField> internalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& iF
+                const labelUList& iF
             ) const = 0;
 
 

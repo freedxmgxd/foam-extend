@@ -38,6 +38,7 @@ Foam::tmp<Foam::Field<Type> > Foam::crackerFvMesh::globalCrackField
     (
         new Field<Type>(this->globalCrackSize(), pTraits<Type>::zero)
     );
+    Field<Type>& globalCrackField = tGlobalCrackField.ref();
 
     label globalIndex = this->localCrackStart();
 
@@ -45,9 +46,9 @@ Foam::tmp<Foam::Field<Type> > Foam::crackerFvMesh::globalCrackField
 
     for (label i=0; i<localCrackSize; i++)
     {
-        tGlobalCrackField()[globalIndex++] = localCrackField[i];
+        globalCrackField[globalIndex++] = localCrackField[i];
     }
-    reduce(tGlobalCrackField(), sumOp<Field<Type> >());
+    reduce(globalCrackField, sumOp<Field<Type> >());
 
     return tGlobalCrackField;
 }

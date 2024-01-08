@@ -87,7 +87,7 @@ public:
             }
 
             //- Return faceCells of zero size
-            virtual const unallocLabelList& faceCells() const;
+            virtual const labelUList& faceCells() const;
 };
 
 

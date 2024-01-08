@@ -58,7 +58,7 @@ noAdjConvectionScheme<Type>::fvmAdjDiv
     );
 
     // Touch diagonal for consistency
-    tfvm().diag() = 0;
+    tfvm.ref().diag() = 0;
 
     return tfvm;
 }
@@ -77,7 +77,7 @@ noAdjConvectionScheme<Type>::fvcAdjDiv
         fvc::grad(vf) & Up
     );
 
-    tAdjConvection().rename
+    tAdjConvection.ref().rename
     (
         "adjConvection(" + Up.name() + ',' + vf.name() + ')'
     );

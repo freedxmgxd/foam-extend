@@ -260,7 +260,7 @@ void LamBremhorstKE::correct()
 
     // Dissipation equation
 
-    tmp<fvScalarMatrix> epsEqn
+    fvScalarMatrix epsEqn
     (
         fvm::ddt(epsilon_)
       + fvm::div(phi_, epsilon_)
@@ -271,14 +271,14 @@ void LamBremhorstKE::correct()
       - fvm::Sp(C2_*f2*epsilon_/k_, epsilon_)
     );
 
-    epsEqn().relax();
+    epsEqn.relax();
     solve(epsEqn);
     bound(epsilon_, epsilon0_);
 
 
     // Turbulent kinetic energy equation
 
-    tmp<fvScalarMatrix> kEqn
+    fvScalarMatrix kEqn
     (
         fvm::ddt(k_)
       + fvm::div(phi_, k_)
@@ -288,7 +288,7 @@ void LamBremhorstKE::correct()
         G - fvm::Sp(epsilon_/k_, k_)
     );
 
-    kEqn().relax();
+    kEqn.relax();
     solve(kEqn);
     bound(k_, k0_);
 

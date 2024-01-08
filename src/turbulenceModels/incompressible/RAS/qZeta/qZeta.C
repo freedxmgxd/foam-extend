@@ -301,7 +301,7 @@ void qZeta::correct()
 
     // Zeta equation
 
-    tmp<fvScalarMatrix> zetaEqn
+    fvScalarMatrix zetaEqn
     (
         fvm::ddt(zeta_)
       + fvm::div(phi_, zeta_)
@@ -313,14 +313,14 @@ void qZeta::correct()
       + E
     );
 
-    zetaEqn().relax();
+    zetaEqn.relax();
     solve(zetaEqn);
     bound(zeta_, epsilon0_/(2*sqrt(k0_)));
 
 
     // q equation
 
-    tmp<fvScalarMatrix> qEqn
+    fvScalarMatrix qEqn
     (
         fvm::ddt(q_)
       + fvm::div(phi_, q_)
@@ -330,7 +330,7 @@ void qZeta::correct()
         G - fvm::Sp(zeta_/q_, q_)
     );
 
-    qEqn().relax();
+    qEqn.relax();
     solve(qEqn);
     bound(q_, sqrt(k0_));
 

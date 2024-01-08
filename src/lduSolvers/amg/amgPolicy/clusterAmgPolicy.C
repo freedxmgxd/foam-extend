@@ -91,13 +91,13 @@ void Foam::clusterAmgPolicy::calcChild()
     const label nRows = matrix().lduAddr().size();
 
     // Get matrix addressing
-    const unallocLabelList& lowerAddr = matrix().lduAddr().lowerAddr();
-    const unallocLabelList& upperAddr = matrix().lduAddr().upperAddr();
-    const unallocLabelList& losortAddr = matrix().lduAddr().losortAddr();
+    const labelUList& lowerAddr = matrix().lduAddr().lowerAddr();
+    const labelUList& upperAddr = matrix().lduAddr().upperAddr();
+    const labelUList& losortAddr = matrix().lduAddr().losortAddr();
 
-    const unallocLabelList& ownerStartAddr =
+    const labelUList& ownerStartAddr =
         matrix().lduAddr().ownerStartAddr();
-    const unallocLabelList& losortStartAddr =
+    const labelUList& losortStartAddr =
         matrix().lduAddr().losortStartAddr();
 
 
@@ -554,8 +554,8 @@ Foam::autoPtr<Foam::amgMatrix> Foam::clusterAmgPolicy::restrictMatrix() const
     // 4) Agglomerate the diagonal by summing up the fine diagonal
 
     // Get addressing
-    const unallocLabelList& upperAddr = matrix().lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = matrix().lduAddr().lowerAddr();
+    const labelUList& upperAddr = matrix().lduAddr().upperAddr();
+    const labelUList& lowerAddr = matrix().lduAddr().lowerAddr();
 
     const label nFineCoeffs = upperAddr.size();
 

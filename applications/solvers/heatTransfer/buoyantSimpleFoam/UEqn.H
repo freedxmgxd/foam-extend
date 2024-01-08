@@ -6,7 +6,7 @@
       + turbulence->divDevRhoReff()
     );
 
-    UEqn().relax();
+    UEqn.ref().relax();
 
     solve
     (

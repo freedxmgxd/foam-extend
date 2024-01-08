@@ -57,13 +57,8 @@ Foam::tmp<Foam::Field<Type> > Foam::mixingPlanePolyPatch::toProfile
     // HJ, 4/Jun/2011
     if (ff.size() != size())
     {
-        FatalErrorIn
-        (
-            "tmp<Field<Type> > mixingPlanePolyPatch::toProfile\n"
-            "(\n"
-            "    const Field<Type>& ff\n"
-            ") const"
-        )   << "Incorrect patch field size.  Field size: "
+        FatalErrorInFunction
+            << "Incorrect patch field size.  Field size: "
             << ff.size() << " patch size: " << size()
             << abort(FatalError);
     }
@@ -73,7 +68,7 @@ Foam::tmp<Foam::Field<Type> > Foam::mixingPlanePolyPatch::toProfile
     (
         new Field<Type>(nProfileBands(), pTraits<Type>::zero)
     );
-    Field<Type>& profileField = tprofileField();
+    Field<Type>& profileField = tprofileField.ref();
 
     if (localParallel())
     {
@@ -231,7 +226,7 @@ Foam::mixingPlanePolyPatch::fromProfile
             patchToPatch().maskedProfileToMaster
             (
                 pf,
-                tresult(),
+                tresult.ref(),
                 zoneAddressing()
             );
         }
@@ -240,7 +235,7 @@ Foam::mixingPlanePolyPatch::fromProfile
              patchToPatch().maskedProfileToSlave
              (
                  pf,
-                 tresult(),
+                 tresult.ref(),
                  zoneAddressing()
              );
         }

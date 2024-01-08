@@ -315,7 +315,7 @@ Foam::faFieldReconstructor::reconstructFaAreaField
 
     reconstructFaAreaField
     (
-        treconField(),
+        treconField.ref(),
         procFields
     );
 
@@ -629,7 +629,7 @@ Foam::faFieldReconstructor::reconstructFaEdgeField
     // Reconstruct field
     reconstructFaEdgeField
     (
-        treconField(),
+        treconField.ref(),
         procFields
     );
 

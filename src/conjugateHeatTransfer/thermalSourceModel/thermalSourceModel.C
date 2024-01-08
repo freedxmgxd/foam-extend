@@ -101,7 +101,7 @@ Foam::tmp<Foam::volScalarField> Foam::thermalSourceModel::S() const
             )
         )
     );
-    volScalarField& source = tsource();
+    volScalarField& source = tsource.ref();
 
     forAll(sources_, sourceI)
     {

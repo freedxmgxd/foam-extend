@@ -124,7 +124,7 @@ Foam::tmp<Foam::crMatrix> Foam::crMatrix::T() const
 
     // Create transpose
     tmp<crMatrix> ttranspose(new crMatrix(crAddr().T()));
-    crMatrix& transpose = ttranspose();
+    crMatrix& transpose = ttranspose.ref();
 
     scalarField& tCoeffs = transpose.coeffs();
 

@@ -415,7 +415,7 @@ tmp<scalarField> solidCohesiveFvPatchVectorField::crackingAndDamage() const
     (
         new scalarField(size(), 1.0)
     );
-    scalarField& cad = tcrackingAndDamage();
+    scalarField& cad = tcrackingAndDamage.ref();
 
     forAll(cad, facei)
     {
@@ -435,7 +435,7 @@ tmp<scalarField> solidCohesiveFvPatchVectorField::GI() const
     (
         new scalarField(size(), 0.0)
     );
-    scalarField& GI = tGI();
+    scalarField& GI = tGI.ref();
 
     forAll(GI, facei)
     {
@@ -452,7 +452,7 @@ tmp<scalarField> solidCohesiveFvPatchVectorField::GII() const
     (
         new scalarField(size(), 0.0)
     );
-    scalarField& GII = tGII();
+    scalarField& GII = tGII.ref();
 
     forAll(GII, facei)
     {
@@ -738,7 +738,7 @@ void solidCohesiveFvPatchVectorField::updateCoeffs()
 
 
     // Get face cells regions
-    const unallocLabelList& faceCells = patch().faceCells();
+    const labelUList& faceCells = patch().faceCells();
     const fvMesh& mesh = patch().boundaryMesh().mesh();
 
     if (!isA<crackerFvMesh>(mesh))
@@ -1133,7 +1133,7 @@ void solidCohesiveFvPatchVectorField::calcPenaltyFactor()
 
     const volScalarField::DimensionedInternalField & V = mesh.V();
     {
-        const unallocLabelList& faceCells =
+        const labelUList& faceCells =
             mesh.boundary()[patchID].faceCells();
 
         forAll(mesh.boundary()[patchID], facei)

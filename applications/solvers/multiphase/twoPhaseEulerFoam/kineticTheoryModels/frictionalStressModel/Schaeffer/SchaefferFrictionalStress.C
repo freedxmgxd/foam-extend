@@ -122,7 +122,7 @@ Foam::tmp<Foam::volScalarField> Foam::SchaefferFrictionalStress::muf
         )
     );
 
-    volScalarField& muff = tmuf();
+    volScalarField& muff = tmuf.ref();
 
     forAll (D, celli)
     {

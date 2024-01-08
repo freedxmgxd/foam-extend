@@ -270,8 +270,8 @@ void Foam::tetPolyMesh::addParallelPointPatch()
         // Go through all the local points and get all the edges coming
         // from that point.  Check if the edge is local, if not, it is cut
 
-        const unallocLabelList& L = lduAddr().lowerAddr();
-        const unallocLabelList& U = lduAddr().upperAddr();
+        const labelUList& L = lduAddr().lowerAddr();
+        const labelUList& U = lduAddr().upperAddr();
 
         labelHashSet localParPointsSet(localParPoints);
 

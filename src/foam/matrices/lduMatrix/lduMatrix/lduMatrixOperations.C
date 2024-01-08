@@ -36,8 +36,8 @@ void Foam::lduMatrix::sumDiag()
     const scalarField& Upper = const_cast<const lduMatrix&>(*this).upper();
     scalarField& Diag = diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     for (label odcI = 0; odcI < l.size(); odcI++)
     {
@@ -53,8 +53,8 @@ void Foam::lduMatrix::negSumDiag()
     const scalarField& Upper = const_cast<const lduMatrix&>(*this).upper();
     scalarField& Diag = diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     for (label odcI = 0; odcI < l.size(); odcI++)
     {
@@ -72,8 +72,8 @@ void Foam::lduMatrix::sumMagOffDiag
     const scalarField& Lower = const_cast<const lduMatrix&>(*this).lower();
     const scalarField& Upper = const_cast<const lduMatrix&>(*this).upper();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     for (label odcI = 0; odcI < l.size(); odcI++)
     {
@@ -208,7 +208,7 @@ void Foam::lduMatrix::operator+=(const lduMatrix& A)
     }
     else
     {
-        FatalErrorIn("lduMatrix::operator+=(const lduMatrix& A)")
+        FatalErrorInFunction
             << "Unknown matrix type combination"
             << abort(FatalError);
     }
@@ -282,7 +282,7 @@ void Foam::lduMatrix::operator-=(const lduMatrix& A)
     }
     else
     {
-        FatalErrorIn("lduMatrix::operator-=(const lduMatrix& A)")
+        FatalErrorInFunction
             << "Unknown matrix type combination"
             << abort(FatalError);
     }
@@ -300,7 +300,7 @@ void Foam::lduMatrix::operator*=(const scalarField& sf)
     {
         scalarField& upper = *upperPtr_;
 
-        const unallocLabelList& l = lduAddr().lowerAddr();
+        const labelUList& l = lduAddr().lowerAddr();
 
         for (label odcI = 0; odcI < upper.size(); odcI++)
         {
@@ -312,7 +312,7 @@ void Foam::lduMatrix::operator*=(const scalarField& sf)
     {
         scalarField& lower = *lowerPtr_;
 
-        const unallocLabelList& u = lduAddr().upperAddr();
+        const labelUList& u = lduAddr().upperAddr();
 
         for (label odcI = 0; odcI < lower.size(); odcI++)
         {
@@ -343,14 +343,14 @@ void Foam::lduMatrix::operator*=(scalar s)
 
 Foam::tmp<Foam::scalarField> Foam::lduMatrix::H1() const
 {
-    tmp<scalarField > tH1
+    tmp<scalarField> tH1
     (
         new scalarField(lduAddr().size(), 0.0)
     );
 
     if (lowerPtr_ || upperPtr_)
     {
-        scalarField& H1_ = tH1();
+        scalarField& H1_ = tH1.ref();
 
         scalar* __restrict__ H1Ptr = H1_.begin();
 

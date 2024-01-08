@@ -94,9 +94,15 @@ public:
         errorEstimate(const errorEstimate<Type>&);
 
 
-    // Destructor
+        //- Construct and return a clone setting internal field reference
+        tmp<errorEstimate<Type> > clone() const
+        {
+            return tmp<errorEstimate<Type> >(new errorEstimate<Type>(*this));
+        }
 
-        ~errorEstimate();
+
+    //- Destructor
+    ~errorEstimate() = default;
 
 
     // Member Functions

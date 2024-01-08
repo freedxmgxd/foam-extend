@@ -99,7 +99,7 @@ noConvectionScheme<Type>::fvmDiv
     );
 
     // Touch diagonal for consistency
-    tfvm().diag() = 0;
+    tfvm.ref().diag() = 0;
 
     return tfvm;
 }
@@ -118,7 +118,7 @@ noConvectionScheme<Type>::fvcDiv
         fvc::surfaceIntegrate(flux(faceFlux, vf))
     );
 
-    tConvection().rename
+    tConvection.ref().rename
     (
         "convection(" + faceFlux.name() + ',' + vf.name() + ')'
     );

@@ -142,7 +142,7 @@ public:
                     return true;
                 }
 
-                virtual const unallocLabelList& directAddressing() const
+                virtual const labelUList& directAddressing() const
                 {
                     if (!directPatchAddressingPtr_)
                     {

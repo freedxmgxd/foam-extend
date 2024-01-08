@@ -59,11 +59,11 @@ namespace Foam
             )
         );
 
-        volScalarField& Co = tCo();
+        volScalarField& Co = tCo.ref();
 
         // Set local references to mesh data
-        const unallocLabelList& owner = mesh.owner();
-        const unallocLabelList& neighbour = mesh.neighbour();
+        const labelUList& owner = mesh.owner();
+        const labelUList& neighbour = mesh.neighbour();
 
         forAll(owner, facei)
         {

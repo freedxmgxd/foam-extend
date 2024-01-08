@@ -40,12 +40,12 @@ void Foam::LUscalarMatrix::solve(Field<Type>& sourceSol) const
             (
                 completeSourceSol,
                 sourceSol.size()
-            ).assign(sourceSol);
+            ) = sourceSol;
 
             for
             (
-                int slave=Pstream::firstSlave();
-                slave<=Pstream::lastSlave();
+                int slave = Pstream::firstSlave();
+                slave <= Pstream::lastSlave();
                 slave++
             )
             {

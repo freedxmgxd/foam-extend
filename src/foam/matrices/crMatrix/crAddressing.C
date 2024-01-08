@@ -158,7 +158,7 @@ Foam::tmp<Foam::crAddressing> Foam::crAddressing::T() const
     (
         new crAddressing(nCols(), nRows(), trRowSizes)
     );
-    crAddressing& transpose = ttranspose();
+    crAddressing& transpose = ttranspose.ref();
 
     // Set coefficients
     const labelList& trRow = transpose.rowStart();

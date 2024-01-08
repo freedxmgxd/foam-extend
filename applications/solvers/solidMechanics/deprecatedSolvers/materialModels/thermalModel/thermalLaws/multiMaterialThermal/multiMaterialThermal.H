@@ -62,10 +62,10 @@ class multiMaterialThermal
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        multiMaterialThermal(const multiMaterialThermal&);
+        multiMaterialThermal(const multiMaterialThermal&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const multiMaterialThermal&);
+        void operator=(const multiMaterialThermal&) = delete;
 
 
         //- Calculate indicator field given index
@@ -75,8 +75,6 @@ public:
 
     //- Runtime type information
     TypeName("multiMaterial");
-
-    // Static data members
 
 
     // Constructors
@@ -90,9 +88,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~multiMaterialThermal();
+    //- Destructor
+    virtual ~multiMaterialThermal() = default;
 
 
     // Member Functions

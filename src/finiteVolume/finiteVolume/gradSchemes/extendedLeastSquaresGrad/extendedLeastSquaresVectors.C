@@ -109,8 +109,8 @@ void Foam::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
     surfaceVectorField& lsN = *nVectorsPtr_;
 
     // Set local references to mesh data
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
     const volVectorField& C = mesh().C();
 
     // Set up temporary storage for the dd tensor (before inversion)
@@ -135,7 +135,7 @@ void Foam::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
     forAll(lsP.boundaryField(), patchI)
     {
         const fvPatch& p = mesh().boundary()[patchI];
-        const unallocLabelList& faceCells = p.faceCells();
+        const labelUList& faceCells = p.faceCells();
 
         // Better version of d-vectors: Zeljko Tukovic, 25/Apr/2010
         vectorField pd = p.delta();
@@ -241,7 +241,7 @@ void Foam::extendedLeastSquaresVectors::makeLeastSquaresVectors() const
         fvsPatchVectorField& patchLsP = lsP.boundaryField()[patchI];
 
         const fvPatch& p = patchLsP.patch();
-        const unallocLabelList& faceCells = p.faceCells();
+        const labelUList& faceCells = p.faceCells();
 
         forAll(p, patchFaceI)
         {

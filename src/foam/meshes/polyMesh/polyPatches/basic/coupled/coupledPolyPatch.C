@@ -243,10 +243,4 @@ Foam::coupledPolyPatch::coupledPolyPatch
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::coupledPolyPatch::~coupledPolyPatch()
-{}
-
-
 // ************************************************************************* //

@@ -141,7 +141,7 @@ tmp<Field<Type> > cyclicGgiFvPatchField<Type>::patchNeighbourField() const
     const Field<Type>& iField = this->internalField();
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = cyclicGgiPatch_.shadow().faceCells();
+    const labelUList& sfc = cyclicGgiPatch_.shadow().faceCells();
 
     Field<Type> sField(sfc.size());
 
@@ -152,7 +152,7 @@ tmp<Field<Type> > cyclicGgiFvPatchField<Type>::patchNeighbourField() const
 
     // Transformation is handled in interpolation.  HJ, 7/Jan/2009
     tmp<Field<Type> > tpnf(cyclicGgiPatch_.interpolate(sField));
-    Field<Type>& pnf = tpnf();
+    Field<Type>& pnf = tpnf.ref();
 
     if (cyclicGgiPatch_.bridgeOverlap())
     {
@@ -188,7 +188,7 @@ cyclicGgiFvPatchField<Type>::untransformedInterpolate
     const Field<Type>& iField = this->internalField();
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = cyclicGgiPatch_.shadow().faceCells();
+    const labelUList& sfc = cyclicGgiPatch_.shadow().faceCells();
 
     scalarField sField(sfc.size());
 
@@ -202,7 +202,7 @@ cyclicGgiFvPatchField<Type>::untransformedInterpolate
         new scalarField(cyclicGgiPatch_.size())
     );
 
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     result = cyclicGgiPatch_.interpolate(sField);
 
@@ -279,7 +279,7 @@ void cyclicGgiFvPatchField<Type>::initInterfaceMatrixUpdate
     // patch comms.  HJ, 11/Jul/2011
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = cyclicGgiPatch_.shadow().faceCells();
+    const labelUList& sfc = cyclicGgiPatch_.shadow().faceCells();
 
     scalarField sField(sfc.size());
 
@@ -298,7 +298,7 @@ void cyclicGgiFvPatchField<Type>::initInterfaceMatrixUpdate
     scalarField pnf = cyclicGgiPatch_.interpolate(sField);
 
     // Multiply the field by coefficients and add into the result
-    const unallocLabelList& fc = cyclicGgiPatch_.faceCells();
+    const labelUList& fc = cyclicGgiPatch_.faceCells();
 
     if (switchToLhs)
     {

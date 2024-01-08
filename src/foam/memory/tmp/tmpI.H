@@ -26,44 +26,74 @@ License
 #include "error.H"
 #include <typeinfo>
 
+// * * * * * * * * * * * * * Private Member Operators  * * * * * * * * * * * //
+
+template<class T>
+inline bool Foam::tmp<T>::isAnyTmp() const
+{
+    return tmpType_ == REUSABLE_TMP || tmpType_ == NON_REUSABLE_TMP;
+}
+
+
+template<class T>
+inline void Foam::tmp<T>::operator++()
+{
+    ptr_->operator++();
+
+    if (ptr_->count() > 1)
+    {
+        FatalErrorInFunction
+            << "Attempt to create more than 2 tmps referring to same object.  "
+            << "This is not allowed: incorrect use of tmp detected for type "
+            << this->typeName()
+            << abort(FatalError);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class T>
-inline Foam::tmp<T>::tmp(T* tPtr)
+inline Foam::tmp<T>::tmp(T* tPtr, bool nonReusable)
 :
-    isTmp_(true),
-    ptr_(tPtr),
-    ref_(*tPtr)
-{}
+    tmpType_(nonReusable ? NON_REUSABLE_TMP : REUSABLE_TMP),
+    ptr_(tPtr)
+{
+    if (tPtr && !tPtr->unique())
+    {
+        FatalErrorInFunction
+            << "Attempted construction of a " << this->typeName()
+            << " from non-unique pointer"
+            << abort(FatalError);
+    }
+}
 
 
 template<class T>
 inline Foam::tmp<T>::tmp(const T& tRef)
 :
-    isTmp_(false),
-    ptr_(0),
-    ref_(tRef)
+    tmpType_(CONST_REF),
+    ptr_(const_cast<T*>(&tRef))
 {}
 
 
 template<class T>
 inline Foam::tmp<T>::tmp(const tmp<T>& t)
 :
-    isTmp_(t.isTmp_),
-    ptr_(t.ptr_),
-    ref_(t.ref_)
+    tmpType_(t.tmpType_),
+    ptr_(t.ptr_)
 {
-    if (isTmp_)
+    if (isAnyTmp())
     {
         if (ptr_)
         {
-            ptr_->operator++();
+            operator++();
         }
         else
         {
-            FatalErrorIn("Foam::tmp<T>::tmp(const tmp<T>&)")
+            FatalErrorInFunction
                 << "attempted copy of a deallocated temporary"
-                << " of type " << typeid(T).name()
+                << " of type " << this->typeName()
                 << abort(FatalError);
         }
     }
@@ -71,33 +101,43 @@ inline Foam::tmp<T>::tmp(const tmp<T>& t)
 
 
 template<class T>
+inline Foam::tmp<T>::tmp(const tmp<T>&& t)
+:
+    tmpType_(t.tmpType_),
+    ptr_(t.ptr_)
+{
+    if (isAnyTmp())
+    {
+        t.ptr_ = 0;
+    }
+}
+
+
+template<class T>
 inline Foam::tmp<T>::tmp(const tmp<T>& t, bool allowTransfer)
 :
-    isTmp_(t.isTmp_),
-    ptr_(t.ptr_),
-    ref_(t.ref_)
+    tmpType_(t.tmpType_),
+    ptr_(t.ptr_)
 {
-    if (isTmp_)
+    if (isAnyTmp())
     {
-        if (allowTransfer)
+        if (ptr_)
         {
-            const_cast<tmp<T>&>(t).ptr_ = 0;
-        }
-        else
-        {
-            if (ptr_)
+            if (allowTransfer && tmpType_ == REUSABLE_TMP)
             {
-                ptr_->operator++();
+                t.ptr_ = 0;
             }
             else
             {
-                FatalErrorIn
-                (
-                    "Foam::tmp<T>::tmp(const tmp<T>&, bool allowTransfer)"
-                )   << "attempted copy of a deallocated temporary"
-                    << " of type " << typeid(T).name()
-                    << abort(FatalError);
+                operator++();
             }
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "attempted copy of a deallocated temporary"
+                << " of type " << this->typeName()
+                << abort(FatalError);
         }
     }
 }
@@ -106,7 +146,100 @@ inline Foam::tmp<T>::tmp(const tmp<T>& t, bool allowTransfer)
 template<class T>
 inline Foam::tmp<T>::~tmp()
 {
-    if (isTmp_ && ptr_)
+    clear();
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class T>
+inline bool Foam::tmp<T>::isTmp() const
+{
+    return tmpType_ == REUSABLE_TMP;
+}
+
+
+template<class T>
+inline bool Foam::tmp<T>::empty() const
+{
+    return (isAnyTmp() && !ptr_);
+}
+
+
+template<class T>
+inline bool Foam::tmp<T>::valid() const
+{
+    return (!isAnyTmp() || (isAnyTmp() && ptr_));
+}
+
+
+template<class T>
+inline Foam::word Foam::tmp<T>::typeName() const
+{
+    return "tmp<" + word(typeid(T).name()) + '>';
+}
+
+
+template<class T>
+inline T& Foam::tmp<T>::ref() const
+{
+    if (isAnyTmp())
+    {
+         if (!ptr_)
+         {
+             FatalErrorInFunction
+                 << "Temporary of type " << this->typeName() << " deallocated"
+                 << abort(FatalError);
+         }
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Attempt to acquire non-const reference to const object"
+            << " from a " << this->typeName()
+            << abort(FatalError);
+    }
+
+    return *ptr_;
+}
+
+
+template<class T>
+inline T* Foam::tmp<T>::ptr() const
+{
+    if (isTmp())
+    {
+        if (!ptr_)
+        {
+            FatalErrorInFunction
+                << "Temporary of type " << this->typeName() << " deallocated"
+                << abort(FatalError);
+        }
+
+        if (!ptr_->unique())
+        {
+            FatalErrorInFunction
+                << "Attempt to acquire pointer to object referred to"
+                << " by multiple temporaries of type " << this->typeName()
+                << abort(FatalError);
+        }
+
+        T* ptr = ptr_;
+        ptr_ = 0;
+
+        return ptr;
+    }
+    else
+    {
+        return ptr_->clone().ptr();
+    }
+}
+
+
+template<class T>
+inline void Foam::tmp<T>::clear() const
+{
+    if (isAnyTmp() && ptr_)
     {
         if (ptr_->unique())
         {
@@ -116,67 +249,8 @@ inline Foam::tmp<T>::~tmp()
         else
         {
             ptr_->operator--();
+            ptr_ = 0;
         }
-    }
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class T>
-inline bool Foam::tmp<T>::isTmp() const
-{
-    return isTmp_;
-}
-
-
-template<class T>
-inline bool Foam::tmp<T>::empty() const
-{
-    return (isTmp_ && !ptr_);
-}
-
-
-template<class T>
-inline bool Foam::tmp<T>::valid() const
-{
-    return (!isTmp_ || (isTmp_ && ptr_));
-}
-
-
-template<class T>
-inline T* Foam::tmp<T>::ptr() const
-{
-    if (isTmp_)
-    {
-         if (!ptr_)
-         {
-             FatalErrorInFunction
-                 << "temporary of type " << typeid(T).name() << " deallocated"
-                 << abort(FatalError);
-         }
-
-         T* ptr = ptr_;
-         ptr_ = 0;
-
-         ptr->resetRefCount();
-
-         return ptr;
-    }
-    else
-    {
-        return new T(ref_);
-    }
-}
-
-
-template<class T>
-inline void Foam::tmp<T>::clear() const
-{
-    if (isTmp_ && ptr_)  // skip this bit:  && ptr_->unique())
-    {
-        delete ptr_;
-        ptr_ = 0;
     }
 }
 
@@ -184,52 +258,19 @@ inline void Foam::tmp<T>::clear() const
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class T>
-inline T& Foam::tmp<T>::operator()()
-{
-    if (isTmp_)
-    {
-        if (!ptr_)
-        {
-            FatalErrorInFunction
-                << "temporary of type " << typeid(T).name() << " deallocated"
-                << abort(FatalError);
-        }
-
-        return *ptr_;
-    }
-    else
-    {
-        // Note: const is cast away!
-        // Perhaps there should be two refs, one for const and one for non const
-        // and if the ref is actually const then you cannot return it here.
-        //
-        // Another possibility would be to store a const ref and a flag to say
-        // whether the tmp was constructed with a const or a non-const argument.
-        //
-        // eg, enum refType { POINTER = 0, REF = 1, CONSTREF = 2 };
-        return const_cast<T&>(ref_);
-    }
-}
-
-
-template<class T>
 inline const T& Foam::tmp<T>::operator()() const
 {
-    if (isTmp_)
+    if (isAnyTmp())
     {
         if (!ptr_)
         {
             FatalErrorInFunction
-                << "temporary of type " << typeid(T).name() << " deallocated"
+                << "temporary of type " << this->typeName() << " deallocated"
                 << abort(FatalError);
         }
+    }
 
-        return *ptr_;
-    }
-    else
-    {
-        return ref_;
-    }
+    return *ptr_;
 }
 
 
@@ -243,70 +284,100 @@ inline Foam::tmp<T>::operator const T&() const
 template<class T>
 inline T* Foam::tmp<T>::operator->()
 {
-    if (isTmp_)
+    if (isAnyTmp())
     {
          if (!ptr_)
          {
              FatalErrorInFunction
-                 << "temporary of type " << typeid(T).name() << " deallocated"
+                 << "Temporary of type " << this->typeName() << " deallocated"
                  << abort(FatalError);
          }
-
-         return ptr_;
     }
     else
     {
-        return &const_cast<T&>(ref_);
+        FatalErrorInFunction
+            << "Attempt to cast const object to non-const for type "
+            << this->typeName()
+            << abort(FatalError);
     }
+
+    return ptr_;
 }
 
 
 template<class T>
 inline const T* Foam::tmp<T>::operator->() const
 {
-    return const_cast<tmp<T>&>(*this).operator->();
+    if (isAnyTmp() && !ptr_)
+    {
+        FatalErrorInFunction
+            << "Temporary of type " << this->typeName() << " deallocated"
+            << abort(FatalError);
+    }
+
+    return ptr_;
+}
+
+
+template<class T>
+inline void Foam::tmp<T>::operator=(T* tPtr)
+{
+    clear();
+
+    if (!tPtr)
+    {
+        FatalErrorInFunction
+            << "Attempted copy of a deallocated tmp of type "
+                << this->typeName()
+            << abort(FatalError);
+    }
+
+    if (tPtr && !tPtr->unique())
+    {
+        FatalErrorInFunction
+            << "Attempted assignment of a tmp of type" << this->typeName()
+            << " to non-unique pointer"
+            << abort(FatalError);
+    }
+
+    tmpType_ = REUSABLE_TMP;
+    ptr_ = tPtr;
 }
 
 
 template<class T>
 inline void Foam::tmp<T>::operator=(const tmp<T>& t)
 {
-    if (isTmp_ && ptr_)
-    {
-        if (ptr_->unique())
-        {
-            delete ptr_;
-            ptr_ = 0;
-        }
-        else
-        {
-            ptr_->operator--();
-        }
-    }
+    clear();
 
-    if (t.isTmp_)
+    if (t.isAnyTmp())
     {
-        isTmp_ = true;
+        tmpType_ = t.tmpType_;
         ptr_ = t.ptr_;
 
-        if (ptr_)
-        {
-            ptr_->operator++();
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "attempted copy of a deallocated temporary"
-                << " of type " << typeid(T).name()
-                << abort(FatalError);
-        }
+        t.ptr_ = 0;
     }
     else
     {
         FatalErrorInFunction
-            << "attempted to assign to a const reference to constant object"
-            << " of type " << typeid(T).name()
+            << "Attempted to assign to a const reference to an object"
+            << " of type " << this->typeName()
             << abort(FatalError);
+    }
+}
+
+
+template<class T>
+inline void Foam::tmp<T>::operator=(const tmp<T>&& t)
+{
+    clear();
+
+    tmpType_ = t.tmpType_;
+    ptr_ = t.ptr_;
+
+    if (isAnyTmp())
+    {
+        t.ptr_ = 0;
     }
 }
 

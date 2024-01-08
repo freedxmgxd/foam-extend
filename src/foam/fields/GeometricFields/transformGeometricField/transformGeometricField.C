@@ -74,7 +74,7 @@ tmp<GeometricField<Type, PatchField, GeoMesh> > transform
         )
     );
 
-    transform(tranf(), trf, tf);
+    transform(tranf.ref(), trf, tf);
 
     return tranf;
 }
@@ -160,7 +160,7 @@ tmp<GeometricField<Type, PatchField, GeoMesh> > transform
         )
     );
 
-    transform(tranf(), t, tf);
+    transform(tranf.ref(), t, tf);
 
     return tranf;
 }

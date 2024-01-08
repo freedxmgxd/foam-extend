@@ -57,12 +57,6 @@ Foam::MaxwellSLSViscoelastic::MaxwellSLSViscoelastic
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::MaxwellSLSViscoelastic::~MaxwellSLSViscoelastic()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
@@ -86,7 +80,7 @@ Foam::MaxwellSLSViscoelastic::rho(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -120,7 +114,7 @@ Foam::tmp<Foam::volScalarField> Foam::MaxwellSLSViscoelastic::E(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -146,7 +140,7 @@ Foam::tmp<Foam::volScalarField> Foam::MaxwellSLSViscoelastic::nu(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -187,7 +181,7 @@ Foam::tmp<Foam::volScalarField> Foam::MaxwellSLSViscoelastic::J(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }

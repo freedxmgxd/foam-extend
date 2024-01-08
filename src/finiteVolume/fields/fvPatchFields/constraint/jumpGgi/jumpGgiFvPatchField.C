@@ -119,7 +119,7 @@ void jumpGgiFvPatchField<Type>::initInterfaceMatrixUpdate
     // patch comms.  HJ, 11/Jul/2011
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = this->ggiPatch().shadow().faceCells();
+    const labelUList& sfc = this->ggiPatch().shadow().faceCells();
 
     scalarField sField(sfc.size());
 
@@ -132,7 +132,7 @@ void jumpGgiFvPatchField<Type>::initInterfaceMatrixUpdate
 
 
     // Multiply the field by coefficients and add into the result
-    const unallocLabelList& fc = this->ggiPatch().faceCells();
+    const labelUList& fc = this->ggiPatch().faceCells();
 
     const Field<scalar> jf = jump()().component(cmpt);
 

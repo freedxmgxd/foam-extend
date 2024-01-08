@@ -46,13 +46,8 @@ tmp<Field<Type> > ggiSAMGInterface::fastExpand(const UList<Type>& ff) const
 
     if (ff.size() != this->size())
     {
-        FatalErrorIn
-        (
-            "tmp<Field<Type> > ggiSAMGInterface::fastExpand"
-            "("
-            "    const UList<Type>& ff"
-            ") const"
-        )   << "Wrong field size.  ff: " << ff.size()
+        FatalErrorInFunction
+            << "Wrong field size.  ff: " << ff.size()
             << " interface: " << this->size()
             << abort(FatalError);
     }
@@ -74,7 +69,7 @@ tmp<Field<Type> > ggiSAMGInterface::fastExpand(const UList<Type>& ff) const
         // Prepare for distribute.  Note: field will be expanded to zone size
         // during the distribute operation
         tmp<Field<Type> > tresult(new Field<Type>(ff));
-        List<Type>& expand = tresult();
+        List<Type>& expand = tresult.ref();
 
         map().distribute(expand);
 
@@ -109,13 +104,8 @@ tmp<Field<Type> > ggiSAMGInterface::fastReduce(const UList<Type>& ff) const
 
     if (ff.size() != this->size())
     {
-        FatalErrorIn
-        (
-            "tmp<Field<Type> > ggiSAMGInterface::fastReduce"
-            "("
-            "    const UList<Type>& ff"
-            ") const"
-        )   << "Wrong field size.  ff: " << ff.size()
+        FatalErrorInFunction
+            << "Wrong field size.  ff: " << ff.size()
             << " interface: " << this->size()
             << abort(FatalError);
     }
@@ -147,7 +137,7 @@ tmp<Field<Type> > ggiSAMGInterface::fastReduce(const UList<Type>& ff) const
         (
             new Field<Type>(shadowZa.size())
         );
-        Field<Type>& result = tresult();
+        Field<Type>& result = tresult.ref();
 
         // Filter from expanded field to zone size
         forAll (shadowZa, shadowZaI)

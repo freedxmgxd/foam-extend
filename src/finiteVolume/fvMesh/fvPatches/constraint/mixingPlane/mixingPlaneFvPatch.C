@@ -232,7 +232,7 @@ const Foam::scalarListList& Foam::mixingPlaneFvPatch::ggiWeights() const
 
 Foam::tmp<Foam::labelField> Foam::mixingPlaneFvPatch::interfaceInternalField
 (
-    const unallocLabelList& internalData
+    const labelUList& internalData
 ) const
 {
     return patchInternalField(internalData);
@@ -242,7 +242,7 @@ Foam::tmp<Foam::labelField> Foam::mixingPlaneFvPatch::interfaceInternalField
 void Foam::mixingPlaneFvPatch::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     labelTransferBuffer_ = interfaceData;
@@ -252,7 +252,7 @@ void Foam::mixingPlaneFvPatch::initTransfer
 Foam::tmp<Foam::labelField> Foam::mixingPlaneFvPatch::transfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     return this->shadow().labelTransferBuffer();
@@ -262,7 +262,7 @@ Foam::tmp<Foam::labelField> Foam::mixingPlaneFvPatch::transfer
 void Foam::mixingPlaneFvPatch::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     labelTransferBuffer_ = patchInternalField(iF);
@@ -272,7 +272,7 @@ void Foam::mixingPlaneFvPatch::initInternalFieldTransfer
 Foam::tmp<Foam::labelField> Foam::mixingPlaneFvPatch::internalFieldTransfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     return shadow().labelTransferBuffer();

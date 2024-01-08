@@ -105,7 +105,7 @@ void Foam::ggiSAMGInterfaceField::updateInterfaceMatrix
         ggiInterface_.internalFieldTransfer(commsType, psiInternal);
     transformCoupleField(pnf, cmpt);
 
-    const unallocLabelList& faceCells = ggiInterface_.faceCells();
+    const labelUList& faceCells = ggiInterface_.faceCells();
 
     // New treatment.  HJ, 26/Jun/2011
     if (pnf.size() != faceCells.size())

@@ -83,45 +83,45 @@ inline Foam::label Foam::UList<T>::rcIndex(const label i) const
 }
 
 
-// Check start is within valid range (0 ... size-1).
+// Check start is within valid range (0 ... size-1)
 template<class T>
 inline void Foam::UList<T>::checkStart(const label start) const
 {
     if (start<0 || (start && start>=size_))
     {
-        FatalErrorIn("UList<T>::checkStart(const label)")
+        FatalErrorInFunction
             << "start " << start << " out of range 0 ... " << max(size_-1, 0)
             << abort(FatalError);
     }
 }
 
 
-// Check size is within valid range (0 ... size).
+// Check size is within valid range (0 ... size)
 template<class T>
 inline void Foam::UList<T>::checkSize(const label size) const
 {
     if (size<0 || size>size_)
     {
-        FatalErrorIn("UList<T>::checkSize(const label)")
+        FatalErrorInFunction
             << "size " << size << " out of range 0 ... " << size_
             << abort(FatalError);
     }
 }
 
 
-// Check index i is within valid range (0 ... size-1).
+// Check index i is within valid range (0 ... size-1)
 template<class T>
 inline void Foam::UList<T>::checkIndex(const label i) const
 {
     if (!size_)
     {
-        FatalErrorIn("UList<T>::checkIndex(const label)")
+        FatalErrorInFunction
             << "attempt to access element from zero sized list"
             << abort(FatalError);
     }
     else if (i<0 || i>=size_)
     {
-        FatalErrorIn("UList<T>::checkIndex(const label)")
+        FatalErrorInFunction
             << "index " << i << " out of range 0 ... " << size_-1
             << abort(FatalError);
     }
@@ -170,6 +170,14 @@ inline T* Foam::UList<T>::data()
 }
 
 
+template<class T>
+inline void Foam::UList<T>::shallowCopy(const UList<T>& a)
+{
+    size_ = a.size_;
+    v_ = a.v_;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 
@@ -186,8 +194,7 @@ inline T& Foam::UList<T>::operator[](const label i)
 
 namespace Foam
 {
-
-    // Template specialization for bool
+    // Template specialisation for bool
     template<>
     inline const bool& UList<bool>::operator[](const label i) const
     {
@@ -233,19 +240,6 @@ Foam::UList<T>::begin()
     return v_;
 }
 
-template<class T>
-inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::begin() const
-{
-    return v_;
-}
-
-template<class T>
-inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::cbegin() const
-{
-    return v_;
-}
 
 template<class T>
 inline typename Foam::UList<T>::iterator
@@ -254,12 +248,14 @@ Foam::UList<T>::end()
     return &v_[size_];
 }
 
+
 template<class T>
 inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::end() const
+Foam::UList<T>::cbegin() const
 {
-    return &v_[size_];
+    return v_;
 }
+
 
 template<class T>
 inline typename Foam::UList<T>::const_iterator
@@ -268,47 +264,70 @@ Foam::UList<T>::cend() const
     return &v_[size_];
 }
 
+
 template<class T>
-inline typename Foam::UList<T>::iterator
+inline typename Foam::UList<T>::const_iterator
+Foam::UList<T>::begin() const
+{
+    return v_;
+}
+
+
+template<class T>
+inline typename Foam::UList<T>::const_iterator
+Foam::UList<T>::end() const
+{
+    return &v_[size_];
+}
+
+
+template<class T>
+inline typename Foam::UList<T>::reverse_iterator
 Foam::UList<T>::rbegin()
 {
-    return &v_[size_-1];
+    return reverse_iterator(end());
 }
 
-template<class T>
-inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::rbegin() const
-{
-    return &v_[size_-1];
-}
 
 template<class T>
-inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::crbegin() const
-{
-    return &v_[size_-1];
-}
-
-template<class T>
-inline typename Foam::UList<T>::iterator
+inline typename Foam::UList<T>::reverse_iterator
 Foam::UList<T>::rend()
 {
-    return &v_[-1];
+    return reverse_iterator(begin());
 }
 
+
 template<class T>
-inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::rend() const
+inline typename Foam::UList<T>::const_reverse_iterator
+Foam::UList<T>::crbegin() const
 {
-    return &v_[-1];
+    return const_reverse_iterator(cend());
 }
 
+
 template<class T>
-inline typename Foam::UList<T>::const_iterator
+inline typename Foam::UList<T>::const_reverse_iterator
 Foam::UList<T>::crend() const
 {
-    return &v_[-1];
+    return const_reverse_iterator(cbegin());
 }
+
+
+template<class T>
+inline typename Foam::UList<T>::const_reverse_iterator
+Foam::UList<T>::rbegin() const
+{
+    return const_reverse_iterator(cend());
+}
+
+
+template<class T>
+inline typename Foam::UList<T>::const_reverse_iterator
+Foam::UList<T>::rend() const
+{
+    return const_reverse_iterator(cbegin());
+}
+
 
 template<class T>
 inline Foam::label Foam::UList<T>::size() const

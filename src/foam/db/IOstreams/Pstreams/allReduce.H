@@ -32,7 +32,7 @@ SourceFiles
 #ifndef allReduce_H
 #define allReduce_H
 
-#include "mpi.h"
+#include <mpi.h>
 
 #include "Pstream.H"
 #include "PstreamGlobals.H"

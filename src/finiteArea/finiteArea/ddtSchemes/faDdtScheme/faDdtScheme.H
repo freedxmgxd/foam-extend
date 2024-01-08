@@ -71,16 +71,17 @@ protected:
 
     // Protected data
 
+        //- Mesh reference
         const faMesh& mesh_;
 
 
     // Private Member Functions
 
         //- Disallow copy construct
-        faDdtScheme(const faDdtScheme&);
+        faDdtScheme(const faDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const faDdtScheme&);
+        void operator=(const faDdtScheme&) = delete;
 
 
 public:
@@ -126,9 +127,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~faDdtScheme();
+    //- Destructor
+    virtual ~faDdtScheme() = default;
 
 
     // Member Functions
@@ -141,69 +141,69 @@ public:
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
         (
-            const dimensioned<Type>
-        ) = 0;
+            const dimensioned<Type>&
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
         (
-            const dimensioned<Type>
-        ) = 0;
+            const dimensioned<Type>&
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
         (
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
         (
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, faePatchField, edgeMesh> > facDdt0
         (
             const GeometricField<Type, faePatchField, edgeMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
         (
             const dimensionedScalar&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
         (
             const areaScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
         (
             const areaScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<faMatrix<Type> > famDdt
         (
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<faMatrix<Type> > famDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<faMatrix<Type> > famDdt
         (
             const areaScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 };
 
 

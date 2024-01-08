@@ -127,7 +127,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
         )
     );
 
-    volScalarField& Su0 = tSu0();
+    volScalarField& Su0 = tSu0.ref();
 
     forAll(Su0, celli)
     {
@@ -177,7 +177,7 @@ Foam::tmp<Foam::volScalarField> Foam::laminarFlameSpeedModels::Gulders::Su0pTphi
         )
     );
 
-    volScalarField& Su0 = tSu0();
+    volScalarField& Su0 = tSu0.ref();
 
     forAll(Su0, celli)
     {

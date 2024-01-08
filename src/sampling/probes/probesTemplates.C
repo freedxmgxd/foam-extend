@@ -79,7 +79,7 @@ void Foam::probes::sampleAndWrite
 
         os  << setw(w) << vField.time().timeToUserTime(vField.time().value());
 
-        forAll(values, probeI)
+        forAll (values, probeI)
         {
             os  << ' ' << setw(w) << values[probeI];
         }
@@ -103,7 +103,7 @@ void Foam::probes::sampleAndWrite
 
         os  << setw(w) << sField.time().timeToUserTime(sField.time().value());
 
-        forAll(values, probeI)
+        forAll (values, probeI)
         {
             os  << ' ' << setw(w) << values[probeI];
         }
@@ -115,7 +115,7 @@ void Foam::probes::sampleAndWrite
 template<class Type>
 void Foam::probes::sampleAndWrite(const fieldGroup<Type>& fields)
 {
-    forAll(fields, fieldI)
+    forAll (fields, fieldI)
     {
         if (loadFromFiles_)
         {
@@ -164,7 +164,7 @@ void Foam::probes::sampleAndWrite(const fieldGroup<Type>& fields)
 template<class Type>
 void Foam::probes::sampleAndWriteSurfaceFields(const fieldGroup<Type>& fields)
 {
-    forAll(fields, fieldI)
+    forAll (fields, fieldI)
     {
         if (loadFromFiles_)
         {
@@ -224,8 +224,7 @@ Foam::probes::sample
     (
         new Field<Type>(this->size(), unsetVal)
     );
-
-    Field<Type>& values = tValues();
+    Field<Type>& values = tValues.ref();
 
     if (fixedLocations_)
     {
@@ -234,7 +233,7 @@ Foam::probes::sample
             interpolation<Type>::New(interpolationScheme_, vField)
         );
 
-        forAll(*this, probeI)
+        forAll (*this, probeI)
         {
             if (elementList_[probeI] >= 0)
             {
@@ -251,7 +250,7 @@ Foam::probes::sample
     }
     else
     {
-        forAll(*this, probeI)
+        forAll (*this, probeI)
         {
             if (elementList_[probeI] >= 0)
             {
@@ -294,10 +293,9 @@ Foam::probes::sample
     (
         new Field<Type>(this->size(), unsetVal)
     );
+    Field<Type>& values = tValues.ref();
 
-    Field<Type>& values = tValues();
-
-    forAll(*this, probeI)
+    forAll (*this, probeI)
     {
         if (faceList_[probeI] >= 0)
         {

@@ -149,7 +149,7 @@ tmp<Field<Type> > ggiFvPatchField<Type>::patchNeighbourField() const
     // Get shadow face-cells and assemble shadow field
     // This is a patchInternalField of neighbour but access is inconvenient.
     // Assemble by hand. HJ, 27/Sep/2011
-    const unallocLabelList& sfc = ggiPatch_.shadow().faceCells();
+    const labelUList& sfc = ggiPatch_.shadow().faceCells();
 
     Field<Type> sField(sfc.size());
 
@@ -159,7 +159,7 @@ tmp<Field<Type> > ggiFvPatchField<Type>::patchNeighbourField() const
     }
 
     tmp<Field<Type> > tpnf(ggiPatch_.interpolate(sField));
-    Field<Type>& pnf = tpnf();
+    Field<Type>& pnf = tpnf.ref();
 
     if (ggiPatch_.bridgeOverlap())
     {
@@ -238,7 +238,7 @@ void ggiFvPatchField<Type>::initInterfaceMatrixUpdate
 
     // Get shadow face-cells and assemble shadow field
     // Consider using shadowField().patchInternalField() ? HJ, 18/Feb/2016
-    const unallocLabelList& sfc = ggiPatch_.shadow().faceCells();
+    const labelUList& sfc = ggiPatch_.shadow().faceCells();
 
     scalarField sField(sfc.size());
 
@@ -273,7 +273,7 @@ void ggiFvPatchField<Type>::initInterfaceMatrixUpdate
     }
 
     // Multiply the field by coefficients and add into the result
-    const unallocLabelList& fc = ggiPatch_.faceCells();
+    const labelUList& fc = ggiPatch_.faceCells();
 
     if (switchToLhs)
     {
@@ -322,7 +322,7 @@ void ggiFvPatchField<Type>::initInterfaceMatrixUpdate
 
     // Get shadow face-cells and assemble shadow patch internal field
     // Consider using shadowField().patchInternalField() ? HJ, 18/Feb/2016
-    const unallocLabelList& sfc = ggiPatch_.shadow().faceCells();
+    const labelUList& sfc = ggiPatch_.shadow().faceCells();
 
     Field<Type> sField(sfc.size());
 
@@ -356,7 +356,7 @@ void ggiFvPatchField<Type>::initInterfaceMatrixUpdate
     // of multiplication
     multiply(pnf, coeffs, pnf);
 
-    const unallocLabelList& fc = ggiPatch_.faceCells();
+    const labelUList& fc = ggiPatch_.faceCells();
 
     if (switchToLhs)
     {

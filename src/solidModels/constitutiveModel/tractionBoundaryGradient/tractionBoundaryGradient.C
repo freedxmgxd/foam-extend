@@ -55,7 +55,7 @@ Foam::tmp<Foam::vectorField> Foam::tractionBoundaryGradient::traction
     (
         new vectorField(gradField.size(), vector::zero)
     );
-    vectorField& traction = ttraction();
+    vectorField& traction = ttraction.ref();
 
     // Orthotropic material
     if (orthotropic)
@@ -273,7 +273,7 @@ Foam::tmp<Foam::vectorField> Foam::tractionBoundaryGradient::snGrad
 {
     // Create result
     tmp<vectorField> tgradient(new vectorField(traction.size(), vector::zero));
-    vectorField& gradient = tgradient();
+    vectorField& gradient = tgradient.ref();
 
     // Orthotropic material
     if (orthotropic)

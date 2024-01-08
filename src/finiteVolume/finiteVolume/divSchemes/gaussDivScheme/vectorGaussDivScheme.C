@@ -56,7 +56,7 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
     (
         new BlockLduSystem<vector, scalar>(mesh)
     );
-    BlockLduSystem<vector, scalar>& bs = tbs();
+    BlockLduSystem<vector, scalar>& bs = tbs.ref();
     scalarField& source = bs.source();
 
     // Grab ldu parts of block matrix as linear always
@@ -79,7 +79,7 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
         const fvPatch& patch = pf.patch();
         const vectorField& Sf = patch.Sf();
         const fvsPatchScalarField& pw = weights.boundaryField()[patchI];
-        const unallocLabelList& fc = patch.faceCells();
+        const labelUList& fc = patch.faceCells();
 
         const vectorField internalCoeffs(pf.valueInternalCoeffs(pw));
 
@@ -134,7 +134,7 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
     (
         new BlockLduSystem<vector, scalar>(mesh)
     );
-    BlockLduSystem<vector, scalar>& bs = tbs();
+    BlockLduSystem<vector, scalar>& bs = tbs.ref();
     scalarField& source = bs.source();
 
     // Grab ldu parts of block matrix as linear always
@@ -158,7 +158,7 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
         const fvPatch& patch = pf.patch();
         const vectorField& Sf = patch.Sf();
         const fvsPatchScalarField& pw = weights.boundaryField()[patchI];
-        const unallocLabelList& fc = patch.faceCells();
+        const labelUList& fc = patch.faceCells();
 
         const scalarField& pFlux = flux.boundaryField()[patchI];
 

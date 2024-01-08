@@ -51,19 +51,8 @@ void Foam::allReduce
     // Check for processors that are not in the communicator
     if (Pstream::myProcNo(comm) == -1)
     {
-        FatalErrorIn
-        (
-            "void Foam::allReduce\n"
-            "(\n"
-            "    Type& Value,\n"
-            "    int MPICount,\n"
-            "    MPI_Datatype MPIType,\n"
-            "    MPI_Op MPIOp,\n"
-            "    const BinaryOp& bop,\n"
-            "    const int tag,\n"
-            "    const label comm\n"
-            ")"
-        )   << "Reduce called on the processor which is not a member "
+        FatalErrorInFunction
+            << "Reduce called on the processor which is not a member "
             << "of comm.  This is not allowed"
             << abort(FatalError);
     }

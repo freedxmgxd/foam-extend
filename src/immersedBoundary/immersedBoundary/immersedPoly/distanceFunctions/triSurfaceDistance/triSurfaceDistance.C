@@ -79,7 +79,7 @@ Foam::tmp<Foam::scalarField>
 Foam::triSurfaceDistance::distance(const vectorField& p) const
 {
     tmp<scalarField> tdist(new scalarField(p.size()));
-    scalarField& dist = tdist();
+    scalarField& dist = tdist.ref();
 
     forAll (p, i)
     {

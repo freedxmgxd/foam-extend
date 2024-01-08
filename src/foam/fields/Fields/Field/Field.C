@@ -69,7 +69,7 @@ template<class Type>
 Field<Type>::Field
 (
     const UList<Type>& mapF,
-    const unallocLabelList& mapAddressing
+    const labelUList& mapAddressing
 )
 :
     List<Type>(mapAddressing.size())
@@ -81,7 +81,7 @@ template<class Type>
 Field<Type>::Field
 (
     const tmp<Field<Type> >& tmapF,
-    const unallocLabelList& mapAddressing
+    const labelUList& mapAddressing
 )
 :
     List<Type>(mapAddressing.size())
@@ -288,7 +288,7 @@ template<class Type>
 void Field<Type>::map
 (
     const UList<Type>& mapF,
-    const unallocLabelList& mapAddressing
+    const labelUList& mapAddressing
 )
 {
     Field<Type>& f = *this;
@@ -317,7 +317,7 @@ template<class Type>
 void Field<Type>::map
 (
     const tmp<Field<Type> >& tmapF,
-    const unallocLabelList& mapAddressing
+    const labelUList& mapAddressing
 )
 {
     map(tmapF(), mapAddressing);
@@ -451,7 +451,7 @@ template<class Type>
 void Field<Type>::rmap
 (
     const UList<Type>& mapF,
-    const unallocLabelList& mapAddressing
+    const labelUList& mapAddressing
 )
 {
     Field<Type>& f = *this;
@@ -471,7 +471,7 @@ template<class Type>
 void Field<Type>::rmap
 (
     const tmp<Field<Type> >& tmapF,
-    const unallocLabelList& mapAddressing
+    const labelUList& mapAddressing
 )
 {
     rmap(tmapF(), mapAddressing);
@@ -483,7 +483,7 @@ template<class Type>
 void Field<Type>::rmap
 (
     const UList<Type>& mapF,
-    const unallocLabelList& mapAddressing,
+    const labelUList& mapAddressing,
     const scalarList& mapWeights
 )
 {
@@ -501,7 +501,7 @@ template<class Type>
 void Field<Type>::rmap
 (
     const tmp<Field<Type> >& tmapF,
-    const unallocLabelList& mapAddressing,
+    const labelUList& mapAddressing,
     const scalarList& mapWeights
 )
 {
@@ -524,7 +524,7 @@ tmp<Field<typename Field<Type>::cmptType> > Field<Type>::component
 ) const
 {
     tmp<Field<cmptType> > Component(new Field<cmptType>(this->size()));
-    ::Foam::component(Component(), *this, d);
+    ::Foam::component(Component.ref(), *this, d);
     return Component;
 }
 
@@ -569,7 +569,7 @@ template<class Type>
 tmp<Field<Type> > Field<Type>::T() const
 {
     tmp<Field<Type> > transpose(new Field<Type>(this->size()));
-    ::Foam::T(transpose(), *this);
+    ::Foam::T(transpose.ref(), *this);
     return transpose;
 }
 

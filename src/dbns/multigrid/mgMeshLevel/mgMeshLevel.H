@@ -142,13 +142,13 @@ public:
         // Addressing
 
             //- Return owner addressing
-            virtual const unallocLabelList& owner() const = 0;
+            virtual const labelUList& owner() const = 0;
 
             //- Return neighbour addressing
-            virtual const unallocLabelList& neighbour() const = 0;
+            virtual const labelUList& neighbour() const = 0;
 
             //- Return face-cell addressing for all patches
-            virtual const unallocLabelList& faceCells
+            virtual const labelUList& faceCells
             (
                 const label patchNo
             ) const = 0;
@@ -333,7 +333,7 @@ public:
                          new Field<Type>(fineLevel().nCells())
                      );
 
-                     prolong(coarseData, tresult());
+                     prolong(coarseData, tresult.ref());
 
                      // Reached finest level, return
                      return tresult;

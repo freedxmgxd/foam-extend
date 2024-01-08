@@ -134,7 +134,7 @@ Foam::blockSymmPlaneFvPatchVectorField::blockValueInternalCoeffs
         new vectorCoeffField(this->size())
     );
 
-    tcoeff().asSquare() = I - this->patch().nf()*this->patch().nf();
+    tcoeff.ref().asSquare() = I - this->patch().nf()*this->patch().nf();
 
     return tcoeff;
 }
@@ -166,7 +166,7 @@ Foam::blockSymmPlaneFvPatchVectorField::blockGradientInternalCoeffs() const
         new vectorCoeffField(this->size())
     );
 
-    tcoeff().asSquare() =
+    tcoeff.ref().asSquare() =
         -this->patch().deltaCoeffs()*this->patch().nf()*this->patch().nf();
 
     return tcoeff;

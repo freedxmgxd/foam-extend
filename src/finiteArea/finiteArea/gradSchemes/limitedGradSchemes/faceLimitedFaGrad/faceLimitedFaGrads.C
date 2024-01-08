@@ -106,10 +106,10 @@ tmp<areaVectorField> faceLimitedGrad<scalar>::grad
         return tGrad;
     }
 
-    areaVectorField& g = tGrad();
+    areaVectorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const areaVectorField& C = mesh.areaCentres();
     const edgeVectorField& Cf = mesh.edgeCentres();
@@ -139,7 +139,7 @@ tmp<areaVectorField> faceLimitedGrad<scalar>::grad
     {
         const faPatchScalarField& psf = bsf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].edgeFaces();
+        const labelUList& pOwner = mesh.boundary()[patchi].edgeFaces();
 
         if (psf.coupled())
         {
@@ -207,7 +207,7 @@ tmp<areaVectorField> faceLimitedGrad<scalar>::grad
 
     forAll(bsf, patchi)
     {
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].edgeFaces();
+        const labelUList& pOwner = mesh.boundary()[patchi].edgeFaces();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         forAll(pOwner, pFacei)
@@ -255,10 +255,10 @@ tmp<areaTensorField> faceLimitedGrad<vector>::grad
         return tGrad;
     }
 
-    areaTensorField& g = tGrad();
+    areaTensorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const areaVectorField& C = mesh.areaCentres();
     const edgeVectorField& Cf = mesh.edgeCentres();
@@ -287,7 +287,7 @@ tmp<areaTensorField> faceLimitedGrad<vector>::grad
     forAll(bsf, patchi)
     {
         const faPatchVectorField& psf = bsf[patchi];
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].edgeFaces();
+        const labelUList& pOwner = mesh.boundary()[patchi].edgeFaces();
 
         if (psf.coupled())
         {
@@ -358,7 +358,7 @@ tmp<areaTensorField> faceLimitedGrad<vector>::grad
 
     forAll(bsf, patchi)
     {
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].edgeFaces();
+        const labelUList& pOwner = mesh.boundary()[patchi].edgeFaces();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         forAll(pOwner, pFacei)

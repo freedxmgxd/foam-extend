@@ -72,17 +72,20 @@ protected:
 
     // Protected data
 
+        //- Mesh reference
         const faMesh& mesh_;
+
+        //- Interpolation scheme
         tmp<edgeInterpolationScheme<Type> > tinterpScheme_;
 
 
     // Private Member Functions
 
         //- Disallow copy construct
-        divScheme(const divScheme&);
+        divScheme(const divScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const divScheme&);
+        void operator=(const divScheme&) = delete;
 
 
 public:
@@ -126,9 +129,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~divScheme();
+    //- Destructor
+    virtual ~divScheme() = default;
 
 
     // Member Functions
@@ -146,7 +148,7 @@ public:
         > facDiv
         (
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 };
 
 

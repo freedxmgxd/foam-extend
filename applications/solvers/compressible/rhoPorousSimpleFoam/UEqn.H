@@ -18,13 +18,13 @@
     if (pressureImplicitPorosity)
     {
         tmp<volTensorField> tTU = tensor(I)*UEqn().A();
-        pZones.addResistance(UEqn(), tTU());
+        pZones.addResistance(UEqn.ref(), tTU.ref());
         trTU = inv(tTU());
-        trTU().rename("rAU");
+        trTU.ref().rename("rAU");
 
         volVectorField gradp = fvc::grad(p);
 
-        for (int UCorr=0; UCorr<nUCorr; UCorr++)
+        for (int UCorr = 0; UCorr < nUCorr; UCorr++)
         {
             U = trTU() & (UEqn().H() - gradp);
         }
@@ -37,5 +37,5 @@
         solve(UEqn() == -fvc::grad(p));
 
         trAU = 1.0/UEqn().A();
-        trAU().rename("rAU");
+        trAU.ref().rename("rAU");
     }

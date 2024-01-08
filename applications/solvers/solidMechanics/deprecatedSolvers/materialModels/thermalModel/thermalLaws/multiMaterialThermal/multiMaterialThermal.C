@@ -46,7 +46,7 @@ Foam::tmp<Foam::scalarField> Foam::multiMaterialThermal::indicator
     const scalarField& mat = materials_.internalField();
 
     tmp<scalarField> tresult(new scalarField(mat.size(), 0.0));
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     forAll (mat, matI)
     {
@@ -110,27 +110,14 @@ Foam::multiMaterialThermal::multiMaterialThermal
      || max(materials_).value() > laws.size() + SMALL
     )
     {
-        FatalErrorIn
-        (
-            "multiMaterialThermal::multiMaterialThermal\n"
-            "(\n"
-            "    const word& name,\n"
-            "    const volScalarField& T,\n"
-            "    const dictionary& dict\n"
-            ")"
-        )   << "Invalid definition of material indicator field.  "
+        FatalErrorInFunction
+            << "Invalid definition of material indicator field.  "
             << "Number of materials: " << laws.size()
             << " max index: " << max(materials_)
             << ".  Should be " << laws.size() - 1
             << abort(FatalError);
     }
 }
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::multiMaterialThermal::~multiMaterialThermal()
-{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -154,7 +141,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterialThermal::C() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<thermalLaw>& laws = *this;
@@ -190,7 +177,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterialThermal::k() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<thermalLaw>& laws = *this;
@@ -226,7 +213,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterialThermal::alpha() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<thermalLaw>& laws = *this;
@@ -262,7 +249,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterialThermal::T0() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<thermalLaw>& laws = *this;

@@ -75,7 +75,7 @@ correctedLnGrad<Type>::correction
             vf.dimensions()*mesh.deltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, faePatchField, edgeMesh>& ssf = tssf();
+    GeometricField<Type, faePatchField, edgeMesh>& ssf = tssf.ref();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {

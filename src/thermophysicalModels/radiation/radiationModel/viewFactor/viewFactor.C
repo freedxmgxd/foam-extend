@@ -212,7 +212,7 @@ void Foam::radiation::viewFactor::initialise()
     }
 
     // Fill the local values to distribute
-    SubList<scalar>(compactCoarseMagSf, nLocalCoarseFaces_).assign(localCoarseMagSf);
+    SubList<scalar>(compactCoarseMagSf, nLocalCoarseFaces_) = localCoarseMagSf;
 
     // Distribute data
     map_->distribute(compactCoarseMagSf);
@@ -231,7 +231,7 @@ void Foam::radiation::viewFactor::initialise()
     (
         compactGlobalIds,
         nLocalCoarseFaces_
-    ).assign(localGlobalIds);
+    ) = localGlobalIds;
 
     map_->distribute(compactGlobalIds);
 
@@ -698,10 +698,9 @@ void Foam::radiation::viewFactor::calculate()
     }
 
     // Fill the local values to distribute
-    SubList<scalar>(compactCoarseT, nLocalCoarseFaces_).assign(localCoarseTave);
-    SubList<scalar>(compactCoarseE, nLocalCoarseFaces_).assign(localCoarseEave);
-    SubList<scalar>
-        (compactCoarseHo, nLocalCoarseFaces_).assign(localCoarseHoave);
+    SubList<scalar>(compactCoarseT, nLocalCoarseFaces_) = localCoarseTave;
+    SubList<scalar>(compactCoarseE, nLocalCoarseFaces_) = localCoarseEave;
+    SubList<scalar>(compactCoarseHo, nLocalCoarseFaces_) = localCoarseHoave;
 
     // Distribute data
     map_->distribute(compactCoarseT);
@@ -722,7 +721,7 @@ void Foam::radiation::viewFactor::calculate()
     (
         compactGlobalIds,
         nLocalCoarseFaces_
-    ).assign(localGlobalIds);
+    ) = localGlobalIds;
 
     map_->distribute(compactGlobalIds);
 
@@ -763,7 +762,7 @@ void Foam::radiation::viewFactor::calculate()
                 {
                     scalar invEj = 1.0/E[j];
                     scalar sigmaT4 =
-                        radiation::sigmaSB.value()*pow(T[j], 4.0);
+                        radiation::sigmaSB.value()*pow4(T[j]);
 
                     if (i==j)
                     {
@@ -816,8 +815,7 @@ void Foam::radiation::viewFactor::calculate()
                 for (label j=0; j<totalNCoarseFaces_; j++)
                 {
                     scalar sigmaT4 =
-                        radiation::sigmaSB.value()
-                       *pow(T[j], 4.0);
+                        radiation::sigmaSB.value()*pow4(T[j]);
 
                     if (i==j)
                     {

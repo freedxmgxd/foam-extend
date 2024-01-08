@@ -167,7 +167,7 @@ Foam::contactPatchPair::masterTouchFraction() const
     (
         new scalarField(masterPatchLocalFaces.size(), 0)
     );
-    scalarField& touchFrac = ttouchFrac();
+    scalarField& touchFrac = ttouchFrac.ref();
 
     forAll (masterPatchLocalFaces, faceI)
     {
@@ -229,7 +229,7 @@ Foam::contactPatchPair::slaveTouchFraction() const
     (
         new scalarField(slavePatchLocalFaces.size(), 0)
     );
-    scalarField& touchFrac = ttouchFrac();
+    scalarField& touchFrac = ttouchFrac.ref();
 
     forAll (slavePatchLocalFaces, faceI)
     {

@@ -65,8 +65,8 @@ Foam::donorSuitability::faceArea::faceArea
 
     // Get necessary mesh data
     const scalarField& magSfIn = mesh.magSf().internalField();
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     // Note: only internal faces of the mesh are considered, there's no need to
     // loop through boundary faces

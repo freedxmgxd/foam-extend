@@ -429,7 +429,7 @@ void LienCubicKELowRe::correct()
         Cmu_*fMu*sqr(k_)/epsilon_*S2 - (nonlinearStress_ && gradU);
 
     // Dissipation equation
-    tmp<fvScalarMatrix> epsEqn
+    fvScalarMatrix epsEqn
     (
         fvm::ddt(epsilon_)
       + fvm::div(phi_, epsilon_)
@@ -444,7 +444,7 @@ void LienCubicKELowRe::correct()
       - fvm::Sp(C2_*f2*epsilon_/k_, epsilon_)
     );
 
-    epsEqn().relax();
+    epsEqn.relax();
 
 #   include "LienCubicKELowReSetWallDissipation.H"
 #   include "wallDissipationI.H"
@@ -455,7 +455,7 @@ void LienCubicKELowRe::correct()
 
     // Turbulent kinetic energy equation
 
-    tmp<fvScalarMatrix> kEqn
+    fvScalarMatrix kEqn
     (
         fvm::ddt(k_)
       + fvm::div(phi_, k_)
@@ -466,7 +466,7 @@ void LienCubicKELowRe::correct()
       - fvm::Sp(epsilon_/k_, k_)
     );
 
-    kEqn().relax();
+    kEqn.relax();
     solve(kEqn);
     bound(k_, k0_);
 

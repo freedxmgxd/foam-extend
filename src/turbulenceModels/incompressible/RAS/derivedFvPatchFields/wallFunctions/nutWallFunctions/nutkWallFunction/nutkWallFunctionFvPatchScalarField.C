@@ -55,10 +55,10 @@ tmp<scalarField> nutkWallFunctionFvPatchScalarField::calcNut() const
     const scalar Cmu25 = pow025(Cmu_);
 
     tmp<scalarField> tnutw(new scalarField(patch().size(), 0.0));
-    scalarField& nutw = tnutw();
+    scalarField& nutw = tnutw.ref();
 
     // Get face cells
-    const unallocLabelList& fc = patch().faceCells();
+    const labelUList& fc = patch().faceCells();
 
     forAll(nutw, faceI)
     {

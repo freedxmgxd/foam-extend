@@ -79,7 +79,7 @@ explicitConvectionScheme<Type>::fvmDiv
             faceFlux.dimensions()*vf.dimensions()
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     // Matrix consistency
     fvm.diag() = 0;
@@ -113,7 +113,7 @@ explicitConvectionScheme<Type>::fvcDiv
         fvc::surfaceIntegrate(flux(faceFlux, vf))
     );
 
-    tConvection().rename
+    tConvection.ref().rename
     (
         "convection(" + faceFlux.name() + ',' + vf.name() + ')'
     );

@@ -39,8 +39,8 @@ void Foam::BlockCholeskyPrecon<scalar>::calcPreconDiag()
     // Precondition the diagonal
     if (matrix_.symmetric())
     {
-        const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-        const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
+        const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+        const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
 
         // Get off-diagonal matrix coefficients
         const scalarField& upper = matrix_.upper();
@@ -53,8 +53,8 @@ void Foam::BlockCholeskyPrecon<scalar>::calcPreconDiag()
     }
     else if (matrix_.asymmetric())
     {
-        const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-        const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
+        const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+        const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
 
         // Get off-diagonal matrix coefficients
         const scalarField& upper = matrix_.upper();
@@ -89,8 +89,8 @@ void Foam::BlockCholeskyPrecon<scalar>::precondition
 
     if (matrix_.symmetric())
     {
-        const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-        const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
+        const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+        const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
 
         // Get off-diagonal matrix coefficients
         const scalarField& upper = matrix_.upper();
@@ -111,9 +111,9 @@ void Foam::BlockCholeskyPrecon<scalar>::precondition
     }
     else if (matrix_.asymmetric())
     {
-        const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-        const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
-        const unallocLabelList& losortAddr = matrix_.lduAddr().losortAddr();
+        const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+        const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
+        const labelUList& losortAddr = matrix_.lduAddr().losortAddr();
 
         // Get off-diagonal matrix coefficients
         const scalarField& upper = matrix_.upper();
@@ -159,9 +159,9 @@ void Foam::BlockCholeskyPrecon<scalar>::preconditionT
 
     if (matrix_.asymmetric())
     {
-        const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-        const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
-        const unallocLabelList& losortAddr = matrix_.lduAddr().losortAddr();
+        const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+        const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
+        const labelUList& losortAddr = matrix_.lduAddr().losortAddr();
 
         // Get off-diagonal matrix coefficients
         const scalarField& upper = matrix_.upper();

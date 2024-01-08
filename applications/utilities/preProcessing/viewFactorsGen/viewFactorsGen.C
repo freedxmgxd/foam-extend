@@ -42,6 +42,8 @@ Description
 #include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "symmetryPolyPatch.H"
+#include "wedgePolyPatch.H"
 #include "distributedTriSurfaceMesh.H"
 #include "triSurfaceTools.H"
 #include "mapDistribute.H"
@@ -161,6 +163,24 @@ int main(int argc, char *argv[])
 #   include "createTime.H"
 #   include "createNamedMesh.H"
 
+    const polyBoundaryMesh& patches = mesh.boundaryMesh();
+
+    forAll(patches, patchi)
+    {
+        const polyPatch& pp = patches[patchi];
+        if
+        (
+            isA<symmetryPolyPatch>(pp)
+         || isA<wedgePolyPatch>(pp)
+        )
+        {
+            FatalErrorIn(args.executable()) << args.executable()
+                << " does not currently support transforming patches: "
+                   "cyclic, symmetry and wedge."
+                << exit(FatalError);
+        }
+    }
+
     // Read view factor dictionary
     IOdictionary viewFactorDict
     (
@@ -238,7 +258,6 @@ int main(int argc, char *argv[])
     label nCoarseFaces = 0;      // total number of coarse faces
     label nFineFaces = 0;        // total number of fine faces
 
-    const polyBoundaryMesh& patches = mesh.boundaryMesh();
     const polyBoundaryMesh& coarsePatches = coarseMesh.boundaryMesh();
 
     labelList viewFactorsPatches(patches.size());
@@ -339,14 +358,14 @@ int main(int argc, char *argv[])
             (
                 availablePoints,
                 upp.faceCentres().size()
-            ).assign(upp.faceCentres());
+            ) = upp.faceCentres();
 
             SubList<point>
             (
                 availablePoints,
                 upp.localPoints().size(),
                 upp.faceCentres().size()
-            ).assign(upp.localPoints());
+            ) = upp.localPoints();
 
             point cfo = cf;
             scalar dist = GREAT;
@@ -513,8 +532,8 @@ int main(int argc, char *argv[])
     dynamicLabelList compactPatchId(map.constructSize());
 
     // Insert my coarse local values
-    SubList<point>(compactCoarseSf, nCoarseFaces).assign(localCoarseSf);
-    SubList<point>(compactCoarseCf, nCoarseFaces).assign(localCoarseCf);
+    SubList<point>(compactCoarseSf, nCoarseFaces) = localCoarseSf;
+    SubList<point>(compactCoarseCf, nCoarseFaces) = localCoarseCf;
 
     // Insert my fine local values
     label compactI = 0;

@@ -63,10 +63,10 @@ tmp<volVectorField> cellMDLimitedGrad<scalar>::calcGrad
         return tGrad;
     }
 
-    volVectorField& g = tGrad();
+    volVectorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
@@ -96,7 +96,7 @@ tmp<volVectorField> cellMDLimitedGrad<scalar>::calcGrad
     {
         const fvPatchScalarField& psf = bsf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
 
         if (psf.coupled())
         {
@@ -165,7 +165,7 @@ tmp<volVectorField> cellMDLimitedGrad<scalar>::calcGrad
 
     forAll(bsf, patchi)
     {
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         forAll(pOwner, pFacei)
@@ -205,10 +205,10 @@ tmp<volTensorField> cellMDLimitedGrad<vector>::calcGrad
         return tGrad;
     }
 
-    volTensorField& g = tGrad();
+    volTensorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
@@ -237,7 +237,7 @@ tmp<volTensorField> cellMDLimitedGrad<vector>::calcGrad
     forAll(bsf, patchi)
     {
         const fvPatchVectorField& psf = bsf[patchi];
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
 
         if (psf.coupled())
         {
@@ -306,7 +306,7 @@ tmp<volTensorField> cellMDLimitedGrad<vector>::calcGrad
 
     forAll(bsf, patchi)
     {
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         forAll(pOwner, pFacei)

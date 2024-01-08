@@ -56,7 +56,7 @@ Foam::linearUpwind<Type>::correction
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();
 
     const surfaceScalarField& faceFlux = this->faceFlux_;
 
@@ -117,7 +117,7 @@ Foam::linearUpwind<Type>::correction
         {
             const fvPatch& p = mesh.boundary()[patchi];
 
-            const unallocLabelList& pOwner = p.faceCells();
+            const labelUList& pOwner = p.faceCells();
 
             const vectorField& pCf = Cf.boundaryField()[patchi];
 

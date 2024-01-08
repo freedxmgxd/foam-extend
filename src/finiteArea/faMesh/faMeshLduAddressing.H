@@ -59,7 +59,7 @@ class faMeshLduAddressing
         const labelList& upperAddr_;
 
         //- Patch addressing as a list of sublists
-        List<const unallocLabelList*> patchAddr_;
+        List<const labelUList*> patchAddr_;
 
         //- Patch field evaluation schedule
         const lduSchedule& patchSchedule_;
@@ -115,19 +115,19 @@ public:
         }
 
         //- Return lower addressing (i.e. lower label = upper triangle)
-        virtual const unallocLabelList& lowerAddr() const
+        virtual const labelUList& lowerAddr() const
         {
             return lowerAddr_;
         }
 
         //- Return upper addressing (i.e. upper label)
-        virtual const unallocLabelList& upperAddr() const
+        virtual const labelUList& upperAddr() const
         {
             return upperAddr_;
         }
 
         //- Return patch addressing
-        virtual const unallocLabelList& patchAddr(const label i) const
+        virtual const labelUList& patchAddr(const label i) const
         {
             return *patchAddr_[i];
         }

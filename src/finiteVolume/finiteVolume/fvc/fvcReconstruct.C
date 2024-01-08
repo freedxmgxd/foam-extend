@@ -74,7 +74,7 @@ reconstruct
         )
     );
     GeometricField<GradType, fvPatchField, volMesh>& reconField =
-        treconField();
+        treconField.ref();
 
     // Notes regarding boundary:
     // 1. Reconstruction is only available in cell centres: there is no need

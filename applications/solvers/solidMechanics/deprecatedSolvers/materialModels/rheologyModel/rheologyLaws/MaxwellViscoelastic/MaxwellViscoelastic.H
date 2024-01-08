@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class MaxwellViscoelastic Declaration
+                      Class MaxwellViscoelastic Declaration
 \*---------------------------------------------------------------------------*/
 
 class MaxwellViscoelastic
@@ -68,10 +68,10 @@ class MaxwellViscoelastic
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MaxwellViscoelastic(const MaxwellViscoelastic&);
+        MaxwellViscoelastic(const MaxwellViscoelastic&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MaxwellViscoelastic&);
+        void operator=(const MaxwellViscoelastic&) = delete;
 
 
 public:
@@ -93,9 +93,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~MaxwellViscoelastic();
+    //- Destructor
+    virtual ~MaxwellViscoelastic() = default;
 
 
     // Member Functions

@@ -239,8 +239,8 @@ void edgeInterpolation::makeLPN() const
     const edgeVectorField& edgeCentres = mesh().edgeCentres();
     const areaVectorField& faceCentres = mesh().areaCentres();
 
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     scalarField& lPNIn = lPN.internalField();
 
@@ -327,8 +327,8 @@ void edgeInterpolation::makeWeights() const
     const edgeVectorField& edgeCentres = mesh().edgeCentres();
     const areaVectorField& faceCentres = mesh().areaCentres();
 
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     scalarField& weightingFactorsIn = weightingFactors.internalField();
 
@@ -422,8 +422,8 @@ void edgeInterpolation::makeDeltaCoeffs() const
     // Set local references to mesh data
     const edgeVectorField& edgeCentres = mesh().edgeCentres();
     const areaVectorField& faceCentres = mesh().areaCentres();
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
     const edgeVectorField& lengths = mesh().Le();
 
     const edgeList& edges = mesh().edges();
@@ -527,8 +527,8 @@ void edgeInterpolation::makeCorrectionVectors() const
     // Set local references to mesh data
     const areaVectorField& faceCentres = mesh().areaCentres();
 
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     const edgeVectorField& lengths = mesh().Le();
     const edgeScalarField& magLengths = mesh().magLe();
@@ -646,8 +646,8 @@ void edgeInterpolation::makeSkewCorrectionVectors() const
     const areaVectorField& C = mesh().areaCentres();
     const edgeVectorField& Ce = mesh().edgeCentres();
 
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     const pointField& points = mesh().points();
     const edgeList& edges = mesh().edges();

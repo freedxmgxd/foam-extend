@@ -97,12 +97,8 @@ displacementInterpolationFvMotionSolver
 
         if (zoneI == -1)
         {
-            FatalErrorIn
-            (
-                "displacementInterpolationFvMotionSolver::"
-                "displacementInterpolationFvMotionSolver(const polyMesh&,"
-                "Istream&)"
-            )   << "Cannot find zone " << zoneName << endl
+            FatalErrorInFunction
+                << "Cannot find zone " << zoneName << endl
                 << "Valid zones are " << mesh.faceZones().names()
                 << exit(FatalError);
         }
@@ -266,12 +262,8 @@ displacementInterpolationFvMotionSolver
 
             if (rangeI == -1 || rangeI == rangeToCoord.size()-1)
             {
-                FatalErrorIn
-                (
-                    "displacementInterpolationFvMotionSolver::"
-                    "displacementInterpolationFvMotionSolver"
-                    "(const polyMesh&, Istream&)"
-                )   << "Did not find point " << points0()[pointI]
+                FatalErrorInFunction
+                    << "Did not find point " << points0()[pointI]
                     << " coordinate " << meshCoords[pointI]
                     << " in ranges " << rangeToCoord
                     << abort(FatalError);
@@ -329,17 +321,15 @@ Foam::displacementInterpolationFvMotionSolver::curPoints() const
 {
     if (mesh().nPoints() != points0().size())
     {
-        FatalErrorIn
-        (
-            "displacementInterpolationFvMotionSolver::curPoints() const"
-        )   << "The number of points in the mesh seems to have changed." << endl
+        FatalErrorInFunction
+            << "The number of points in the mesh seems to have changed." << endl
             << "In constant/polyMesh there are " << points0().size()
             << " points; in the current mesh there are " << mesh().nPoints()
             << " points." << exit(FatalError);
     }
 
     tmp<pointField> tcurPoints(new pointField(points0()));
-    pointField& curPoints = tcurPoints();
+    pointField& curPoints = tcurPoints.ref();
 
     // Interpolate the displacement of the face zones.
     vectorField zoneDisp(displacements_.size(), vector::zero);

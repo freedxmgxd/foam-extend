@@ -47,7 +47,7 @@ void faMatrix<scalar>::setComponentReference
     const scalar value
 )
 {
-    const unallocLabelList& faceLabels =
+    const labelUList& faceLabels =
         psi_.mesh().boundary()[patchI].edgeFaces();
 
     internalCoeffs_[patchI][edgeI] +=
@@ -127,7 +127,7 @@ tmp<scalarField> faMatrix<scalar>::residual() const
         )
     );
 
-    addBoundarySource(tres());
+    addBoundarySource(tres.ref());
 
     return tres;
 }
@@ -154,7 +154,7 @@ tmp<areaScalarField> faMatrix<scalar>::H() const
             zeroGradientFaPatchScalarField::typeName
         )
     );
-    areaScalarField Hphi = tHphi();
+    areaScalarField Hphi = tHphi.ref();
 
     Hphi.internalField() = (lduMatrix::H(psi_.internalField()) + source_);
     addBoundarySource(Hphi.internalField());

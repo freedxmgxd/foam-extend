@@ -62,19 +62,19 @@ class gaussLaplacianScheme
         (
             const surfaceScalarField& gammaMagSf,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
         tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > gammaSnGradCorr
         (
             const surfaceVectorField& SfGammaCorr,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
         //- Disallow default bitwise copy construct
-        gaussLaplacianScheme(const gaussLaplacianScheme&);
+        gaussLaplacianScheme(const gaussLaplacianScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const gaussLaplacianScheme&);
+        void operator=(const gaussLaplacianScheme&) = delete;
 
 
 public:
@@ -109,30 +109,28 @@ public:
         {}
 
 
-    // Destructor
-
-        virtual ~gaussLaplacianScheme()
-        {}
+    //- Destructor
+    virtual ~gaussLaplacianScheme() = default;
 
 
     // Member Functions
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<fvMatrix<Type> > fvmLaplacian
+        virtual tmp<fvMatrix<Type> > fvmLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 };
 
 
@@ -146,7 +144,7 @@ tmp<fvMatrix<Type> > gaussLaplacianScheme<Type, scalar>::fvmLaplacian       \
 (                                                                           \
     const GeometricField<scalar, fvsPatchField, surfaceMesh>&,              \
     const GeometricField<Type, fvPatchField, volMesh>&                      \
-);                                                                          \
+) const;                                                                    \
                                                                             \
 template<>                                                                  \
 tmp<GeometricField<Type, fvPatchField, volMesh> >                           \
@@ -154,7 +152,7 @@ gaussLaplacianScheme<Type, scalar>::fvcLaplacian                            \
 (                                                                           \
     const GeometricField<scalar, fvsPatchField, surfaceMesh>&,              \
     const GeometricField<Type, fvPatchField, volMesh>&                      \
-);
+) const;
 
 
 defineFvmLaplacianScalarGamma(scalar);

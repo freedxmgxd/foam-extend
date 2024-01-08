@@ -319,7 +319,7 @@ public:
             tmp<vectorField> ngbPolyPatchPointNormals() const;
 
             //- Return edge-face addressing
-            const unallocLabelList& edgeFaces() const;
+            const labelUList& edgeFaces() const;
 
             //- Return edge centres
             const vectorField& edgeCentres() const;

@@ -132,14 +132,14 @@ lnGradScheme<Type>::lnGrad
             vf.dimensions()*tdeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, faePatchField, edgeMesh>& ssf = tssf();
+    GeometricField<Type, faePatchField, edgeMesh>& ssf = tssf.ref();
 
     // set reference to difference factors array
     const scalarField& deltaCoeffs = tdeltaCoeffs().internalField();
 
     // owner/neighbour addressing
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     forAll(owner, faceI)
     {
@@ -170,7 +170,7 @@ lnGradScheme<Type>::lnGrad
 
     if (corrected())
     {
-        tsf() += correction(vf);
+        tsf.ref() += correction(vf);
     }
 
     return tsf;

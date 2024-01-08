@@ -36,9 +36,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from dictionary
@@ -84,7 +81,7 @@ Foam::tmp<Foam::volScalarField> Foam::linearElastic::rho() const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -110,7 +107,7 @@ Foam::tmp<Foam::volScalarField> Foam::linearElastic::E() const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -136,7 +133,7 @@ Foam::tmp<Foam::volScalarField> Foam::linearElastic::nu() const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }

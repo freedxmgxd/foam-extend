@@ -38,9 +38,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from dictionary
@@ -57,12 +54,6 @@ Foam::KelvinSLSViscoelastic::KelvinSLSViscoelastic
     k2_(dict.lookup("k2")),
     eta2_(dict.lookup("eta2")),
     nu_(dict.lookup("nu"))
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::KelvinSLSViscoelastic::~KelvinSLSViscoelastic()
 {}
 
 
@@ -88,7 +79,7 @@ Foam::tmp<Foam::volScalarField> Foam::KelvinSLSViscoelastic::rho(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -128,7 +119,7 @@ Foam::tmp<Foam::volScalarField> Foam::KelvinSLSViscoelastic::E(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -154,7 +145,7 @@ Foam::tmp<Foam::volScalarField> Foam::KelvinSLSViscoelastic::nu(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -193,7 +184,7 @@ Foam::tmp<Foam::volScalarField> Foam::KelvinSLSViscoelastic::J(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }

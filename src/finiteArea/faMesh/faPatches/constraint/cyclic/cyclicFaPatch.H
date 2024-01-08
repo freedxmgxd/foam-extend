@@ -149,21 +149,21 @@ public:
             //  the interface as a field
             virtual tmp<labelField> interfaceInternalField
             (
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const;
 
             //- Transfer and return neighbour field
             virtual tmp<labelField> transfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const;
 
             //- Return neighbour field
             virtual tmp<labelField> internalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const;
 };
 

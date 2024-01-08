@@ -66,7 +66,7 @@ average
         )
     );
 
-    GeometricField<Type, fvPatchField, volMesh>& av = taverage();
+    GeometricField<Type, fvPatchField, volMesh>& av = taverage.ref();
 
     av.internalField() =
     (

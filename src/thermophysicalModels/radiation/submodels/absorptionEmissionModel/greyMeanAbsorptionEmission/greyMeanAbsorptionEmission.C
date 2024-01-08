@@ -161,7 +161,7 @@ Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
         )
     );
 
-    scalarField& a = ta().internalField();
+    scalarField& a = ta.ref().internalField();
 
     forAll(a, i)
     {
@@ -252,7 +252,7 @@ Foam::radiation::greyMeanAbsorptionEmission::ECont(const label bandI) const
     {
         const volScalarField& dQ =
             mesh_.lookupObject<volScalarField>("dQ");
-        E().internalField() = EhrrCoeff_*dQ;
+        E.ref().internalField() = EhrrCoeff_*dQ;
     }
 
     return E;

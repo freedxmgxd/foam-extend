@@ -114,17 +114,17 @@ void inv(Field<tensor>& tf, const UList<tensor>& tf1)
 
 tmp<tensorField> inv(const UList<tensor>& tf)
 {
-    tmp<tensorField> result(new tensorField(tf.size()));
-    inv(result(), tf);
-    return result;
+    tmp<tensorField> tresult(new tensorField(tf.size()));
+    inv(tresult.ref(), tf);
+    return tresult;
 }
 
 
 tmp<tensorField> inv(const tmp<tensorField>& tf)
 {
     tmp<tensorField> tRes = reuseTmp<tensor, tensor>::New(tf);
-    inv(tRes(), tf());
-    reuseTmp<tensor, tensor>::clear(tf);
+    inv(tRes.ref(), tf());
+    tf.clear();
     return tRes;
 }
 
@@ -143,7 +143,7 @@ tmp<Field<tensor> > transformFieldMask<tensor>
 )
 {
     tmp<tensorField> tRes(new tensorField(stf.size()));
-    tensorField& res = tRes();
+    tensorField& res = tRes.ref();
     TFOR_ALL_F_OP_F(tensor, res, =, symmTensor, stf)
     return tRes;
 }

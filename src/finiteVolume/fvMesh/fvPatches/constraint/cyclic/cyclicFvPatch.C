@@ -44,7 +44,7 @@ namespace Foam
 // Make mesh cell centres.  Moved from fvMeshGeometry
 void Foam::cyclicFvPatch::makeC(slicedSurfaceVectorField& C) const
 {
-    C.boundaryField()[index()].UList<vector>::operator=
+    C.boundaryField()[index()].UList<vector>::shallowCopy
     (
         patchSlice(cyclicPolyPatch_.boundaryMesh().mesh().faceCentres())
     );
@@ -158,7 +158,7 @@ Foam::tmp<Foam::vectorField> Foam::cyclicFvPatch::delta() const
     label sizeby2 = patchD.size()/2;
 
     tmp<vectorField> tpdv(new vectorField(patchD.size()));
-    vectorField& pdv = tpdv();
+    vectorField& pdv = tpdv.ref();
 
     // To the transformation if necessary
     if (parallel())
@@ -190,7 +190,7 @@ Foam::tmp<Foam::vectorField> Foam::cyclicFvPatch::delta() const
 
 Foam::tmp<Foam::labelField> Foam::cyclicFvPatch::interfaceInternalField
 (
-    const unallocLabelList& internalData
+    const labelUList& internalData
 ) const
 {
     return patchInternalField(internalData);
@@ -200,11 +200,11 @@ Foam::tmp<Foam::labelField> Foam::cyclicFvPatch::interfaceInternalField
 Foam::tmp<Foam::labelField> Foam::cyclicFvPatch::transfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     tmp<labelField> tpnf(new labelField(this->size()));
-    labelField& pnf = tpnf();
+    labelField& pnf = tpnf.ref();
 
     label sizeby2 = this->size()/2;
 
@@ -221,13 +221,13 @@ Foam::tmp<Foam::labelField> Foam::cyclicFvPatch::transfer
 Foam::tmp<Foam::labelField> Foam::cyclicFvPatch::internalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
-    const unallocLabelList& faceCells = this->patch().faceCells();
+    const labelUList& faceCells = this->patch().faceCells();
 
     tmp<labelField> tpnf(new labelField(this->size()));
-    labelField& pnf = tpnf();
+    labelField& pnf = tpnf.ref();
 
     label sizeby2 = this->size()/2;
 

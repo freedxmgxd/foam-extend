@@ -6,7 +6,7 @@
       + turbulence->divDevReff()
     );
 
-    UEqn().relax();
+    UEqn.ref().relax();
 
     // Include the porous media resistance and solve the momentum equation
     // either implicit in the tensorial resistance or transport using by
@@ -18,9 +18,9 @@
     if (pressureImplicitPorosity)
     {
         tmp<volTensorField> tTU = tensor(I)*UEqn().A();
-        pZones.addResistance(UEqn(), tTU());
+        pZones.addResistance(UEqn.ref(), tTU.ref());
         trTU = inv(tTU());
-        trTU().rename("rAU");
+        trTU.ref().rename("rAU");
 
         volVectorField gradp = fvc::grad(p);
 
@@ -32,10 +32,10 @@
     }
     else
     {
-        pZones.addResistance(UEqn());
+        pZones.addResistance(UEqn.ref());
 
         solve(UEqn() == -fvc::grad(p));
 
         trAU = 1.0/UEqn().A();
-        trAU().rename("rAU");
+        trAU.ref().rename("rAU");
     }

@@ -77,7 +77,7 @@ void processorFaPatchField<scalar>::updateInterfaceMatrix
         procPatch_.receive<scalar>(commsType, this->size())()
     );
 
-    const unallocLabelList& edgeFaces = patch().edgeFaces();
+    const labelUList& edgeFaces = patch().edgeFaces();
 
     if (switchToLhs)
     {

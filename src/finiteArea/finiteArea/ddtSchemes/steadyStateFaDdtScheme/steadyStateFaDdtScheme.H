@@ -59,10 +59,10 @@ class steadyStateFaDdtScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        steadyStateFaDdtScheme(const steadyStateFaDdtScheme&);
+        steadyStateFaDdtScheme(const steadyStateFaDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const steadyStateFaDdtScheme&);
+        void operator=(const steadyStateFaDdtScheme&) = delete;
 
 
 public:
@@ -86,79 +86,77 @@ public:
         {}
 
 
+    //- Destructor
+    virtual ~steadyStateFaDdtScheme() = default;
+
+
     // Member Functions
 
-        //- Return mesh reference
-        const faMesh& mesh() const
-        {
-            return fa::faDdtScheme<Type>::mesh();
-        }
-
-        tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
+        virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
         (
-            const dimensioned<Type>
-        );
+            const dimensioned<Type>&
+        ) const;
 
-        tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
+        virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
         (
-            const dimensioned<Type>
-        );
+            const dimensioned<Type>&
+        ) const;
 
-        tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
+        virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
         (
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
+        virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
         (
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, faePatchField, edgeMesh> > facDdt0
+        virtual tmp<GeometricField<Type, faePatchField, edgeMesh> > facDdt0
         (
             const GeometricField<Type, faePatchField, edgeMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
+        virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
+        virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
         (
             const dimensionedScalar&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
+        virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt
         (
             const areaScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
+        virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facDdt0
         (
             const areaScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
-        tmp<faMatrix<Type> > famDdt
+        virtual tmp<faMatrix<Type> > famDdt
         (
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
-        tmp<faMatrix<Type> > famDdt
+        virtual tmp<faMatrix<Type> > famDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
-        tmp<faMatrix<Type> > famDdt
+        virtual tmp<faMatrix<Type> > famDdt
         (
             const areaScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 };
 
 

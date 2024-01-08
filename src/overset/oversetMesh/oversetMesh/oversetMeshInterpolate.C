@@ -106,7 +106,7 @@ Foam::tmp<Foam::Field<Type> > Foam::oversetMesh::acceptorMasterData
 ) const
 {
     tmp<Field<Type> > tresult(new Field<Type>(this->acceptorCells().size()));
-    UList<Type>& result = tresult();
+    UList<Type>& result = tresult.ref();
 
     acceptorMasterData(result, cellF);
 
@@ -218,7 +218,7 @@ Foam::oversetMesh::acceptorAllData
     (
         new FieldField<Field, Type>(this->acceptorCells().size())
     );
-    FieldField<Field, Type>& result = tresult();
+    FieldField<Field, Type>& result = tresult.ref();
 
     acceptorAllData(result, cellF);
 
@@ -343,7 +343,7 @@ Foam::tmp<Foam::Field<Type> > Foam::oversetMesh::interpolate
 ) const
 {
     tmp<Field<Type> > tresult(new Field<Type>(this->acceptorCells().size()));
-    UList<Type>& result = tresult();
+    UList<Type>& result = tresult.ref();
 
     interpolate(result, cellF, fieldName);
 

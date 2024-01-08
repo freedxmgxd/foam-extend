@@ -74,7 +74,7 @@ tmp<Field<Type> > ggiAMGInterface::fastExpand(const UList<Type>& ff) const
         // Prepare for distribute.  Note: field will be expanded to zone size
         // during the distribute operation
         tmp<Field<Type> > tresult(new Field<Type>(ff));
-        List<Type>& expand = tresult();
+        List<Type>& expand = tresult.ref();
 
         map().distribute(expand);
 
@@ -147,7 +147,7 @@ tmp<Field<Type> > ggiAMGInterface::fastReduce(const UList<Type>& ff) const
         (
             new Field<Type>(shadowZa.size())
         );
-        Field<Type>& result = tresult();
+        Field<Type>& result = tresult.ref();
 
         // Filter from expanded field to zone size
         forAll (shadowZa, shadowZaI)

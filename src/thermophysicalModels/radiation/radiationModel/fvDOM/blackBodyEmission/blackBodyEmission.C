@@ -217,7 +217,7 @@ Foam::radiation::blackBodyEmission::EbDeltaLambdaT
             radiation::sigmaSB*pow4(T)
         )
     );
-    volScalarField& Eb = tEb();
+    volScalarField& Eb = tEb.ref();
 
     if (magSqr(band - Vector2D<scalar>::one) > SMALL) // Multiple bands?
     {

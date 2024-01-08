@@ -374,7 +374,7 @@ void SpalartAllmaras::correct()
         sqrt(2.0)*mag(skew(fvc::grad(U_)))
       + fv2(chi, fv1)*nuTilda_/sqr(kappa_*d_);
 
-    tmp<fvScalarMatrix> nuTildaEqn
+    fvScalarMatrix nuTildaEqn
     (
         fvm::ddt(nuTilda_)
       + fvm::div(phi_, nuTilda_)
@@ -386,7 +386,7 @@ void SpalartAllmaras::correct()
       - fvm::Sp(Cw1_*fw(Stilda)*nuTilda_/sqr(d_), nuTilda_)
     );
 
-    nuTildaEqn().relax();
+    nuTildaEqn.relax();
     solve(nuTildaEqn);
     bound(nuTilda_, dimensionedScalar("0", nuTilda_.dimensions(), 0.0));
     nuTilda_.correctBoundaryConditions();

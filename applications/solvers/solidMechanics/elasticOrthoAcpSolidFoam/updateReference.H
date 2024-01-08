@@ -20,7 +20,7 @@
             == processorPolyPatch::typeName
         )
         {
-            const unallocLabelList& curFaceCells =
+            const labelUList& curFaceCells =
                 mesh.boundary()[patchI].faceCells();
 
             forAll(curFaceCells, fI)

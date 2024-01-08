@@ -249,7 +249,7 @@ void globalTetPolyPatch::calcCutEdgeAddressing() const
     cutEdgeNeighbourStartPtr_ = new labelList(mp.size() + 1, -1);
     labelList& neiStart = *cutEdgeNeighbourStartPtr_;
 
-    const unallocLabelList& losort = ldu.losortAddr();
+    const labelUList& losort = ldu.losortAddr();
 
     // Go through all the local points and get all the edges coming
     // from that point.  Check if the edge has been marked as local;

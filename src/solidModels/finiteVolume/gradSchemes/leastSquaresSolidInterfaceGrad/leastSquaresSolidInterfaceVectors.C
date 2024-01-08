@@ -102,8 +102,8 @@ void Foam::leastSquaresSolidInterfaceVectors::makeLeastSquaresVectors() const
     surfaceVectorField& lsN = *nVectorsPtr_;
 
     // Set local references to mesh data
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     const volVectorField& C = mesh().C();
     const surfaceScalarField& w = mesh().weights();
@@ -159,7 +159,7 @@ void Foam::leastSquaresSolidInterfaceVectors::makeLeastSquaresVectors() const
         //magSf.boundaryField()[patchi];
 
         const fvPatch& p = pw.patch();
-        const unallocLabelList& faceCells = p.patch().faceCells();
+        const labelUList& faceCells = p.patch().faceCells();
 
         // Build the d-vectors
 
@@ -262,7 +262,7 @@ void Foam::leastSquaresSolidInterfaceVectors::makeLeastSquaresVectors() const
 //         const fvsPatchScalarField& pMagSf = magSf.boundaryField()[patchi];
 
         const fvPatch& p = pw.patch();
-        const unallocLabelList& faceCells = p.faceCells();
+        const labelUList& faceCells = p.faceCells();
 
         // Build the d-vectors
         // Better version of d-vectors: Zeljko Tukovic, 25/Apr/2010

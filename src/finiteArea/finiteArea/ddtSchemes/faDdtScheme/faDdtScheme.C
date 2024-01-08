@@ -57,11 +57,8 @@ tmp<faDdtScheme<Type> > faDdtScheme<Type>::New
 
     if (schemeData.eof())
     {
-        FatalIOErrorIn
-        (
-            "faDdtScheme<Type>::New(const faMesh&, Istream&)",
-            schemeData
-        )   << "Ddt scheme not specified" << nl << nl
+        FatalIOErrorInFunction(schemeData)
+            << "Ddt scheme not specified" << nl << nl
             << "Valid ddt schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -74,11 +71,8 @@ tmp<faDdtScheme<Type> > faDdtScheme<Type>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
-        (
-            "faDdtScheme<Type>::New(const faMesh&, Istream&)",
-            schemeData
-        )   << "Unknown ddt scheme " << schemeName << nl << nl
+        FatalIOErrorInFunction(schemeData)
+            << "Unknown ddt scheme " << schemeName << nl << nl
             << "Valid ddt schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -86,13 +80,6 @@ tmp<faDdtScheme<Type> > faDdtScheme<Type>::New
 
     return cstrIter()(mesh, schemeData);
 }
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type>
-faDdtScheme<Type>::~faDdtScheme()
-{}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

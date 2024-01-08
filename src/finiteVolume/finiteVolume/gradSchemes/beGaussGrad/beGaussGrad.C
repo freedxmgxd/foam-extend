@@ -85,10 +85,10 @@ beGaussGrad<Type>::calcGrad
             zeroGradientFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
     const vectorField& Sf = mesh.Sf();
 
     Field<GradType>& igGrad = gGrad;
@@ -114,7 +114,7 @@ beGaussGrad<Type>::calcGrad
 
     forAll (mesh.boundary(), patchi)
     {
-        const unallocLabelList& pFaceCells =
+        const labelUList& pFaceCells =
             mesh.boundary()[patchi].faceCells();
 
         const vectorField& pSf = mesh.Sf().boundaryField()[patchi];

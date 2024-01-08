@@ -96,8 +96,8 @@ void Foam::extendedLduAddressing::calcCellCells
     // function.
     labelList ncc(lduAddr_.size(), 0);
 
-    const unallocLabelList& own = lowerAddr();
-    const unallocLabelList& nei = upperAddr();
+    const labelUList& own = lowerAddr();
+    const labelUList& nei = upperAddr();
 
     forAll (nei, faceI)
     {
@@ -212,16 +212,16 @@ void Foam::extendedLduAddressing::calcFaceMap() const
     }
 
     // Get reference to ordinary owner/neighbour addressing
-    const unallocLabelList& own = lowerAddr();
-    const unallocLabelList& nbr = upperAddr();
+    const labelUList& own = lowerAddr();
+    const labelUList& nbr = upperAddr();
 
     // Allocate memory for faceMap
     faceMapPtr_ = new labelList(own.size(), -1);
     labelList& faceMap = *faceMapPtr_;
 
     // Get reference to extended neighbour and owner start addressing
-    const unallocLabelList& extNbr = extendedUpperAddr();
-    const unallocLabelList& extOwnStart = extendedOwnerStartAddr();
+    const labelUList& extNbr = extendedUpperAddr();
+    const labelUList& extOwnStart = extendedOwnerStartAddr();
 
     // Loop through ordinary faces
     forAll (nbr, faceI)
@@ -270,7 +270,7 @@ void Foam::extendedLduAddressing::calcExtendedLosort() const
     const label matrixSize = lduAddr_.size();
     labelList nNbrOfFace(matrixSize, 0);
 
-    const unallocLabelList& nbr = extendedUpperAddr();
+    const labelUList& nbr = extendedUpperAddr();
 
     forAll (nbr, nbrI)
     {
@@ -462,7 +462,7 @@ Foam::extendedLduAddressing::~extendedLduAddressing()
 
 // * * * * * * * * * * * * Public Member Functions  * * * * * * * * * * * * * //
 
-const Foam::unallocLabelList&
+const Foam::labelUList&
 Foam::extendedLduAddressing::extendedLowerAddr() const
 {
     // Extended lower and upper are calculated together. If one of
@@ -477,7 +477,7 @@ Foam::extendedLduAddressing::extendedLowerAddr() const
 }
 
 
-const Foam::unallocLabelList&
+const Foam::labelUList&
 Foam::extendedLduAddressing::extendedUpperAddr() const
 {
     // Extended lower and upper are calculated together. If one of
@@ -492,7 +492,7 @@ Foam::extendedLduAddressing::extendedUpperAddr() const
 }
 
 
-const Foam::unallocLabelList& Foam::extendedLduAddressing::faceMap() const
+const Foam::labelUList& Foam::extendedLduAddressing::faceMap() const
 {
     if(!faceMapPtr_)
     {
@@ -503,7 +503,7 @@ const Foam::unallocLabelList& Foam::extendedLduAddressing::faceMap() const
 }
 
 
-const Foam::unallocLabelList&
+const Foam::labelUList&
 Foam::extendedLduAddressing::extendedLosortAddr() const
 {
     if (!extendedLosortPtr_)
@@ -515,7 +515,7 @@ Foam::extendedLduAddressing::extendedLosortAddr() const
 }
 
 
-const Foam::unallocLabelList&
+const Foam::labelUList&
 Foam::extendedLduAddressing::extendedOwnerStartAddr() const
 {
     if (!extendedOwnerStartPtr_)
@@ -527,7 +527,7 @@ Foam::extendedLduAddressing::extendedOwnerStartAddr() const
 }
 
 
-const Foam::unallocLabelList&
+const Foam::labelUList&
 Foam::extendedLduAddressing::extendedLosortStartAddr() const
 {
     if (!extendedLosortStartPtr_)
@@ -554,7 +554,7 @@ Foam::extendedLduAddressing::extendedTriIndex
 
     label endLabel = extendedOwnerStartAddr()[own + 1];
 
-    const unallocLabelList& neighbour = extendedUpperAddr();
+    const labelUList& neighbour = extendedUpperAddr();
 
     for (label i = startLabel; i < endLabel; ++i)
     {

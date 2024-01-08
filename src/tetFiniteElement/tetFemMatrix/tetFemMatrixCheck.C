@@ -60,8 +60,8 @@ void tetFemMatrix<Type>::check()
     const scalarField oldDiag = dd;
 
     // Get matrix addressing
-    const unallocLabelList& L = lduAddr().lowerAddr();
-    const unallocLabelList& U = lduAddr().upperAddr();
+    const labelUList& L = lduAddr().lowerAddr();
+    const labelUList& U = lduAddr().upperAddr();
 
     {
         scalarField matrixSumOffDiag(lduAddr().size(), 0.0);

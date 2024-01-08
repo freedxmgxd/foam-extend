@@ -68,10 +68,8 @@ void PstreamGlobals::checkCommunicator
      || comm >= PstreamGlobals::MPICommunicators_.size()
     )
     {
-        FatalErrorIn
-        (
-            "PstreamGlobals::checkCommunicator(const label, const label)"
-        )   << "otherProcNo:" << otherProcNo << " : illegal communicator "
+        FatalErrorInFunction
+            << "otherProcNo:" << otherProcNo << " : illegal communicator "
             << comm << endl
             << "Communicator should be within range 0.."
             << PstreamGlobals::MPICommunicators_.size() - 1

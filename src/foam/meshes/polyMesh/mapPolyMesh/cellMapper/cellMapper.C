@@ -326,7 +326,7 @@ Foam::label Foam::cellMapper::sizeBeforeMapping() const
 }
 
 
-const Foam::unallocLabelList& Foam::cellMapper::directAddressing() const
+const Foam::labelUList& Foam::cellMapper::directAddressing() const
 {
     if (!direct())
     {

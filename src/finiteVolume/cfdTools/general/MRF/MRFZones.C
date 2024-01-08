@@ -75,7 +75,7 @@ Foam::tmp<Foam::volVectorField> Foam::MRFZones::omega() const
             dimensionedVector("zero", dimless/dimTime, vector::zero)
         )
     );
-    volVectorField& MRFZonesOmega = tMRFZonesOmega();
+    volVectorField& MRFZonesOmega = tMRFZonesOmega.ref();
 
     forAll (*this, i)
     {
@@ -104,7 +104,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZones::fluxCorrection() const
             dimensionedScalar("zero", dimVelocity*dimArea, 0)
         )
     );
-    surfaceScalarField& MRFZonesPhiCorr = tMRFZonesPhiCorr();
+    surfaceScalarField& MRFZonesPhiCorr = tMRFZonesPhiCorr.ref();
 
     forAll (*this, i)
     {
@@ -133,7 +133,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::MRFZones::meshPhi() const
             dimensionedScalar("zero", dimVolume/dimTime, 0)
         )
     );
-    surfaceScalarField& MRFZonesFaceU = tMRFZonesFaceU();
+    surfaceScalarField& MRFZonesFaceU = tMRFZonesFaceU.ref();
 
     forAll (*this, i)
     {
@@ -259,7 +259,7 @@ Foam::tmp<Foam::volScalarField> Foam::MRFZones::Su
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& source = tPhiSource();
+    volScalarField& source = tPhiSource.ref();
 
     // Due to gradient cacheing, must take a tmp field
     // HJ, 22/Apr/2016
@@ -297,12 +297,12 @@ Foam::tmp<Foam::volVectorField> Foam::MRFZones::Su
             zeroGradientFvPatchVectorField::typeName
         )
     );
-    volVectorField& source = tPhiSource();
+    volVectorField& source = tPhiSource.ref();
 
     // Due to gradient cacheing, must take a tmp field
     // HJ, 22/Apr/2016
     tmp<volTensorField> tgradPhi = fvc::grad(phi);
-    const volTensorField& gradPhi = tgradPhi();
+    const volTensorField& gradPhi = tgradPhi.ref();
 
     forAll (*this, i)
     {
@@ -334,7 +334,7 @@ Foam::tmp<Foam::volScalarField> Foam::MRFZones::calcMagUTheta
             dimensionedScalar("zero", dimVelocity, 0.0)
         )
     );
-    volScalarField& MRFZonesUTheta = tMRFZonesUTheta();
+    volScalarField& MRFZonesUTheta = tMRFZonesUTheta.ref();
 
     forAll (*this, i)
     {

@@ -49,7 +49,7 @@ Foam::porousZones::ddt
 )
 {
     tmp<fvMatrix<Type> > tres = fvm::ddt(vf);
-    modifyDdt(tres());
+    modifyDdt(tres.ref());
     return tres;
 }
 
@@ -63,7 +63,7 @@ Foam::porousZones::ddt
 )
 {
     tmp<fvMatrix<Type> > tres = fvm::ddt(vf);
-    modifyDdt(tres());
+    modifyDdt(tres.ref());
     return tres;
 }
 
@@ -77,7 +77,7 @@ Foam::porousZones::ddt
 )
 {
     tmp<fvMatrix<Type> > tres = fvm::ddt(rho,vf);
-    modifyDdt(tres());
+    modifyDdt(tres.ref());
     return tres;
 }
 
@@ -91,8 +91,9 @@ Foam::porousZones::ddt
 )
 {
     tmp<fvMatrix<Type> > tres = fvm::ddt(rho,vf);
-    modifyDdt(tres());
+    modifyDdt(tres.ref());
     return tres;
 }
+
 
 // ************************************************************************* //

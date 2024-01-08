@@ -51,8 +51,8 @@ LimitedGrad<Type, GradientLimiter>::limiter
 {
     // Get reference to the mesh
     const fvMesh& mesh = vf.mesh();
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     // Calculate min/max of field
 
@@ -83,7 +83,7 @@ LimitedGrad<Type, GradientLimiter>::limiter
     {
         const fvPatchField<Type>& psf = bf[patchI];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchI].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchI].faceCells();
 
         if (psf.coupled())
         {
@@ -182,7 +182,7 @@ LimitedGrad<Type, GradientLimiter>::limiter
 
     forAll (bf, patchI)
     {
-        const unallocLabelList& pOwner = mesh.boundary()[patchI].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchI].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchI];
 
         forAll (pOwner, pFaceI)
@@ -292,8 +292,8 @@ LimitedGrad<Type, GradientLimiter>::gradientMatrix
     // Limit upper and lower coeffs
 
     const fvMesh& mesh = vf.mesh();
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     forAll (u, faceI)
     {

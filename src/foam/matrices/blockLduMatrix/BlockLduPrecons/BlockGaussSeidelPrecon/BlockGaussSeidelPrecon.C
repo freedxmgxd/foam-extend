@@ -117,8 +117,8 @@ void Foam::BlockGaussSeidelPrecon<Type>::BlockSweep
     const Field<Type>& b
 ) const
 {
-    const unallocLabelList& u = this->matrix_.lduAddr().upperAddr();
-    const unallocLabelList& ownStart =
+    const labelUList& u = this->matrix_.lduAddr().upperAddr();
+    const labelUList& ownStart =
         this->matrix_.lduAddr().ownerStartAddr();
 
     const label nRows = ownStart.size() - 1;
@@ -218,8 +218,8 @@ void Foam::BlockGaussSeidelPrecon<Type>::BlockSweep
     const Field<Type>& b
 ) const
 {
-    const unallocLabelList& u = this->matrix_.lduAddr().upperAddr();
-    const unallocLabelList& ownStart =
+    const labelUList& u = this->matrix_.lduAddr().upperAddr();
+    const labelUList& ownStart =
         this->matrix_.lduAddr().ownerStartAddr();
 
     const label nRows = ownStart.size() - 1;

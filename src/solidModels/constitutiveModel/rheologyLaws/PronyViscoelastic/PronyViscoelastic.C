@@ -38,9 +38,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from dictionary
@@ -89,7 +86,7 @@ Foam::tmp<Foam::volScalarField> Foam::PronyViscoelastic::rho(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
     return tresult;
 }
 
@@ -128,7 +125,7 @@ Foam::tmp<Foam::volScalarField> Foam::PronyViscoelastic::E(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
     return tresult;
 }
 
@@ -153,7 +150,7 @@ Foam::tmp<Foam::volScalarField> Foam::PronyViscoelastic::nu(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
     return tresult;
 }
 

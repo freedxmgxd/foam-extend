@@ -78,10 +78,10 @@ gaussGrad<Type>::gradf
             extrapolatedCalculatedFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
     const vectorField& Sf = mesh.Sf();
 
     Field<GradType>& igGrad = gGrad;
@@ -97,7 +97,7 @@ gaussGrad<Type>::gradf
 
     forAll (mesh.boundary(), patchI)
     {
-        const unallocLabelList& pFaceCells =
+        const labelUList& pFaceCells =
             mesh.boundary()[patchI].faceCells();
 
         const vectorField& pSf = mesh.Sf().boundaryField()[patchI];
@@ -138,7 +138,7 @@ gaussGrad<Type>::calcGrad
     (
         gradf(tinterpScheme_().interpolate(vsf), name)
     );
-    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& gGrad = tgGrad.ref();
 
     gGrad.rename("grad(" + vsf.name() + ')');
     this->correctBoundaryConditions(vsf, gGrad);

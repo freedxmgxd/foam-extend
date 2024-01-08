@@ -60,7 +60,7 @@ Su
             dimArea*su.dimensions()
         )
     );
-    faMatrix<Type>& fam = tfam();
+    faMatrix<Type>& fam = tfam.ref();
 
     fam.source() -= mesh.S()*su.internalField();
 
@@ -99,7 +99,7 @@ Sp
             dimArea*sp.dimensions()*vf.dimensions()
         )
     );
-    faMatrix<Type>& fam = tfam();
+    faMatrix<Type>& fam = tfam.ref();
 
     fam.diag() += mesh.S()*sp.internalField();
 
@@ -138,7 +138,7 @@ Sp
             dimArea*sp.dimensions()*vf.dimensions()
         )
     );
-    faMatrix<Type>& fam = tfam();
+    faMatrix<Type>& fam = tfam.ref();
 
     fam.diag() += mesh.S()*sp.value();
 
@@ -164,7 +164,7 @@ SuSp
             dimArea*sp.dimensions()*vf.dimensions()
         )
     );
-    faMatrix<Type>& fam = tfam();
+    faMatrix<Type>& fam = tfam.ref();
 
     fam.diag() += mesh.S()*max(sp.internalField(), scalar(0));
 

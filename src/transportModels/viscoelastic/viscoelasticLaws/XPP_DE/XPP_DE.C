@@ -140,7 +140,7 @@ void Foam::XPP_DE::correct()
     volSymmTensorField twoD = twoSymm(L);
 
     // Evolution of orientation
-    tmp<fvSymmTensorMatrix> SEqn
+    fvSymmTensorMatrix SEqn
     (
         fvm::ddt(S_)
       + fvm::div(phi(), S_)
@@ -157,7 +157,7 @@ void Foam::XPP_DE::correct()
         (3*alpha_*Foam::pow(Lambda_, 4)*symm(S_ & S_) - (1 - alpha_)/3*I_)
     );
 
-    SEqn().relax();
+    SEqn.relax();
     solve(SEqn);
 
 

@@ -38,7 +38,7 @@ Description
 
         if (p.isWall())
         {
-            epsEqn().setValues
+            epsEqn.setValues
             (
                 p.faceCells(),
                 epsilon_.boundaryField()[patchi].patchInternalField()

@@ -150,7 +150,7 @@ class fvMatrix
         template<class Type2>
         void addToInternalField
         (
-            const unallocLabelList& addr,
+            const labelUList& addr,
             const Field<Type2>& pf,
             Field<Type2>& intf
         ) const;
@@ -158,7 +158,7 @@ class fvMatrix
         template<class Type2>
         void addToInternalField
         (
-            const unallocLabelList& addr,
+            const labelUList& addr,
             const tmp<Field<Type2> >& tpf,
             Field<Type2>& intf
         ) const;
@@ -167,7 +167,7 @@ class fvMatrix
         template<class Type2>
         void subtractFromInternalField
         (
-            const unallocLabelList& addr,
+            const labelUList& addr,
             const Field<Type2>& pf,
             Field<Type2>& intf
         ) const;
@@ -175,7 +175,7 @@ class fvMatrix
         template<class Type2>
         void subtractFromInternalField
         (
-            const unallocLabelList& addr,
+            const labelUList& addr,
             const tmp<Field<Type2> >& tpf,
             Field<Type2>& intf
         ) const;

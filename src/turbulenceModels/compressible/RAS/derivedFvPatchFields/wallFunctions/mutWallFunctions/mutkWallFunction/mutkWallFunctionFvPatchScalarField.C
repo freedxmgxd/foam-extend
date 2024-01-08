@@ -56,10 +56,10 @@ tmp<scalarField> mutkWallFunctionFvPatchScalarField::calcMut() const
     const scalar Cmu25 = pow025(Cmu_);
 
     tmp<scalarField> tmutw(new scalarField(patch().size(), 0.0));
-    scalarField& mutw = tmutw();
+    scalarField& mutw = tmutw.ref();
 
     // Get face cells
-    const unallocLabelList& fc = patch().faceCells();
+    const labelUList& fc = patch().faceCells();
 
     forAll(mutw, faceI)
     {

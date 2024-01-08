@@ -235,7 +235,7 @@ Foam::label Foam::pointMapper::sizeBeforeMapping() const
 }
 
 
-const Foam::unallocLabelList& Foam::pointMapper::directAddressing() const
+const Foam::labelUList& Foam::pointMapper::directAddressing() const
 {
     if (!direct())
     {

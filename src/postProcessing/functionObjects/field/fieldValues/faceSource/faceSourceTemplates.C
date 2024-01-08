@@ -74,16 +74,16 @@ Foam::tmp<Foam::Field<Type> > Foam::fieldValues::faceSource::getFieldValues
             if (surfacePtr_().interpolate())
             {
                 const interpolationCellPoint<Type> interp(fld);
-                tmp<Field<Type> > tintFld(surfacePtr_().interpolate(interp));
-                const Field<Type>& intFld = tintFld();
+                Field<Type> intFld = surfacePtr_().interpolate(interp);
 
                 // Average
                 const faceList& faces = surfacePtr_().faces();
+
                 tmp<Field<Type> > tavg
                 (
                     new Field<Type>(faces.size(), pTraits<Type>::zero)
                 );
-                Field<Type>& avg = tavg();
+                Field<Type>& avg = tavg.ref();
 
                 forAll(faces, faceI)
                 {
@@ -110,16 +110,8 @@ Foam::tmp<Foam::Field<Type> > Foam::fieldValues::faceSource::getFieldValues
 
     if (mustGet)
     {
-        FatalErrorIn
-        (
-            "Foam::tmp<Foam::Field<Type> > "
-            "Foam::fieldValues::faceSource::getFieldValues"
-            "("
-                "const word&, "
-                "const bool, "
-                "const bool"
-            ") const"
-        )   << "Field " << fieldName << " not found in database"
+        FatalErrorInFunction
+            << "Field " << fieldName << " not found in database"
             << abort(FatalError);
     }
 
@@ -391,7 +383,7 @@ Foam::tmp<Foam::Field<Type> > Foam::fieldValues::faceSource::filterField
 ) const
 {
     tmp<Field<Type> > tvalues(new Field<Type>(faceId_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(values, i)
     {
@@ -438,7 +430,7 @@ Foam::tmp<Foam::Field<Type> > Foam::fieldValues::faceSource::filterField
 ) const
 {
     tmp<Field<Type> > tvalues(new Field<Type>(faceId_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(values, i)
     {

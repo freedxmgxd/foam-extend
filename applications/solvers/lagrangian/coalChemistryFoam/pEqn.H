@@ -27,6 +27,10 @@ if (pimple.transonic())
           + massSource.Su()
         );
 
+        Info<< "Mass source: "
+            << gSum(massSource.Su()().field()*mesh.V().field())
+            << endl;
+
         pEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())
@@ -55,6 +59,10 @@ else
             coalParcels.Srho()
           + massSource.Su()
         );
+
+        Info<< "Mass source: "
+            << gSum(massSource.Su()().field()*mesh.V().field())
+            << endl;
 
         pEqn.solve();
 

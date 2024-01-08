@@ -443,11 +443,11 @@ void Foam::domainDecomposition::decomposeMesh(const bool filterEmptyPatches)
                 const bool isSlave = !procPatch.master();
 
                 // Get face cells on this side
-                const unallocLabelList& fc = patches[patchI].faceCells();
+                const labelUList& fc = patches[patchI].faceCells();
 
                 // Get face cells on the other side (communicated during
                 // distributeCells() call)
-                const unallocLabelList& nfc = patchNbrFaceCells_[patchI];
+                const labelUList& nfc = patchNbrFaceCells_[patchI];
 
                 // Get neighbour cellToProc addressing across the interface
                 const labelList& curNbrPtc = patchNbrCellToProc_[patchI];
@@ -725,7 +725,7 @@ void Foam::domainDecomposition::decomposeMesh(const bool filterEmptyPatches)
             {
                 // Normal patch. Add faces to processor where the cell
                 // next to the face lives
-                const unallocLabelList& fc = patches[patchI].faceCells();
+                const labelUList& fc = patches[patchI].faceCells();
 
                 forAll (fc, patchFaceI)
                 {

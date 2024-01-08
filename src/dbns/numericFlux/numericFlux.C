@@ -88,8 +88,8 @@ template<class Flux, class Limiter>
 void Foam::numericFlux<Flux, Limiter>::computeFlux()
 {
     // Get face-to-cell addressing: face area point from owner to neighbour
-    const unallocLabelList& owner = this->mesh().owner();
-    const unallocLabelList& neighbour = this->mesh().neighbour();
+    const labelUList& owner = this->mesh().owner();
+    const labelUList& neighbour = this->mesh().neighbour();
 
     // Get the face area vector
     const surfaceVectorField& Sf = this->mesh().Sf();

@@ -74,7 +74,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::readField
 
         Field<Type>::operator+=(fieldAverage);
 
-        GeometricBoundaryField& boundaryField = tboundaryField();
+        GeometricBoundaryField& boundaryField = tboundaryField.ref();
 
         forAll(boundaryField, patchi)
         {
@@ -119,7 +119,7 @@ bool Foam::GeometricField<Type, PatchField, GeoMesh>::readIfPresent()
     {
         // Force assignment to preserve types from the boundary field which
         // was just read in.  HJ, 29/Aug/2022
-        boundaryField_.transfer(readField(this->readStream(typeName))());
+        boundaryField_.transfer(readField(this->readStream(typeName)).ref());
 
         // Clear caches: boundary field has been transferred.
         // HJ, 2/May/2022
@@ -942,8 +942,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::T() const
         )
     );
 
-    Foam::T(result().internalField(), internalField());
-    Foam::T(result().boundaryField(), boundaryField());
+    Foam::T(result.ref().internalField(), internalField());
+    Foam::T(result.ref().boundaryField(), boundaryField());
 
     return result;
 }
@@ -979,8 +979,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::component
         )
     );
 
-    Foam::component(Component().internalField(), internalField(), d);
-    Foam::component(Component().boundaryField(), boundaryField(), d);
+    Foam::component(Component.ref().internalField(), internalField(), d);
+    Foam::component(Component.ref().boundaryField(), boundaryField(), d);
 
     return Component;
 }
@@ -1086,7 +1086,7 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator=
             << abort(FatalError);
     }
 
-    const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
+    const GeometricField<Type, PatchField, GeoMesh>& gf = tgf.ref();
 
     checkField(*this, gf, "=");
 

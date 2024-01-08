@@ -224,7 +224,7 @@ tetPointFieldReconstructor::reconstructTetPointField
     // Reconstruct field
     reconstructTetPointField
     (
-        treconField(),
+        treconField.ref(),
         procFields
     );
 
@@ -434,7 +434,7 @@ tetPointFieldReconstructor::reconstructElementField
     // Reconstruct field
     reconstructElementField
     (
-        treconField(),
+        treconField.ref(),
         procFields
     );
 

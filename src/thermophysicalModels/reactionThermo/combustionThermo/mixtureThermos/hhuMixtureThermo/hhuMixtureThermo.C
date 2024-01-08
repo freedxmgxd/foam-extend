@@ -200,7 +200,7 @@ Foam::hhuMixtureThermo<MixtureType>::hc() const
         )
     );
 
-    volScalarField& hcf = thc();
+    volScalarField& hcf = thc.ref();
     scalarField& hcCells = hcf.internalField();
 
     forAll(hcCells, celli)
@@ -230,7 +230,7 @@ Foam::tmp<Foam::scalarField> Foam::hhuMixtureThermo<MixtureType>::h
 ) const
 {
     tmp<scalarField> th(new scalarField(T.size()));
-    scalarField& h = th();
+    scalarField& h = th.ref();
 
     forAll(T, celli)
     {
@@ -249,7 +249,7 @@ Foam::tmp<Foam::scalarField> Foam::hhuMixtureThermo<MixtureType>::h
 ) const
 {
     tmp<scalarField> th(new scalarField(T.size()));
-    scalarField& h = th();
+    scalarField& h = th.ref();
 
     forAll(T, facei)
     {
@@ -269,7 +269,7 @@ Foam::tmp<Foam::scalarField> Foam::hhuMixtureThermo<MixtureType>::Cp
 {
     tmp<scalarField> tCp(new scalarField(T.size()));
 
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, facei)
     {
@@ -289,7 +289,7 @@ Foam::hhuMixtureThermo<MixtureType>::Cp
 ) const
 {
     tmp<scalarField> tCp(new scalarField(T.size()));
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, celli)
     {
@@ -323,7 +323,7 @@ Foam::hhuMixtureThermo<MixtureType>::Cp() const
         )
     );
 
-    volScalarField& cp = tCp();
+    volScalarField& cp = tCp.ref();
     scalarField& cpCells = cp.internalField();
     const scalarField& TCells = T_.internalField();
 
@@ -350,7 +350,7 @@ Foam::tmp<Foam::scalarField> Foam::hhuMixtureThermo<MixtureType>::Cv
 {
     tmp<scalarField> tCv(new scalarField(T.size()));
 
-    scalarField& cv = tCv();
+    scalarField& cv = tCv.ref();
 
     forAll(T, facei)
     {
@@ -383,7 +383,7 @@ Foam::tmp<Foam::volScalarField> Foam::hhuMixtureThermo<MixtureType>::Cv() const
         )
     );
 
-    volScalarField& cv = tCv();
+    volScalarField& cv = tCv.ref();
 
     forAll(T_, celli)
     {
@@ -408,7 +408,7 @@ Foam::hhuMixtureThermo<MixtureType>::hu
 ) const
 {
     tmp<scalarField> thu(new scalarField(Tu.size()));
-    scalarField& hu = thu();
+    scalarField& hu = thu.ref();
 
     forAll(Tu, celli)
     {
@@ -428,7 +428,7 @@ Foam::hhuMixtureThermo<MixtureType>::hu
 ) const
 {
     tmp<scalarField> thu(new scalarField(Tu.size()));
-    scalarField& hu = thu();
+    scalarField& hu = thu.ref();
 
     forAll(Tu, facei)
     {
@@ -459,7 +459,7 @@ Foam::hhuMixtureThermo<MixtureType>::Tb() const
         )
     );
 
-    volScalarField& Tb_ = tTb();
+    volScalarField& Tb_ = tTb.ref();
     scalarField& TbCells = Tb_.internalField();
     const scalarField& TCells = T_.internalField();
     const scalarField& hCells = h_.internalField();
@@ -510,7 +510,7 @@ Foam::hhuMixtureThermo<MixtureType>::psiu() const
         )
     );
 
-    volScalarField& psiu = tpsiu();
+    volScalarField& psiu = tpsiu.ref();
     scalarField& psiuCells = psiu.internalField();
     const scalarField& TuCells = Tu_.internalField();
     const scalarField& pCells = p_.internalField();
@@ -561,7 +561,7 @@ Foam::hhuMixtureThermo<MixtureType>::psib() const
         )
     );
 
-    volScalarField& psib = tpsib();
+    volScalarField& psib = tpsib.ref();
     scalarField& psibCells = psib.internalField();
     volScalarField Tb_ = Tb();
     const scalarField& TbCells = Tb_.internalField();
@@ -613,7 +613,7 @@ Foam::hhuMixtureThermo<MixtureType>::muu() const
         )
     );
 
-    volScalarField& muu_ = tmuu();
+    volScalarField& muu_ = tmuu.ref();
     scalarField& muuCells = muu_.internalField();
     const scalarField& TuCells = Tu_.internalField();
 
@@ -659,7 +659,7 @@ Foam::hhuMixtureThermo<MixtureType>::mub() const
         )
     );
 
-    volScalarField& mub_ = tmub();
+    volScalarField& mub_ = tmub.ref();
     scalarField& mubCells = mub_.internalField();
     volScalarField Tb_ = Tb();
     const scalarField& TbCells = Tb_.internalField();

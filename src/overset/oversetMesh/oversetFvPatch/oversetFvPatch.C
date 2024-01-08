@@ -131,7 +131,7 @@ const Foam::mapDistribute& Foam::oversetFvPatch::map() const
 
 Foam::tmp<Foam::labelField> Foam::oversetFvPatch::interfaceInternalField
 (
-    const unallocLabelList& internalData
+    const labelUList& internalData
 ) const
 {
     // Return all internal values
@@ -145,7 +145,7 @@ Foam::tmp<Foam::labelField> Foam::oversetFvPatch::interfaceInternalField
 void Foam::oversetFvPatch::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {}
 
@@ -153,7 +153,7 @@ void Foam::oversetFvPatch::initTransfer
 Foam::tmp<Foam::labelField> Foam::oversetFvPatch::transfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     return labelField::null();
@@ -163,7 +163,7 @@ Foam::tmp<Foam::labelField> Foam::oversetFvPatch::transfer
 void Foam::oversetFvPatch::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     // Repackage donor data to acceptors
@@ -176,7 +176,7 @@ void Foam::oversetFvPatch::initInternalFieldTransfer
 Foam::tmp<Foam::labelField> Foam::oversetFvPatch::internalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     return tmp<labelField>(new labelField(labelTransferBuffer_));

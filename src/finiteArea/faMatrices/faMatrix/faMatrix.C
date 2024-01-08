@@ -43,18 +43,15 @@ template<class Type>
 template<class Type2>
 void faMatrix<Type>::addToInternalField
 (
-    const unallocLabelList& addr,
+    const labelUList& addr,
     const Field<Type2>& pf,
     Field<Type2>& intf
 ) const
 {
     if (addr.size() != pf.size())
     {
-        FatalErrorIn
-        (
-            "faMatrix<Type>::addToInternalField(const unallocLabelList&, "
-            "const Field&, Field&)"
-        )   << "sizes of addressing and field are different"
+        FatalErrorInFunction
+            << "sizes of addressing and field are different"
             << abort(FatalError);
     }
 
@@ -69,7 +66,7 @@ template<class Type>
 template<class Type2>
 void faMatrix<Type>::addToInternalField
 (
-    const unallocLabelList& addr,
+    const labelUList& addr,
     const tmp<Field<Type2> >& tpf,
     Field<Type2>& intf
 ) const
@@ -83,18 +80,15 @@ template<class Type>
 template<class Type2>
 void faMatrix<Type>::subtractFromInternalField
 (
-    const unallocLabelList& addr,
+    const labelUList& addr,
     const Field<Type2>& pf,
     Field<Type2>& intf
 ) const
 {
     if (addr.size() != pf.size())
     {
-        FatalErrorIn
-        (
-            "faMatrix<Type>::addToInternalField(const unallocLabelList&, "
-            "const Field&, Field&)"
-        )   << "sizes of addressing and field are different"
+        FatalErrorInFunction
+            << "sizes of addressing and field are different"
             << abort(FatalError);
     }
 
@@ -109,7 +103,7 @@ template<class Type>
 template<class Type2>
 void faMatrix<Type>::subtractFromInternalField
 (
-    const unallocLabelList& addr,
+    const labelUList& addr,
     const tmp<Field<Type2> >& tpf,
     Field<Type2>& intf
 ) const
@@ -171,10 +165,9 @@ void faMatrix<Type>::addBoundarySource
         }
         else if (couples)
         {
-            tmp<Field<Type> > tpnf = ptf.patchNeighbourField();
-            const Field<Type>& pnf = tpnf();
+            const Field<Type>& pnf = ptf.patchNeighbourField();
 
-            const unallocLabelList& addr = lduAddr().patchAddr(patchI);
+            const labelUList& addr = lduAddr().patchAddr(patchI);
 
             forAll(addr, facei)
             {
@@ -361,8 +354,8 @@ void faMatrix<Type>::setValues
     }
 
     const labelListList& edges = mesh.patch().faceEdges();
-    const unallocLabelList& own = mesh.owner();
-    const unallocLabelList& nei = mesh.neighbour();
+    const labelUList& own = mesh.owner();
+    const labelUList& nei = mesh.neighbour();
 
     scalarField& Diag = diag();
     Field<Type>& psi =
@@ -484,7 +477,7 @@ void faMatrix<Type>::relax(const scalar alpha)
 
         if (ptf.size())
         {
-            const unallocLabelList& pa = lduAddr().patchAddr(patchI);
+            const labelUList& pa = lduAddr().patchAddr(patchI);
             Field<Type>& iCoeffs = internalCoeffs_[patchI];
 
             if (ptf.coupled())
@@ -531,7 +524,7 @@ void faMatrix<Type>::relax(const scalar alpha)
 
         if (ptf.size())
         {
-            const unallocLabelList& pa = lduAddr().patchAddr(patchI);
+            const labelUList& pa = lduAddr().patchAddr(patchI);
             Field<Type>& iCoeffs = internalCoeffs_[patchI];
 
             if (ptf.coupled())
@@ -572,7 +565,7 @@ template<class Type>
 tmp<scalarField> faMatrix<Type>::D() const
 {
     tmp<scalarField> tdiag(new scalarField(diag()));
-    addCmptAvBoundaryDiag(tdiag());
+    addCmptAvBoundaryDiag(tdiag.ref());
     return tdiag;
 }
 
@@ -596,8 +589,8 @@ tmp<areaScalarField> faMatrix<Type>::A() const
         )
     );
 
-    tAphi().internalField() = D()/psi_.mesh().S();
-    tAphi().correctBoundaryConditions();
+    tAphi.ref().internalField() = D()/psi_.mesh().S();
+    tAphi.ref().correctBoundaryConditions();
 
     return tAphi;
 }
@@ -623,7 +616,7 @@ tmp<GeometricField<Type, faPatchField, areaMesh> > faMatrix<Type>::H() const
     );
 
     // Loop over field components
-    for (direction cmpt=0; cmpt<Type::nComponents; cmpt++)
+    for (direction cmpt = 0; cmpt < Type::nComponents; cmpt++)
     {
         scalarField psiCmpt = psi_.internalField().component(cmpt);
 
@@ -632,14 +625,14 @@ tmp<GeometricField<Type, faPatchField, areaMesh> > faMatrix<Type>::H() const
         boundaryDiagCmpt.negate();
         addCmptAvBoundaryDiag(boundaryDiagCmpt);
 
-        tHphi().internalField().replace(cmpt, boundaryDiagCmpt*psiCmpt);
+        tHphi.ref().internalField().replace(cmpt, boundaryDiagCmpt*psiCmpt);
     }
 
-    tHphi().internalField() += lduMatrix::H(psi_.internalField()) + source_;
-    addBoundarySource(tHphi().internalField());
+    tHphi.ref().internalField() += lduMatrix::H(psi_.internalField()) + source_;
+    addBoundarySource(tHphi.ref().internalField());
 
-    tHphi().internalField() /= psi_.mesh().S();
-    tHphi().correctBoundaryConditions();
+    tHphi.ref().internalField() /= psi_.mesh().S();
+    tHphi.ref().correctBoundaryConditions();
 
     return tHphi;
 }
@@ -651,7 +644,7 @@ flux() const
 {
     if (!psi_.mesh().schemesDict().fluxRequired(psi_.name()))
     {
-        FatalErrorIn("faMatrix<Type>::flux()")
+        FatalErrorInFunction
             << "flux requested but " << psi_.name()
             << " not specified in the fluxRequired sub-dictionary of faSchemes"
             << abort(FatalError);
@@ -672,9 +665,10 @@ flux() const
             dimensions()
         )
     );
-    GeometricField<Type, faePatchField, edgeMesh>& fieldFlux = tfieldFlux();
+    GeometricField<Type, faePatchField, edgeMesh>& fieldFlux =
+        tfieldFlux.ref();
 
-    for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
+    for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
         fieldFlux.internalField().replace
         (
@@ -732,14 +726,14 @@ void faMatrix<Type>::operator=(const faMatrix<Type>& famv)
 {
     if (this == &famv)
     {
-        FatalErrorIn("faMatrix<Type>::operator=(const faMatrix<Type>&)")
+        FatalErrorInFunction
             << "attempted to assignment to self"
             << abort(FatalError);
     }
 
     if (&psi_ != &(famv.psi_))
     {
-        FatalErrorIn("faMatrix<Type>::operator=(const faMatrix<Type>&)")
+        FatalErrorInFunction
             << "different fields"
             << abort(FatalError);
     }
@@ -934,7 +928,7 @@ void faMatrix<Type>::operator*=
 
     if (faceFluxCorrectionPtr_)
     {
-        FatalErrorIn("faMatrix<Type>::operator*=(const tmp<areaScalarField>&)")
+        FatalErrorInFunction
             << "cannot scale a matrix containing a faceFluxCorrection"
             << abort(FatalError);
     }
@@ -983,10 +977,8 @@ void checkMethod
 {
     if (&fam1.psi() != &fam2.psi())
     {
-        FatalErrorIn
-        (
-            "checkMethod(const faMatrix<Type>&, const faMatrix<Type>&)"
-        )   << "incompatible fields for operation "
+        FatalErrorInFunction
+            << "incompatible fields for operation "
             << endl << "    "
             << "[" << fam1.psi().name() << "] "
             << op
@@ -996,10 +988,8 @@ void checkMethod
 
     if (dimensionSet::debug && fam1.dimensions() != fam2.dimensions())
     {
-        FatalErrorIn
-        (
-            "checkMethod(const faMatrix<Type>&, const faMatrix<Type>&)"
-        )   << "incompatible dimensions for operation "
+        FatalErrorInFunction
+            << "incompatible dimensions for operation "
             << endl << "    "
             << "[" << fam1.psi().name() << fam1.dimensions()/dimArea << " ] "
             << op
@@ -1019,11 +1009,8 @@ void checkMethod
 {
     if (dimensionSet::debug && fam.dimensions()/dimArea != vf.dimensions())
     {
-        FatalErrorIn
-        (
-            "checkMethod(const faMatrix<Type>&, const GeometricField<Type, "
-            "faPatchField, areaMesh>&)"
-        )   <<  "incompatible dimensions for operation "
+        FatalErrorInFunction
+            <<  "incompatible dimensions for operation "
             << endl << "    "
             << "[" << fam.psi().name() << fam.dimensions()/dimArea << " ] "
             << op
@@ -1043,11 +1030,8 @@ void checkMethod
 {
     if (dimensionSet::debug && fam.dimensions()/dimArea != vf.dimensions())
     {
-        FatalErrorIn
-        (
-            "checkMethod(const faMatrix<Type>&, const DimensionedField<Type, "
-            "areaMesh>&)"
-        )   <<  "incompatible dimensions for operation "
+        FatalErrorInFunction
+            <<  "incompatible dimensions for operation "
             << endl << "    "
             << "[" << fam.psi().name() << fam.dimensions()/dimArea << " ] "
             << op
@@ -1067,10 +1051,8 @@ void checkMethod
 {
     if (dimensionSet::debug && fam.dimensions()/dimArea != dt.dimensions())
     {
-        FatalErrorIn
-        (
-            "checkMethod(const faMatrix<Type>&, const dimensioned<Type>&)"
-        )   << "incompatible dimensions for operation "
+        FatalErrorInFunction
+            << "incompatible dimensions for operation "
             << endl << "    "
             << "[" << fam.psi().name() << fam.dimensions()/dimArea << " ] "
             << op
@@ -1132,7 +1114,7 @@ tmp<faMatrix<Type> > operator-
 )
 {
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().negate();
+    tC.ref().negate();
     return tC;
 }
 
@@ -1144,7 +1126,7 @@ tmp<faMatrix<Type> > operator-
 )
 {
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().negate();
+    tC.ref().negate();
     return tC;
 }
 
@@ -1159,7 +1141,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, B, "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC() += B;
+    tC.ref() += B;
     return tC;
 }
 
@@ -1173,7 +1155,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), B, "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC() += B;
+    tC.ref() += B;
     return tC;
 }
 
@@ -1187,7 +1169,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, tB(), "+");
     tmp<faMatrix<Type> > tC(tB.ptr());
-    tC() += A;
+    tC.ref() += A;
     return tC;
 }
 
@@ -1201,7 +1183,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), tB(), "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC() += tB();
+    tC.ref() += tB();
     tB.clear();
     return tC;
 }
@@ -1216,7 +1198,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, B, "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC() -= B;
+    tC.ref() -= B;
     return tC;
 }
 
@@ -1230,7 +1212,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), B, "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC() -= B;
+    tC.ref() -= B;
     return tC;
 }
 
@@ -1244,8 +1226,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, tB(), "-");
     tmp<faMatrix<Type> > tC(tB.ptr());
-    tC() -= A;
-    tC().negate();
+    tC.ref() -= A;
+    tC.ref().negate();
     return tC;
 }
 
@@ -1259,7 +1241,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), tB(), "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC() -= tB();
+    tC.ref() -= tB();
     tB.clear();
     return tC;
 }
@@ -1323,7 +1305,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() -= su.mesh().S()*su.internalField();
+    tC.ref().source() -= su.mesh().S()*su.internalField();
     return tC;
 }
 
@@ -1336,7 +1318,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() -= su.mesh().S()*su.internalField();
+    tC.ref().source() -= su.mesh().S()*su.internalField();
     return tC;
 }
 
@@ -1349,7 +1331,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() -= tsu().mesh().S()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().S()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1364,7 +1346,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() -= tsu().mesh().S()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().S()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1378,7 +1360,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() -= su.mesh().S()*su.internalField();
+    tC.ref().source() -= su.mesh().S()*su.internalField();
     return tC;
 }
 
@@ -1391,7 +1373,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() -= su.mesh().S()*su.internalField();
+    tC.ref().source() -= su.mesh().S()*su.internalField();
     return tC;
 }
 
@@ -1404,7 +1386,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() -= tsu().mesh().S()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().S()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1418,7 +1400,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() -= tsu().mesh().S()*tsu().internalField();
+    tC.ref().source() -= tsu().mesh().S()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1433,7 +1415,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() += su.mesh().S()*su.internalField();
+    tC.ref().source() += su.mesh().S()*su.internalField();
     return tC;
 }
 
@@ -1446,7 +1428,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() += su.mesh().S()*su.internalField();
+    tC.ref().source() += su.mesh().S()*su.internalField();
     return tC;
 }
 
@@ -1459,7 +1441,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() += tsu().mesh().S()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().S()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1473,7 +1455,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() += tsu().mesh().S()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().S()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1488,8 +1470,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().negate();
-    tC().source() -= su.mesh().S()*su.internalField();
+    tC.ref().negate();
+    tC.ref().source() -= su.mesh().S()*su.internalField();
     return tC;
 }
 
@@ -1503,8 +1485,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().negate();
-    tC().source() -= su.mesh().S()*su.internalField();
+    tC.ref().negate();
+    tC.ref().source() -= su.mesh().S()*su.internalField();
     return tC;
 }
 
@@ -1517,8 +1499,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().negate();
-    tC().source() -= tsu().mesh().S()*tsu().internalField();
+    tC.ref().negate();
+    tC.ref().source() -= tsu().mesh().S()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1533,8 +1515,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().negate();
-    tC().source() -= tsu().mesh().S()*tsu().internalField();
+    tC.ref().negate();
+    tC.ref().source() -= tsu().mesh().S()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1550,7 +1532,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() -= su.mesh().S()*su.field();
+    tC.ref().source() -= su.mesh().S()*su.field();
     return tC;
 }
 
@@ -1564,7 +1546,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() -= su.mesh().S()*su.field();
+    tC.ref().source() -= su.mesh().S()*su.field();
     return tC;
 }
 
@@ -1578,7 +1560,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() -= tsu().mesh().S()*tsu().field();
+    tC.ref().source() -= tsu().mesh().S()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -1593,7 +1575,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() -= tsu().mesh().S()*tsu().field();
+    tC.ref().source() -= tsu().mesh().S()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -1608,7 +1590,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() -= su.mesh().S()*su.field();
+    tC.ref().source() -= su.mesh().S()*su.field();
     return tC;
 }
 
@@ -1622,7 +1604,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() -= su.mesh().S()*su.field();
+    tC.ref().source() -= su.mesh().S()*su.field();
     return tC;
 }
 
@@ -1635,7 +1617,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() -= tsu().mesh().S()*tsu().field();
+    tC.ref().source() -= tsu().mesh().S()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -1649,7 +1631,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() -= tsu().mesh().S()*tsu().field();
+    tC.ref().source() -= tsu().mesh().S()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -1664,7 +1646,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() += su.mesh().S()*su.field();
+    tC.ref().source() += su.mesh().S()*su.field();
     return tC;
 }
 
@@ -1677,7 +1659,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() += su.mesh().S()*su.field();
+    tC.ref().source() += su.mesh().S()*su.field();
     return tC;
 }
 
@@ -1690,7 +1672,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() += tsu().mesh().S()*tsu().field();
+    tC.ref().source() += tsu().mesh().S()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -1704,7 +1686,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() += tsu().mesh().S()*tsu().field();
+    tC.ref().source() += tsu().mesh().S()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -1719,8 +1701,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().negate();
-    tC().source() -= su.mesh().S()*su.field();
+    tC.ref().negate();
+    tC.ref().source() -= su.mesh().S()*su.field();
     return tC;
 }
 
@@ -1734,8 +1716,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().negate();
-    tC().source() -= su.mesh().S()*su.field();
+    tC.ref().negate();
+    tC.ref().source() -= su.mesh().S()*su.field();
     return tC;
 }
 
@@ -1748,8 +1730,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().negate();
-    tC().source() -= tsu().mesh().S()*tsu().field();
+    tC.ref().negate();
+    tC.ref().source() -= tsu().mesh().S()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -1764,8 +1746,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().negate();
-    tC().source() -= tsu().mesh().S()*tsu().field();
+    tC.ref().negate();
+    tC.ref().source() -= tsu().mesh().S()*tsu().field();
     tsu.clear();
     return tC;
 }
@@ -1781,7 +1763,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() -= su.value()*A.psi().mesh().S();
+    tC.ref().source() -= su.value()*A.psi().mesh().S();
     return tC;
 }
 
@@ -1795,7 +1777,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() -= su.value()*A.psi().mesh().S();
+    tC.ref().source() -= su.value()*A.psi().mesh().S();
     return tC;
 }
 
@@ -1809,7 +1791,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() += su.value()*tC().psi().mesh().S();
+    tC.ref().source() += su.value()*tC().psi().mesh().S();
     return tC;
 }
 
@@ -1823,8 +1805,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().negate();
-    tC().source() -= su.value()*A.psi().mesh().S();
+    tC.ref().negate();
+    tC.ref().source() -= su.value()*A.psi().mesh().S();
     return tC;
 }
 
@@ -1838,7 +1820,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() -= su.value()*tC().psi().mesh().S();
+    tC.ref().source() -= su.value()*tC().psi().mesh().S();
     return tC;
 }
 
@@ -1852,7 +1834,7 @@ tmp<faMatrix<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() -= su.value()*tC().psi().mesh().S();
+    tC.ref().source() -= su.value()*tC().psi().mesh().S();
     return tC;
 }
 
@@ -1866,7 +1848,7 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() += su.value()*tC().psi().mesh().S();
+    tC.ref().source() += su.value()*tC().psi().mesh().S();
     return tC;
 }
 
@@ -1880,8 +1862,8 @@ tmp<faMatrix<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().negate();
-    tC().source() -= su.value()*tC().psi().mesh().S();
+    tC.ref().negate();
+    tC.ref().source() -= su.value()*tC().psi().mesh().S();
     return tC;
 }
 
@@ -1898,7 +1880,7 @@ tmp<faMatrix<Type> > operator==
 {
     checkMethod(A, su, "==");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() += su.mesh().S()*su.internalField();
+    tC.ref().source() += su.mesh().S()*su.internalField();
     return tC;
 }
 
@@ -1911,7 +1893,7 @@ tmp<faMatrix<Type> > operator==
 {
     checkMethod(tA(), su, "==");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() += su.mesh().S()*su.internalField();
+    tC.ref().source() += su.mesh().S()*su.internalField();
     return tC;
 }
 
@@ -1924,7 +1906,7 @@ tmp<faMatrix<Type> > operator==
 {
     checkMethod(A, tsu(), "==");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() += tsu().mesh().S()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().S()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1938,7 +1920,7 @@ tmp<faMatrix<Type> > operator==
 {
     checkMethod(tA(), tsu(), "==");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() += tsu().mesh().S()*tsu().internalField();
+    tC.ref().source() += tsu().mesh().S()*tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1954,7 +1936,7 @@ tmp<faMatrix<Type> > operator==
 {
     checkMethod(A, su, "==");
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC().source() += A.psi().mesh().S()*su.value();
+    tC.ref().source() += A.psi().mesh().S()*su.value();
     return tC;
 }
 
@@ -1968,7 +1950,7 @@ tmp<faMatrix<Type> > operator==
 {
     checkMethod(tA(), su, "==");
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC().source() += tC().psi().mesh().S()*su.value();
+    tC.ref().source() += tC().psi().mesh().S()*su.value();
     return tC;
 }
 
@@ -1984,7 +1966,7 @@ tmp<faMatrix<Type> > operator*
 )
 {
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC() *= vsf;
+    tC.ref() *= vsf;
     return tC;
 }
 
@@ -1996,7 +1978,7 @@ tmp<faMatrix<Type> > operator*
 )
 {
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC() *= tvsf;
+    tC.ref() *= tvsf;
     return tC;
 }
 
@@ -2008,7 +1990,7 @@ tmp<faMatrix<Type> > operator*
 )
 {
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC() *= vsf;
+    tC.ref() *= vsf;
     return tC;
 }
 
@@ -2020,7 +2002,7 @@ tmp<faMatrix<Type> > operator*
 )
 {
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC() *= tvsf;
+    tC.ref() *= tvsf;
     return tC;
 }
 
@@ -2034,7 +2016,7 @@ tmp<faMatrix<Type> > operator*
 )
 {
     tmp<faMatrix<Type> > tC(new faMatrix<Type>(A));
-    tC() *= ds;
+    tC.ref() *= ds;
     return tC;
 }
 
@@ -2047,7 +2029,7 @@ tmp<faMatrix<Type> > operator*
 )
 {
     tmp<faMatrix<Type> > tC(tA.ptr());
-    tC() *= ds;
+    tC.ref() *= ds;
     return tC;
 }
 

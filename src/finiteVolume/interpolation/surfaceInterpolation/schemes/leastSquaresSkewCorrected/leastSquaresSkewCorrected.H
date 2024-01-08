@@ -159,9 +159,9 @@ public:
                 )
             );
 
-            for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
+            for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
             {
-                tsfCorr().replace
+                tsfCorr.ref().replace
                 (
                     cmpt,
                     scv() & linear
@@ -209,7 +209,8 @@ public:
             else
             {
                 return
-                    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >(nullptr);
+                    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+                    (nullptr);
             }
         }
 };

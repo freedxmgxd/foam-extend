@@ -85,10 +85,10 @@ tmp<volVectorField> faceLimitedGrad<scalar>::calcGrad
         return tGrad;
     }
 
-    volVectorField& g = tGrad();
+    volVectorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
@@ -135,7 +135,7 @@ tmp<volVectorField> faceLimitedGrad<scalar>::calcGrad
     {
         const fvPatchScalarField& psf = bsf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         if (psf.coupled())
@@ -222,10 +222,10 @@ tmp<volTensorField> faceLimitedGrad<vector>::calcGrad
         return tGrad;
     }
 
-    volTensorField& g = tGrad();
+    volTensorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
@@ -287,7 +287,7 @@ tmp<volTensorField> faceLimitedGrad<vector>::calcGrad
     {
         const fvPatchVectorField& psf = bvf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         if (psf.coupled())
@@ -384,15 +384,15 @@ tmp<BlockLduSystem<vector, vector> > faceLimitedGrad<scalar>::fvmGrad
         return tbs;
     }
 
-    BlockLduSystem<vector, vector>& bs = tbs();
+    BlockLduSystem<vector, vector>& bs = tbs.ref();
 
     // Calculate current gradient for explicit limiting
     // Using cached gradient?  Check.  HJ, 4/Jun/2016
     tmp<volVectorField> tGrad = basicGradScheme_().grad(vsf);
-    const volVectorField& g = tGrad();
+    const volVectorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
@@ -455,7 +455,7 @@ tmp<BlockLduSystem<vector, vector> > faceLimitedGrad<scalar>::fvmGrad
     {
         const fvPatchScalarField& psf = bsf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].faceCells();
+        const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         if (psf.coupled())

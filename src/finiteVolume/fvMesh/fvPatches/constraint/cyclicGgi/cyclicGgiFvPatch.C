@@ -280,7 +280,7 @@ Foam::tmp<Foam::vectorField> Foam::cyclicGgiFvPatch::delta() const
         (
             shadow().Cn() - cyclicGgiPolyPatch_.shadow().reconFaceCellCentres()
         );
-        vectorField& delta = tdelta();
+        vectorField& delta = tdelta.ref();
 
         if (bridgeOverlap())
         {

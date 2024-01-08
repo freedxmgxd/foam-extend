@@ -62,7 +62,7 @@ Foam::tmp<Foam::Field<Type> > Foam::RBFInterpolation::interpolate
         new Field<Type>(dataPoints_.size(), pTraits<Type>::zero)
     );
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     // FB 21-12-2008
     // 1) Calculate alpha and beta coefficients using the Inverse

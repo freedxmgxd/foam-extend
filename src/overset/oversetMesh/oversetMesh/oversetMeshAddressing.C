@@ -358,8 +358,8 @@ void Foam::oversetMesh::calcGamma() const
     surfaceScalarField& sg = *sGammaPtr_;
     scalarField& sgIn = sg.internalField();
 
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     // Internal faces: flux is live between all active and acceptor cells
     forAll (sgIn, faceI)
@@ -507,8 +507,8 @@ void Foam::oversetMesh::calcFringeFaces() const
     dynamicLabelList acFC(2*acc.size());
     DynamicList<bool> acFF(2*acc.size());
 
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     const volScalarField::GeometricBoundaryField& gammaPatches =
         gamma().boundaryField();
@@ -684,8 +684,8 @@ void Foam::oversetMesh::calcHoleFaces() const
     dynamicLabelList hFC(2*hc.size());
     DynamicList<bool> hFF(2*hc.size());
 
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     forAll (neighbour, faceI)
     {

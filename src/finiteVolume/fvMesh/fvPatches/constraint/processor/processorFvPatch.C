@@ -143,7 +143,7 @@ Foam::tmp<Foam::vectorField> Foam::processorFvPatch::delta() const
 
 Foam::tmp<Foam::labelField> Foam::processorFvPatch::interfaceInternalField
 (
-    const unallocLabelList& internalData
+    const labelUList& internalData
 ) const
 {
     return patchInternalField(internalData);
@@ -153,7 +153,7 @@ Foam::tmp<Foam::labelField> Foam::processorFvPatch::interfaceInternalField
 void Foam::processorFvPatch::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     send(commsType, interfaceData);
@@ -163,7 +163,7 @@ void Foam::processorFvPatch::initTransfer
 Foam::tmp<Foam::labelField> Foam::processorFvPatch::transfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList&
+    const labelUList&
 ) const
 {
     return receive<label>(commsType, this->size());
@@ -173,7 +173,7 @@ Foam::tmp<Foam::labelField> Foam::processorFvPatch::transfer
 void Foam::processorFvPatch::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     send(commsType, patchInternalField(iF)());
@@ -183,7 +183,7 @@ void Foam::processorFvPatch::initInternalFieldTransfer
 Foam::tmp<Foam::labelField> Foam::processorFvPatch::internalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList&
+    const labelUList&
 ) const
 {
     return receive<label>(commsType, this->size());

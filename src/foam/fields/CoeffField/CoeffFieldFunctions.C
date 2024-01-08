@@ -44,7 +44,7 @@ tmp<CoeffField<Type> > inv(const CoeffField<Type>& f)
 
     // Create result
     tmp<CoeffField<Type> > tresult(new CoeffField<Type>(f.size()));
-    CoeffField<Type>& result = tresult();
+    CoeffField<Type>& result = tresult.ref();
 
     if (f.activeType() == blockCoeffBase::SCALAR)
     {
@@ -185,7 +185,7 @@ tmp<CoeffField<Type> > operator op                                            \
 )                                                                             \
 {                                                                             \
     tmp<CoeffField<Type> > tf(new CoeffField<Type>(f1.size()));               \
-    opFunc(tf(), f1);                                                         \
+    opFunc(tf.ref(), f1);                                                     \
     return tf;                                                                \
 }                                                                             \
                                                                               \
@@ -196,7 +196,7 @@ tmp<CoeffField<Type> > operator op                                            \
 )                                                                             \
 {                                                                             \
     tmp<CoeffField<Type> > tf(tf1.ptr());                                     \
-    opFunc(tf(), tf());                                                       \
+    opFunc(tf.ref(), tf());                                                   \
     return tf;                                                                \
 }
 
@@ -215,7 +215,7 @@ tmp<Field<Type> > operator op                                                 \
 )                                                                             \
 {                                                                             \
     tmp<Field<Type> > tf(new Field<Type>(f1.size()));                         \
-    opFunc(tf(), f1, f2);                                                     \
+    opFunc(tf.ref(), f1, f2);                                                 \
     return tf;                                                                \
 }                                                                             \
                                                                               \
@@ -228,7 +228,7 @@ tmp<Field<Type> > operator op                                                 \
 )                                                                             \
 {                                                                             \
     tmp<Field<Type> > tf(new Field<Type>(f1.size()));                         \
-    opFunc(tf(), f1, f2);                                                     \
+    opFunc(tf.ref(), f1, f2);                                                 \
     return tf;                                                                \
 }                                                                             \
                                                                               \
@@ -241,7 +241,7 @@ tmp<Field<Type> > operator op                                                 \
 )                                                                             \
 {                                                                             \
     tmp<Field<Type> > tf(new Field<Type>(f1.size()));                         \
-    opFunc(tf(), f1, f2);                                                     \
+    opFunc(tf.ref(), f1, f2);                                                 \
     return tf;                                                                \
 }
 
@@ -254,7 +254,7 @@ tmp<Field<Type> > operator op                                                 \
 )                                                                             \
 {                                                                             \
     tmp<Field<Type> > tf(tf2.ptr());                                          \
-    opFunc(tf(), f1, tf());                                                   \
+    opFunc(tf.ref(), f1, tf());                                               \
     return tf;                                                                \
 }
 
@@ -280,7 +280,7 @@ tmp<Field<Type> > operator op                                                 \
 )                                                                             \
 {                                                                             \
     tmp<Field<Type> > tf(tf1.ptr());                                          \
-    opFunc(tf(), tf(), f2);                                                   \
+    opFunc(tf.ref(), tf(), f2);                                               \
     return tf;                                                                \
 }
 
@@ -306,7 +306,7 @@ tmp<Field<Type> > operator op                                                 \
 )                                                                             \
 {                                                                             \
     tmp<Field<Type> > tf(tf1.ptr());                                          \
-    opFunc(tf(), tf(), tf2());                                                \
+    opFunc(tf.ref(), tf(), tf2());                                            \
     tf2.clear();                                                              \
     return tf;                                                                \
 }
@@ -320,7 +320,7 @@ tmp<Field<Type> > operator op                                                 \
 )                                                                             \
 {                                                                             \
     tmp<Field<Type> > tf(tf2.ptr());                                          \
-    opFunc(tf(), tf1(), tf());                                                \
+    opFunc(tf.ref(), tf1(), tf());                                            \
     tf1.clear();                                                              \
     return tf;                                                                \
 }

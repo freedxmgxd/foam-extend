@@ -49,7 +49,7 @@ Foam::tmp<Foam::scalarField> Foam::multiMaterial::indicator
     const scalarField& mat = materials_.internalField();
 
     tmp<scalarField> tresult(new scalarField(mat.size(), 0.0));
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     forAll (mat, matI)
     {
@@ -157,7 +157,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterial::rho() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;
@@ -193,7 +193,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterial::E() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;
@@ -229,7 +229,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterial::nu() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;

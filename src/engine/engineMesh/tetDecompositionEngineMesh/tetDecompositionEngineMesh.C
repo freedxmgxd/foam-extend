@@ -155,7 +155,7 @@ void tetDecompositionEngineMesh::move()
 
     forAll (patches, patchI)
     {
-        const unallocLabelList& fc = patches[patchI].faceCells();
+        const labelUList& fc = patches[patchI].faceCells();
 
         forAll (fc, fcI)
         {

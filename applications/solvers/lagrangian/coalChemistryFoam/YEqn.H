@@ -19,6 +19,15 @@ tmp<fv::convectionScheme<scalar> > mvConvection
         {
             volScalarField& Yi = Y[i];
 
+            Info<< "Specie source: " << Y[i].name() << ": "
+                << gSum
+                   (
+                       massSource.Su()().field()*
+                       speciesSource.Su(i)().field()*
+                       mesh.V().field()
+                   )
+                << endl;
+
             fvScalarMatrix YiEqn
             (
                 fvm::ddt(rho, Yi)
@@ -38,6 +47,9 @@ tmp<fv::convectionScheme<scalar> > mvConvection
             
             Yi.max(0.0);
             Yi.min(1.0);
+
+            speciesSource.limitField(Yi, i);
+            
             Yt += Yi;
         }
         else
@@ -50,4 +62,5 @@ tmp<fv::convectionScheme<scalar> > mvConvection
     Yt.min(1.0);
     
     Y[inertIndex] = scalar(1) - Yt;
+    Y[inertIndex].max(0.0);
 }

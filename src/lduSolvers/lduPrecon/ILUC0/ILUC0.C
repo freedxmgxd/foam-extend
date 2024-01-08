@@ -287,9 +287,9 @@ void Foam::ILUC0::precondition
     {
         // Get matrix addressing
         const lduAddressing& addr = matrix_.lduAddr();
-        const unallocLabelList& upperAddr = addr.upperAddr();
-        const unallocLabelList& lowerAddr = addr.lowerAddr();
-        const unallocLabelList& losortAddr = addr.losortAddr();
+        const labelUList& upperAddr = addr.upperAddr();
+        const labelUList& lowerAddr = addr.lowerAddr();
+        const labelUList& losortAddr = addr.losortAddr();
 
         // Solve Lz = b with forward substitution. preconLower_ is chosen to
         // be unit triangular. z does not need to be stored
@@ -359,9 +359,9 @@ void Foam::ILUC0::preconditionT
     {
         // Get matrix addressing
         const lduAddressing& addr = matrix_.lduAddr();
-        const unallocLabelList& upperAddr = addr.upperAddr();
-        const unallocLabelList& lowerAddr = addr.lowerAddr();
-        const unallocLabelList& losortAddr = addr.losortAddr();
+        const labelUList& upperAddr = addr.upperAddr();
+        const labelUList& lowerAddr = addr.lowerAddr();
+        const labelUList& losortAddr = addr.losortAddr();
 
         // Solve U^T z = b with forward substitution. preconLower_ is chosen to
         // be unit triangular - U^T (transpose U) "contains" diagonal entries. z

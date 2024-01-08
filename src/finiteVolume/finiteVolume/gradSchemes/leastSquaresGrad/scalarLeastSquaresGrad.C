@@ -49,8 +49,8 @@ tmp<BlockLduSystem<vector, vector> > leastSquaresGrad<scalar>::fvmGrad
 {
     const fvMesh& mesh = vf.mesh();
 
-    const unallocLabelList& own = mesh.owner();
-    const unallocLabelList& nei = mesh.neighbour();
+    const labelUList& own = mesh.owner();
+    const labelUList& nei = mesh.neighbour();
 
     volScalarField cellV
     (
@@ -76,7 +76,7 @@ tmp<BlockLduSystem<vector, vector> > leastSquaresGrad<scalar>::fvmGrad
     (
         new BlockLduSystem<vector, vector>(mesh)
     );
-    BlockLduSystem<vector, vector>& bs = tbs();
+    BlockLduSystem<vector, vector>& bs = tbs.ref();
     vectorField& source = bs.source();
 
     // Grab ldu parts of block matrix as linear always

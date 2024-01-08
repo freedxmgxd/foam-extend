@@ -49,7 +49,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::nonOrthogonality() const
             mesh_.nCells(), 0.0
         )
     );
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     scalarField sumArea(mesh_.nCells(), 0.0);
 
@@ -76,7 +76,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::nonOrthogonality() const
 
     forAll (mesh_.boundaryMesh(), patchI)
     {
-        const unallocLabelList& faceCells =
+        const labelUList& faceCells =
             mesh_.boundaryMesh()[patchI].faceCells();
 
         const vectorField::subField faceCentres =
@@ -112,7 +112,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::skewness() const
             mesh_.nCells(), 0.0
         )
     );
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     scalarField sumArea(mesh_.nCells(), 0.0);
 
@@ -155,7 +155,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::skewness() const
 
     forAll (mesh_.boundaryMesh(), patchI)
     {
-        const unallocLabelList& faceCells =
+        const labelUList& faceCells =
             mesh_.boundaryMesh()[patchI].faceCells();
 
         const vectorField::subField faceCentres =
@@ -196,7 +196,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceNonOrthogonality() const
             mesh_.nFaces(), 0.0
         )
     );
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
 
     const vectorField& centres = mesh_.cellCentres();
@@ -222,7 +222,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceNonOrthogonality() const
 
     forAll (mesh_.boundaryMesh(), patchI)
     {
-        const unallocLabelList& faceCells =
+        const labelUList& faceCells =
             mesh_.boundaryMesh()[patchI].faceCells();
 
         const vectorField::subField faceCentres =
@@ -258,7 +258,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceSkewness() const
             mesh_.nFaces(), 0.0
         )
     );
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
 
     const vectorField& cellCtrs = mesh_.cellCentres();
@@ -299,7 +299,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceSkewness() const
 
     forAll (mesh_.boundaryMesh(), patchI)
     {
-        const unallocLabelList& faceCells =
+        const labelUList& faceCells =
             mesh_.boundaryMesh()[patchI].faceCells();
 
         const vectorField::subField faceCentres =

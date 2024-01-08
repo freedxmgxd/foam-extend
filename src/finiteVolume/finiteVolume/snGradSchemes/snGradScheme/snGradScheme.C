@@ -114,7 +114,7 @@ snGradScheme<Type>::snGrad
             vf.dimensions()*tdeltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     // Update coupled interfaces
     vf.boundaryField().updateCoupledPatchFields();
@@ -123,8 +123,8 @@ snGradScheme<Type>::snGrad
     const scalarField& deltaCoeffs = tdeltaCoeffs().internalField();
 
     // owner/neighbour addressing
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     forAll(owner, faceI)
     {
@@ -155,7 +155,7 @@ snGradScheme<Type>::snGrad
 
     if (corrected())
     {
-        tsf() += correction(vf);
+        tsf.ref() += correction(vf);
     }
 
     return tsf;

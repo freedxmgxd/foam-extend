@@ -73,18 +73,23 @@ protected:
 
     // Protected data
 
+        //- Mesh reference
         const faMesh& mesh_;
+
+        //- Interpolation scheme
         tmp<edgeInterpolationScheme<scalar> > tinterpGammaScheme_;
+
+        //- lnGrad scheme
         tmp<lnGradScheme<Type> > tlnGradScheme_;
 
 
     // Private Member Functions
 
         //- Disallow copy construct
-        laplacianScheme(const laplacianScheme&);
+        laplacianScheme(const laplacianScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const laplacianScheme&);
+        void operator=(const laplacianScheme&) = delete;
 
 
 public:
@@ -155,9 +160,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~laplacianScheme();
+    //- Destructor
+    virtual ~laplacianScheme() = default;
 
 
     // Member Functions
@@ -172,30 +176,30 @@ public:
         (
             const edgeScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<faMatrix<Type> > famLaplacian
         (
             const areaScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facLaplacian
         (
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facLaplacian
         (
             const edgeScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facLaplacian
         (
             const areaScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 };
 
 

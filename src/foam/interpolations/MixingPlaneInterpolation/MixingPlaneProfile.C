@@ -152,7 +152,7 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::computeProfileFromHistograms
     // Re-package the data into pointField
     tmp<pointField> tprofile(new pointField(leapFrogProfile.size()));
 
-    pointField& profile = tprofile();
+    pointField& profile = tprofile.ref();
 
     label pI = 0;
 
@@ -228,10 +228,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::calcProfile() const
 
     if (debug)
     {
-        InfoIn
-        (
-            "tmp<pointField> MixingPlaneInterpolation::calcProfile()"
-        )   << "masterGlobalProfile: " << masterGlobalProfile << nl
+        InfoInFunction
+            << "masterGlobalProfile: " << masterGlobalProfile << nl
             << "slaveGlobalProfile: " << slaveGlobalProfile << endl;
     }
 
@@ -273,10 +271,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::calcProfile() const
 
     if (debug)
     {
-        InfoIn
-        (
-            "tmp<pointField> MixingPlaneInterpolation::calcProfile()"
-        )   << "halfMinSizeBin: " << halfMinSizeBin << endl;
+        InfoInFunction
+            << "halfMinSizeBin: " << halfMinSizeBin << endl;
     }
 
     // Build master and slave histogram
@@ -370,11 +366,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::calcProfile() const
         case USER_DEFINED:
         default:
         {
-            FatalErrorIn
-            (
-                "tmp<pointField> MixingPlaneInterpolation<MasterPatch, "
-                "SlavePatch>::calcProfile() const"
-            )   << "Bad type of mixing plane discretisation: "
+            FatalErrorInFunction
+                << "Bad type of mixing plane discretisation: "
                 << discretisationNames_[discretisationType_]
                 << nl << "Available types are: " << nl
                 << MixingPlaneInterpolationName::discretisationNames_
@@ -420,11 +413,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::calcProfile() const
 
     if (debug)
     {
-        InfoIn
-        (
-            "tmp<pointField> MixingPlaneInterpolation<MasterPatch, "
-            "SlavePatch>::calcProfile() const"
-        )   << setprecision(12) << nl
+        InfoInFunction
+            << setprecision(12) << nl
             << "masterBB: " << masterBB << nl
             << "slaveBB: " <<  slaveBB << nl
             << "globSpanBB: " <<  globSpanBB << nl
@@ -435,7 +425,7 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::calcProfile() const
     // outside of either master/slave BB
 
     tmp<pointField> tprofile(new pointField(profileBeforeClip.size()));
-    pointField& profile = tprofile();
+    pointField& profile = tprofile.ref();
     label curIndex = 0;
 
     forAll (profileBeforeClip, pI)
@@ -450,12 +440,8 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::calcProfile() const
         {
             if (debug)
             {
-                InfoIn
-                (
-                    "MixingPlaneInterpolation"
-                    "<MasterPatch, SlavePatch>::"
-                    "removeNonOverlappedProfilePoints"
-                )   << setprecision(12) << "   Removing point: "
+                InfoInFunction
+                    << setprecision(12) << "   Removing point: "
                     << profileBeforeClip[pI] << endl;
             }
         }
@@ -465,21 +451,15 @@ MixingPlaneInterpolation<MasterPatch, SlavePatch>::calcProfile() const
 
     if (profile.size() < 2)
     {
-        FatalErrorIn
-        (
-            "tmp<pointField> MixingPlaneInterpolation<MasterPatch, "
-            "SlavePatch>::calcProfile() const"
-        )   << "Lost all points in profile: " << profile
+        FatalErrorInFunction
+            << "Lost all points in profile: " << profile
             << abort(FatalError);
     }
 
     if (debug)
     {
-        InfoIn
-        (
-            "MixingPlaneInterpolation<MasterPatch, SlavePatch>::"
-            "removeNonOverlappedProfilePoints"
-        )   << "cleaned-up profile values: " << profile << endl;
+        InfoInFunction
+            << "cleaned-up profile values: " << profile << endl;
     }
 
     return tprofile;

@@ -99,7 +99,7 @@ tmp<Field<tensorType> > transformFieldMask<tensorType>                       \
 )                                                                            \
 {                                                                            \
     tmp<Field<tensorType> > tRes(new Field<tensorType>(dtf.size()));         \
-    Field<tensorType>& res = tRes();                                         \
+    Field<tensorType>& res = tRes.ref();                                     \
     TFOR_ALL_F_OP_F(tensorType, res, =, diagTensorType, dtf)                 \
     return tRes;                                                             \
 }                                                                            \
@@ -111,7 +111,7 @@ tmp<Field<tensorType> > transformFieldMask<tensorType>                       \
 )                                                                            \
 {                                                                            \
     tmp<Field<tensorType> > tRes(new Field<tensorType>(stf.size()));         \
-    Field<tensorType>& res = tRes();                                         \
+    Field<tensorType>& res = tRes.ref();                                     \
     TFOR_ALL_F_OP_F(tensorType, res, =, sphericalTensorType, stf)            \
     return tRes;                                                             \
 }                                                                            \

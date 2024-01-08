@@ -116,7 +116,7 @@ public:
         // To be removed.  HJ, 16/Jan/2009
 
             //- Return faceCell addressing
-            virtual const unallocLabelList& faceCells() const
+            virtual const labelUList& faceCells() const
             {
                 return labelList::null();
             }
@@ -128,7 +128,7 @@ public:
             //  the interface as a field
             virtual tmp<labelField> interfaceInternalField
             (
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const
             {
                 return tmp<labelField>(nullptr);
@@ -138,7 +138,7 @@ public:
             virtual void initTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const
             {}
 
@@ -146,7 +146,7 @@ public:
             virtual tmp<labelField> transfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const
             {
                 return tmp<labelField>(nullptr);
@@ -156,7 +156,7 @@ public:
             virtual void initInternalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& iF
+                const labelUList& iF
             ) const
             {}
 
@@ -164,7 +164,7 @@ public:
             virtual tmp<labelField> internalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& iF
+                const labelUList& iF
             ) const
             {
                 return tmp<labelField>(nullptr);

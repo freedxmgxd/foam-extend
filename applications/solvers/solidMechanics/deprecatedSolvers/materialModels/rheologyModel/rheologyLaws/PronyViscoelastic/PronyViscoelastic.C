@@ -38,9 +38,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from dictionary
@@ -58,12 +55,6 @@ Foam::PronyViscoelastic::PronyViscoelastic
     tau_("tau", dict, readInt(dict.lookup("size"))),
     tauDimensions_(dict.lookup("tauDimensions")),
     nu_(dict.lookup("nu"))
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::PronyViscoelastic::~PronyViscoelastic()
 {}
 
 
@@ -89,7 +80,7 @@ Foam::tmp<Foam::volScalarField> Foam::PronyViscoelastic::rho(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
     return tresult;
 }
 
@@ -128,7 +119,7 @@ Foam::tmp<Foam::volScalarField> Foam::PronyViscoelastic::E(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
     return tresult;
 }
 
@@ -153,7 +144,7 @@ Foam::tmp<Foam::volScalarField> Foam::PronyViscoelastic::nu(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
     return tresult;
 }
 

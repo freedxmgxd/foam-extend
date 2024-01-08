@@ -18,15 +18,15 @@
 
     if (dpdt)
     {
-        pWork() += fvc::ddt(p);
+        pWork.ref() += fvc::ddt(p);
     }
     if (eWork)
     {
-        pWork() = -p*fvc::div(phi/fvc::interpolate(rho));
+        pWork.ref() = -p*fvc::div(phi/fvc::interpolate(rho));
     }
     if (hWork)
     {
-        pWork() += fvc::div(phi/fvc::interpolate(rho)*fvc::interpolate(p));
+        pWork.ref() += fvc::div(phi/fvc::interpolate(rho)*fvc::interpolate(p));
     }
 
     {

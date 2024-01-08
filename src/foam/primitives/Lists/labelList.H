@@ -43,7 +43,7 @@ namespace Foam
     typedef List<labelList> labelListList;
     typedef List<labelListList> labelListListList;
 
-    typedef UList<label> unallocLabelList;
+    typedef UList<label> labelUList;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

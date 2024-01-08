@@ -84,7 +84,7 @@ extendedLeastSquaresGrad<Type>::calcGrad
             zeroGradientFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad.ref();
 
     // Get reference to least square vectors
     const extendedLeastSquaresVectors& lsv = extendedLeastSquaresVectors::New
@@ -96,8 +96,8 @@ extendedLeastSquaresGrad<Type>::calcGrad
     const surfaceVectorField& ownLs = lsv.pVectors();
     const surfaceVectorField& neiLs = lsv.nVectors();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     forAll(owner, facei)
     {
@@ -115,7 +115,7 @@ extendedLeastSquaresGrad<Type>::calcGrad
     {
         const fvsPatchVectorField& patchOwnLs = ownLs.boundaryField()[patchi];
 
-        const unallocLabelList& faceCells =
+        const labelUList& faceCells =
             lsGrad.boundaryField()[patchi].patch().faceCells();
 
         if (vsf.boundaryField()[patchi].coupled())

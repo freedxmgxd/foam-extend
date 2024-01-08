@@ -321,7 +321,7 @@ void LaunderSharmaKE::correct()
 
     // Dissipation equation
 
-    tmp<fvScalarMatrix> epsEqn
+    fvScalarMatrix epsEqn
     (
         fvm::ddt(rho_, epsilon_)
       + fvm::div(phi_, epsilon_)
@@ -333,14 +333,14 @@ void LaunderSharmaKE::correct()
       + E
     );
 
-    epsEqn().relax();
+    epsEqn.relax();
     solve(epsEqn);
     bound(epsilon_, epsilon0_);
 
 
     // Turbulent kinetic energy equation
 
-    tmp<fvScalarMatrix> kEqn
+    fvScalarMatrix kEqn
     (
         fvm::ddt(rho_, k_)
       + fvm::div(phi_, k_)
@@ -351,7 +351,7 @@ void LaunderSharmaKE::correct()
     //+ flameKproduction
     );
 
-    kEqn().relax();
+    kEqn.relax();
     solve(kEqn);
     bound(k_, k0_);
 

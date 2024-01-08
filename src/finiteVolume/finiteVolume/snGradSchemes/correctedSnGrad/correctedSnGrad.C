@@ -64,7 +64,7 @@ Foam::fv::correctedSnGrad<Type>::fullGradCorrection
 
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tssf =
         mesh.correctionVectors() & fvc::interpolate(fvc::grad(vf));
-    tssf().rename("snGradCorr(" + vf.name() + ')');
+    tssf.ref().rename("snGradCorr(" + vf.name() + ')');
 
     return tssf;
 }
@@ -96,7 +96,7 @@ correctedSnGrad<Type>::correction
             vf.dimensions()*mesh.deltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {

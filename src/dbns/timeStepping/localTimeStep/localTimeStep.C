@@ -67,8 +67,8 @@ void Foam::localTimeStep::update
     const bool adjustTimeStep
 )
 {
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     // Compute characteristic length for each cell
     // Calculated from min face delta coefficient.  HJ, 6/Sep/2012
@@ -111,7 +111,7 @@ void Foam::localTimeStep::update
 
         if (p.coupled())
         {
-            const unallocLabelList& faceCells = p.patch().faceCells();
+            const labelUList& faceCells = p.patch().faceCells();
 
             forAll (pDeltaFace, patchFacei)
             {

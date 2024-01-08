@@ -86,7 +86,7 @@ Foam::tmp<Foam::volScalarField> Foam::fluentDataConverter::convertField
             defaultValue
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     SLList<label>::const_iterator fieldIDIter = fieldID_.begin();
     SLList<label>::const_iterator zoneIDIter = zoneID_.begin();

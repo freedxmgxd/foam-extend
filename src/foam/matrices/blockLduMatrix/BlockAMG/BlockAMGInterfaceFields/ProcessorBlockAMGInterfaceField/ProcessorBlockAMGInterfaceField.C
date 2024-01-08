@@ -191,7 +191,7 @@ void Foam::ProcessorBlockAMGInterfaceField<Type>::updateInterfaceMatrix
     // of multiplication
     multiply(receiveBuf_, coeffs, receiveBuf_);
 
-    const unallocLabelList& faceCells = procInterface_.faceCells();
+    const labelUList& faceCells = procInterface_.faceCells();
 
     if (switchToLhs)
     {

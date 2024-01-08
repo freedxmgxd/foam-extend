@@ -4,6 +4,11 @@
 
     if (max(magU) > UMax)
     {
+        Info<< "magU " << max(magU).value()
+            << " (" << gMax(magU.internalField()) << "): "
+            << "Limiting."
+            << endl;
+
         volScalarField Ulimiter =
             pos(magU - UMax)*UMax/(magU + smallU)
           + neg(magU - UMax);

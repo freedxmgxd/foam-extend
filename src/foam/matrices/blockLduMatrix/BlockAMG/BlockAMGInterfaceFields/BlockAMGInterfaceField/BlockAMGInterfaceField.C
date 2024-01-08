@@ -39,7 +39,7 @@ Foam::BlockAMGInterfaceField<Type>::agglomerateBlockCoeffs
     (
         new CoeffField<Type>(interface_.size())
     );
-    CoeffField<Type>& coarseCoeffs = tcoarseCoeffs();
+    CoeffField<Type>& coarseCoeffs = tcoarseCoeffs.ref();
 
     typedef CoeffField<Type> TypeCoeffField;
 

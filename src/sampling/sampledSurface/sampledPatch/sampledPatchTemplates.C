@@ -36,7 +36,7 @@ Foam::sampledPatch::sampleField
 {
     // One value per face
     tmp<Field<Type> > tvalues(new Field<Type>(patchFaceLabels_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     if (patchIndex() != -1)
     {
@@ -61,7 +61,7 @@ Foam::sampledPatch::interpolateField
 {
     // One value per vertex
     tmp<Field<Type> > tvalues(new Field<Type>(points().size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     if (patchIndex() != -1)
     {

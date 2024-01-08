@@ -782,7 +782,7 @@ GGIInterpolation<MasterPatch, SlavePatch>::findNonOverlappingFaces
 ) const
 {
     tmp<labelField> tpatchFaceNonOverlapAddr(new labelField());
-    labelField& patchFaceNonOverlapAddr = tpatchFaceNonOverlapAddr();
+    labelField& patchFaceNonOverlapAddr = tpatchFaceNonOverlapAddr.ref();
 
     DynamicList<label, 64> patchFaceNonOverlap(patchWeights.size());
 

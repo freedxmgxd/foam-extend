@@ -62,10 +62,10 @@ class noLaplacianScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        noLaplacianScheme(const noLaplacianScheme&);
+        noLaplacianScheme(const noLaplacianScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const noLaplacianScheme&);
+        void operator=(const noLaplacianScheme&) = delete;
 
 
 public:
@@ -100,30 +100,28 @@ public:
         {}
 
 
-    // Destructor
-
-        virtual ~noLaplacianScheme()
-        {}
+    //- Destructor
+    virtual ~noLaplacianScheme() = default;
 
 
     // Member Functions
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<fvMatrix<Type> > fvmLaplacian
+        virtual tmp<fvMatrix<Type> > fvmLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcLaplacian
         (
             const GeometricField<GType, fvsPatchField, surfaceMesh>&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 };
 
 

@@ -7,7 +7,7 @@ if (addMRF || addPorosity)
     // Collect pressure source with tensorial 1/Ap
     const volTensorField& rTU = trTU();
 
-    tpresSource =
+    tpresSource.ref() =
     (
         (mesh.Sf() & fvc::interpolate(rTU))
       & fvc::interpolate(fvc::grad(p))
@@ -15,7 +15,7 @@ if (addMRF || addPorosity)
     const surfaceScalarField& presSource = tpresSource();
 
     // Assemble pressure matrix with tensorial 1/Ap
-    tpEqn =
+    tpEqn.ref() =
     (
       - fvm::laplacian(rTU, p)
      ==
@@ -27,7 +27,7 @@ else
     // Collect pressure source with scalar 1/Ap
     const volScalarField& rAU = trAU();
 
-    tpresSource =
+    tpresSource.ref() =
     (
         fvc::interpolate(rAU)*
         (mesh.Sf() & fvc::interpolate(fvc::grad(p, "grad(pSource)")))
@@ -35,7 +35,7 @@ else
     const surfaceScalarField& presSource = tpresSource();
 
     // Assemble pressure matrix with tensorial 1/Ap
-    tpEqn =
+    tpEqn.ref() =
     (
         - fvm::laplacian(rAU, p)
        ==
@@ -43,6 +43,6 @@ else
     );
 }
 
-tpEqn().setReference(pRefCell, pRefValue);
+tpEqn.ref().setReference(pRefCell, pRefValue);
 
-UpEqn.insertEquation(3, tpEqn());
+UpEqn.insertEquation(3, tpEqn.ref());

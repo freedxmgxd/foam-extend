@@ -57,7 +57,7 @@ Foam::linearUpwindV<Type>::correction
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();
 
     const surfaceScalarField& faceFlux = this->faceFlux_;
     const surfaceScalarField& w = mesh.weights();
@@ -93,7 +93,7 @@ Foam::linearUpwindV<Type>::correction
     // Moved to cached gradScheme.  HJ, 22/Apr/2016
 //     gradVf.correctBoundaryConditions();
 
-    forAll(faceFlux, facei)
+    forAll (faceFlux, facei)
     {
         vector maxCorr;
 
@@ -146,7 +146,7 @@ Foam::linearUpwindV<Type>::correction
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
         GeometricBoundaryField& bSfCorr = sfCorr.boundaryField();
 
-    forAll(bSfCorr, patchi)
+    forAll (bSfCorr, patchi)
     {
         fvsPatchField<Type>& pSfCorr = bSfCorr[patchi];
 
@@ -154,7 +154,7 @@ Foam::linearUpwindV<Type>::correction
         {
             const fvPatch& p = mesh.boundary()[patchi];
 
-            const unallocLabelList& pOwner = p.faceCells();
+            const labelUList& pOwner = p.faceCells();
 
             const vectorField& pCf = Cf.boundaryField()[patchi];
 
@@ -176,7 +176,7 @@ Foam::linearUpwindV<Type>::correction
             // Better version of d-vectors: Zeljko Tukovic, 25/Apr/2010
             vectorField pd = p.delta();
 
-            forAll(pOwner, facei)
+            forAll (pOwner, facei)
             {
                 vector maxCorr;
 

@@ -170,10 +170,10 @@ tmp<scalarField> nutMEWTWallFunctionFvPatchScalarField::calcNut() const
         lookupPatchField<volScalarField, scalar>(nutName_);
 
     tmp<scalarField> tnutw(new scalarField(patch().size(), SMALL));
-    scalarField& nutw = tnutw();
+    scalarField& nutw = tnutw.ref();
 
     // Get face cells
-    const unallocLabelList& fc = patch().faceCells();
+    const labelUList& fc = patch().faceCells();
 
     forAll(nutw, faceI)
     {

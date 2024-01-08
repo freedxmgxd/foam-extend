@@ -140,7 +140,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixture::rho() const
 
     for(++iter; iter != phases_.end(); ++iter)
     {
-        trho() += iter().limitedAlpha()*iter().rho();
+        trho.ref() += iter().limitedAlpha()*iter().rho();
     }
 
     return trho;
@@ -155,7 +155,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixture::mu() const
 
     for(++iter; iter != phases_.end(); ++iter)
     {
-        tmu() += iter().limitedAlpha()*iter().rho()*iter().nu();
+        tmu.ref() += iter().limitedAlpha()*iter().rho()*iter().nu();
     }
 
     return tmu;
@@ -172,7 +172,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::multiphaseMixture::muf() const
 
     for(++iter; iter != phases_.end(); ++iter)
     {
-        tmuf() +=
+        tmuf.ref() +=
             fvc::interpolate(iter().limitedAlpha())*iter().rho()*
             fvc::interpolate(iter().nu());
     }
@@ -215,17 +215,16 @@ Foam::multiphaseMixture::surfaceTensionForce() const
             )
         )
     );
+    surfaceScalarField& stf = tstf.ref();
 
-    surfaceScalarField& stf = tstf();
-
-    forAllConstIter(PtrDictionary<phase>, phases_, iter1)
+    forAllConstIter (PtrDictionary<phase>, phases_, iter1)
     {
         const phase& alpha1 = iter1();
 
         PtrDictionary<phase>::const_iterator iter2 = iter1;
         ++iter2;
 
-        for(; iter2 != phases_.end(); ++iter2)
+        for (; iter2 != phases_.end(); ++iter2)
         {
             const phase& alpha2 = iter2();
 
@@ -234,7 +233,7 @@ Foam::multiphaseMixture::surfaceTensionForce() const
 
             if (sigma == sigmas_.end())
             {
-                FatalErrorIn("multiphaseMixture::surfaceTensionForce() const")
+                FatalErrorInFunction
                     << "Cannot find interface " << interfacePair(alpha1, alpha2)
                     << " in list of sigma values"
                     << exit(FatalError);
@@ -389,12 +388,8 @@ void Foam::multiphaseMixture::correctContactAngle
 
             if (tp == acap.thetaProps().end())
             {
-                FatalErrorIn
-                (
-                    "multiphaseMixture::correctContactAngle"
-                    "(const phase& alpha1, const phase& alpha2, "
-                    "fvPatchVectorFieldField& nHatb) const"
-                )   << "Cannot find interface "
+                FatalErrorInFunction
+                    << "Cannot find interface "
                     << interfacePair(alpha1, alpha2)
                     << "\n    in table of theta properties for patch "
                     << acap.patch().name()
@@ -470,7 +465,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixture::K
 {
     tmp<surfaceVectorField> tnHatfv = nHatfv(alpha1, alpha2);
 
-    correctContactAngle(alpha1, alpha2, tnHatfv().boundaryField());
+    correctContactAngle(alpha1, alpha2, tnHatfv.ref().boundaryField());
 
     // Simple expression for curvature
     return -fvc::div(tnHatfv & mesh_.Sf());

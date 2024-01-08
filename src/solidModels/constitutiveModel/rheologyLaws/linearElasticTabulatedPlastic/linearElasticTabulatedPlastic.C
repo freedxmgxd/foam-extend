@@ -174,8 +174,8 @@ sigmaY(const scalar epsilonPEq, const label cellID) const
 
 Foam::tmp<Foam::volScalarField> Foam::linearElasticTabulatedPlastic::Ep() const
 {
-  // not used in aravasMises
-  notImplemented("linearElasticTabulatedPlastic::Ep() is not implemented");
+    // not used in aravasMises
+    notImplemented("linearElasticTabulatedPlastic::Ep() is not implemented");
 
     return tmp<volScalarField>
     (
@@ -219,7 +219,7 @@ Foam::linearElasticTabulatedPlastic::Ep(const volScalarField& epsilonPEq) const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& Ep = tresult();
+    volScalarField& Ep = tresult.ref();
 
     // The user specifies a table of "Stress vs plasticStrain"
     // However, the plasticity return algorithm - in plasticityModel.correct() -

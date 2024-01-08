@@ -95,7 +95,7 @@ public:
             virtual bool master() const = 0;
 
             //- Return faceCell addressing
-            virtual const unallocLabelList& faceCells() const = 0;
+            virtual const labelUList& faceCells() const = 0;
 
 
         // Interface transfer functions
@@ -104,14 +104,14 @@ public:
             //  the interface as a field
             virtual tmp<labelField> interfaceInternalField
             (
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const = 0;
 
             //- Initialise interface data transfer
             virtual void initTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const
             {}
 
@@ -119,14 +119,14 @@ public:
             virtual tmp<labelField> transfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const = 0;
 
             //- Initialise transfer of internal field adjacent to the interface
             virtual void initInternalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& iF
+                const labelUList& iF
             ) const
             {}
 
@@ -134,7 +134,7 @@ public:
             virtual tmp<labelField> internalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& iF
+                const labelUList& iF
             ) const = 0;
 
             //- Initialise transfer of prolongation matrix to the interface

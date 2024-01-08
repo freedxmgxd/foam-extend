@@ -96,7 +96,7 @@ Foam::radiation::cloudAbsorptionEmission::aDisp(const label) const
             mesh_.objectRegistry::lookupObject<thermoCloud>(cloudNames_[i])
         );
 
-        ta() += tc.ap();
+        ta.ref() += tc.ap();
     }
 
     return ta;
@@ -156,7 +156,7 @@ Foam::radiation::cloudAbsorptionEmission::EDisp(const label bandI) const
             mesh_.objectRegistry::lookupObject<thermoCloud>(cloudNames_[i])
         );
 
-        tE() += tc.Ep();
+        tE.ref() += tc.Ep();
     }
 
     return tE;

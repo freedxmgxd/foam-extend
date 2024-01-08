@@ -55,8 +55,8 @@ void Foam::oversetAdjustPhi
     const boolList& fringeFaceFlips = om.fringeFaceFlips();
 
     // Get internal owner-neighbour addressing
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     // Get region split to identify separate mesh components
     const scalarField& regionID = om.regionID().internalField();

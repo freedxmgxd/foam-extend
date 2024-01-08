@@ -146,7 +146,7 @@ Foam::pressureGradientExplicitSource::Su() const
         )
     );
 
-    DimensionedField<vector, volMesh>& sourceField = tSource();
+    DimensionedField<vector, volMesh>& sourceField = tSource.ref();
 
     forAllConstIter(cellSet, selectedCellSet_, iter)
     {

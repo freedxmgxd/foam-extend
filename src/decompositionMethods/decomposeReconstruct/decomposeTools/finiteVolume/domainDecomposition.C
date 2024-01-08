@@ -718,7 +718,7 @@ bool Foam::domainDecomposition::writeDecomposition()
         boundaryProcAddressing.write();
 
         // Create and write cellLevel and pointLevel information
-        const unallocLabelList& cellMap = cellProcAddressing;
+        const labelUList& cellMap = cellProcAddressing;
         labelIOField procCellLevel
         (
             IOobject
@@ -734,7 +734,7 @@ bool Foam::domainDecomposition::writeDecomposition()
         );
         procCellLevel.write();
 
-        const unallocLabelList& pointMap = pointProcAddressing;
+        const labelUList& pointMap = pointProcAddressing;
         labelIOField procPointLevel
         (
             IOobject

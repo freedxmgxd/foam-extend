@@ -134,7 +134,7 @@ public:
             }
 
             //- Return faceCell addressing
-            virtual const unallocLabelList& faceCells() const
+            virtual const labelUList& faceCells() const
             {
                 return fvPatch::faceCells();
             }
@@ -149,14 +149,14 @@ public:
             //  the interface as a field
             virtual tmp<labelField> interfaceInternalField
             (
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const = 0;
 
             //- Initialise interface data transfer
             virtual void initTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const
             {}
 
@@ -164,14 +164,14 @@ public:
             virtual tmp<labelField> transfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const = 0;
 
             //- Initialise neighbour field transfer
             virtual void initInternalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                unallocLabelList& iF
+                labelUList& iF
             ) const
             {}
 
@@ -179,7 +179,7 @@ public:
             virtual tmp<labelField> internalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& iF
+                const labelUList& iF
             ) const = 0;
 };
 

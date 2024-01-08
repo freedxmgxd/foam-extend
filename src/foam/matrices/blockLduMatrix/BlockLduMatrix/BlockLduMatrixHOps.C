@@ -47,8 +47,8 @@ Foam::BlockLduMatrix<Type>::H(const Field<Type>& x) const
 
     if (this->thereIsUpper())
     {
-        const unallocLabelList& l = lduAddr().lowerAddr();
-        const unallocLabelList& u = lduAddr().upperAddr();
+        const labelUList& l = lduAddr().lowerAddr();
+        const labelUList& u = lduAddr().upperAddr();
         const TypeCoeffField& Upper = this->upper();
 
         // Create multiplication function object
@@ -165,8 +165,8 @@ Foam::BlockLduMatrix<Type>::faceH(const Field<Type>& x) const
     typedef typename TypeCoeffField::linearTypeField linearTypeField;
     typedef typename TypeCoeffField::squareTypeField squareTypeField;
 
-    const unallocLabelList& u = lduAddr().upperAddr();
-    const unallocLabelList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
 
     // Create result
     tmp<Field<Type> > tresult(new Field<Type>(u.size(), pTraits<Type>::zero));

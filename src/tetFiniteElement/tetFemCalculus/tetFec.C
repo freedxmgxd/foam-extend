@@ -80,7 +80,7 @@ tetFec::grad
     );
 
     GeometricField<GradType, tetPolyPatchField, tetPointMesh>& femGrad =
-        tFemGrad();
+        tFemGrad.ref();
 
     pointField points = tetMesh.points();
     cellShapeList tetCellShapes = tetMesh.tetCells();
@@ -175,7 +175,7 @@ tetFec::elementGrad
     );
 
     GeometricField<GradType, elementPatchField, elementMesh>& elemGrad =
-        tElemGrad();
+        tElemGrad.ref();
 
     pointField points = tetMesh.points();
 

@@ -245,7 +245,7 @@ Foam::tmp<Foam::scalarField> Foam::IAPWSThermo::h
     const scalarField& pCells = this->p_.internalField();
 
     tmp<scalarField> th(new scalarField(T.size()));
-    scalarField& h = th();
+    scalarField& h = th.ref();
 
     forAll(T, celli)
     {
@@ -266,7 +266,7 @@ Foam::tmp<Foam::scalarField> Foam::IAPWSThermo::h
     const fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
 
     tmp<scalarField> th(new scalarField(T.size()));
-    scalarField& h = th();
+    scalarField& h = th.ref();
 
     forAll(T, facei)
     {
@@ -286,7 +286,7 @@ Foam::tmp<Foam::scalarField> Foam::IAPWSThermo::rho
 ) const
 {
     tmp<scalarField> trho(new scalarField(h.size()));
-    scalarField& rho = trho();
+    scalarField& rho = trho.ref();
 
     forAll(h, facei)
     {
@@ -307,7 +307,7 @@ Foam::tmp<Foam::scalarField> Foam::IAPWSThermo::Cp
     const fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
 
     tmp<scalarField> tCp(new scalarField(T.size()));
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, facei)
     {
@@ -339,7 +339,7 @@ Foam::tmp<Foam::volScalarField> Foam::IAPWSThermo::Cp() const
         )
     );
 
-    volScalarField& cp = tCp();
+    volScalarField& cp = tCp.ref();
 
     forAll(this->T_, celli)
     {
@@ -384,7 +384,7 @@ Foam::tmp<Foam::volScalarField> Foam::IAPWSThermo::rho() const
         )
     );
 
-    volScalarField& rho = prho();
+    volScalarField& rho = prho.ref();
 
     forAll(this->p_, celli)
     {
@@ -417,7 +417,7 @@ Foam::tmp<Foam::scalarField> Foam::IAPWSThermo::Cv
     const fvPatchScalarField& pp = this->p_.boundaryField()[patchi];
 
     tmp<scalarField> tCv(new scalarField(T.size()));
-    scalarField& cv = tCv();
+    scalarField& cv = tCv.ref();
 
     forAll(T, facei)
     {
@@ -449,7 +449,7 @@ Foam::tmp<Foam::volScalarField> Foam::IAPWSThermo::Cv() const
         )
     );
 
-    volScalarField& cv = tCv();
+    volScalarField& cv = tCv.ref();
 
     forAll(this->h_, celli)
     {

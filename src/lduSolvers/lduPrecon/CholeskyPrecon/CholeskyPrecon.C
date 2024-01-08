@@ -54,8 +54,8 @@ void Foam::CholeskyPrecon::calcPreconDiag()
     // Precondition the diagonal
     if (matrix_.symmetric())
     {
-        const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-        const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
+        const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+        const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
 
         // Get off-diagonal matrix coefficients
         const scalarField& upper = matrix_.upper();

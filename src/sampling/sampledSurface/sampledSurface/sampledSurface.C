@@ -295,7 +295,7 @@ Foam::tmp<Foam::Field<Foam::scalar> >
 Foam::sampledSurface::project(const Field<scalar>& field) const
 {
     tmp<Field<scalar> > tRes(new Field<scalar>(faces().size()));
-    Field<scalar>& res = tRes();
+    Field<scalar>& res = tRes.ref();
 
     forAll(faces(), faceI)
     {
@@ -310,7 +310,7 @@ Foam::tmp<Foam::Field<Foam::scalar> >
 Foam::sampledSurface::project(const Field<vector>& field) const
 {
     tmp<Field<scalar> > tRes(new Field<scalar>(faces().size()));
-    project(tRes(), field);
+    project(tRes.ref(), field);
     return tRes;
 }
 
@@ -319,7 +319,7 @@ Foam::tmp<Foam::Field<Foam::vector> >
 Foam::sampledSurface::project(const Field<sphericalTensor>& field) const
 {
     tmp<Field<vector> > tRes(new Field<vector>(faces().size()));
-    project(tRes(), field);
+    project(tRes.ref(), field);
     return tRes;
 }
 
@@ -328,7 +328,7 @@ Foam::tmp<Foam::Field<Foam::vector> >
 Foam::sampledSurface::project(const Field<symmTensor>& field) const
 {
     tmp<Field<vector> > tRes(new Field<vector>(faces().size()));
-    project(tRes(), field);
+    project(tRes.ref(), field);
     return tRes;
 }
 
@@ -337,7 +337,7 @@ Foam::tmp<Foam::Field<Foam::vector> >
 Foam::sampledSurface::project(const Field<tensor>& field) const
 {
     tmp<Field<vector> > tRes(new Field<vector>(faces().size()));
-    project(tRes(), field);
+    project(tRes.ref(), field);
     return tRes;
 }
 

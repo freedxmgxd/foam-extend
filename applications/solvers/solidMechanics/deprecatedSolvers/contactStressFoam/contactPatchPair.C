@@ -33,7 +33,7 @@ Description
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from components
-    Foam::contactPatchPair::contactPatchPair
+Foam::contactPatchPair::contactPatchPair
 (
     const fvMesh& m,
     const label master,
