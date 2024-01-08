@@ -31,7 +31,7 @@ regions
 
         fringe
         {
-            type overlap;
+            type adaptiveOverlap;
 
             suitablePairFraction 0.5;
             cacheFringe          no;
@@ -39,7 +39,7 @@ regions
             donorSuitability
             {
                 type      cellVolumes;
-                threshold 0.2;
+                threshold 0.25;
             }
         }
     }

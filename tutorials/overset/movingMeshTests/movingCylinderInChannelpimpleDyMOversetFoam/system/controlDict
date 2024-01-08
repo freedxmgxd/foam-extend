@@ -14,10 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     icoDyMOversetFoam;
+application     pimpleDyMOversetFoam;
 
-// startFrom       startTime;
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
@@ -37,7 +36,7 @@ writeFormat     ascii;
 
 writePrecision  10;
 
-writeCompression uncompressed;
+writeCompression compressed;
 
 timeFormat      general;
 
@@ -63,6 +62,43 @@ libs
 
 functions
 (
+    minMaxU
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name U;
+    }
+    minMaxP
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name p;
+    }
+    minMaxK
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name k;
+    }
+    minMaxNut
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name nut;
+    }
+   
     forces
     {
          type                forces;
