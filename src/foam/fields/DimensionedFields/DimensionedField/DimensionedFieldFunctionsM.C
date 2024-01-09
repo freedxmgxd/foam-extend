@@ -519,7 +519,7 @@ tmp<DimensionedField<ReturnType, GeoMesh> > operator Op                       \
                                                                               \
     Foam::OpFunc(tRes().field(), df1.field(), df2.field());                   \
                                                                               \
-    reuseTmpTmpDimensionedField<ReturnType, Type1, Type1, Type2, GeoMesh>::   \
+    reuseTmpTmpDimensionedField<ReturnType, Type1, Type2, GeoMesh>::          \
         clear(tdf1, tdf2);                                                    \
                                                                               \
     return tRes;                                                              \
