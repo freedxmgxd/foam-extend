@@ -6,7 +6,7 @@
       + turb.divDevRhoReff()
     );
 
-    UEqn().relax();
+    UEqn.ref().relax();
 
     if (momentumPredictor)
     {

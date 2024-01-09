@@ -6,7 +6,7 @@
       + turbulence->divDevRhoReff()
     );
 
-    UEqn().relax();
+    UEqn.ref().relax();
 
     // Include the porous media resistance and solve the momentum equation
     // either implicit in the tensorial resistance or transport using by
@@ -32,7 +32,7 @@
     }
     else
     {
-        pZones.addResistance(UEqn());
+        pZones.addResistance(UEqn.ref());
 
         solve(UEqn() == -fvc::grad(p));
 

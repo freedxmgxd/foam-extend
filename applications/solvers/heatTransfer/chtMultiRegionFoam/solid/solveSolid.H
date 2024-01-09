@@ -6,8 +6,8 @@
             fvm::ddt(rho*cp, T)
           - fvm::laplacian(Kappa, T)
         );
-        TEqn().relax();
-        TEqn().solve();
+        TEqn.ref().relax();
+        solve(TEqn);
     }
 
     Info<< "Min/max T:" << min(T) << ' ' << max(T) << endl;
