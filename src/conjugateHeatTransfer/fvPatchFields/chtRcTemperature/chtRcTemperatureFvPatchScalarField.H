@@ -125,6 +125,10 @@ public:
         }
 
 
+    //- Destructor
+    virtual ~chtRcTemperatureFvPatchScalarField() = default;
+
+
     // Member functions
 
         // Access functions
