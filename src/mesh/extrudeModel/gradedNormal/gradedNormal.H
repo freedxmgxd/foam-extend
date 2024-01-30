@@ -51,7 +51,7 @@ namespace extrudeModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class gradedNormal Declaration
+                        Class gradedNormal Declaration
 \*---------------------------------------------------------------------------*/
 
 class gradedNormal
@@ -115,7 +115,7 @@ public:
 
 
     //- Destructor
-    ~gradedNormal();
+    ~gradedNormal() = default;
 
 
     // Access functions
