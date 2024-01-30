@@ -394,30 +394,8 @@ void regionCouplingFvPatchField<Type>::initInterfaceMatrixUpdate
                 this->patch().patchInternalField(psiInternal)
             );
 
-        if (regionCouplePatch_.bridgeOverlap())
-        {
-            const scalarField mirrorField =
-                transform
-                (
-                    (I - sqr(this->patch().nf())/
-                    (1.0 - regionCouplePatch_.fvPatch::weights())),
-                    regionCouplePatch_.patchInternalField(psiInternal)
-                );
-
-            // Set fully uncovered faces
-            regionCouplePatch_.setUncoveredFaces
-            (
-                mirrorField,
-                matrixUpdateBuffer_
-            );
-
-            // For partially covered faces, add mirror that causes no flux
-            regionCouplePatch_.addToPartialFaces
-            (
-                mirrorField,
-                matrixUpdateBuffer_
-            );
-        }
+        // Bridge overlap is done on receive side
+        // HJ, 30/Jan/2025
     }
     else
     {
@@ -448,6 +426,34 @@ void regionCouplingFvPatchField<Type>::updateInterfaceMatrix
         // compared to earlier versions
         // HJ, 28/Sep/2011
         scalarField pnf = this->shadowPatchField().matrixUpdateBuffer();
+
+
+        // Bridge overlap is done on receive side
+        // HJ, 30/Jan/2025
+        if (regionCouplePatch_.bridgeOverlap())
+        {
+            const scalarField mirrorField =
+                transform
+                (
+                    (I - sqr(this->patch().nf())/
+                    (1.0 - regionCouplePatch_.fvPatch::weights())),
+                    regionCouplePatch_.patchInternalField(psiInternal)
+                );
+
+            // Set fully uncovered faces
+            regionCouplePatch_.setUncoveredFaces
+            (
+                mirrorField,
+                pnf
+            );
+
+            // For partially covered faces, add mirror that causes no flux
+            regionCouplePatch_.addToPartialFaces
+            (
+                mirrorField,
+                pnf
+            );
+        }
 
         // Multiply the field by coefficients and add into the result
         const labelUList& fc = regionCouplePatch_.faceCells();
