@@ -79,7 +79,7 @@ reconstructIb
         )
     );
     GeometricField<GradType, fvPatchField, volMesh>& reconField =
-        treconField();
+        treconField.ref();
 
     // Note:
     // 1) Reconstruction is only available in cell centres: there is no need
@@ -134,7 +134,7 @@ reconstructIb
 
     reconField.boundaryField() = fluxTimesNormal.boundaryField();
 
-    treconField().correctBoundaryConditions();
+    reconField.correctBoundaryConditions();
 
     return treconField;
 }
