@@ -388,6 +388,7 @@ int main(int argc, char *argv[])
     argList::validOptions.insert("overwrite", "");
 
 #   include "addTimeOptions.H"
+#   include "addRegionOption.H"
 
 #   include "setRootCase.H"
 #   include "createTime.H"
@@ -401,7 +402,7 @@ int main(int argc, char *argv[])
 
     runTime.setTime(Times[startTime], startTime);
 
-#   include "createMesh.H"
+#   include "createNamedMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
     const bool blockOrder = args.optionFound("blockOrder");
