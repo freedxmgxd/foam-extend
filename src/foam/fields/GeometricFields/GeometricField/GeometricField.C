@@ -163,7 +163,8 @@ bool Foam::GeometricField<Type, PatchField, GeoMesh>::readOldTimeIfPresent()
     {
         if (debug)
         {
-            Info<< "Reading old time level for field"
+            InfoInFunction
+                << "Reading old time level for field"
                 << endl << this->info() << endl;
         }
 
@@ -210,9 +211,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     readIfPresent();
@@ -240,9 +239,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     readIfPresent();
@@ -267,9 +264,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     boundaryField_ == dt.value();
@@ -296,9 +291,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "creating temporary"
-            << endl << this->info() << endl;
+        InfoInFunction << "Creating temporary" << endl << this->info() << endl;
     }
 
     boundaryField_ == dt.value();
@@ -307,7 +300,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 }
 
 
-//  construct from components
+// Construct from components
 template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 (
@@ -326,9 +319,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing from components"
-            << endl << this->info() << endl;
+        InfoInFunction
+            << "constructing from components" << endl << this->info() << endl;
     }
 
     readIfPresent();
@@ -364,9 +356,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     if (debug)
     {
-        Info<< "Finishing read-construct of "
-               "GeometricField<Type, PatchField, GeoMesh>"
-            << endl << this->info() << endl;
+        InfoInFunction
+            << "Finishing read-construction of" << endl << this->info() << endl;
     }
 }
 
@@ -399,8 +390,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     if (debug)
     {
-        Info<< "Finishing read-construct of "
-               "GeometricField<Type, PatchField, GeoMesh>"
+        InfoInFunction
+            << "Finishing read-construct of "
             << endl << this->info() << endl;
     }
 }
@@ -434,8 +425,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 
     if (debug)
     {
-        Info<< "Finishing dictionary-construct of "
-               "GeometricField<Type, PatchField, GeoMesh>"
+        InfoInFunction
+            << "Finishing dictionary-construct of "
             << endl << this->info() << endl;
     }
 }
@@ -456,8 +447,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy"
+        InfoInFunction
+            << "Constructing as copy"
             << endl << this->info() << endl;
     }
 
@@ -489,8 +480,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting IO params"
+        InfoInFunction
+            << "Constructing as copy resetting IO params"
             << endl << this->info() << endl;
     }
 
@@ -521,8 +512,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting name"
+        InfoInFunction
+            << "Constructing as copy resetting name"
             << endl << this->info() << endl;
     }
 
@@ -554,8 +545,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting IO params"
+        InfoInFunction
+            << "Constructing as copy resetting IO params"
             << endl << this->info() << endl;
     }
 
@@ -589,8 +580,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 {
     if (debug)
     {
-        Info<< "GeometricField<Type, PatchField, GeoMesh>::GeometricField : "
-               "constructing as copy resetting IO params and patch types"
+        InfoInFunction
+            << "Constructing as copy resetting IO params and patch types"
             << endl << this->info() << endl;
     }
 
@@ -694,7 +685,8 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::storeOldTime() const
 
         if (debug)
         {
-            Info<< "Storing old time field for field" << endl
+            InfoInFunction
+                << "Storing old time field for field" << endl
                 << this->info() << endl;
         }
 
@@ -768,7 +760,8 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::storePrevIter() const
     {
         if (debug)
         {
-            Info<< "Allocating previous iteration field" << endl
+            InfoInFunction
+                << "Allocating previous iteration field" << endl
                 << this->info() << endl;
         }
 
@@ -850,11 +843,8 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::relax(const scalar alpha)
 
     if (debug)
     {
-        InfoIn
-        (
-            "GeometricField<Type, PatchField, GeoMesh>::relax"
-            "(const scalar alpha)"
-        )  << "Relaxing" << endl << this->info() << " by " << alpha << endl;
+        InfoInFunction
+            << "Relaxing" << endl << this->info() << " by " << alpha << endl;
     }
 
     operator==(prevIter() + alpha*(*this - prevIter()));
