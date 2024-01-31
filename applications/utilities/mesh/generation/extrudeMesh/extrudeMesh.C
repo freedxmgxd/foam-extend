@@ -66,8 +66,8 @@ int main(int argc, char *argv[])
     (
         IOobject
         (
-            "extrudeProperties",
-            runTimeExtruded.constant(),
+            "extrudeMeshDict",
+            runTimeExtruded.system(),
             runTimeExtruded,
             IOobject::MUST_READ
         )
