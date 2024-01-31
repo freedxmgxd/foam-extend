@@ -100,17 +100,17 @@ inline Foam::tmp<T>::tmp(const tmp<T>& t)
 }
 
 
-template<class T>
-inline Foam::tmp<T>::tmp(const tmp<T>&& t)
-:
-    tmpType_(t.tmpType_),
-    ptr_(t.ptr_)
-{
-    if (isAnyTmp())
-    {
-        t.ptr_ = 0;
-    }
-}
+// template<class T>
+// inline Foam::tmp<T>::tmp(const tmp<T>&& t)
+// :
+//     tmpType_(t.tmpType_),
+//     ptr_(t.ptr_)
+// {
+//     if (isAnyTmp())
+//     {
+//         t.ptr_ = 0;
+//     }
+// }
 
 
 template<class T>
