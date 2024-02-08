@@ -160,7 +160,8 @@ void Foam::chtRcTemperatureFvPatchScalarField::initEvaluate
             << abort(FatalError);
     }
 
-    const chtRegionCoupleBase& K = dynamic_cast<const chtRegionCoupleBase&>(kpf);
+    const chtRegionCoupleBase& K =
+        dynamic_cast<const chtRegionCoupleBase&>(kpf);
 
     *this == K.calcTemperature(*this, shadowPatchField(), K);
 }
