@@ -34,12 +34,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::processorLduInterfaceField::~processorLduInterfaceField()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::processorLduInterfaceField::transformCoupleField
