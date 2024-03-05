@@ -190,12 +190,12 @@ unset MPI_ARCH_PATH
 mpi_version=unknown
 case "$WM_MPLIB" in
 OPENMPI)
-    if [ ! -z $WM_THIRD_PARTY_USE_OPENMPI_400 ] && [ -e $WM_THIRD_PARTY_DIR/packages/openmpi-4.0.0/platforms/$WM_OPTIONS ]
+    if [ ! -z $WM_THIRD_PARTY_USE_OPENMPI_412 ] && [ -e $WM_THIRD_PARTY_DIR/packages/openmpi-4.1.2/platforms/$WM_OPTIONS ]
         then
-        mpi_version=openmpi-4.0.0
+        mpi_version=openmpi-4.1.2
         if [ "$FOAM_VERBOSE" -a "$PS1" ]
         then
-            echo "Using openmpi-4.0.0 from the ThirdParty package: $WM_THIRD_PARTY_DIR/packages/$mpi_version"
+            echo "Using openmpi-4.1.2 from the ThirdParty package: $WM_THIRD_PARTY_DIR/packages/$mpi_version"
         fi
         _foamSource $WM_THIRD_PARTY_DIR/packages/$mpi_version/platforms/$WM_OPTIONS/etc/$mpi_version.sh
 
