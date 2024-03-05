@@ -22,7 +22,7 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Set up the gamma field
+    Set up the T field for initial guess
 
 \*---------------------------------------------------------------------------*/
 
@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
 
     Info << pos(0.02 - centres.internalField().component(vector::X))*
             centres.internalField().component(vector::X)/0.02 << endl;
+
     T.internalField() =
         pos(0.02 - centres.internalField().component(vector::X))*
         (
@@ -68,6 +69,8 @@ int main(int argc, char *argv[])
                 mathematicalConstant::pi
             )/2.0 + 0.5
         );
+
+    T.correctBoundaryConditions();
 
     T.write();
 
