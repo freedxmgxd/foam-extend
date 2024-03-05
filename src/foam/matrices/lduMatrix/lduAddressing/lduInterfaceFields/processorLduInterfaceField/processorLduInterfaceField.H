@@ -63,7 +63,7 @@ public:
 
 
     //- Destructor
-    virtual ~processorLduInterfaceField();
+    virtual ~processorLduInterfaceField() = default;
 
 
     // Member Functions

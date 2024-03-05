@@ -136,8 +136,7 @@ void Foam::ProcessorBlockAMGInterfaceField<Type>::initInterfaceMatrixUpdate
     }
 
     // Mark as ready for update
-    const_cast<ProcessorBlockAMGInterfaceField<Type>&>(*this).updatedMatrix() =
-        false;
+    this->updatedMatrix() = false;
 
     Pstream::warnComm = oldWarn;
 }
@@ -209,8 +208,7 @@ void Foam::ProcessorBlockAMGInterfaceField<Type>::updateInterfaceMatrix
     }
 
     // Mark as updated
-    const_cast<ProcessorBlockAMGInterfaceField<Type>&>(*this).updatedMatrix() =
-        true;
+    this->updatedMatrix() = true;
 }
 
 

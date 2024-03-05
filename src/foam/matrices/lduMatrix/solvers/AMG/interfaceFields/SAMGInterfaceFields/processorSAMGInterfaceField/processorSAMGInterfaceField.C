@@ -126,7 +126,7 @@ void Foam::processorSAMGInterfaceField::initInterfaceMatrixUpdate
     }
 
     // Mark as ready for update
-    const_cast<processorSAMGInterfaceField&>(*this).updatedMatrix() = false;
+    this->updatedMatrix() = false;
 
     Pstream::warnComm = oldWarn;
 }
@@ -197,7 +197,7 @@ void Foam::processorSAMGInterfaceField::updateInterfaceMatrix
     }
 
     // Mark as updated
-    const_cast<processorSAMGInterfaceField&>(*this).updatedMatrix() = true;
+    this->updatedMatrix() = true;
 }
 
 
