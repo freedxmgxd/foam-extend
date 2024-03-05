@@ -54,7 +54,7 @@ Foam::wordList Foam::ReadFields
 
         HashSet<word> localNamesSet(localNames);
 
-        forAll(masterNames, i)
+        forAll (masterNames, i)
         {
             const word& masterFld = masterNames[i];
 
@@ -62,12 +62,8 @@ Foam::wordList Foam::ReadFields
 
             if (iter == localNamesSet.end())
             {
-                FatalErrorIn
-                (
-                    "ReadFields<class GeoField, class Mesh>"
-                    "(const Mesh&, const IOobjectList&, PtrList<GeoField>&"
-                    ", const bool)"
-                )   << "Fields not synchronised across processors." << endl
+                FatalErrorInFunction
+                    << "Fields not synchronised across processors." << endl
                     << "Master has fields " << masterNames
                     << "  processor " << Pstream::myProcNo()
                     << " has fields " << localNames << exit(FatalError);
@@ -80,12 +76,8 @@ Foam::wordList Foam::ReadFields
 
         forAllConstIter(HashSet<word>, localNamesSet, iter)
         {
-            FatalErrorIn
-            (
-                "ReadFields<class GeoField, class Mesh>"
-                "(const Mesh&, const IOobjectList&, PtrList<GeoField>&"
-                ", const bool)"
-            )   << "Fields not synchronised across processors." << endl
+            FatalErrorInFunction
+                << "Fields not synchronised across processors." << endl
                 << "Master has fields " << masterNames
                 << "  processor " << Pstream::myProcNo()
                 << " has fields " << localNames << exit(FatalError);
@@ -97,7 +89,7 @@ Foam::wordList Foam::ReadFields
 
     // Make sure to read in masterNames order.
 
-    forAll(masterNames, i)
+    forAll (masterNames, i)
     {
         Info<< "Reading " << GeoField::typeName << ' ' << masterNames[i]
             << endl;
