@@ -56,26 +56,14 @@ echo Starting ThirdParty AllMake: Stage4
 echo ========================================
 echo
 
-# qt-everywhere-opensource-src-4.8.6
+# qt-everywhere-opensource-src-5.15.12
 if [ ! -z "$QT_THIRD_PARTY" ]
 then
-    # Qt 4.8.6
+    # Qt 5.15.12
     #
-    [ ! -z "$WM_THIRD_PARTY_USE_QT_486" ] && {
-	echo "Building Qt 4.8.6"
-	( rpm_make -p qt-everywhere-opensource-src-4.8.6 -s qt-everywhere-opensource-src-4.8.6.spec -u http://download.qt.io/archive/qt/4.8/4.8.6/qt-everywhere-opensource-src-4.8.6.tar.gz )
-    }
-    # Qt 5.8.0
-    #
-    [ ! -z "$WM_THIRD_PARTY_USE_QT_580" ] && {
-    echo "Building Qt 5.8.0"
-    ( rpm_make -p qt-everywhere-opensource-src-5.8.0 -s qt-everywhere-opensource-src-5.8.0.spec -u http://download.qt.io/archive/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.tar.gz )
-    }
-    # Qt 5.11.1
-    #
-    [ ! -z "$WM_THIRD_PARTY_USE_QT_5111" ] && {
-    echo "Building Qt 5.11.1"
-    ( rpm_make -p qt-everywhere-src-5.11.1 -s qt-everywhere-src-5.11.1.spec -u http://download.qt.io/archive/qt/5.11/5.11.1/single/qt-everywhere-src-5.11.1.tar.xz )
+    [ ! -z "$WM_THIRD_PARTY_USE_QT_51512" ] && {
+    echo "Building Qt 5.15.12"
+    ( rpm_make -p qt-everywhere-src-5.15.12 -s qt-everywhere-src-5.15.12.spec -u http://download.qt.io/archive/qt/5.11/5.15.12/single/qt-everywhere-src-5.15.12.tar.xz )
     }
 else
     echo "Using system installed QT"
@@ -90,51 +78,11 @@ then
 
     if [ -d "$QT_BIN_DIR" -a -r "$QT_BIN_DIR"/qmake ]
     then
-        # ParaView 4.0.1
-        #
-        [ ! -z "$WM_THIRD_PARTY_USE_PARAVIEW_401" ] && {
-            echo "Building ParaView 4.0.1"
-            ( rpm_make -p ParaView-4.0.1 -s ParaView-4.0.1.spec -u http://downloads.sourceforge.net/project/foam-extend/ThirdParty/ParaView-v4.0.1-source.tgz \
-		-f --define='_qmakePath $QT_BIN_DIR/qmake'
-            )
-        }
-        # ParaView 4.1.0
-        #
-        [ ! -z "$WM_THIRD_PARTY_USE_PARAVIEW_410" ] && {
-            echo "Building ParaView 4.1.0"
-            ( rpm_make -p ParaView-4.1.0 -s ParaView-4.1.0.spec -u http://downloads.sourceforge.net/project/foam-extend/ThirdParty/ParaView-v4.1.0-source.tar.gz \
-		-f --define='_qmakePath $QT_BIN_DIR/qmake'
-            )
-        }
-        # ParaView 4.3.1
-        #
-        [ ! -z "$WM_THIRD_PARTY_USE_PARAVIEW_431" ] && {
-            echo "Building ParaView 4.3.1"
-            ( rpm_make -p ParaView-4.3.1 -s ParaView-4.3.1.spec -u http://downloads.sourceforge.net/project/foam-extend/ThirdParty/ParaView-v4.3.1-source.tar.gz \
-		-f --define='_qmakePath $QT_BIN_DIR/qmake'
-            )
-        }
-        # ParaView 4.4.0
-        #
-        [ ! -z "$WM_THIRD_PARTY_USE_PARAVIEW_440" ] && {
-            echo "Building ParaView 4.4.0"
-            ( rpm_make -p ParaView-4.4.0 -s ParaView-4.4.0.spec -u http://downloads.sourceforge.net/project/foam-extend/ThirdParty/ParaView-v4.4.0-source.tar.gz \
-		-f --define='_qmakePath $QT_BIN_DIR/qmake'
-            )
-        }
-        # ParaView 5.4.1
-        #
-        [ ! -z "$WM_THIRD_PARTY_USE_PARAVIEW_541" ] && {
-            echo "Building ParaView 5.4.1"
-            ( rpm_make -p ParaView-5.4.1 -s ParaView-5.4.1.spec -u http://www.paraview.org/files/v5.4/ParaView-v5.4.1.tar.gz \
-        -f --define='_qmakePath $QT_BIN_DIR/qmake'
-            )
-        }
         # ParaView 5.5.2
         #
-        [ ! -z "$WM_THIRD_PARTY_USE_PARAVIEW_552" ] && {
-            echo "Building ParaView 5.5.2"
-            ( rpm_make -p ParaView-5.5.2 -s ParaView-5.5.2.spec -u http://www.paraview.org/files/v5.5/ParaView-v5.5.2.tar.gz \
+        [ ! -z "$WM_THIRD_PARTY_USE_PARAVIEW_5120" ] && {
+            echo "Building ParaView 5.12.0"
+            ( rpm_make -p ParaView-5.12.0 -s ParaView-5.12.0.spec -u http://www.paraview.org/files/v5.12/ParaView-v5.12.0.tar.gz \
         -f --define='_qmakePath $QT_BIN_DIR/qmake'
             )
         }

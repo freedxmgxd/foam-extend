@@ -190,12 +190,12 @@ unset MPI_ARCH_PATH
 mpi_version=unknown
 case "$WM_MPLIB" in
 OPENMPI)
-    if [ ! -z $WM_THIRD_PARTY_USE_OPENMPI_400 ] && [ -e $WM_THIRD_PARTY_DIR/packages/openmpi-4.0.0/platforms/$WM_OPTIONS ]
+    if [ ! -z $WM_THIRD_PARTY_USE_OPENMPI_412 ] && [ -e $WM_THIRD_PARTY_DIR/packages/openmpi-4.1.2/platforms/$WM_OPTIONS ]
         then
-        mpi_version=openmpi-4.0.0
+        mpi_version=openmpi-4.1.2
         if [ "$FOAM_VERBOSE" -a "$PS1" ]
         then
-            echo "Using openmpi-4.0.0 from the ThirdParty package: $WM_THIRD_PARTY_DIR/packages/$mpi_version"
+            echo "Using openmpi-4.1.2 from the ThirdParty package: $WM_THIRD_PARTY_DIR/packages/$mpi_version"
         fi
         _foamSource $WM_THIRD_PARTY_DIR/packages/$mpi_version/platforms/$WM_OPTIONS/etc/$mpi_version.sh
 
@@ -795,44 +795,16 @@ fi
 
 # Load QT
 # ~~~~~~~
-[ ! -z "$QT_THIRD_PARTY" ] && [ ! -z $WM_THIRD_PARTY_USE_QT_5111 ] && [ -e $WM_THIRD_PARTY_DIR/packages/qt-everywhere-src-5.11.1/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/qt-everywhere-src-5.11.1/platforms/$WM_OPTIONS/etc/qt-everywhere-src-5.11.1.sh
-}
-# ~~~~~~~
-[ ! -z "$QT_THIRD_PARTY" ] && [ ! -z $WM_THIRD_PARTY_USE_QT_580 ] && [ -e $WM_THIRD_PARTY_DIR/packages/qt-everywhere-opensource-src-5.8.0/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/qt-everywhere-opensource-src-5.8.0/platforms/$WM_OPTIONS/etc/qt-everywhere-opensource-src-5.8.0.sh
-}
-[ ! -z "$QT_THIRD_PARTY" ] && [ ! -z $WM_THIRD_PARTY_USE_QT_486 ] && [ -e $WM_THIRD_PARTY_DIR/packages/qt-everywhere-opensource-src-4.8.6/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/qt-everywhere-opensource-src-4.8.6/platforms/$WM_OPTIONS/etc/qt-everywhere-opensource-src-4.8.6.sh
+[ ! -z "$QT_THIRD_PARTY" ] && [ ! -z $WM_THIRD_PARTY_USE_QT_51512 ] && [ -e $WM_THIRD_PARTY_DIR/packages/qt-everywhere-src-5.15.12/platforms/$WM_OPTIONS ] && {
+    _foamSource $WM_THIRD_PARTY_DIR/packages/qt-everywhere-src-5.15.12/platforms/$WM_OPTIONS/etc/qt-everywhere-src-5.15.12.sh
 }
 [ "$FOAM_VERBOSE" -a "$PS1" ] && echo "    QT_DIR is initialized to: $QT_DIR"
 
 
 # Load ParaView
 # ~~~~~~~~~~~~~
-[ -z "$PARAVIEW_SYSTEM" ] && [ ! -z $WM_THIRD_PARTY_USE_PARAVIEW_552 ] && [ -e $WM_THIRD_PARTY_DIR/packages/ParaView-5.5.2/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-5.5.2/platforms/$WM_OPTIONS/etc/ParaView-5.5.2.sh
-}
-[ -z "$PARAVIEW_SYSTEM" ] && [ ! -z $WM_THIRD_PARTY_USE_PARAVIEW_541 ] && [ -e $WM_THIRD_PARTY_DIR/packages/ParaView-5.4.1/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-5.4.1/platforms/$WM_OPTIONS/etc/ParaView-5.4.1.sh
-}
-[ -z "$PARAVIEW_SYSTEM" ] && [ ! -z $WM_THIRD_PARTY_USE_PARAVIEW_440 ] && [ -e $WM_THIRD_PARTY_DIR/packages/ParaView-4.4.0/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-4.4.0/platforms/$WM_OPTIONS/etc/ParaView-4.4.0.sh
-}
-[ -z "$PARAVIEW_SYSTEM" ] && [ ! -z $WM_THIRD_PARTY_USE_PARAVIEW_431 ] && [ -e $WM_THIRD_PARTY_DIR/packages/ParaView-4.3.1/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-4.3.1/platforms/$WM_OPTIONS/etc/ParaView-4.3.1.sh
-}
-[ -z "$PARAVIEW_SYSTEM" ] && [ ! -z $WM_THIRD_PARTY_USE_PARAVIEW_410 ] && [ -e $WM_THIRD_PARTY_DIR/packages/ParaView-4.1.0/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-4.1.0/platforms/$WM_OPTIONS/etc/ParaView-4.1.0.sh
-}
-[ -z "$PARAVIEW_SYSTEM" ] && [ ! -z $WM_THIRD_PARTY_USE_PARAVIEW_401 ] && [ -e $WM_THIRD_PARTY_DIR/packages/ParaView-4.0.1/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-4.0.1/platforms/$WM_OPTIONS/etc/ParaView-4.0.1.sh
-}
-[ -z "$PARAVIEW_SYSTEM" ] && [ ! -z $WM_THIRD_PARTY_USE_PARAVIEW_3141 ] && [ -e $WM_THIRD_PARTY_DIR/packages/ParaView-3.14.1/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-3.14.1/platforms/$WM_OPTIONS/etc/ParaView-3.14.1.sh
-}
-[ -z "$PARAVIEW_SYSTEM" ] && [ ! -z $WM_THIRD_PARTY_USE_PARAVIEW_381 ] && [ -e $WM_THIRD_PARTY_DIR/packages/ParaView-3.8.1/platforms/$WM_OPTIONS ] && {
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-3.8.1/platforms/$WM_OPTIONS/etc/ParaView-3.8.1.sh
+[ -z "$PARAVIEW_SYSTEM" ] && [ ! -z $WM_THIRD_PARTY_USE_PARAVIEW_5120 ] && [ -e $WM_THIRD_PARTY_DIR/packages/ParaView-5.12.0/platforms/$WM_OPTIONS ] && {
+    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-5.12.0/platforms/$WM_OPTIONS/etc/ParaView-5.12.0.sh
 }
 [ "$FOAM_VERBOSE" -a "$PS1" ] && echo "    PARAVIEW_DIR is initialized to: $PARAVIEW_DIR"
 

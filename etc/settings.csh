@@ -144,11 +144,11 @@ set mpi_version=unknown
 
 switch ("$WM_MPLIB")
 case OPENMPI:
-    if ($?WM_THIRD_PARTY_USE_OPENMPI_400 != 0 && -d $WM_THIRD_PARTY_DIR/packages/openmpi-4.0.0/platforms/$WM_OPTIONS ) then
-        set mpi_version=openmpi-4.0.0
+    if ($?WM_THIRD_PARTY_USE_OPENMPI_412 != 0 && -d $WM_THIRD_PARTY_DIR/packages/openmpi-4.1.2/platforms/$WM_OPTIONS ) then
+        set mpi_version=openmpi-4.1.2
 
         if ($?FOAM_VERBOSE && $?prompt) then
-            echo "Using openmpi-4.0.0 from the ThirdParty package: $WM_THIRD_PARTY_DIR/packages/$mpi_version"
+            echo "Using openmpi-4.1.2 from the ThirdParty package: $WM_THIRD_PARTY_DIR/packages/$mpi_version"
         endif
         _foamSource $WM_THIRD_PARTY_DIR/packages/$mpi_version/platforms/$WM_OPTIONS/etc/$mpi_version.csh
 
@@ -675,46 +675,15 @@ endif
 
 # QT
 # ~~~~~
-if ( $?QT_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_QT_5111 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/qt-everywhere-src-5.11.1/platforms/$WM_OPTIONS )then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/qt-everywhere-src-5.11.1/platforms/$WM_OPTIONS/etc/qt-everywhere-src-5.11.1.csh
-endif
-if ( $?QT_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_QT_580 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/qt-everywhere-opensource-src-5.8.0/platforms/$WM_OPTIONS )then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/qt-everywhere-opensource-src-5.8.0/platforms/$WM_OPTIONS/etc/qt-everywhere-opensource-src-5.8.0.csh
-endif
-if ( $?QT_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_QT_486 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/qt-everywhere-opensource-src-4.8.6/platforms/$WM_OPTIONS )then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/qt-everywhere-opensource-src-4.8.6/platforms/$WM_OPTIONS/etc/qt-everywhere-opensource-src-4.8.6.csh
+if ( $?QT_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_QT_51512 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/qt-everywhere-src-5.15.12/platforms/$WM_OPTIONS )then
+    _foamSource $WM_THIRD_PARTY_DIR/packages/qt-everywhere-src-5.15.12/platforms/$WM_OPTIONS/etc/qt-everywhere-src-5.15.12.csh
 endif
 
 # PARAVIEW
 # ~~~~~
-if ( $?PARAVIEW_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_PARAVIEW_552 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/ParaView-5.5.2/platforms/$WM_OPTIONS ) then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-5.5.2/platforms/$WM_OPTIONS/etc/ParaView-5.5.2.csh
+if ( $?PARAVIEW_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_PARAVIEW_5120 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/ParaView-5.12.0/platforms/$WM_OPTIONS ) then
+    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-5.12.0/platforms/$WM_OPTIONS/etc/ParaView-5.12.0.csh
 endif
-if ( $?PARAVIEW_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_PARAVIEW_541 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/ParaView-5.4.1/platforms/$WM_OPTIONS ) then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-5.4.1/platforms/$WM_OPTIONS/etc/ParaView-5.4.1.csh
-endif
-if ( $?PARAVIEW_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_PARAVIEW_440 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/ParaView-4.4.0/platforms/$WM_OPTIONS ) then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-4.4.0/platforms/$WM_OPTIONS/etc/ParaView-4.4.0.csh
-endif
-if ( $?PARAVIEW_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_PARAVIEW_431 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/ParaView-4.3.1/platforms/$WM_OPTIONS ) then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-4.3.1/platforms/$WM_OPTIONS/etc/ParaView-4.3.1.csh
-endif
-if ( $?PARAVIEW_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_PARAVIEW_410 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/ParaView-4.1.0/platforms/$WM_OPTIONS ) then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-4.1.0/platforms/$WM_OPTIONS/etc/ParaView-4.1.0.csh
-endif
-if ( $?PARAVIEW_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_PARAVIEW_401 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/ParaView-4.0.1/platforms/$WM_OPTIONS ) then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-4.0.1/platforms/$WM_OPTIONS/etc/ParaView-4.0.1.csh
-endif
-if ( $?PARAVIEW_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_PARAVIEW_381 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/ParaView-3.8.1/platforms/$WM_OPTIONS ) then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-3.8.1/platforms/$WM_OPTIONS/etc/ParaView-3.8.1.csh
-endif
-if ( $?PARAVIEW_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_PARAVIEW_3141 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/ParaView-3.14.1/platforms/$WM_OPTIONS ) then
-   _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-3.14.1/platforms/$WM_OPTIONS/etc/ParaView-3.14.1.csh
-endif
-if ( $?PARAVIEW_SYSTEM == 0 && $?WM_THIRD_PARTY_USE_PARAVIEW_381 != 0 && -e "$WM_THIRD_PARTY_DIR"/packages/ParaView-3.8.1/platforms/$WM_OPTIONS ) then
-    _foamSource $WM_THIRD_PARTY_DIR/packages/ParaView-3.8.1/platforms/$WM_OPTIONS/etc/ParaView-3.8.1.csh
-endif
-
 
 # llvm
 # ~~~~~
