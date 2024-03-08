@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | foam-extend: Open Source CFD                    |
-|  \\    /   O peration     | Version:     5.1                                |
+|  \\    /   O peration     | Version:     5.0                                |
 |   \\  /    A nd           | Web:         http://www.foam-extend.org         |
-|    \\/     M anipulation  |                                                 |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -17,40 +17,42 @@ FoamFile
 
 5
 (
-    leftWall
+    impellerWall
     {
         type            wall;
-        nFaces          100;
-        startFace       17936;
-        closedSolidBodyMotion false;
+        nFaces          68;
+        startFace       1040;
     }
-    rightWall
+    baffleWall
     {
         type            wall;
-        nFaces          100;
-        startFace       18036;
-        closedSolidBodyMotion false;
+        nFaces          84;
+        startFace       1108;
     }
-    lowerWall
+    insideSlider
     {
-        type            wall;
-        nFaces          124;
-        startFace       18136;
-        closedSolidBodyMotion false;
+        type            ggi;
+        nFaces          36;
+        startFace       1192;
+        shadowPatch     outsideSlider;
+        zone            insideZone;
+        bridgeOverlap   false;
     }
-    atmosphere
+    outsideSlider
     {
-        type            patch;
-        nFaces          92;
-        startFace       18260;
+        type            ggi;
+        nFaces          36;
+        startFace       1228;
+        shadowPatch     insideSlider;
+        zone            outsideZone;
+        bridgeOverlap   false;
     }
     defaultFaces
     {
         type            empty;
-        nFaces          18144;
-        startFace       18352;
+        nFaces          1152;
+        startFace       1264;
     }
 )
-
 
 // ************************************************************************* //

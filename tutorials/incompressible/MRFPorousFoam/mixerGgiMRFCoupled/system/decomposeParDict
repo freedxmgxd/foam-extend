@@ -10,38 +10,20 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      controlDict;
+    object      decomposeParDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application icoFoam;
+numberOfSubdomains 4;
 
-startFrom       startTime;
+method          scotch;
 
-startTime       0;
+globalFaceZones ( insideZone outsideZone );
 
-stopAt          endTime;
+distributed     no;
 
-endTime         0.5;
-
-deltaT          0.005;
-
-writeControl    timeStep;
-
-writeInterval   20;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
+roots
+(
+);
 
 // ************************************************************************* //

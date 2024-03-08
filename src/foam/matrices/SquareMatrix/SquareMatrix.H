@@ -64,7 +64,7 @@ public:
         //- Construct given number of rows/columns.
         explicit inline SquareMatrix(const label n);
 
-        //- Construct with given number of rows and rows
+        //- Construct with given number of rows
         //  and value for all elements.
         inline SquareMatrix(const label n, const Type&);
 

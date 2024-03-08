@@ -10,38 +10,31 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      controlDict;
+    object      dynamicMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application icoFoam;
+dynamicFvMeshLib   "libtopoChangerFvMesh.so";
+dynamicFvMesh      mixerGgiFvMesh;
 
-startFrom       startTime;
+mixerGgiFvMeshCoeffs
+{
+    coordinateSystem
+    {
+        type            cylindrical;
+        origin          (0 0 0);
+        axis            (0 0 1);
+        direction       (1 0 0);
+    }
 
-startTime       0;
+    // Rotational speed in revolutions per minute
+    rpm                 60;
 
-stopAt          endTime;
-
-endTime         0.5;
-
-deltaT          0.005;
-
-writeControl    timeStep;
-
-writeInterval   20;
-
-purgeWrite      0;
-
-writeFormat     ascii;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable yes;
+    slider
+    {
+        moving      ( insideSlider );
+        static      ( outsideSlider );
+    }
+}
 
 // ************************************************************************* //

@@ -1,0 +1,97 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    Up
+    {
+        solver          AMG;
+        cycle           V-cycle;
+        coarseningType	SAMG;
+
+        norm            componentNorm;
+        normComponent   3;
+
+        nPreSweeps      1;
+        nPostSweeps     3;
+        groupSize       8;
+        minCoarseEqns   10;
+        nMaxLevels      100;
+        scale           on;
+        smoother        ILUC0;
+
+        minIter         0;
+        maxIter         100;
+
+        tolerance       1e-6;
+        relTol          0.0;
+
+    }
+    // potentialFoam and rescue
+    p
+    {
+        solver          amgSolver;
+        cycle           V-cycle;
+        policy          selectionAMG;
+
+        nPreSweeps      1;
+        nPostSweeps     3;
+        groupSize       8;
+        minCoarseEqns   20;
+        nMaxLevels      100;
+        scale           on;
+        smoother        ILUC0;
+
+        minIter         1;
+        maxIter         100;
+
+        tolerance       1e-07;
+        relTol          0.0;
+
+    }
+}
+
+SIMPLE
+{
+    nNonOrthogonalCorrectors 0;
+    pRefCell        0;
+    pRefValue       0;
+}
+
+
+blockSolver
+{
+    pRefCell        0;
+    pRefValue       0;
+}
+relaxationFactors
+{
+    fields
+    {}
+    equations
+    {
+        U 0.9;
+    }
+}
+fieldBounds
+{
+    U    200;
+    p    -1e6 1e6;
+}
+
+
+
+// ************************************************************************* //
