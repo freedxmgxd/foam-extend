@@ -103,7 +103,7 @@ void Foam::UList<T>::swap(UList<T>& a)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T>
-Foam::label Foam::UList<T>::byteSize() const
+std::streamsize Foam::UList<T>::byteSize() const
 {
     if (!contiguous<T>())
     {

@@ -72,10 +72,10 @@ class UList
 {
     // Private Data
 
-        //- Vector of values of type T.
+        //- Vector of values of type T
         T* __restrict__ v_;
 
-        //- Number of elements in UList.
+        //- Number of elements in UList
         label size_;
 
 
@@ -147,7 +147,7 @@ public:
 
     // Constructors
 
-        //- Null constructor.
+        //- Null constructor
         inline UList();
 
         //- Construct from components
@@ -158,7 +158,6 @@ public:
 
 
     // Member Functions
-
 
         // Access
 
@@ -172,8 +171,9 @@ public:
 
             //- Return the binary size in number of characters of the UList
             //  if the element is a primitive type
-            //  i.e. contiguous<T>() == true
-            label byteSize() const;
+            //  i.e. contiguous<T>() == true.
+            //  Note that is of type streamsize since used in stream ops
+            std::streamsize byteSize() const;
 
 
             //- Return a const pointer to the first data element,
@@ -233,7 +233,7 @@ public:
         inline T& operator[](const label);
 
         //- Return (subscript-checked on debug) element of constant UList
-        //  Note that the bool specialization adds lazy evaluation so reading
+        //  Note that the bool specialisation adds lazy evaluation so reading
         //  an out-of-range element returns false without any ill-effects
         inline const T& operator[](const label) const;
 
