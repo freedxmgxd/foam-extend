@@ -331,12 +331,12 @@ void updateIncompressibleCase(const fvMesh& mesh)
 
 int main(int argc, char *argv[])
 {
-    #include "addTimeOptions.H"
+#   include "addTimeOptions.H"
     argList::validOptions.insert("compressible", "");
 
-    #include "setRootCase.H"
-    #include "createTime.H"
-    #include "createMesh.H"
+#   include "setRootCase.H"
+#   include "createTime.H"
+#   include "createMesh.H"
 
     bool compressible = args.optionFound("compressible");
 
