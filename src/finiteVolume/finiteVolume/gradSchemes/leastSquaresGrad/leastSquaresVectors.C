@@ -107,8 +107,8 @@ void Foam::leastSquaresVectors::makeLeastSquaresVectors() const
     surfaceVectorField& lsN = *nVectorsPtr_;
 
     // Set local references to mesh data
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
     const volVectorField& C = mesh().C();
 
     // Set up temporary storage for the dd tensor (before inversion)
@@ -129,7 +129,7 @@ void Foam::leastSquaresVectors::makeLeastSquaresVectors() const
     forAll (lsP.boundaryField(), patchI)
     {
         const fvPatch& p = mesh().boundary()[patchI];
-        const unallocLabelList& fc = p.faceCells();
+        const labelUList& fc = p.faceCells();
 
         // Better version of d-vectors: Zeljko Tukovic, 25/Apr/2010
         const vectorField pd = p.delta();
@@ -195,7 +195,7 @@ void Foam::leastSquaresVectors::makeLeastSquaresVectors() const
         fvsPatchVectorField& patchLsP = lsP.boundaryField()[patchI];
         fvsPatchVectorField& patchLsN = lsN.boundaryField()[patchI];
         const fvPatch& p = mesh().boundary()[patchI];
-        const unallocLabelList& fc = p.faceCells();
+        const labelUList& fc = p.faceCells();
 
         const fvPatchSymmTensorField& volInvDdp = volInvDdb[patchI];
 
@@ -291,7 +291,7 @@ void Foam::leastSquaresVectors::makeLeastSquaresVectors() const
         fvsPatchVectorField& patchLsP = lsP.boundaryField()[patchI];
         const vectorField& pSf = Sf.boundaryField()[patchI];
         const fvPatch& p = mesh().boundary()[patchI];
-        const unallocLabelList& fc = p.faceCells();
+        const labelUList& fc = p.faceCells();
 
         // Same check for coupled and uncoupled
         forAll (patchLsP, pFaceI)
@@ -367,7 +367,7 @@ void Foam::leastSquaresVectors::makeLeastSquaresVectors() const
         fvsPatchVectorField& patchLsP = lsP.boundaryField()[patchI];
         fvsPatchVectorField& patchLsN = lsN.boundaryField()[patchI];
         const fvPatch& p = mesh().boundary()[patchI];
-        const unallocLabelList& fc = p.faceCells();
+        const labelUList& fc = p.faceCells();
 
         const fvsPatchScalarField& pw = w.boundaryField()[patchI];
         const fvPatchScalarField& cellVp = cellVb[patchI];

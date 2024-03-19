@@ -117,10 +117,8 @@ public:
         }
 
 
-    // Destructor
-
-        virtual ~symmetryPolyPatch()
-        {}
+    //- Destructor
+    virtual ~symmetryPolyPatch() = default;
 };
 
 

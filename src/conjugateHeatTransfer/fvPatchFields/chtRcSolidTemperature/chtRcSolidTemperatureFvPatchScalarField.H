@@ -48,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class chtRcSolidTemperatureFvPatchScalarField Declaration
+            Class chtRcSolidTemperatureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class chtRcSolidTemperatureFvPatchScalarField
@@ -81,7 +81,8 @@ public:
             const dictionary&
         );
 
-        //- Construct by mapping given chtRcSolidTemperatureFvPatchScalarField onto a new patch
+        //- Construct by mapping given
+        //  chtRcSolidTemperatureFvPatchScalarField onto a new patch
         chtRcSolidTemperatureFvPatchScalarField
         (
             const chtRcSolidTemperatureFvPatchScalarField&,
@@ -117,6 +118,10 @@ public:
                 new chtRcSolidTemperatureFvPatchScalarField(*this, iF)
             );
         }
+
+
+    //- Destructor
+    virtual ~chtRcSolidTemperatureFvPatchScalarField() = default;
 
 
     // Member functions

@@ -174,7 +174,7 @@ Foam::tmp<Foam::pointField> Foam::polyPatch::calcFaceCentres
 {
     tmp<pointField> tctrs(new pointField(faces.size()));
 
-    pointField& ctrs = tctrs();
+    pointField& ctrs = tctrs.ref();
 
     forAll(faces, faceI)
     {
@@ -194,7 +194,7 @@ Foam::tmp<Foam::pointField> Foam::polyPatch::getAnchorPoints
 {
     tmp<pointField> tanchors(new pointField(faces.size()));
 
-    pointField& anchors = tanchors();
+    pointField& anchors = tanchors.ref();
 
     forAll(faces, faceI)
     {
@@ -473,12 +473,12 @@ const Foam::vectorField::subField Foam::polyPatch::faceAreas() const
 Foam::tmp<Foam::vectorField> Foam::polyPatch::faceCellCentres() const
 {
     tmp<vectorField> tcc(new vectorField(size()));
-    vectorField& cc = tcc();
+    vectorField& cc = tcc.ref();
 
     // get reference to global cell centres
     const vectorField& gcc = boundaryMesh_.mesh().cellCentres();
 
-    const unallocLabelList& faceCells = this->faceCells();
+    const labelUList& faceCells = this->faceCells();
 
     forAll (faceCells, facei)
     {
@@ -489,7 +489,7 @@ Foam::tmp<Foam::vectorField> Foam::polyPatch::faceCellCentres() const
 }
 
 
-const Foam::unallocLabelList& Foam::polyPatch::faceCells() const
+const Foam::labelUList& Foam::polyPatch::faceCells() const
 {
     if (!faceCellsPtr_)
     {

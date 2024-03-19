@@ -229,7 +229,7 @@ Foam::tmp<Foam::vectorField> Foam::cylindricalCS::globalToLocal
         coordinateSystem::globalToLocal(global, translate);
 
     tmp<vectorField> tresult(new vectorField(lc.size()));
-    vectorField& result = tresult();
+    vectorField& result = tresult.ref();
 
     result.replace
     (

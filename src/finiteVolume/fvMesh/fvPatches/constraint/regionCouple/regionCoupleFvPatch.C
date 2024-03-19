@@ -276,7 +276,7 @@ Foam::tmp<Foam::vectorField> Foam::regionCoupleFvPatch::delta() const
             (
                 shadow().Cn() - rcPolyPatch_.shadow().reconFaceCellCentres()
             );
-            vectorField& delta = tdelta();
+            vectorField& delta = tdelta.ref();
 
             if (bridgeOverlap())
             {
@@ -432,7 +432,7 @@ void Foam::regionCoupleFvPatch::expandCrMatrixToZone(crMatrix&) const
 
 Foam::tmp<Foam::labelField> Foam::regionCoupleFvPatch::interfaceInternalField
 (
-    const unallocLabelList& internalData
+    const labelUList& internalData
 ) const
 {
     return patchInternalField(internalData);
@@ -442,7 +442,7 @@ Foam::tmp<Foam::labelField> Foam::regionCoupleFvPatch::interfaceInternalField
 void Foam::regionCoupleFvPatch::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     labelTransferBuffer_ = interfaceData;
@@ -452,7 +452,7 @@ void Foam::regionCoupleFvPatch::initTransfer
 Foam::tmp<Foam::labelField> Foam::regionCoupleFvPatch::transfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
 
@@ -463,7 +463,7 @@ Foam::tmp<Foam::labelField> Foam::regionCoupleFvPatch::transfer
 void Foam::regionCoupleFvPatch::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     labelTransferBuffer_ = patchInternalField(iF);
@@ -473,7 +473,7 @@ void Foam::regionCoupleFvPatch::initInternalFieldTransfer
 Foam::tmp<Foam::labelField> Foam::regionCoupleFvPatch::internalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     return shadow().labelTransferBuffer();

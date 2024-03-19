@@ -126,7 +126,7 @@ void freestreamPressureFvPatchScalarField::updateCoeffs()
     }
     else
     {
-        FatalErrorIn("freestreamPressureFvPatchScalarField::updateCoeffs()")
+        FatalErrorInFunction
             << "dimensions of phi are not correct"
             << "\n    on patch " << this->patch().name()
             << " of field " << this->dimensionedInternalField().name()

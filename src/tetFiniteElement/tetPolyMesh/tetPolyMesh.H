@@ -292,13 +292,13 @@ public:
             }
 
             //- Owner
-            const unallocLabelList& owner() const
+            const labelUList& owner() const
             {
                 return lduAddr().lowerAddr();
             }
 
             //- Neighbour
-            const unallocLabelList& neighbour() const
+            const labelUList& neighbour() const
             {
                 return lduAddr().upperAddr();
             }

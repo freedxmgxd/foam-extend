@@ -226,7 +226,7 @@ Foam::chtRcThermalDiffusivityFvPatchScalarField::calcThermalDiffusivity
             lData[facei][1] = lfNei[facei];
         }
 
-        if(TwOwn.shadowPatchField().radiation())
+        if (TwOwn.shadowPatchField().radiation())
         {
             const scalarField& lTwNei = TwOwn.shadowPatchField().Tw();
             const scalarField& lQrNei =
@@ -276,7 +276,7 @@ Foam::chtRcThermalDiffusivityFvPatchScalarField::calcThermalDiffusivity
     const scalarField kNei = fNei/(p.weights()*p.magLongDeltas());
 
     tmp<scalarField> kTmp(new scalarField(p.size()));
-    scalarField& k = kTmp();
+    scalarField& k = kTmp.ref();
 
     k = kOwn*(kNei + Qr/stabilise(TcNei - TcOwn, SMALL));
     k /= p.deltaCoeffs()*(kOwn + kNei);
@@ -386,7 +386,7 @@ Foam::chtRcThermalDiffusivityFvPatchScalarField::calcTemperature
     const scalarField kNei = fNei/(p.weights()*p.magLongDeltas());
 
     tmp<scalarField> TwTmp(new scalarField(TwOwn.Tw()));
-    scalarField& Tw = TwTmp();
+    scalarField& Tw = TwTmp.ref();
 
     Tw = (Qr + kOwn*TcOwn + kNei*TcNei)/(kOwn + kNei);
 

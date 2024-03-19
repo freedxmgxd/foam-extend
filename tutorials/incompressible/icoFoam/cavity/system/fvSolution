@@ -18,17 +18,16 @@ solvers
 {
     p
     {
-        solver           PCG;
-        preconditioner   DIC;
-        tolerance        1e-06;
+        solver           CG;
+        preconditioner   Cholesky;
+        tolerance        1e-09;
         relTol           0;
     }
-
     U
     {
         solver           BiCGStab;
-        preconditioner   DILU;
-        tolerance        1e-05;
+        preconditioner   ILU0;
+        tolerance        1e-09;
         relTol           0;
     }
 }

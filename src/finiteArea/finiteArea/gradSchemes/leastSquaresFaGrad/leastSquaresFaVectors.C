@@ -99,8 +99,8 @@ void Foam::leastSquaresFaVectors::makeLeastSquaresVectors() const
     edgeVectorField& lsN = *nVectorsPtr_;
 
     // Set local references to mesh data
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = mesh().owner();
+    const labelUList& neighbour = mesh().neighbour();
 
     const areaVectorField& C = mesh().areaCentres();
     const edgeScalarField& w = mesh().weights();
@@ -130,7 +130,7 @@ void Foam::leastSquaresFaVectors::makeLeastSquaresVectors() const
 //         const faePatchScalarField& pMagSf = magSf.boundaryField()[patchi];
 
         const faPatch& p = pw.patch();
-        const unallocLabelList& edgeFaces = p.edgeFaces();
+        const labelUList& edgeFaces = p.edgeFaces();
 
         // Build the d-vectors
         // HJ, reconsider deltas at the boundary, consistent with FVM
@@ -188,7 +188,7 @@ void Foam::leastSquaresFaVectors::makeLeastSquaresVectors() const
 //         const faePatchScalarField& pMagSf = magSf.boundaryField()[patchi];
 
         const faPatch& p = pw.patch();
-        const unallocLabelList& edgeFaces = p.edgeFaces();
+        const labelUList& edgeFaces = p.edgeFaces();
 
         // Build the d-vectors
         vectorField pd = p.delta();

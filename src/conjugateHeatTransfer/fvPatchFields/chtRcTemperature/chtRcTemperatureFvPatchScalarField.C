@@ -160,7 +160,8 @@ void Foam::chtRcTemperatureFvPatchScalarField::initEvaluate
             << abort(FatalError);
     }
 
-    const chtRegionCoupleBase& K = dynamic_cast<const chtRegionCoupleBase&>(kpf);
+    const chtRegionCoupleBase& K =
+        dynamic_cast<const chtRegionCoupleBase&>(kpf);
 
     *this == K.calcTemperature(*this, shadowPatchField(), K);
 }
@@ -224,14 +225,14 @@ void Foam::chtRcTemperatureFvPatchScalarField::manipulateMatrix
 {
     const fvPatch& p = patch();
     const scalarField& magSf = p.magSf();
-    const labelList& cellLabels = p.faceCells();
+    const labelList& faceCells = p.faceCells();
     scalarField& source = matrix.source();
 
     scalarField s = this->source();
 
-    forAll(cellLabels, i)
+    forAll(faceCells, i)
     {
-        source[cellLabels[i]] += s[i]*magSf[i];
+        source[faceCells[i]] += s[i]*magSf[i];
     }
 }
 

@@ -44,7 +44,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian       \
 (                                                                            \
     const GeometricField<scalar, fvsPatchField, surfaceMesh>& gamma,         \
     const GeometricField<Type, fvPatchField, volMesh>& vf                    \
-)                                                                            \
+) const                                                                      \
 {                                                                            \
     const fvMesh& mesh = this->mesh();                                       \
                                                                              \
@@ -54,7 +54,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian       \
     );                                                                       \
                                                                              \
     tmp<fvMatrix<Type> > tfvm = fvmLaplacianUncorrected(gammaMagSf, vf);     \
-    fvMatrix<Type>& fvm = tfvm();                                            \
+    fvMatrix<Type>& fvm = tfvm.ref();                                        \
                                                                              \
     if (this->tsnGradScheme_().corrected())                                  \
     {                                                                        \
@@ -94,7 +94,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvcLaplacian       \
 (                                                                            \
     const GeometricField<scalar, fvsPatchField, surfaceMesh>& gamma,         \
     const GeometricField<Type, fvPatchField, volMesh>& vf                    \
-)                                                                            \
+) const                                                                      \
 {                                                                            \
     const fvMesh& mesh = this->mesh();                                       \
                                                                              \
@@ -103,7 +103,10 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvcLaplacian       \
         fvc::div(gamma*this->tsnGradScheme_().snGrad(vf)*mesh.magSf())       \
     );                                                                       \
                                                                              \
-    tLaplacian().rename("laplacian(" + gamma.name() + ',' + vf.name() + ')');\
+    tLaplacian.ref().rename                                                  \
+    (                                                                        \
+        "laplacian(" + gamma.name() + ',' + vf.name() + ')'                  \
+    );                                                                       \
                                                                              \
     return tLaplacian;                                                       \
 }

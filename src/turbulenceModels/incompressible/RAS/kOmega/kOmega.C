@@ -242,7 +242,7 @@ void kOmega::correct()
     omega_.boundaryField().updateCoeffs();
 
     // Turbulence specific dissipation rate equation
-    tmp<fvScalarMatrix> omegaEqn
+    fvScalarMatrix omegaEqn
     (
         fvm::ddt(omega_)
       + fvm::div(phi_, omega_)
@@ -253,18 +253,18 @@ void kOmega::correct()
       - fvm::Sp(beta_*omega_, omega_)
     );
 
-    omegaEqn().relax();
-
     // No longer needed: matrix completes at the point of solution
     // HJ, 17/Apr/2012
 //     omegaEqn().completeAssembly();
+
+    omegaEqn.relax();
 
     solve(omegaEqn);
     bound(omega_, omega0_);
 
 
     // Turbulent kinetic energy equation
-    tmp<fvScalarMatrix> kEqn
+    fvScalarMatrix kEqn
     (
         fvm::ddt(k_)
       + fvm::div(phi_, k_)
@@ -275,7 +275,7 @@ void kOmega::correct()
       - fvm::Sp(Cmu_*omega_, k_)
     );
 
-    kEqn().relax();
+    kEqn.relax();
     solve(kEqn);
     bound(k_, k0_);
 

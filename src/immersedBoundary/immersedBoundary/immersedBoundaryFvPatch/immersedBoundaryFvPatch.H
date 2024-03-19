@@ -31,7 +31,6 @@ Notes
     Rewrite of the immersed boundary method for increased efficiency
     and robustness.  Main changes
     - using octree for fast search of eligible cells using indexedOctree
-    - parallel communication using mapDistribute
 
     Complete rewrite of Immersed Boundary methodology: use cell cutting
     at fvMesh level.  Hrvoje Jasak.
@@ -169,7 +168,7 @@ public:
             }
 
             //- Return faceCells next to the IB surface
-            virtual const unallocLabelList& faceCells() const;
+            virtual const labelUList& faceCells() const;
 
 
         // Access functions for geometrical data

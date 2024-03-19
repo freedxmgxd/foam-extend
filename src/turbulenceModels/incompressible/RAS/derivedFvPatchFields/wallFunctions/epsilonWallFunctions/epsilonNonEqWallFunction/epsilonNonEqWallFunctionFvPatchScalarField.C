@@ -195,7 +195,7 @@ void epsilonNonEqWallFunctionFvPatchScalarField::updateCoeffs()
         lookupPatchField<volScalarField, scalar>(nutName_);
 
     // Get face cells
-    const unallocLabelList& fc = patch().faceCells();
+    const labelUList& fc = patch().faceCells();
 
     // Set epsilon
     forAll(nutw, faceI)

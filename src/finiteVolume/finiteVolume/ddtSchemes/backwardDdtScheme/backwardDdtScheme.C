@@ -43,14 +43,14 @@ namespace fv
 template<class Type>
 scalar backwardDdtScheme<Type>::deltaT_() const
 {
-    return mesh().time().deltaT().value();
+    return this->mesh().time().deltaT().value();
 }
 
 
 template<class Type>
 scalar backwardDdtScheme<Type>::deltaT0_() const
 {
-    return mesh().time().deltaT0().value();
+    return this->mesh().time().deltaT0().value();
 }
 
 
@@ -78,15 +78,15 @@ tmp<GeometricField<Type, fvPatchField, volMesh> >
 backwardDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+dt.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
     scalar deltaT = deltaT_();
@@ -96,14 +96,14 @@ backwardDdtScheme<Type>::fvcDdt
     scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalar coefft0  = coefft + coefft00;
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         tmp<GeometricField<Type, fvPatchField, volMesh> > tdtdt
         (
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 dimensioned<Type>
                 (
                     "0",
@@ -113,9 +113,11 @@ backwardDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt().internalField() = rDeltaT.value()*dt.value()*
+        tdtdt.ref().internalField() = rDeltaT.value()*dt.value()*
         (
-            coefft - (coefft0*mesh().V0() - coefft00*mesh().V00())/mesh().V()
+            coefft
+          - (coefft0*this->mesh().V0() - coefft00*this->mesh().V00())/
+            this->mesh().V()
         );
 
         return tdtdt;
@@ -127,7 +129,7 @@ backwardDdtScheme<Type>::fvcDdt
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 dimensioned<Type>
                 (
                     "0",
@@ -146,15 +148,15 @@ tmp<GeometricField<Type, fvPatchField, volMesh> >
 backwardDdtScheme<Type>::fvcDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+vf.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
     scalar deltaT = deltaT_();
@@ -164,23 +166,23 @@ backwardDdtScheme<Type>::fvcDdt
     scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalar coefft0  = coefft + coefft00;
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, fvPatchField, volMesh> >
         (
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*vf.dimensions(),
                 rDeltaT.value()*
                 (
                     coefft*vf.internalField() -
                     (
-                        coefft0*vf.oldTime().internalField()*mesh().V0()
+                        coefft0*vf.oldTime().internalField()*this->mesh().V0()
                       - coefft00*vf.oldTime().oldTime().internalField()
-                       *mesh().V00()
-                    )/mesh().V()
+                       *this->mesh().V00()
+                    )/this->mesh().V()
                 ),
                 rDeltaT.value()*
                 (
@@ -218,15 +220,15 @@ backwardDdtScheme<Type>::fvcDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+rho.name()+','+vf.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
     scalar deltaT = deltaT_();
@@ -236,23 +238,23 @@ backwardDdtScheme<Type>::fvcDdt
     scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalar coefft0  = coefft + coefft00;
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, fvPatchField, volMesh> >
         (
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.value()*rho.value()*
                 (
                     coefft*vf.internalField() -
                     (
-                        coefft0*vf.oldTime().internalField()*mesh().V0()
+                        coefft0*vf.oldTime().internalField()*this->mesh().V0()
                       - coefft00*vf.oldTime().oldTime().internalField()
-                       *mesh().V00()
-                    )/mesh().V()
+                       *this->mesh().V00()
+                    )/this->mesh().V()
                 ),
                 rDeltaT.value()*rho.value()*
                 (
@@ -289,15 +291,15 @@ backwardDdtScheme<Type>::fvcDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+rho.name()+','+vf.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
     scalar deltaT = deltaT_();
@@ -307,24 +309,25 @@ backwardDdtScheme<Type>::fvcDdt
     scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalar coefft0  = coefft + coefft00;
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, fvPatchField, volMesh> >
         (
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.value()*
                 (
                     coefft*rho.internalField()*vf.internalField() -
                     (
                         coefft0*rho.oldTime().internalField()
-                       *vf.oldTime().internalField()*mesh().V0()
+                       *vf.oldTime().internalField()*this->mesh().V0()
                       - coefft00*rho.oldTime().oldTime().internalField()
-                       *vf.oldTime().oldTime().internalField()*mesh().V00()
-                    )/mesh().V()
+                       *vf.oldTime().oldTime().internalField()*
+                        this->mesh().V00()
+                    )/this->mesh().V()
                 ),
                 rDeltaT.value()*
                 (
@@ -363,7 +366,7 @@ tmp<fvMatrix<Type> >
 backwardDdtScheme<Type>::fvmDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -374,7 +377,7 @@ backwardDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -385,20 +388,20 @@ backwardDdtScheme<Type>::fvmDdt
     scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalar coefft0  = coefft + coefft00;
 
-    fvm.diag() = (coefft*rDeltaT)*mesh().V();
+    fvm.diag() = (coefft*rDeltaT)*this->mesh().V();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         fvm.source() = rDeltaT*
         (
-            coefft0*vf.oldTime().internalField()*mesh().V0()
+            coefft0*vf.oldTime().internalField()*this->mesh().V0()
           - coefft00*vf.oldTime().oldTime().internalField()
-           *mesh().V00()
+           *this->mesh().V00()
         );
     }
     else
     {
-        fvm.source() = rDeltaT*mesh().V()*
+        fvm.source() = rDeltaT*this->mesh().V()*
         (
             coefft0*vf.oldTime().internalField()
           - coefft00*vf.oldTime().oldTime().internalField()
@@ -415,7 +418,7 @@ backwardDdtScheme<Type>::fvmDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -425,7 +428,7 @@ backwardDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -436,20 +439,20 @@ backwardDdtScheme<Type>::fvmDdt
     scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalar coefft0  = coefft + coefft00;
 
-    fvm.diag() = (coefft*rDeltaT*rho.value())*mesh().V();
+    fvm.diag() = (coefft*rDeltaT*rho.value())*this->mesh().V();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         fvm.source() = rDeltaT*rho.value()*
         (
-            coefft0*vf.oldTime().internalField()*mesh().V0()
+            coefft0*vf.oldTime().internalField()*this->mesh().V0()
           - coefft00*vf.oldTime().oldTime().internalField()
-           *mesh().V00()
+           *this->mesh().V00()
         );
     }
     else
     {
-        fvm.source() = rDeltaT*mesh().V()*rho.value()*
+        fvm.source() = rDeltaT*this->mesh().V()*rho.value()*
         (
             coefft0*vf.oldTime().internalField()
           - coefft00*vf.oldTime().oldTime().internalField()
@@ -466,7 +469,7 @@ backwardDdtScheme<Type>::fvmDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -476,7 +479,7 @@ backwardDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -487,21 +490,21 @@ backwardDdtScheme<Type>::fvmDdt
     scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalar coefft0  = coefft + coefft00;
 
-    fvm.diag() = (coefft*rDeltaT)*rho.internalField()*mesh().V();
+    fvm.diag() = (coefft*rDeltaT)*rho.internalField()*this->mesh().V();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         fvm.source() = rDeltaT*
         (
             coefft0*rho.oldTime().internalField()
-           *vf.oldTime().internalField()*mesh().V0()
+           *vf.oldTime().internalField()*this->mesh().V0()
           - coefft00*rho.oldTime().oldTime().internalField()
-           *vf.oldTime().oldTime().internalField()*mesh().V00()
+           *vf.oldTime().oldTime().internalField()*this->mesh().V00()
         );
     }
     else
     {
-        fvm.source() = rDeltaT*mesh().V()*
+        fvm.source() = rDeltaT*this->mesh().V()*
         (
             coefft0*rho.oldTime().internalField()
            *vf.oldTime().internalField()
@@ -521,15 +524,15 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
     const volScalarField& rA,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddtPhiCorr(" + rA.name() + ',' + U.name() + ',' + phi.name() + ')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
     scalar deltaT = deltaT_();
@@ -559,7 +562,7 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
                             coefft0*U.oldTime()
                           - coefft00*U.oldTime().oldTime()
                         )
-                    ) & mesh().Sf()
+                    ) & this->mesh().Sf()
                 )
             )
         )
@@ -575,9 +578,9 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phiAbs
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
@@ -586,8 +589,8 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
       + rho.name() + ','
       + U.name() + ','
       + phiAbs.name() + ')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
     scalar deltaT = deltaT_();
@@ -623,7 +626,7 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
                               - coefft00*rho.oldTime().oldTime()
                                *U.oldTime().oldTime()
                             )
-                        ) & mesh().Sf()
+                        ) & this->mesh().Sf()
                     )
                 )
             )
@@ -662,7 +665,7 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
                                 coefft0*U.oldTime()
                               - coefft00*U.oldTime().oldTime()
                             )
-                        ) & mesh().Sf()
+                        ) & this->mesh().Sf()
                     )
                 )
             )
@@ -695,7 +698,7 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
                                 coefft0*U.oldTime()
                               - coefft00*U.oldTime().oldTime()
                             )
-                        ) & mesh().Sf()
+                        ) & this->mesh().Sf()
                     )
                 )
             )
@@ -703,10 +706,8 @@ backwardDdtScheme<Type>::fvcDdtPhiCorr
     }
     else
     {
-        FatalErrorIn
-        (
-            "backwardDdtScheme<Type>::fvcDdtPhiCorr"
-        )   << "dimensions of phiAbs are not correct"
+        FatalErrorInFunction
+            << "dimensions of phiAbs are not correct"
             << abort(FatalError);
 
         return fluxFieldType::null();
@@ -721,7 +722,7 @@ backwardDdtScheme<Type>::fvcDdtConsistentPhiCorr
     const GeometricField<Type, fvsPatchField, surfaceMesh>& faceU,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const surfaceScalarField& rAUf
-)
+) const
 {
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_(U);
@@ -739,11 +740,11 @@ backwardDdtScheme<Type>::fvcDdtConsistentPhiCorr
 
     // Calculate old and old-old flux contributions
     fluxFieldType oldTimeFlux =
-        beta*rAUf*(mesh().Sf() & faceU.oldTime());
+        beta*rAUf*(this->mesh().Sf() & faceU.oldTime());
     fluxFieldType oldOldTimeFlux =
-        gamma*rAUf*(mesh().Sf() & faceU.oldTime().oldTime());
+        gamma*rAUf*(this->mesh().Sf() & faceU.oldTime().oldTime());
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         // Mesh is moving, need to take into account the ratio between old and
         // current cell volumes for old flux contribution
@@ -752,16 +753,16 @@ backwardDdtScheme<Type>::fvcDdtConsistentPhiCorr
             IOobject
             (
                 "V0ByV",
-                mesh().time().timeName(),
-                mesh(),
+                this->mesh().time().timeName(),
+                this->mesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh(),
+            this->mesh(),
             dimensionedScalar("one", dimless, 1.0),
             zeroGradientFvPatchScalarField::typeName
         );
-        V0ByV.internalField() = mesh().V0()/mesh().V();
+        V0ByV.internalField() = this->mesh().V0()/this->mesh().V();
         V0ByV.correctBoundaryConditions();
 
         // Correct old time flux contribution
@@ -775,16 +776,16 @@ backwardDdtScheme<Type>::fvcDdtConsistentPhiCorr
             IOobject
             (
                 "V00ByV",
-                mesh().time().timeName(),
-                mesh(),
+                this->mesh().time().timeName(),
+                this->mesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh(),
+            this->mesh(),
             dimensionedScalar("one", dimless, 1.0),
             zeroGradientFvPatchScalarField::typeName
         );
-        V00ByV.internalField() = mesh().V00()/mesh().V();
+        V00ByV.internalField() = this->mesh().V00()/this->mesh().V();
         V00ByV.correctBoundaryConditions();
 
         // Correct old-old time flux contribution
@@ -799,7 +800,7 @@ template<class Type>
 tmp<surfaceScalarField> backwardDdtScheme<Type>::meshPhi
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     const scalar deltaT = deltaT_();
     const scalar deltaT0 = deltaT0_(vf);
@@ -809,7 +810,7 @@ tmp<surfaceScalarField> backwardDdtScheme<Type>::meshPhi
     const scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     const scalar coefft  = 1 + deltaT/(deltaT + deltaT0);
 
-    return coefft*mesh().phi() - coefft00*mesh().phi().oldTime();
+    return coefft*this->mesh().phi() - coefft00*this->mesh().phi().oldTime();
 }
 
 

@@ -648,7 +648,7 @@ tmp<pointField> GGIInterpolation<MasterPatch, SlavePatch>::projectPointsOnPlane
 ) const
 {
     tmp<pointField> tprojectedPoints(new pointField(lpoints.size()));
-    pointField& projectedPoints = tprojectedPoints();
+    pointField& projectedPoints = tprojectedPoints.ref();
 
     vector normalVector = planeDirection/(mag(planeDirection) + VSMALL);
 

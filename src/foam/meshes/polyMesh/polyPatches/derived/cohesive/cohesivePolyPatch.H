@@ -126,9 +126,8 @@ public:
         }
 
 
-    // Destructor
-
-        virtual ~cohesivePolyPatch();
+    //- Destructor
+    virtual ~cohesivePolyPatch() = default;
 
 
     // Member Functions

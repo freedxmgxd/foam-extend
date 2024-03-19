@@ -86,13 +86,13 @@ Foam::tmp<Foam::volDiagTensorField> Foam::rheologyLaw::K() const
         )
     );
 
-  volDiagTensorField& result = tresult();
+  volDiagTensorField& result = tresult.ref();
 
   result.replace(diagTensor::XX, A11);
   result.replace(diagTensor::YY, A22);
   result.replace(diagTensor::ZZ, A33);
 
-  tresult().correctBoundaryConditions();
+  tresult.ref().correctBoundaryConditions();
 
   return tresult;
 }
@@ -131,7 +131,7 @@ Foam::tmp<Foam::volSymmTensor4thOrderField> Foam::rheologyLaw::C() const
         )
     );
 
-  volSymmTensor4thOrderField& result = tresult();
+  volSymmTensor4thOrderField& result = tresult.ref();
 
   result.replace(symmTensor4thOrder::XXXX, twoMuLambda);
   result.replace(symmTensor4thOrder::XXYY, lambda);
@@ -146,7 +146,7 @@ Foam::tmp<Foam::volSymmTensor4thOrderField> Foam::rheologyLaw::C() const
   result.replace(symmTensor4thOrder::YZYZ, twoMu);
   result.replace(symmTensor4thOrder::ZXZX, twoMu);
 
-  tresult().correctBoundaryConditions();
+  result.correctBoundaryConditions();
 
   return tresult;
 }

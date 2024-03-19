@@ -285,35 +285,35 @@ public:
             //  the interface as a field
             virtual tmp<labelField> interfaceInternalField
             (
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const;
 
             //- Initialise interface data transfer
             virtual void initTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const;
 
             //- Transfer and return neighbour field
             virtual tmp<labelField> transfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& interfaceData
+                const labelUList& interfaceData
             ) const;
 
             //- Initialise neighbour field transfer
             virtual void initInternalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const;
 
             //- Return neighbour field
             virtual tmp<labelField> internalFieldTransfer
             (
                 const Pstream::commsTypes commsType,
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const;
 
             //- Write the patch data as a dictionary

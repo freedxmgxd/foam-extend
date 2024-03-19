@@ -99,7 +99,7 @@ class faMatrix
         template<class Type2>
         void addToInternalField
         (
-            const unallocLabelList& addr,
+            const labelUList& addr,
             const Field<Type2>& pf,
             Field<Type2>& intf
         ) const;
@@ -107,7 +107,7 @@ class faMatrix
         template<class Type2>
         void addToInternalField
         (
-            const unallocLabelList& addr,
+            const labelUList& addr,
             const tmp<Field<Type2> >& tpf,
             Field<Type2>& intf
         ) const;
@@ -116,7 +116,7 @@ class faMatrix
         template<class Type2>
         void subtractFromInternalField
         (
-            const unallocLabelList& addr,
+            const labelUList& addr,
             const Field<Type2>& pf,
             Field<Type2>& intf
         ) const;
@@ -124,7 +124,7 @@ class faMatrix
         template<class Type2>
         void subtractFromInternalField
         (
-            const unallocLabelList& addr,
+            const labelUList& addr,
             const tmp<Field<Type2> >& tpf,
             Field<Type2>& intf
         ) const;
@@ -200,6 +200,16 @@ public:
             const GeometricField<Type, faPatchField, areaMesh>&,
             Istream&
         );
+
+
+        //- Clone
+        tmp<faMatrix<Type> > clone() const
+        {
+            return tmp<faMatrix<Type> >
+            (
+                new faMatrix<Type>(*this)
+            );
+        }
 
 
     //- Destructor

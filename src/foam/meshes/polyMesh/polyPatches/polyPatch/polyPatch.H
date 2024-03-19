@@ -420,7 +420,7 @@ public:
         // Addressing into mesh
 
             //- Return face-cell addressing
-            const unallocLabelList& faceCells() const;
+            const labelUList& faceCells() const;
 
             //- Return global edge index for local edges
             const labelList& meshEdges() const;

@@ -45,17 +45,17 @@ namespace Foam
 
 class refCount
 {
-    // Private data
+    // Private Data
 
         int count_;
 
     // Private member functions
 
         //- Dissallow copy
-        refCount(const refCount&);
+        refCount(const refCount&) = delete;
 
         //- Dissallow bitwise assignment
-        void operator=(const refCount&);
+        void operator=(const refCount&) = delete;
 
 
 public:

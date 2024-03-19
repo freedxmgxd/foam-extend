@@ -78,8 +78,8 @@ void solidInterface::makeSubMesh() const
 
     const scalarField& materialsI = materials.internalField();
 
-    const unallocLabelList& owner = mesh_.owner();
-    const unallocLabelList& neighbour = mesh_.neighbour();
+    const labelUList& owner = mesh_.owner();
+    const labelUList& neighbour = mesh_.neighbour();
 
     labelHashSet interfaceCellSet;
 
@@ -155,8 +155,8 @@ void solidInterface::makeGlobalInterFaces() const
 
         const scalarField& materialsI = materials.internalField();
 
-        const unallocLabelList& owner = mesh_.owner();
-        const unallocLabelList& neighbour = mesh_.neighbour();
+        const labelUList& owner = mesh_.owner();
+        const labelUList& neighbour = mesh_.neighbour();
 
         labelHashSet interFacesSet;
 
@@ -211,8 +211,8 @@ void solidInterface::makeLocalInterFaces() const
 
     const fvMesh& sMesh = subMesh().subMesh();
 
-    const unallocLabelList& owner = sMesh.owner();
-    const unallocLabelList& neighbour = sMesh.neighbour();
+    const labelUList& owner = sMesh.owner();
+    const labelUList& neighbour = sMesh.neighbour();
 
     labelHashSet interFacesSet;
 
@@ -418,8 +418,8 @@ void solidInterface::makeIndicator() const
 
     List<labelPair>& indicator = *indicatorPtr_;
 
-    const unallocLabelList& owner = mesh_.owner();
-    const unallocLabelList& neighbour = mesh_.neighbour();
+    const labelUList& owner = mesh_.owner();
+    const labelUList& neighbour = mesh_.neighbour();
 
     if (mesh_.foundObject<volScalarField>("materials"))
     {

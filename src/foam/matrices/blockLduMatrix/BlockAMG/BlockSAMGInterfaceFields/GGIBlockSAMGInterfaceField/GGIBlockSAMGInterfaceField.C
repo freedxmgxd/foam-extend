@@ -148,7 +148,7 @@ Foam::GGIBlockSAMGInterfaceField<Type>::selectBlockCoeffs
 ) const
 {
     tmp<CoeffField<Type> > tcoarseCoeffs(new CoeffField<Type>(size()));
-    CoeffField<Type>& coarseCoeffs = tcoarseCoeffs();
+    CoeffField<Type>& coarseCoeffs = tcoarseCoeffs.ref();
 
     typedef CoeffField<Type> TypeCoeffField;
 
@@ -233,7 +233,7 @@ void Foam::GGIBlockSAMGInterfaceField<Type>::updateInterfaceMatrix
     // of multiplication
     multiply(pnf, coeffs, pnf);
 
-    const unallocLabelList& faceCells = ggiInterface_.faceCells();
+    const labelUList& faceCells = ggiInterface_.faceCells();
 
     if (switchToLhs)
     {

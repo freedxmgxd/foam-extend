@@ -184,7 +184,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::anisotropicFilter::operator()
 
     for (direction d=0; d<symmTensor::nComponents; d++)
     {
-        tmpFilteredField().replace
+        tmpFilteredField.ref().replace
         (
             d, anisotropicFilter::operator()(unFilteredField().component(d))
         );
@@ -220,7 +220,7 @@ Foam::tmp<Foam::volTensorField> Foam::anisotropicFilter::operator()
 
     for (direction d=0; d<tensor::nComponents; d++)
     {
-        tmpFilteredField().replace
+        tmpFilteredField.ref().replace
         (
             d, anisotropicFilter::operator()(unFilteredField().component(d))
         );

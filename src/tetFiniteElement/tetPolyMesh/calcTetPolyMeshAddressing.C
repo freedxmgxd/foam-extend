@@ -97,7 +97,7 @@ label tetPolyMesh::addressing
     labelList& globalToLocalBuffer
 ) const
 {
-    const unallocFaceList& meshFaces = mesh_.faces();
+    const faceUList& meshFaces = mesh_.faces();
 
     const labelList& cellFaces = mesh_.cells()[cellID];
 

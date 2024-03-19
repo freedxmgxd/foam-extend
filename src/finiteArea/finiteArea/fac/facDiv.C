@@ -54,7 +54,7 @@ div
     tmp<GeometricField<Type, faPatchField, areaMesh> > tDiv =
         fac::edgeIntegrate(ssf);
 
-    GeometricField<Type, faPatchField, areaMesh>& Div = tDiv();
+    GeometricField<Type, faPatchField, areaMesh>& Div = tDiv.ref();
 
     Div.internalField() = transform(tensor::I - sqr(n), Div.internalField());
     Div.correctBoundaryConditions();
@@ -112,7 +112,7 @@ div
         typename innerProduct<vector, Type>::type,
         faPatchField,
         areaMesh
-    >& Div = tDiv();
+    >& Div = tDiv.ref();
 
     Div.internalField() = transform(tensor::I - sqr(n), Div.internalField());
     Div.correctBoundaryConditions();
@@ -205,7 +205,7 @@ div
             vf.mesh().schemesDict().divScheme(name)
         )().facDiv(flux, vf)
     );
-    GeometricField<Type, faPatchField, areaMesh>& Div = tDiv();
+    GeometricField<Type, faPatchField, areaMesh>& Div = tDiv.ref();
 
     Div.internalField() = transform(tensor::I - sqr(n), Div.internalField());
     Div.correctBoundaryConditions();

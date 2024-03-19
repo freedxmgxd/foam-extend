@@ -129,13 +129,6 @@ Foam::hPsiMixtureThermo<MixtureType>::hPsiMixtureThermo
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class MixtureType>
-Foam::hPsiMixtureThermo<MixtureType>::~hPsiMixtureThermo()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class MixtureType>
@@ -181,7 +174,7 @@ Foam::hPsiMixtureThermo<MixtureType>::hc() const
         )
     );
 
-    volScalarField& hcf = thc();
+    volScalarField& hcf = thc.ref();
     scalarField& hcCells = hcf.internalField();
 
     forAll(hcCells, celli)
@@ -212,7 +205,7 @@ Foam::hPsiMixtureThermo<MixtureType>::h
 ) const
 {
     tmp<scalarField> th(new scalarField(T.size()));
-    scalarField& h = th();
+    scalarField& h = th.ref();
 
     forAll(T, celli)
     {
@@ -232,7 +225,7 @@ Foam::hPsiMixtureThermo<MixtureType>::h
 ) const
 {
     tmp<scalarField> th(new scalarField(T.size()));
-    scalarField& h = th();
+    scalarField& h = th.ref();
 
     forAll(T, facei)
     {
@@ -253,7 +246,7 @@ Foam::hPsiMixtureThermo<MixtureType>::Cp
 {
     tmp<scalarField> tCp(new scalarField(T.size()));
 
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, facei)
     {
@@ -273,7 +266,7 @@ Foam::hPsiMixtureThermo<MixtureType>::Cp
 ) const
 {
     tmp<scalarField> tCp(new scalarField(T.size()));
-    scalarField& cp = tCp();
+    scalarField& cp = tCp.ref();
 
     forAll(T, celli)
     {
@@ -307,7 +300,7 @@ Foam::hPsiMixtureThermo<MixtureType>::Cp() const
         )
     );
 
-    volScalarField& cp = tCp();
+    volScalarField& cp = tCp.ref();
 
     scalarField& cpCells = cp.internalField();
     const scalarField& TCells = T_.internalField();

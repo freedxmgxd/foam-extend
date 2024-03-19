@@ -410,8 +410,7 @@ Foam::linearValveLayersFvMesh::newLayerPoints() const
     (
         new pointField(allPoints())
     );
-
-    pointField& np = tnewLayerPoints();
+    pointField& np = tnewLayerPoints.ref();
 
     const word layerPatchName
     (

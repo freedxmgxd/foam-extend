@@ -20,18 +20,20 @@ internalField   uniform 100;
 
 boundaryField
 {
-    topAndBottom
-    {
-        type            zeroGradient;
-    }
-
-    left
+    bottom
     {
         type            chtRcThermalDiffusivity;
         remoteField     kappaEff;
         value           uniform 100;
     }
-
+    top
+    {
+        type            zeroGradient;
+    }
+    left
+    {
+        type            zeroGradient;
+    }
     right
     {
         type            zeroGradient;

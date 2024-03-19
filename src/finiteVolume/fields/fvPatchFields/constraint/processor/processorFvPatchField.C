@@ -469,7 +469,7 @@ void Foam::processorFvPatchField<Type>::updateInterfaceMatrix
 
     // Multiply the field by coefficients and add into the result
 
-    const unallocLabelList& faceCells = this->patch().faceCells();
+    const labelUList& faceCells = this->patch().faceCells();
 
     if (switchToLhs)
     {
@@ -600,7 +600,7 @@ void Foam::processorFvPatchField<Type>::updateInterfaceMatrix
     // of multiplication
     multiply(receiveBuf_, coeffs, receiveBuf_);
 
-    const unallocLabelList& faceCells = this->patch().faceCells();
+    const labelUList& faceCells = this->patch().faceCells();
 
     if (switchToLhs)
     {

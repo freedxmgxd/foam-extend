@@ -71,10 +71,10 @@ class constantThermal
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        constantThermal(const constantThermal&);
+        constantThermal(const constantThermal&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const constantThermal&);
+        void operator=(const constantThermal&) = delete;
 
 
 public:
@@ -96,9 +96,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~constantThermal();
+    //- Destructor
+    virtual ~constantThermal() = default;
 
 
     // Member Functions

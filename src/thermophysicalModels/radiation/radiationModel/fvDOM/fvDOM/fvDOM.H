@@ -110,7 +110,7 @@ class fvDOM
         //- Emmited radiative heat flux [W/m2], per band
         PtrList<volScalarField::GeometricBoundaryField> Qem_;
 
-        //- Incidet radiative heat flux [W/m2], per band
+        //- Incident radiative heat flux [W/m2], per band
         PtrList<volScalarField::GeometricBoundaryField> Qin_;
 
         //- Convergence criterion
@@ -135,10 +135,10 @@ class fvDOM
         void initialise();
 
         //- Disallow default bitwise copy construct
-        fvDOM(const fvDOM&);
+        fvDOM(const fvDOM&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fvDOM&);
+        void operator=(const fvDOM&) = delete;
 
         //- Update nlack body emission
         void updateBlackBodyEmission();
@@ -163,7 +163,7 @@ public:
 
 
     //- Destructor
-    virtual ~fvDOM();
+    virtual ~fvDOM() = default;
 
 
     // Member functions

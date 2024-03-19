@@ -102,7 +102,7 @@ class BlockCholeskyPrecon
         template<class DiagType, class ULType>
         void diagInterfaceMultiply
         (
-            const unallocLabelList& fc,
+            const labelUList& fc,
             Field<DiagType>& dDiag,
             const Field<ULType>& coupleUpper,
             const Field<ULType>& coupleLower

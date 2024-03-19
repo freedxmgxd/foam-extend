@@ -156,7 +156,7 @@ inline tmp<volVectorField> spray::momentumSource() const
         )
     );
 
-    tsource().internalField() = sms_/runTime_.deltaT().value()/mesh_.V();
+    tsource.ref().internalField() = sms_/runTime_.deltaT().value()/mesh_.V();
 
     return tsource;
 }
@@ -184,13 +184,13 @@ inline tmp<volScalarField> spray::evaporationSource(const label si) const
     if (isLiquidFuel_[si])
     {
         label fi = gasToLiquidIndex_[si];
-        tsource().internalField() =
+        tsource.ref().internalField() =
             srhos_[fi]/runTime_.deltaT().value()/mesh_.V();
     }
     else
     {
         scalarField s(mesh_.nCells(), 0.0);
-        tsource().internalField() = s;
+        tsource.ref().internalField() = s;
     }
 
     return tsource;
@@ -216,7 +216,7 @@ inline tmp<volScalarField> spray::heatTransferSource() const
         )
     );
 
-    tsource().internalField() = shs_/runTime_.deltaT().value()/mesh_.V();
+    tsource.ref().internalField() = shs_/runTime_.deltaT().value()/mesh_.V();
 
     return tsource;
 }

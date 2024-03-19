@@ -161,8 +161,8 @@ surfaceInterpolationScheme<Type>::interpolate
     const scalarField& y = ys.internalField();
 
     const fvMesh& mesh = vf.mesh();
-    const unallocLabelList& P = mesh.owner();
-    const unallocLabelList& N = mesh.neighbour();
+    const labelUList& P = mesh.owner();
+    const labelUList& N = mesh.neighbour();
 
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsf
     (
@@ -178,7 +178,7 @@ surfaceInterpolationScheme<Type>::interpolate
             vf.dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
     // updateCoupledPatchFields for patchNeighbourField update
     // HJ, 10/Sep/2021
@@ -186,7 +186,7 @@ surfaceInterpolationScheme<Type>::interpolate
 
     Field<Type>& sfi = sf.internalField();
 
-    for (label fi=0; fi<P.size(); fi++)
+    for (label fi = 0; fi < P.size(); fi++)
     {
         sfi[fi] = lambda[fi]*vfi[P[fi]] + y[fi]*vfi[N[fi]];
     }
@@ -237,8 +237,8 @@ surfaceInterpolationScheme<Type>::interpolate
     const scalarField& lambda = lambdas.internalField();
 
     const fvMesh& mesh = vf.mesh();
-    const unallocLabelList& P = mesh.owner();
-    const unallocLabelList& N = mesh.neighbour();
+    const labelUList& P = mesh.owner();
+    const labelUList& N = mesh.neighbour();
 
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tsf
     (
@@ -254,7 +254,7 @@ surfaceInterpolationScheme<Type>::interpolate
             vf.dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
     // updateCoupledPatchFields for patchNeighbourField update
     // HJ, 10/Sep/2021
@@ -309,7 +309,7 @@ surfaceInterpolationScheme<Type>::interpolate
 
     if (corrected())
     {
-        tsf() += correction(vf);
+        tsf.ref() += correction(vf);
     }
 
     return tsf;

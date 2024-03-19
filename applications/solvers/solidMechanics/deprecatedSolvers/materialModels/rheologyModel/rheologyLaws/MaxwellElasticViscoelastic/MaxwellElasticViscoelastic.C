@@ -61,12 +61,6 @@ Foam::MaxwellElasticViscoelastic::MaxwellElasticViscoelastic
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::MaxwellElasticViscoelastic::~MaxwellElasticViscoelastic()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
@@ -90,7 +84,7 @@ Foam::MaxwellElasticViscoelastic::rho(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -121,8 +115,8 @@ Foam::MaxwellElasticViscoelastic::E(scalar t) const
 
     if (t < 0)
     {
-        tE().internalField() = 0.0;
-        tE().correctBoundaryConditions();
+        tE.ref().internalField() = 0.0;
+        tE.ref().correctBoundaryConditions();
     }
 
     return tE;
@@ -158,7 +152,7 @@ Foam::MaxwellElasticViscoelastic::nu(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -192,8 +186,8 @@ Foam::MaxwellElasticViscoelastic::J(scalar t) const
 
     if (t < 0)
     {
-        tJ().internalField() = 0.0;
-        tJ().correctBoundaryConditions();
+        tJ.ref().internalField() = 0.0;
+        tJ.ref().correctBoundaryConditions();
     }
 
     return tJ;

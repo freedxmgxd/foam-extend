@@ -64,8 +64,8 @@ void Foam::coupledCholeskyPrecon::calcPreconDiag()
 
         if (rowMatrix.symmetric())
         {
-            const unallocLabelList& upperAddr = rowMatrix.lduAddr().upperAddr();
-            const unallocLabelList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
+            const labelUList& upperAddr = rowMatrix.lduAddr().upperAddr();
+            const labelUList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
 
             // Get off-diagonal matrix coefficients
             const scalarField& upper = rowMatrix.upper();
@@ -78,8 +78,8 @@ void Foam::coupledCholeskyPrecon::calcPreconDiag()
         }
         else if (rowMatrix.asymmetric())
         {
-            const unallocLabelList& upperAddr = rowMatrix.lduAddr().upperAddr();
-            const unallocLabelList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
+            const labelUList& upperAddr = rowMatrix.lduAddr().upperAddr();
+            const labelUList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
 
             // Get off-diagonal matrix coefficients
             const scalarField& upper = rowMatrix.upper();
@@ -172,8 +172,8 @@ void Foam::coupledCholeskyPrecon::precondition
 
         if (rowMatrix.symmetric())
         {
-            const unallocLabelList& upperAddr = rowMatrix.lduAddr().upperAddr();
-            const unallocLabelList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
+            const labelUList& upperAddr = rowMatrix.lduAddr().upperAddr();
+            const labelUList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
 
             // Get off-diagonal matrix coefficients
             const scalarField& upper = rowMatrix.upper();
@@ -194,9 +194,9 @@ void Foam::coupledCholeskyPrecon::precondition
         }
         else if (rowMatrix.asymmetric())
         {
-            const unallocLabelList& upperAddr = rowMatrix.lduAddr().upperAddr();
-            const unallocLabelList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
-            const unallocLabelList& losortAddr =
+            const labelUList& upperAddr = rowMatrix.lduAddr().upperAddr();
+            const labelUList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
+            const labelUList& losortAddr =
                 rowMatrix.lduAddr().losortAddr();
 
             // Get off-diagonal matrix coefficients
@@ -248,8 +248,8 @@ void Foam::coupledCholeskyPrecon::preconditionT
 
         if (rowMatrix.symmetric())
         {
-            const unallocLabelList& upperAddr = rowMatrix.lduAddr().upperAddr();
-            const unallocLabelList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
+            const labelUList& upperAddr = rowMatrix.lduAddr().upperAddr();
+            const labelUList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
 
             // Get off-diagonal matrix coefficients
             const scalarField& upper = rowMatrix.upper();
@@ -272,9 +272,9 @@ void Foam::coupledCholeskyPrecon::preconditionT
         }
         else if (rowMatrix.asymmetric())
         {
-            const unallocLabelList& upperAddr = rowMatrix.lduAddr().upperAddr();
-            const unallocLabelList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
-            const unallocLabelList& losortAddr =
+            const labelUList& upperAddr = rowMatrix.lduAddr().upperAddr();
+            const labelUList& lowerAddr = rowMatrix.lduAddr().lowerAddr();
+            const labelUList& losortAddr =
                 rowMatrix.lduAddr().losortAddr();
 
             // Get off-diagonal matrix coefficients

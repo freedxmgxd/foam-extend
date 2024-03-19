@@ -143,11 +143,11 @@ void Foam::selectionAmgPolicy::calcCoarsening()
 
     // Get addressing
     const label nRows = matrix().lduAddr().size();
-    const unallocLabelList& lowerAddr = matrix().lduAddr().lowerAddr();
-    const unallocLabelList& upperAddr = matrix().lduAddr().upperAddr();
-    const unallocLabelList& losortAddr = matrix().lduAddr().losortAddr();
-    const unallocLabelList& ownerStart = matrix().lduAddr().ownerStartAddr();
-    const unallocLabelList& losortStart = matrix().lduAddr().losortStartAddr();
+    const labelUList& lowerAddr = matrix().lduAddr().lowerAddr();
+    const labelUList& upperAddr = matrix().lduAddr().upperAddr();
+    const labelUList& losortAddr = matrix().lduAddr().losortAddr();
+    const labelUList& ownerStart = matrix().lduAddr().ownerStartAddr();
+    const labelUList& losortStart = matrix().lduAddr().losortStartAddr();
 
     // Get matrix coefficients
     const scalarField& diag = matrix().diag();
@@ -804,13 +804,13 @@ Foam::autoPtr<Foam::amgMatrix> Foam::selectionAmgPolicy::restrictMatrix() const
     const labelList& colR = crR.column();
 
     // Matrix A addressing
-    const unallocLabelList& rowA = matrix().lduAddr().ownerStartAddr();
-    const unallocLabelList& upperAddr = matrix().lduAddr().upperAddr();
+    const labelUList& rowA = matrix().lduAddr().ownerStartAddr();
+    const labelUList& upperAddr = matrix().lduAddr().upperAddr();
 
     // Addressing for lower triangle loop
-    const unallocLabelList& lowerAddr = matrix().lduAddr().lowerAddr();
-    const unallocLabelList& losortAddr = matrix().lduAddr().losortAddr();
-    const unallocLabelList& losortStart = matrix().lduAddr().losortStartAddr();
+    const labelUList& lowerAddr = matrix().lduAddr().lowerAddr();
+    const labelUList& losortAddr = matrix().lduAddr().losortAddr();
+    const labelUList& losortStart = matrix().lduAddr().losortStartAddr();
 
     // Prolongation addressing
     const labelList& rowP = crP.rowStart();
@@ -1375,8 +1375,8 @@ Foam::autoPtr<Foam::amgMatrix> Foam::selectionAmgPolicy::restrictMatrix() const
         // ja, row of prolongation is ip, etc.
 
         // Get coarse matrix addressing
-        const unallocLabelList& rowC = coarseMatrix.lduAddr().ownerStartAddr();
-        const unallocLabelList& upperCoarseAddr =
+        const labelUList& rowC = coarseMatrix.lduAddr().ownerStartAddr();
+        const labelUList& upperCoarseAddr =
             coarseMatrix.lduAddr().upperAddr();
 
         // Re-initialise coeffLabel vector
@@ -1559,14 +1559,14 @@ Foam::autoPtr<Foam::amgMatrix> Foam::selectionAmgPolicy::restrictMatrix() const
         // ja, row of prolongation is ip, etc.
 
         // Get coarse matrix addressing
-        const unallocLabelList& rowC = coarseMatrix.lduAddr().ownerStartAddr();
-        const unallocLabelList& upperCoarseAddr =
+        const labelUList& rowC = coarseMatrix.lduAddr().ownerStartAddr();
+        const labelUList& upperCoarseAddr =
             coarseMatrix.lduAddr().upperAddr();
-        const unallocLabelList& lowerCoarseAddr =
+        const labelUList& lowerCoarseAddr =
             coarseMatrix.lduAddr().lowerAddr();
-        const unallocLabelList& losortCoarseAddr =
+        const labelUList& losortCoarseAddr =
             coarseMatrix.lduAddr().losortAddr();
-        const unallocLabelList& losortCoarseStart =
+        const labelUList& losortCoarseStart =
             coarseMatrix.lduAddr().losortStartAddr();
 
         // Re-initialise coeffLabel vector

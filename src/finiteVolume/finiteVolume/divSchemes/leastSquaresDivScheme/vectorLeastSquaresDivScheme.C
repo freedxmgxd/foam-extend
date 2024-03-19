@@ -54,8 +54,8 @@ tmp<BlockLduSystem<vector, scalar> > leastSquaresDivScheme<vector>::fvmUDiv
 
     const fvMesh& mesh = vf.mesh();
 
-    const unallocLabelList& own = mesh.owner();
-    const unallocLabelList& nei = mesh.neighbour();
+    const labelUList& own = mesh.owner();
+    const labelUList& nei = mesh.neighbour();
 
     volScalarField cellV
     (
@@ -120,7 +120,7 @@ tmp<BlockLduSystem<vector, scalar> > leastSquaresDivScheme<vector>::fvmUDiv
         const fvPatch& patch = pf.patch();
         const vectorField& pownLs = ownLs.boundaryField()[patchI];
         const fvsPatchScalarField& pw = weights.boundaryField()[patchI];
-        const unallocLabelList& fc = patch.faceCells();
+        const labelUList& fc = patch.faceCells();
 
         // Part of diagonal contribution irrespective of the patch type
         forAll (pf, faceI)
@@ -184,8 +184,8 @@ tmp<BlockLduSystem<vector, scalar> > leastSquaresDivScheme<vector>::fvmUDiv
 
     const fvMesh& mesh = vf.mesh();
 
-    const unallocLabelList& own = mesh.owner();
-    const unallocLabelList& nei = mesh.neighbour();
+    const labelUList& own = mesh.owner();
+    const labelUList& nei = mesh.neighbour();
 
     volScalarField cellV
     (
@@ -249,7 +249,7 @@ tmp<BlockLduSystem<vector, scalar> > leastSquaresDivScheme<vector>::fvmUDiv
         const fvPatch& patch = pf.patch();
         const vectorField& pownLs = ownLs.boundaryField()[patchI];
         const fvsPatchScalarField& pw = weights.boundaryField()[patchI];
-        const unallocLabelList& fc = patch.faceCells();
+        const labelUList& fc = patch.faceCells();
 
         const scalarField& pFlux = flux.boundaryField()[patchI];
 

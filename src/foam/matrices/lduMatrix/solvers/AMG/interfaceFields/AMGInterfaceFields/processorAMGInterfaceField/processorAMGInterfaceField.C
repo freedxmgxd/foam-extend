@@ -126,7 +126,7 @@ void Foam::processorAMGInterfaceField::initInterfaceMatrixUpdate
     }
 
     // Mark as ready for update
-    const_cast<processorAMGInterfaceField&>(*this).updatedMatrix() = false;
+    this->updatedMatrix() = false;
 
     Pstream::warnComm = oldWarn;
 }
@@ -179,7 +179,7 @@ void Foam::processorAMGInterfaceField::updateInterfaceMatrix
 
     // Multiply the field by coefficients and add into the result
 
-    const unallocLabelList& faceCells = procInterface_.faceCells();
+    const labelUList& faceCells = procInterface_.faceCells();
 
     if (switchToLhs)
     {
@@ -197,7 +197,7 @@ void Foam::processorAMGInterfaceField::updateInterfaceMatrix
     }
 
     // Mark as updated
-    const_cast<processorAMGInterfaceField&>(*this).updatedMatrix() = true;
+    this->updatedMatrix() = true;
 }
 
 

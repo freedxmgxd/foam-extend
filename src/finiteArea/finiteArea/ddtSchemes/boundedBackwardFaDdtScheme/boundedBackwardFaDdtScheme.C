@@ -56,8 +56,8 @@ scalar boundedBackwardFaDdtScheme::deltaT0_() const
 tmp<areaScalarField>
 boundedBackwardFaDdtScheme::facDdt
 (
-    const dimensionedScalar dt
-)
+    const dimensionedScalar& dt
+) const
 {
     // No change compared to backward
 
@@ -96,7 +96,7 @@ boundedBackwardFaDdtScheme::facDdt
             )
         );
 
-        tdtdt().internalField() = rDeltaT.value()*dt.value()*
+        tdtdt.ref().internalField() = rDeltaT.value()*dt.value()*
         (
             coefft - (coefft0*mesh().S0() - coefft00*mesh().S00())/mesh().S()
         );
@@ -127,8 +127,8 @@ boundedBackwardFaDdtScheme::facDdt
 tmp<areaScalarField>
 boundedBackwardFaDdtScheme::facDdt0
 (
-    const dimensionedScalar dt
-)
+    const dimensionedScalar& dt
+) const
 {
     // No change compared to backward
 
@@ -162,7 +162,7 @@ boundedBackwardFaDdtScheme::facDdt0
 
     if (mesh().moving())
     {
-        tdtdt0().internalField() = (-rDeltaT.value()*dt.value())*
+        tdtdt0.ref().internalField() = (-rDeltaT.value()*dt.value())*
         (
             (coefft0*mesh().S0() - coefft00*mesh().S00())/mesh().S()
         );
@@ -176,7 +176,7 @@ tmp<areaScalarField>
 boundedBackwardFaDdtScheme::facDdt
 (
     const areaScalarField& vf
-)
+) const
 {
     dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
@@ -272,7 +272,7 @@ tmp<areaScalarField>
 boundedBackwardFaDdtScheme::facDdt0
 (
     const areaScalarField& vf
-)
+) const
 {
     dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
@@ -365,7 +365,7 @@ tmp<edgeScalarField>
 boundedBackwardFaDdtScheme::facDdt0
 (
     const edgeScalarField& vf
-)
+) const
 {
     dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
@@ -434,7 +434,7 @@ boundedBackwardFaDdtScheme::facDdt
 (
     const dimensionedScalar& rho,
     const areaScalarField& vf
-)
+) const
 {
     dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
@@ -530,7 +530,7 @@ boundedBackwardFaDdtScheme::facDdt0
 (
     const dimensionedScalar& rho,
     const areaScalarField& vf
-)
+) const
 {
     dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
@@ -624,7 +624,7 @@ boundedBackwardFaDdtScheme::facDdt
 (
     const areaScalarField& rho,
     const areaScalarField& vf
-)
+) const
 {
     dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
@@ -724,7 +724,7 @@ boundedBackwardFaDdtScheme::facDdt0
 (
     const areaScalarField& rho,
     const areaScalarField& vf
-)
+) const
 {
     dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
@@ -820,7 +820,7 @@ tmp<faScalarMatrix>
 boundedBackwardFaDdtScheme::famDdt
 (
     const areaScalarField& vf
-)
+) const
 {
     tmp<faScalarMatrix> tfam
     (
@@ -831,7 +831,7 @@ boundedBackwardFaDdtScheme::famDdt
         )
     );
 
-    faScalarMatrix& fam = tfam();
+    faScalarMatrix& fam = tfam.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -891,7 +891,7 @@ boundedBackwardFaDdtScheme::famDdt
 (
     const dimensionedScalar& rho,
     const areaScalarField& vf
-)
+) const
 {
     tmp<faScalarMatrix> tfam
     (
@@ -901,7 +901,7 @@ boundedBackwardFaDdtScheme::famDdt
             rho.dimensions()*vf.dimensions()*dimArea/dimTime
         )
     );
-    faScalarMatrix& fam = tfam();
+    faScalarMatrix& fam = tfam.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -961,7 +961,7 @@ boundedBackwardFaDdtScheme::famDdt
 (
     const areaScalarField& rho,
     const areaScalarField& vf
-)
+) const
 {
     tmp<faScalarMatrix> tfam
     (
@@ -971,7 +971,7 @@ boundedBackwardFaDdtScheme::famDdt
             rho.dimensions()*vf.dimensions()*dimArea/dimTime
         )
     );
-    faScalarMatrix& fam = tfam();
+    faScalarMatrix& fam = tfam.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 

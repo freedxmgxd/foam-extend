@@ -73,7 +73,7 @@ fourthSnGrad<Type>::correction
 
     if (correctedSnGrad<Type>(mesh).corrected())
     {
-        tcorr() += correctedSnGrad<Type>(mesh).correction(vf);
+        tcorr.ref() += correctedSnGrad<Type>(mesh).correction(vf);
     }
 
     return tcorr;

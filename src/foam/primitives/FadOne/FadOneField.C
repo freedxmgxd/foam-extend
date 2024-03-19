@@ -39,7 +39,7 @@ Foam::ValueFadOneField(const UList<scalar>& u)
         new Foam::Field<FadOne<nVars> > (u.size())
     );
 
-    Field<FadOne<nVars> >& r = tr();
+    Field<FadOne<nVars> >& r = tr.ref();
 
     forAll (r, i)
     {
@@ -54,7 +54,7 @@ template<int nVars>
 Foam::tmp<Foam::scalarField> Foam::FadOneValue(const Field<FadOne<nVars> >& u)
 {
     tmp<scalarField> tr(new scalarField(u.size()));
-    scalarField& r = tr();
+    scalarField& r = tr.ref();
 
     forAll (r, i)
     {
@@ -87,7 +87,7 @@ Foam::tmp<Foam::scalarField> Foam::FadOneDeriv
 )
 {
     tmp<scalarField> tr(new scalarField(u.size()));
-    scalarField& r = tr();
+    scalarField& r = tr.ref();
 
     forAll (r, i)
     {

@@ -36,9 +36,9 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
 {
     if (debug)
     {
-        Info<< "fvPatchField<Type>::New(const word&, const fvPatch&, "
-               "const DimensionedField<Type, volMesh>&) : patchFieldType="
-            << patchFieldType
+        InfoInFunction
+            << "patchFieldType = " << patchFieldType
+            << ", patchType = " << p.type()
             << endl;
     }
 
@@ -47,14 +47,11 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
 
     if (cstrIter == patchConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "fvPatchField<Type>::New(const word&, const fvPatch&, "
-            "const DimensionedField<Type, volMesh>&)"
-        )   << "Unknown patch field type " << patchFieldType
+        FatalErrorInFunction
+            << "Unknown patch field type " << patchFieldType
             << " for field " << iF.name() << " on patch " << p.name()
             << nl << nl
-            << "Valid patchField types are :" << endl
+            << "Valid null-constructable patchField types are :" << endl
             << patchConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
@@ -85,9 +82,9 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
 
     if (debug)
     {
-        Info<< "fvPatchField<Type>::New(const fvPatch&, "
-               "const DimensionedField<Type, volMesh>&, "
-               "const dictionary&) : patchFieldType = "  << patchFieldType
+        InfoInFunction
+            << "patchFieldType = " << patchFieldType
+            << ", patchType = " << p.type()
             << endl;
     }
 
@@ -103,13 +100,8 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
 
         if (cstrIter == dictionaryConstructorTablePtr_->end())
         {
-            FatalIOErrorIn
-            (
-                "fvPatchField<Type>::New(const fvPatch&, "
-                "const DimensionedField<Type, volMesh>&, "
-                "const dictionary&)",
-                dict
-            )   << "Unknown patch field type " << patchFieldType
+            FatalIOErrorInFunction(dict)
+                << "Unknown patch field type " << patchFieldType
                 << " for field " << iF.name() << " on patch " << p.name()
                 << " for patch type " << p.type() << endl << endl
                 << "Valid patch field types are :" << endl
@@ -133,13 +125,8 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
          && patchTypeCstrIter() != cstrIter()
         )
         {
-            FatalIOErrorIn
-            (
-                "fvPatchField<Type>::New(const fvPatch&, "
-                "const DimensionedField<Type, volMesh>&, "
-                "const dictionary&)",
-                dict
-            )   << "Inconsistent patch and patchField types for field "
+            FatalIOErrorInFunction(dict)
+                << "Inconsistent patch and patchField types for field "
                 << iF.name() << " on patch " << p.name() << "\n"
                 << "    boundary patch type " << p.type()
                 << "    looked up patchType " << word(dict.lookup("patchType"))
@@ -163,10 +150,8 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
 {
     if (debug)
     {
-        Info<< "fvPatchField<Type>::New(const fvPatchField<Type>&, "
-               "const fvPatch&, const DimensionedField<Type, volMesh>&, "
-               "const fvPatchFieldMapper&) : "
-               "constructing fvPatchField<Type>"
+        InfoInFunction
+            << "constructing fvPatchField<Type>"
             << endl;
     }
 
@@ -175,12 +160,8 @@ Foam::tmp<Foam::fvPatchField<Type> > Foam::fvPatchField<Type>::New
 
     if (cstrIter == patchMapperConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "fvPatchField<Type>::New(const fvPatchField<Type>&, "
-            "const fvPatch&, const DimensionedField<Type, volMesh>&, "
-            "const fvPatchFieldMapper&)"
-        )   << "unknown patch field type " << ptf.type()
+        FatalErrorInFunction
+            << "unknown patch field type " << ptf.type()
             << " for field " << iF.name() << " on patch " << p.name()
             << nl << nl
             << "Valid patchField types are :" << endl

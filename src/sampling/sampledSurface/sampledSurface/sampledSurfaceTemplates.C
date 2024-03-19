@@ -35,10 +35,7 @@ bool Foam::sampledSurface::checkFieldSize(const Field<Type>& field) const
 
     if (field.size() != faces().size())
     {
-        FatalErrorIn
-        (
-            "sampledSurface::checkFieldSize(const Field<Type>&) const"
-        )
+        FatalErrorInFunction
             << "size mismatch: "
             << "field (" << field.size()
             << ") != surface (" << faces().size() << ")"
@@ -149,7 +146,7 @@ Foam::sampledSurface::project
 ) const
 {
     tmp<Field<ReturnType> > tRes(new Field<ReturnType>(faces().size()));
-    project(tRes(), field);
+    project(tRes.ref(), field);
     return tRes;
 }
 
@@ -180,7 +177,7 @@ Foam::sampledSurface::pointAverage
             dimensioned<Type>("zero", dimless, pTraits<Type>::zero)
         )
     );
-    GeometricField<Type, fvPatchField, volMesh>& cellAvg = tcellAvg();
+    GeometricField<Type, fvPatchField, volMesh>& cellAvg = tcellAvg.ref();
 
     labelField nPointCells(mesh.nCells(), 0);
     {

@@ -157,7 +157,7 @@ tmp<volScalarField> RASModel::muEff() const
     );
 
     // Apply mut limiter
-    tmuEff().internalField() =
+    tmuEff.ref().internalField() =
         Foam::min(tmuEff().internalField(), muRatio_*mu().internalField());
 
     return tmuEff;

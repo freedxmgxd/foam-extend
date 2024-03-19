@@ -182,7 +182,7 @@ void jumpMixingPlaneFvPatchField<Type>::initInterfaceMatrixUpdate
     )
     {
         // Get shadow face-cells and assemble shadow field
-        const unallocLabelList& sfc =
+        const labelUList& sfc =
             this->mixingPlanePatch().shadow().faceCells();
 
         scalarField sField(sfc.size());
@@ -193,7 +193,7 @@ void jumpMixingPlaneFvPatchField<Type>::initInterfaceMatrixUpdate
         }
 
         // Get local faceCells
-        const unallocLabelList& fc = this->mixingPlanePatch().faceCells();
+        const labelUList& fc = this->mixingPlanePatch().faceCells();
 
         scalarField pnf = this->mixingPlanePatch().interpolate(sField);
 

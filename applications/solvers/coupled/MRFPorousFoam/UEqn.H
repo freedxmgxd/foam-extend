@@ -31,7 +31,7 @@
                 dimensionedTensor("zero", dimless/dimTime, tensor::zero)
             )
         );
-        volTensorField& TU = tTU();
+        volTensorField& TU = tTU.ref();
 
         // Add implicit MRF source as a Hodge dual of the rotational velocity
         TU += *mrfZones.omega();
@@ -40,12 +40,12 @@
         pZones.addResistance(UEqn, TU);
 
         trTU = inv(TU + tensor(I)*UEqn.A());
-        trTU().rename("rAU");
+        trTU.ref().rename("rAU");
     }
     else
     {
         trAU = 1.0/UEqn.A();
-        trAU().rename("rAU");
+        trAU.ref().rename("rAU");
     }
 
     // Under-relax momentum. Note this will destroy the H and A

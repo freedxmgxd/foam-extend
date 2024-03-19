@@ -76,7 +76,7 @@ DeferredCorrectionLimitedScheme<Type, Limiter, LimitFunc>::limiter
             dimless
         )
     );
-    surfaceScalarField& lim = tLimiter();
+    surfaceScalarField& lim = tLimiter.ref();
 
     tmp<GeometricField<typename Limiter::phiType, fvPatchField, volMesh> >
         tlPhi = LimitFunc<Type>()(phi);
@@ -94,7 +94,7 @@ DeferredCorrectionLimitedScheme<Type, Limiter, LimitFunc>::limiter
     const GeometricField
     <
         typename Limiter::gradPhiType, fvPatchField, volMesh
-    >& gradc = tgradc();
+    >& gradc = tgradc.ref();
 
     // Note: in order for the patchNeighbourField to be correct on coupled
     // boundaries, correctBoundaryConditions needs to be called.
@@ -105,8 +105,8 @@ DeferredCorrectionLimitedScheme<Type, Limiter, LimitFunc>::limiter
 
     const surfaceScalarField& CDweights = mesh.surfaceInterpolation::weights();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const vectorField& C = mesh.C();
 

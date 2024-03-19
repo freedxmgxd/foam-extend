@@ -79,7 +79,7 @@ Foam::tmp<Foam::Field<Type> > Foam::ggiPolyPatch::fastExpand
         (
             new Field<Type>(ff)
         );
-        Field<Type>& expandField = texpandField();
+        Field<Type>& expandField = texpandField.ref();
 
         map().distribute(expandField);
 
@@ -93,7 +93,7 @@ Foam::tmp<Foam::Field<Type> > Foam::ggiPolyPatch::fastExpand
         (
             new Field<Type>(zone().size())  // filled with nans
         );
-        Field<Type>& expandField = texpandField();
+        Field<Type>& expandField = texpandField.ref();
 
         const labelList& zAddr = zoneAddressing();
 
@@ -151,7 +151,7 @@ Foam::tmp<Foam::Field<Type> > Foam::ggiPolyPatch::interpolate
         Field<Type> expandField = shadow().fastExpand(ff);
 
         tmp<Field<Type> > tresult(new Field<Type>(size()));
-        Field<Type>& result = tresult();
+        Field<Type>& result = tresult.ref();
 
         if (master())
         {

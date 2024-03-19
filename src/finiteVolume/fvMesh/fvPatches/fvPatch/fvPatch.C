@@ -136,7 +136,7 @@ wordList fvPatch::constraintTypes()
 }
 
 
-const unallocLabelList& fvPatch::faceCells() const
+const labelUList& fvPatch::faceCells() const
 {
     return polyPatch_.faceCells();
 }
@@ -154,9 +154,9 @@ tmp<vectorField> fvPatch::Cn() const
     // needs to be performed again.  HJ, 28/Dec/2006
 
     tmp<vectorField> tcc(new vectorField(size()));
-    vectorField& cc = tcc();
+    vectorField& cc = tcc.ref();
 
-    const unallocLabelList& faceCells = this->faceCells();
+    const labelUList& faceCells = this->faceCells();
 
     // Get reference to global cell centres
     // Bugfix: access cell centres from fvMesh data, not polyMesh.

@@ -130,11 +130,10 @@ public:
         {
             const fvMesh& mesh = this->mesh();
 
-            tmp<surfaceScalarField> tcdWeights
+            const surfaceScalarField cdWeights
             (
                 mesh.surfaceInterpolation::weights()
             );
-            const surfaceScalarField& cdWeights = tcdWeights();
 
             tmp<surfaceScalarField> tclippedLinearWeights
             (
@@ -150,7 +149,8 @@ public:
                     dimless
                 )
             );
-            surfaceScalarField& clippedLinearWeights = tclippedLinearWeights();
+            surfaceScalarField& clippedLinearWeights =
+                tclippedLinearWeights.ref();
 
             clippedLinearWeights.internalField() =
                 max(min(cdWeights.internalField(), 1 - wfLimit_), wfLimit_);

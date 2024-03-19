@@ -45,8 +45,8 @@ template<class Type>
 tmp<GeometricField<Type, faPatchField, areaMesh> >
 steadyStateFaDdtScheme<Type>::facDdt
 (
-    const dimensioned<Type> dt
-)
+    const dimensioned<Type>& dt
+) const
 {
     return tmp<GeometricField<Type, faPatchField, areaMesh> >
     (
@@ -55,10 +55,10 @@ steadyStateFaDdtScheme<Type>::facDdt
             IOobject
             (
                 "ddt("+dt.name()+')',
-                mesh()().time().timeName(),
-                mesh()()
+                this->mesh()().time().timeName(),
+                this->mesh()()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -74,8 +74,8 @@ template<class Type>
 tmp<GeometricField<Type, faPatchField, areaMesh> >
 steadyStateFaDdtScheme<Type>::facDdt0
 (
-    const dimensioned<Type> dt
-)
+    const dimensioned<Type>& dt
+) const
 {
     return tmp<GeometricField<Type, faPatchField, areaMesh> >
     (
@@ -84,10 +84,10 @@ steadyStateFaDdtScheme<Type>::facDdt0
             IOobject
             (
                 "ddt("+dt.name()+')',
-                mesh()().time().timeName(),
-                mesh()()
+                this->mesh()().time().timeName(),
+                this->mesh()()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -104,7 +104,7 @@ tmp<GeometricField<Type, faPatchField, areaMesh> >
 steadyStateFaDdtScheme<Type>::facDdt
 (
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, faPatchField, areaMesh> >
     (
@@ -113,10 +113,10 @@ steadyStateFaDdtScheme<Type>::facDdt
             IOobject
             (
                 "ddt("+vf.name()+')',
-                mesh()().time().timeName(),
-                mesh()()
+                this->mesh()().time().timeName(),
+                this->mesh()()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -133,7 +133,7 @@ tmp<GeometricField<Type, faPatchField, areaMesh> >
 steadyStateFaDdtScheme<Type>::facDdt0
 (
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, faPatchField, areaMesh> >
     (
@@ -142,10 +142,10 @@ steadyStateFaDdtScheme<Type>::facDdt0
             IOobject
             (
                 "ddt0("+vf.name()+')',
-                mesh()().time().timeName(),
-                mesh()()
+                this->mesh()().time().timeName(),
+                this->mesh()()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -162,7 +162,7 @@ tmp<GeometricField<Type, faePatchField, edgeMesh> >
 steadyStateFaDdtScheme<Type>::facDdt0
 (
     const GeometricField<Type, faePatchField, edgeMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, faePatchField, edgeMesh> >
     (
@@ -171,10 +171,10 @@ steadyStateFaDdtScheme<Type>::facDdt0
             IOobject
             (
                 "ddt0("+vf.name()+')',
-                mesh()().time().timeName(),
-                mesh()()
+                this->mesh()().time().timeName(),
+                this->mesh()()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -192,7 +192,7 @@ steadyStateFaDdtScheme<Type>::facDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, faPatchField, areaMesh> >
     (
@@ -201,10 +201,10 @@ steadyStateFaDdtScheme<Type>::facDdt
             IOobject
             (
                 "ddt("+rho.name()+','+vf.name()+')',
-                mesh()().time().timeName(),
-                mesh()()
+                this->mesh()().time().timeName(),
+                this->mesh()()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -221,7 +221,7 @@ steadyStateFaDdtScheme<Type>::facDdt0
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, faPatchField, areaMesh> >
     (
@@ -230,10 +230,10 @@ steadyStateFaDdtScheme<Type>::facDdt0
             IOobject
             (
                 "ddt0("+rho.name()+','+vf.name()+')',
-                mesh()().time().timeName(),
-                mesh()()
+                this->mesh()().time().timeName(),
+                this->mesh()()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -251,7 +251,7 @@ steadyStateFaDdtScheme<Type>::facDdt
 (
     const areaScalarField& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, faPatchField, areaMesh> >
     (
@@ -260,10 +260,10 @@ steadyStateFaDdtScheme<Type>::facDdt
             IOobject
             (
                 "ddt("+rho.name()+','+vf.name()+')',
-                mesh()().time().timeName(),
-                mesh()()
+                this->mesh()().time().timeName(),
+                this->mesh()()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -281,7 +281,7 @@ steadyStateFaDdtScheme<Type>::facDdt0
 (
     const areaScalarField& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, faPatchField, areaMesh> >
     (
@@ -290,10 +290,10 @@ steadyStateFaDdtScheme<Type>::facDdt0
             IOobject
             (
                 "ddt0("+rho.name()+','+vf.name()+')',
-                mesh()().time().timeName(),
-                mesh()()
+                this->mesh()().time().timeName(),
+                this->mesh()()
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
                 "0",
@@ -309,7 +309,7 @@ tmp<faMatrix<Type> >
 steadyStateFaDdtScheme<Type>::famDdt
 (
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     tmp<faMatrix<Type> > tfam
     (
@@ -330,7 +330,7 @@ steadyStateFaDdtScheme<Type>::famDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     tmp<faMatrix<Type> > tfam
     (
@@ -351,7 +351,7 @@ steadyStateFaDdtScheme<Type>::famDdt
 (
     const areaScalarField& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     tmp<faMatrix<Type> > tfam
     (

@@ -38,8 +38,8 @@ void Foam::BlockLduMatrix<Type>::decoupledSumDiag()
 
     TypeCoeffField& Diag = this->diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (this->symmetric())
     {
@@ -141,8 +141,8 @@ void Foam::BlockLduMatrix<Type>::decoupledNegSumDiag()
 
     TypeCoeffField& Diag = this->diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (this->symmetric())
     {
@@ -245,8 +245,8 @@ void Foam::BlockLduMatrix<Type>::decoupledCheck() const
     // Copy the diagonal
     TypeCoeffField DiagCopy(this->diag().size());
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (this->symmetric())
     {
@@ -387,8 +387,8 @@ void Foam::BlockLduMatrix<Type>::decoupledRelax
     // Create multiplication function object
     typename BlockCoeff<Type>::multiply mult;
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (this->symmetric())
     {
@@ -553,7 +553,7 @@ void Foam::BlockLduMatrix<Type>::decoupledMultEqOp(const scalarField& sf)
     {
         TypeCoeffField& Upper = *upperPtr_;
 
-        const unallocLabelList& l = lduAddr().lowerAddr();
+        const labelUList& l = lduAddr().lowerAddr();
 
         if (Upper.activeType() == blockCoeffBase::SCALAR)
         {
@@ -579,7 +579,7 @@ void Foam::BlockLduMatrix<Type>::decoupledMultEqOp(const scalarField& sf)
     {
         TypeCoeffField& Lower = *lowerPtr_;
 
-        const unallocLabelList& u = lduAddr().upperAddr();
+        const labelUList& u = lduAddr().upperAddr();
 
         if (Lower.activeType() == blockCoeffBase::SCALAR)
         {
@@ -613,8 +613,8 @@ void Foam::BlockLduMatrix<Type>::decoupledAmulCore
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
     typedef typename TypeCoeffField::linearTypeField linearTypeField;
 
-    const unallocLabelList& u = lduAddr().upperAddr();
-    const unallocLabelList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
 
     // In order to do automatic multiplication, diagonal needs to be recognised
     // as a decoupled coeff field.  HJ, 19/Feb/2008
@@ -709,8 +709,8 @@ void Foam::BlockLduMatrix<Type>::decoupledTmulCore
     typedef typename TypeCoeffField::scalarTypeField scalarTypeField;
     typedef typename TypeCoeffField::linearTypeField linearTypeField;
 
-    const unallocLabelList& u = lduAddr().upperAddr();
-    const unallocLabelList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
 
     // In order to do automatic multiplication, diagonal needs to be recognised
     // as a decoupled coeff field.  HJ, 19/Feb/2008

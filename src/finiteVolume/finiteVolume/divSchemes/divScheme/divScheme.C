@@ -58,11 +58,8 @@ tmp<divScheme<Type> > divScheme<Type>::New
 
     if (schemeData.eof())
     {
-        FatalIOErrorIn
-        (
-            "divScheme<Type>::New(const fvMesh&, Istream&)",
-            schemeData
-        )   << "Div scheme not specified" << endl << endl
+        FatalIOErrorInFunction(schemeData)
+            << "Div scheme not specified" << endl << endl
             << "Valid div schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -75,11 +72,8 @@ tmp<divScheme<Type> > divScheme<Type>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
-        (
-            "divScheme<Type>::New(const fvMesh&, Istream&)",
-            schemeData
-        )   << "Unknown div scheme "
+        FatalIOErrorInFunction(schemeData)
+            << "Unknown div scheme "
             << schemeName << nl << nl
             << "Valid div schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
@@ -88,13 +82,6 @@ tmp<divScheme<Type> > divScheme<Type>::New
 
     return cstrIter()(mesh, schemeData);
 }
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type>
-divScheme<Type>::~divScheme()
-{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

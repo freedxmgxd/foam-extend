@@ -43,6 +43,6 @@ else
     );
 }
 
-tpEqn().setReference(pRefCell, pRefValue);
+tpEqn.ref().setReference(pRefCell, pRefValue);
 
-UpEqn.insertEquation(3, tpEqn());
+UpEqn.insertEquation(3, tpEqn.ref());

@@ -80,10 +80,8 @@ tmp<volScalarField> steadyInertialDdtScheme<Type>::CorDeltaT() const
 
     if (cofrDeltaTPtr.empty())
     {
-        FatalErrorIn
-        (
-            "steaddyInertialDdtScheme<Type>::CorDeltaT() const"
-        )   << "Cannot find phi or nu: " << phiName_ << " " << nuName_
+        FatalErrorInFunction
+            << "Cannot find phi or nu: " << phiName_ << " " << nuName_
             << abort(FatalError);
     }
 
@@ -98,19 +96,19 @@ tmp<volScalarField> steadyInertialDdtScheme<Type>::CorDeltaT() const
             (
                 "CorDeltaT",
                 cofrDeltaT.instance(),
-                mesh()
+                this->mesh()
             ),
-            mesh(),
+            this->mesh(),
             dimensionedScalar("CorDeltaT", cofrDeltaT.dimensions(), 0.0),
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& corDeltaT = tcorDeltaT();
+    volScalarField& corDeltaT = tcorDeltaT.ref();
 
-    const unallocLabelList& owner = mesh().owner();
-    const unallocLabelList& neighbour = mesh().neighbour();
+    const labelUList& owner = this->mesh().owner();
+    const labelUList& neighbour = this->mesh().neighbour();
 
-    forAll(owner, faceI)
+    forAll (owner, faceI)
     {
         corDeltaT[owner[faceI]] =
             max(corDeltaT[owner[faceI]], cofrDeltaT[faceI]);
@@ -119,15 +117,15 @@ tmp<volScalarField> steadyInertialDdtScheme<Type>::CorDeltaT() const
             max(corDeltaT[neighbour[faceI]], cofrDeltaT[faceI]);
     }
 
-    forAll(corDeltaT.boundaryField(), patchi)
+    forAll (corDeltaT.boundaryField(), patchi)
     {
         const fvsPatchScalarField& pcofrDeltaT =
             cofrDeltaT.boundaryField()[patchi];
 
         const fvPatch& p = pcofrDeltaT.patch();
-        const unallocLabelList& faceCells = p.patch().faceCells();
+        const labelUList& faceCells = p.patch().faceCells();
 
-        forAll(pcofrDeltaT, patchFacei)
+        forAll (pcofrDeltaT, patchFacei)
         {
             corDeltaT[faceCells[patchFacei]] = max
             (
@@ -155,7 +153,7 @@ steadyInertialDdtScheme<Type>::convectionCofrDeltaT() const
     if (phi.dimensions() == dimensionSet(0, 3, -1, 0, 0))
     {
         // Calculate face velocity
-        surfaceScalarField magFaceU = mag(phi)/mesh().magSf();
+        surfaceScalarField magFaceU = mag(phi)/this->mesh().magSf();
 
         // Calculate face Co number from local face velocity stabilised to
         // avoid U = 0 case.  Min velocity is assumed to be 1/1000 of the max
@@ -168,7 +166,7 @@ steadyInertialDdtScheme<Type>::convectionCofrDeltaT() const
             );
 
         return max(magFaceU, faceUlimit)*
-            mesh().surfaceInterpolation::deltaCoeffs()/maxCo_;
+            this->mesh().surfaceInterpolation::deltaCoeffs()/maxCo_;
     }
     else if (phi.dimensions() == dimensionSet(1, 0, -1, 0, 0))
     {
@@ -176,7 +174,7 @@ steadyInertialDdtScheme<Type>::convectionCofrDeltaT() const
             registry.lookupObject<volScalarField>(rhoName_);
 
         surfaceScalarField magFaceU  =
-            mag(phi)/(fvc::interpolate(rho)*mesh().magSf());
+            mag(phi)/(fvc::interpolate(rho)*this->mesh().magSf());
 
         // Calculate face Co number from local face velocity stabilised to
         // avoid U = 0 case.  Min velocity is assumed to be 1/1000 of the max
@@ -184,14 +182,12 @@ steadyInertialDdtScheme<Type>::convectionCofrDeltaT() const
         dimensionedScalar faceUlimit = 0.001*max(magFaceU);
 
         return max(magFaceU, faceUlimit)*
-            mesh().surfaceInterpolation::deltaCoeffs()/maxCo_;
+            this->mesh().surfaceInterpolation::deltaCoeffs()/maxCo_;
     }
     else
     {
-        FatalErrorIn
-        (
-            "steaddyInertialDdtScheme<Type>::convectionCofrDeltaT() const"
-        )   << "Incorrect dimensions of phi: " << phi.dimensions()
+        FatalErrorInFunction
+            << "Incorrect dimensions of phi: " << phi.dimensions()
             << abort(FatalError);
 
         return tmp<surfaceScalarField>(nullptr);
@@ -221,10 +217,8 @@ steadyInertialDdtScheme<Type>::diffusionCofrDeltaT() const
     }
     else
     {
-        FatalErrorIn
-        (
-            "steaddyInertialDdtScheme<Type>::diffusionCofrDeltaT() const"
-        )   << "Cannot find nu"
+        FatalErrorInFunction
+            << "Cannot find nu"
             << abort(FatalError);
 
         return tmp<surfaceScalarField>(nullptr);
@@ -242,22 +236,21 @@ steadyInertialDdtScheme<Type>::diffusionCofrDeltaT
 
     if (nuf.dimensions() == dimensionSet(0, 2, -1, 0, 0))
     {
-        return nuf*sqr(mesh().surfaceInterpolation::deltaCoeffs())/maxCo_;
+        return nuf*sqr(this->mesh().surfaceInterpolation::deltaCoeffs())/
+            maxCo_;
     }
     else if (nuf.dimensions() == dimensionSet(1, -1, -1, 0, 0))
     {
         const volScalarField& rho =
             registry.lookupObject<volScalarField>(rhoName_);
 
-        return nuf*sqr(mesh().surfaceInterpolation::deltaCoeffs())/
+        return nuf*sqr(this->mesh().surfaceInterpolation::deltaCoeffs())/
             (fvc::interpolate(rho)*maxCo_);
     }
     else
     {
-        FatalErrorIn
-        (
-            "steaddyInertialDdtScheme<Type>::diffusionCofrDeltaT() const"
-        )   << "Incorrect dimensions of nu: " << nuf.dimensions()
+        FatalErrorInFunction
+            << "Incorrect dimensions of nu: " << nuf.dimensions()
             << abort(FatalError);
 
         return tmp<surfaceScalarField>(nullptr);
@@ -270,25 +263,25 @@ tmp<GeometricField<Type, fvPatchField, volMesh> >
 steadyInertialDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
-)
+) const
 {
     volScalarField rDeltaT = CorDeltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+dt.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         tmp<GeometricField<Type, fvPatchField, volMesh> > tdtdt
         (
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 dimensioned<Type>
                 (
                     "0",
@@ -298,8 +291,9 @@ steadyInertialDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt().internalField() =
-            rDeltaT.internalField()*dt.value()*(1.0 - mesh().V0()/mesh().V());
+        tdtdt.ref().internalField() =
+            rDeltaT.internalField()*dt.value()*(1.0 - this->mesh().V0()/
+            this->mesh().V());
 
         return tdtdt;
     }
@@ -310,7 +304,7 @@ steadyInertialDdtScheme<Type>::fvcDdt
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 dimensioned<Type>
                 (
                     "0",
@@ -329,30 +323,31 @@ tmp<GeometricField<Type, fvPatchField, volMesh> >
 steadyInertialDdtScheme<Type>::fvcDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     volScalarField rDeltaT = CorDeltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+vf.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, fvPatchField, volMesh> >
         (
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*vf.dimensions(),
                 rDeltaT.internalField()*
                 (
                     vf.internalField()
-                  - vf.prevIter().internalField()*mesh().V0()/mesh().V()
+                  - vf.prevIter().internalField()*this->mesh().V0()/
+                    this->mesh().V()
                 ),
                 rDeltaT.boundaryField()*
                 (
@@ -381,30 +376,31 @@ steadyInertialDdtScheme<Type>::fvcDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     volScalarField rDeltaT = CorDeltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+rho.name()+','+vf.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, fvPatchField, volMesh> >
         (
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.internalField()*rho.value()*
                 (
                     vf.internalField()
-                  - vf.prevIter().internalField()*mesh().V0()/mesh().V()
+                  - vf.prevIter().internalField()*this->mesh().V0()/
+                    this->mesh().V()
                 ),
                 rDeltaT.boundaryField()*rho.value()*
                 (
@@ -433,37 +429,38 @@ steadyInertialDdtScheme<Type>::fvcDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     volScalarField rDeltaT = CorDeltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+rho.name()+','+vf.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, fvPatchField, volMesh> >
         (
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.internalField()*
                 (
                     rho.internalField()*vf.internalField()
-                  - rho.internalField()
-                   *vf.prevIter().internalField()*mesh().V0()/mesh().V()
+                  - rho.internalField()*
+                    vf.prevIter().internalField()*this->mesh().V0()/
+                    this->mesh().V()
                 ),
                 rDeltaT.boundaryField()*
                 (
                     rho.boundaryField()*vf.boundaryField()
-                  - rho.boundaryField()
-                   *vf.prevIter().boundaryField()
+                  - rho.boundaryField()*
+                    vf.prevIter().boundaryField()
                 )
             )
         );
@@ -487,7 +484,7 @@ tmp<fvMatrix<Type> >
 steadyInertialDdtScheme<Type>::fvmDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -498,19 +495,19 @@ steadyInertialDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT = CorDeltaT()().internalField();
 
-    fvm.diag() = rDeltaT*mesh().V();
+    fvm.diag() = rDeltaT*this->mesh().V();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
-        fvm.source() = rDeltaT*vf.prevIter().internalField()*mesh().V0();
+        fvm.source() = rDeltaT*vf.prevIter().internalField()*this->mesh().V0();
     }
     else
     {
-        fvm.source() = rDeltaT*vf.prevIter().internalField()*mesh().V();
+        fvm.source() = rDeltaT*vf.prevIter().internalField()*this->mesh().V();
     }
 
     return tfvm;
@@ -523,7 +520,7 @@ steadyInertialDdtScheme<Type>::fvmDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -533,21 +530,21 @@ steadyInertialDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT = CorDeltaT()().internalField();
 
-    fvm.diag() = rDeltaT*rho.value()*mesh().V();
+    fvm.diag() = rDeltaT*rho.value()*this->mesh().V();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         fvm.source() = rDeltaT
-            *rho.value()*vf.prevIter().internalField()*mesh().V0();
+            *rho.value()*vf.prevIter().internalField()*this->mesh().V0();
     }
     else
     {
         fvm.source() = rDeltaT
-            *rho.value()*vf.prevIter().internalField()*mesh().V();
+            *rho.value()*vf.prevIter().internalField()*this->mesh().V();
     }
 
     return tfvm;
@@ -560,7 +557,7 @@ steadyInertialDdtScheme<Type>::fvmDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -570,23 +567,23 @@ steadyInertialDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT = CorDeltaT()().internalField();
 
-    fvm.diag() = rDeltaT*rho.internalField()*mesh().V();
+    fvm.diag() = rDeltaT*rho.internalField()*this->mesh().V();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
-        fvm.source() = rDeltaT
-            *rho.internalField()
-            *vf.prevIter().internalField()*mesh().V0();
+        fvm.source() = rDeltaT*
+            rho.internalField()*
+            vf.prevIter().internalField()*this->mesh().V0();
     }
     else
     {
-        fvm.source() = rDeltaT
-            *rho.internalField()
-            *vf.prevIter().internalField()*mesh().V();
+        fvm.source() = rDeltaT*
+            rho.internalField()*
+            vf.prevIter().internalField()*this->mesh().V();
     }
 
     return tfvm;
@@ -600,23 +597,23 @@ steadyInertialDdtScheme<Type>::fvcDdtPhiCorr
     const volScalarField& rA,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi
-)
+) const
 {
     IOobject ddtIOobject
     (
         "ddtPhiCorr(" + rA.name() + ',' + U.name() + ',' + phi.name() + ')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<fluxFieldType>
         (
             new fluxFieldType
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 dimensioned<typename flux<Type>::type>
                 (
                     "0",
@@ -638,7 +635,10 @@ steadyInertialDdtScheme<Type>::fvcDdtPhiCorr
                 this->fvcDdtPhiCoeff(U, phi)*
                 (
                     fvc::interpolate(rDeltaT*rA)*phi
-                  - (fvc::interpolate(rDeltaT*rA*U.prevIter()) & mesh().Sf())
+                  - (
+                        fvc::interpolate(rDeltaT*rA*U.prevIter())
+                      & this->mesh().Sf()
+                    )
                 )
             )
         );
@@ -654,24 +654,24 @@ steadyInertialDdtScheme<Type>::fvcDdtPhiCorr
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi
-)
+) const
 {
     IOobject ddtIOobject
     (
         "ddtPhiCorr("
       + rA.name() + ',' + rho.name() + ',' + U.name() + ',' + phi.name() + ')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<fluxFieldType>
         (
             new fluxFieldType
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 dimensioned<typename flux<Type>::type>
                 (
                     "0",
@@ -702,7 +702,7 @@ steadyInertialDdtScheme<Type>::fvcDdtPhiCorr
                       - (
                             fvc::interpolate(rDeltaT*rA*rho*U.prevIter()
                         )
-                      & mesh().Sf())
+                      & this->mesh().Sf())
                     )
                 )
             );
@@ -730,7 +730,7 @@ steadyInertialDdtScheme<Type>::fvcDdtPhiCorr
                             fvc::interpolate
                             (
                                 rDeltaT*rA*rho*U.prevIter()
-                            ) & mesh().Sf()
+                            ) & this->mesh().Sf()
                         )
                     )
                 )
@@ -752,7 +752,7 @@ steadyInertialDdtScheme<Type>::fvcDdtPhiCorr
                         fvc::interpolate(rDeltaT*rA)*phi
                       - (
                             fvc::interpolate(rDeltaT*rA*U.prevIter())
-                          & mesh().Sf()
+                          & this->mesh().Sf()
                         )
                     )
                 )
@@ -760,10 +760,8 @@ steadyInertialDdtScheme<Type>::fvcDdtPhiCorr
         }
         else
         {
-            FatalErrorIn
-            (
-                "steadyInertialDdtScheme<Type>::fvcDdtPhiCorr"
-            )   << "dimensions of phi are not correct"
+            FatalErrorInFunction
+                << "dimensions of phi are not correct"
                 << abort(FatalError);
 
             return fluxFieldType::null();
@@ -779,12 +777,12 @@ steadyInertialDdtScheme<Type>::fvcDdtConsistentPhiCorr
     const GeometricField<Type, fvsPatchField, surfaceMesh>& faceU,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const surfaceScalarField& rAUf
-)
+) const
 {
     tmp<fluxFieldType> toldTimeFlux =
-        (mesh().Sf() & faceU.oldTime())*rAUf*convectionCofrDeltaT();
+        (this->mesh().Sf() & faceU.oldTime())*rAUf*convectionCofrDeltaT();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         // Mesh is moving, need to take into account the ratio between old and
         // current cell volumes
@@ -793,20 +791,20 @@ steadyInertialDdtScheme<Type>::fvcDdtConsistentPhiCorr
             IOobject
             (
                 "V0ByV",
-                mesh().time().timeName(),
-                mesh(),
+                this->mesh().time().timeName(),
+                this->mesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh(),
+            this->mesh(),
             dimensionedScalar("one", dimless, 1.0),
             zeroGradientFvPatchScalarField::typeName
         );
-        V0ByV.internalField() = mesh().V0()/mesh().V();
+        V0ByV.internalField() = this->mesh().V0()/this->mesh().V();
         V0ByV.correctBoundaryConditions();
 
         // Correct the flux with interpolated volume ratio
-        toldTimeFlux() *= fvc::interpolate(V0ByV);
+        toldTimeFlux.ref() *= fvc::interpolate(V0ByV);
     }
 
     return toldTimeFlux;
@@ -817,7 +815,7 @@ template<class Type>
 tmp<surfaceScalarField> steadyInertialDdtScheme<Type>::meshPhi
 (
     const GeometricField<Type, fvPatchField, volMesh>&
-)
+) const
 {
     return tmp<surfaceScalarField>
     (
@@ -826,10 +824,10 @@ tmp<surfaceScalarField> steadyInertialDdtScheme<Type>::meshPhi
             IOobject
             (
                 "meshPhi",
-                mesh().time().timeName(),
-                mesh()
+                this->mesh().time().timeName(),
+                this->mesh()
             ),
-            mesh(),
+            this->mesh(),
             dimensionedScalar("0", dimVolume/dimTime, 0.0)
         )
     );

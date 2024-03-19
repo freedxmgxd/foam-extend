@@ -63,10 +63,10 @@ class skewCorrected
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        skewCorrected(const skewCorrected&);
+        skewCorrected(const skewCorrected&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const skewCorrected&);
+        void operator=(const skewCorrected&) = delete;
 
 
 public:
@@ -158,9 +158,9 @@ public:
                 )
             );
 
-            for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
+            for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
             {
-                tsfCorr().replace
+                tsfCorr.ref().replace
                 (
                     cmpt,
                     scv() & linear
@@ -208,7 +208,8 @@ public:
             else
             {
                 return
-                    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >(nullptr);
+                    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+                    (nullptr);
             }
         }
 };

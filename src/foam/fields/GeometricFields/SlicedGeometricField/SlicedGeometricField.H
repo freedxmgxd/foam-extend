@@ -163,6 +163,27 @@ public:
             >&
         );
 
+        //- Clone
+        tmp<SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh> >
+        clone() const
+        {
+            return
+                tmp
+                <
+                    SlicedGeometricField
+                    <
+                        Type,
+                        PatchField,
+                        SlicedPatchField,
+                        GeoMesh
+                        >
+                >
+                (
+                    new SlicedGeometricField
+                    <Type, PatchField, SlicedPatchField,GeoMesh>(*this)
+                );
+        }
+
 
     //- Destructor
     ~SlicedGeometricField();

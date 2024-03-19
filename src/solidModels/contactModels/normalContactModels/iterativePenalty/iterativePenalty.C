@@ -552,7 +552,7 @@ iterativePenalty::iterativePenalty
     scalarField slaveV(mesh_.boundary()[slavePatchIndex].size(), 0.0);
     const volScalarField::DimensionedInternalField & V = mesh_.V();
     {
-      const unallocLabelList& faceCells =
+      const labelUList& faceCells =
           mesh_.boundary()[masterPatchIndex].faceCells();
       forAll(mesh_.boundary()[masterPatchIndex], facei)
     {
@@ -560,7 +560,7 @@ iterativePenalty::iterativePenalty
     }
     }
     {
-      const unallocLabelList& faceCells =
+      const labelUList& faceCells =
           mesh_.boundary()[slavePatchIndex].faceCells();
       forAll(mesh_.boundary()[slavePatchIndex], facei)
     {

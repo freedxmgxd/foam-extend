@@ -300,11 +300,14 @@ solidCohesiveFixedModeMixFvPatchVectorField::relativeSeparationDistance() const
             curSepDist -= n[i]*(n[i]&curSepDist);
         }
 
-        tRelativeSeparationDistance()[i] =
+        tRelativeSeparationDistance.ref()[i] =
             // mag(curSepDist)/law().deltaC().value();
             mag(curSepDist)/deltaC[i];
 
-    if (tRelativeSeparationDistance()[i] > 1.0) numCrackedFaces++;
+        if (tRelativeSeparationDistance()[i] > 1.0)
+        {
+            numCrackedFaces++;
+        }
     }
 
     Info<< "Relative separation distance, max: "
@@ -566,7 +569,7 @@ void solidCohesiveFixedModeMixFvPatchVectorField::updateCoeffs()
     }
 
     // Get face cells regions
-    const unallocLabelList& faceCells = patch().faceCells();
+    const labelUList& faceCells = patch().faceCells();
 
     const fvMesh& mesh = patch().boundaryMesh().mesh();
 

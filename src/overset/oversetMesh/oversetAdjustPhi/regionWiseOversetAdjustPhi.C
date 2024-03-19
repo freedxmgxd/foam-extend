@@ -56,8 +56,8 @@ void Foam::regionWiseOversetAdjustPhi
     const boolList& fringeFaceFlips = om.fringeFaceFlips();
 
     // Get internal owner-neighbour addressing
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     // Get region split to identify separate mesh components
     const scalarField& regionID = om.regionID().internalField();
@@ -80,7 +80,7 @@ void Foam::regionWiseOversetAdjustPhi
         // Get necessary references
         const fvPatchVectorField& Up = U.boundaryField()[patchI];
         const fvsPatchScalarField& phip = phi.boundaryField()[patchI];
-        const unallocLabelList& fc = Up.patch().faceCells();
+        const labelUList& fc = Up.patch().faceCells();
 
         // All coupled and emptyOverset patches should not be taken into account
         if

@@ -162,7 +162,7 @@ labelList tetPolyMesh::edgesForPoint(const label pointID) const
     const label startFaceNbr = lduAddr().losortStartAddr()[pointID];
     const label endFaceNbr = lduAddr().losortStartAddr()[pointID + 1];
 
-    const unallocLabelList& losort = lduAddr().losortAddr();
+    const labelUList& losort = lduAddr().losortAddr();
 
     // pointID is the owner of the first lot and the neighbour of the second lot
     labelList edgeIndices(nEdgesForPoint(pointID), -1);

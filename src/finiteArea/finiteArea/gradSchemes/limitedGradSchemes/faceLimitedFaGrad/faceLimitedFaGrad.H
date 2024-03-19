@@ -75,10 +75,10 @@ class faceLimitedGrad
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        faceLimitedGrad(const faceLimitedGrad&);
+        faceLimitedGrad(const faceLimitedGrad&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const faceLimitedGrad&);
+        void operator=(const faceLimitedGrad&) = delete;
 
 
 public:
@@ -98,15 +98,16 @@ public:
         {
             if (k_ < 0 || k_ > 1)
             {
-                FatalIOErrorIn
-                (
-                    "faceLimitedGrad(const faMesh& mesh, Istream& schemeData)",
-                    schemeData
-                )   << "coefficient = " << k_
+                FatalIOErrorInFunction(schemeData)
+                    << "coefficient = " << k_
                     << " should be >= 0 and <= 1"
                     << exit(FatalIOError);
             }
         }
+
+
+    //- Destructor
+    virtual ~faceLimitedGrad() = default;
 
 
     // Member Functions
@@ -120,7 +121,7 @@ public:
         );
 
 
-        tmp
+        virtual tmp
         <
             GeometricField
             <typename outerProduct<vector, Type>::type, faPatchField, areaMesh>

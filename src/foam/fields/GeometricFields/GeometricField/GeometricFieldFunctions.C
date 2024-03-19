@@ -104,7 +104,7 @@ pow
         )
     );
 
-    pow<Type, r, PatchField, GeoMesh>(tPow(), gf);
+    pow<Type, r, PatchField, GeoMesh>(tPow.ref(), gf);
 
     return tPow;
 }
@@ -139,7 +139,7 @@ pow
         )
     );
 
-    pow<Type, r, PatchField, GeoMesh>(tPow(), gf);
+    pow<Type, r, PatchField, GeoMesh>(tPow.ref(), gf);
 
     tgf.clear();
 
@@ -190,7 +190,7 @@ sqr(const GeometricField<Type, PatchField, GeoMesh>& gf)
         )
     );
 
-    sqr(tSqr(), gf);
+    sqr(tSqr.ref(), gf);
 
     return tSqr;
 }
@@ -228,7 +228,7 @@ sqr(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf)
         )
     );
 
-    sqr(tSqr(), gf);
+    sqr(tSqr.ref(), gf);
 
     tgf.clear();
 
@@ -270,7 +270,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
         )
     );
 
-    magSqr(tMagSqr(), gf);
+    magSqr(tMagSqr.ref(), gf);
 
     return tMagSqr;
 }
@@ -300,7 +300,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > magSqr
         )
     );
 
-    magSqr(tMagSqr(), gf);
+    magSqr(tMagSqr.ref(), gf);
 
     tgf.clear();
 
@@ -342,7 +342,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
         )
     );
 
-    mag(tMag(), gf);
+    mag(tMag.ref(), gf);
 
     return tMag;
 }
@@ -372,7 +372,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > mag
         )
     );
 
-    mag(tMag(), gf);
+    mag(tMag.ref(), gf);
 
     tgf.clear();
 
@@ -428,7 +428,7 @@ cmptAv(const GeometricField<Type, PatchField, GeoMesh>& gf)
         )
     );
 
-    cmptAv(CmptAv(), gf);
+    cmptAv(CmptAv.ref(), gf);
 
     return CmptAv;
 }
@@ -467,7 +467,7 @@ cmptAv(const tmp<GeometricField<Type, PatchField, GeoMesh> >& tgf)
         )
     );
 
-    cmptAv(CmptAv(), gf);
+    cmptAv(CmptAv.ref(), gf);
 
     tgf.clear();
 
@@ -617,7 +617,7 @@ operator op                                                                   \
         )                                                                     \
     );                                                                        \
                                                                               \
-    Foam::opFunc(tRes(), gf1, gf2);                                           \
+    Foam::opFunc(tRes.ref(), gf1, gf2);                                       \
                                                                               \
     return tRes;                                                              \
 }                                                                             \
@@ -646,10 +646,9 @@ operator op                                                                   \
             gf1.dimensions() op gf2.dimensions()                              \
         );                                                                    \
                                                                               \
-    Foam::opFunc(tRes(), gf1, gf2);                                           \
+    Foam::opFunc(tRes.ref(), gf1, gf2);                                       \
                                                                               \
-    reuseTmpGeometricField<productType, Type2, PatchField, GeoMesh>           \
-    ::clear(tgf2);                                                            \
+    tgf2.clear();                                                             \
                                                                               \
     return tRes;                                                              \
 }                                                                             \
@@ -678,10 +677,9 @@ operator op                                                                   \
             gf1.dimensions() op gf2.dimensions()                              \
         );                                                                    \
                                                                               \
-    Foam::opFunc(tRes(), gf1, gf2);                                           \
+    Foam::opFunc(tRes.ref(), gf1, gf2);                                       \
                                                                               \
-    reuseTmpGeometricField<productType, Type1, PatchField, GeoMesh>           \
-    ::clear(tgf1);                                                            \
+    tgf1.clear();                                                             \
                                                                               \
     return tRes;                                                              \
 }                                                                             \
@@ -705,7 +703,7 @@ operator op                                                                   \
                                                                               \
     tmp<GeometricField<productType, PatchField, GeoMesh> > tRes =             \
         reuseTmpTmpGeometricField                                             \
-        <productType, Type1, Type1, Type2, PatchField, GeoMesh>::New          \
+        <productType, Type1, Type2, PatchField, GeoMesh>::New                 \
         (                                                                     \
             tgf1,                                                             \
             tgf2,                                                             \
@@ -713,11 +711,10 @@ operator op                                                                   \
             gf1.dimensions() op gf2.dimensions()                              \
         );                                                                    \
                                                                               \
-    Foam::opFunc(tRes(), gf1, gf2);                                           \
+    Foam::opFunc(tRes.ref(), gf1, gf2);                                       \
                                                                               \
-    reuseTmpTmpGeometricField                                                 \
-        <productType, Type1, Type1, Type2, PatchField, GeoMesh>               \
-    ::clear(tgf1, tgf2);                                                      \
+    tgf1.clear();                                                             \
+    tgf2.clear();                                                             \
                                                                               \
     return tRes;                                                              \
 }                                                                             \
@@ -764,7 +761,7 @@ operator op                                                                   \
         )                                                                     \
     );                                                                        \
                                                                               \
-    Foam::opFunc(tRes(), gf1, dvs);                                           \
+    Foam::opFunc(tRes.ref(), gf1, dvs);                                       \
                                                                               \
     return tRes;                                                              \
 }                                                                             \
@@ -809,10 +806,9 @@ operator op                                                                   \
             gf1.dimensions() op dvs.dimensions()                              \
         );                                                                    \
                                                                               \
-    Foam::opFunc(tRes(), gf1, dvs);                                           \
+    Foam::opFunc(tRes.ref(), gf1, dvs);                                       \
                                                                               \
-    reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>            \
-    ::clear(tgf1);                                                            \
+    tgf1.clear();                                                             \
                                                                               \
     return tRes;                                                              \
 }                                                                             \
@@ -877,7 +873,7 @@ operator op                                                                   \
         )                                                                     \
     );                                                                        \
                                                                               \
-    Foam::opFunc(tRes(), dvs, gf1);                                           \
+    Foam::opFunc(tRes.ref(), dvs, gf1);                                       \
                                                                               \
     return tRes;                                                              \
 }                                                                             \
@@ -921,10 +917,9 @@ operator op                                                                   \
             dvs.dimensions() op gf1.dimensions()                              \
         );                                                                    \
                                                                               \
-    Foam::opFunc(tRes(), dvs, gf1);                                           \
+    Foam::opFunc(tRes.ref(), dvs, gf1);                                       \
                                                                               \
-    reuseTmpGeometricField<productType, Type, PatchField, GeoMesh>            \
-    ::clear(tgf1);                                                            \
+    tgf1.clear();                                                             \
                                                                               \
     return tRes;                                                              \
 }                                                                             \

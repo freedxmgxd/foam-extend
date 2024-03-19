@@ -22,25 +22,29 @@
 #     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     RPM spec file for ParaView-4.3.1_Server
+#     RPM spec file for ParaView-5.12.0
 #
 # Description
 #     RPM spec file for creating a relocatable RPM
 #
 # Authors:
-#     Martin Beaudoin, Hydro-Quebec, (2010, 2015)
+#     Martin Beaudoin, (2018)
 #     Andreas Feymark, Chalmers University of Technology, (2013)
+#     Pascal Beckstein, HZDR, (2018)
+#     Hrvoje Jasak, Wikki Ltd (2024)
 #
 #------------------------------------------------------------------------------
 
 # We grab the value of WM_THIRD_PARTY and WM_OPTIONS from the environment variable
 %{expand:%%define _WM_THIRD_PARTY_DIR %(echo $WM_THIRD_PARTY_DIR)}
 %{expand:%%define _WM_OPTIONS         %(echo $WM_OPTIONS)}
-%{expand:%%define _MPI_ARCH_PATH      %(echo $MPI_ARCH_PATH)}
-%{expand:%%define _MESA_DIR           %(echo $MESA_DIR)}
 
 # Disable the generation of debuginfo packages
 %define debug_package %{nil}
+
+# Turning off the Fascist build policy
+# Useful for debugging the install section
+%define _unpackaged_files_terminate_build 0
 
 # The topdir needs to point to the $WM_THIRD_PARTY/rpmbuild directory
 %define _topdir	 	%{_WM_THIRD_PARTY_DIR}/rpmBuild
@@ -65,7 +69,7 @@
 
 %define name		ParaView
 %define release		%{_WM_OPTIONS}
-%define version 	4.3.1_Server
+%define version 	5.12.0
 
 %define buildroot       %{_topdir}/BUILD/%{name}-%{version}-root
 
@@ -75,11 +79,11 @@ License: 		Unkown
 Name: 			%{name}
 Version: 		%{version}
 Release: 		%{release}
-URL:                    http://www.paraview.org/files/v4.3/
-Source: 		%url/%{name}-v4.3.1-source.tar.gz
+URL:                    http://www.paraview.org/files/v5.12/
+Source: 		%url/%{name}-v%{version}.tar.gz
 Prefix: 		%{_prefix}
 Group: 			Development/Tools
-Patch0:                 ParaView-v4.3.1.patch_darwin
+Patch0:                 ParaView-5.15.12.patch
 
 %define _installPrefix  %{_prefix}/packages/%{name}-%{version}/platforms/%{_WM_OPTIONS}
 
@@ -105,12 +109,9 @@ Patch0:                 ParaView-v4.3.1.patch_darwin
 %{summary}
 
 %prep
-%setup -q -n %{name}-v4.3.1-source
+%setup -q -n %{name}-v%{version}
 
-%ifos darwin
 %patch0 -p1
-%endif
-
 
 %build
 #
@@ -118,7 +119,6 @@ Patch0:                 ParaView-v4.3.1.patch_darwin
 #
     addCMakeVariable()
     {
-        echo "Adding: $1"
         while [ -n "$1" ]
         do
             CMAKE_VARIABLES="$CMAKE_VARIABLES -D$1"
@@ -153,20 +153,23 @@ Patch0:                 ParaView-v4.3.1.patch_darwin
     addCMakeVariable  CMAKE_BUILD_TYPE:STRING=Release
     addCMakeVariable  BUILD_TESTING:BOOL=OFF
 
-    # Setings specific to ParaView server
-    addCMakeVariable  PARAVIEW_USE_MPI=ON
-    addCMakeVariable  PARAVIEW_BUILD_QT_GUI=OFF
-    addCMakeVariable  VTK_USE_X=OFF
-    addCMakeVariable  OPENGL_INCLUDE_DIR=%{_MESA_DIR}
-    addCMakeVariable  OPENGL_gl_LIBRARY=%{_MESA_DIR}/lib/libOSMesa.so
-    addCMakeVariable  VTK_OPENGL_HAS_OSMESA=ON
-
     # We build with Python. This is just too useful
     addCMakeVariable  PARAVIEW_ENABLE_PYTHON:BOOL=ON
 
- %ifos darwin
-    # Additional installation rules for Mac OS X
-    addCMakeVariable  PARAVIEW_EXTRA_INSTALL_RULES_FILE:FILEPATH=%{_topdir}/BUILD/%{name}-%{version}/Applications/ParaView-3.8.1_extra_install_Darwin.cmake
+    # include development files in "make install"
+    addCMakeVariable  PARAVIEW_INSTALL_DEVELOPMENT_FILES:BOOL=ON
+
+%ifos darwin
+    # Additional installation rules for Mac OSX
+    addCMakeVariable  PARAVIEW_EXTRA_INSTALL_RULES_FILE:FILEPATH=%{_topdir}/BUILD/%{name}-v%{version}-source/Applications/ParaView-4.4.0_extra_install_Darwin.cmake
+
+    # We activate the new Unix-style installation for Mac OS X
+    addCMakeVariable PARAVIEW_DO_UNIX_STYLE_INSTALLS:BOOL=ON
+
+    # Recent version of Mac OSX (Yosemite) cannot compile ParaView with the gcc compiler
+    # Using clang instead
+    CC=clang
+    CXX=clang++
 %endif
 
     # Add the value of _qmakePath for QT_QMAKE_EXECUTABLE
@@ -188,7 +191,7 @@ Patch0:                 ParaView-v4.3.1.patch_darwin
 %install
     # On OpenSUSE, rpmbuild, will choke when detecting unreferenced symlinks
     # created during installation.
-    # Qt version 4.6.3 will generate some unreferenced symlinks when
+    # Qt version 4.8.0 will generate some unreferenced symlinks when
     # ParaView is compiled and installed. By enabling the following
     # environment variable, the command brp-symlink will still complain
     # about missing link targets, but it won't stop rpmbuild from generating
@@ -198,6 +201,15 @@ Patch0:                 ParaView-v4.3.1.patch_darwin
 
     cd buildObj
     make install DESTDIR=$RPM_BUILD_ROOT
+
+%ifos darwin
+    # Cleaning up some strange install side effect from option
+    # PARAVIEW_DO_UNIX_STYLE_INSTALLS
+    # Need to revisit this section eventually.
+    if [ -d "$RPM_BUILD_ROOT/$RPM_BUILD_ROOT" ]; then
+        mv $RPM_BUILD_ROOT/$RPM_BUILD_ROOT/%{_installPrefix}/bin/* $RPM_BUILD_ROOT/%{_installPrefix}/bin
+    fi
+%endif
 
     # Creation of foam-extend specific .csh and .sh files"
 
@@ -215,7 +227,7 @@ cat << DOT_SH_EOF > $RPM_BUILD_ROOT/%{_installPrefix}/etc/%{name}-%{version}.sh
 export PARAVIEW_DIR=\$WM_THIRD_PARTY_DIR/packages/%{name}-%{version}/platforms/\$WM_OPTIONS
 export PARAVIEW_BIN_DIR=\$PARAVIEW_DIR/bin
 export PARAVIEW_LIB_DIR=\$PARAVIEW_DIR/lib
-export PARAVIEW_INCLUDE_DIR=\$PARAVIEW_DIR/include/paraview-4.3
+export PARAVIEW_INCLUDE_DIR=\$PARAVIEW_DIR/include/paraview-5.12
 
 export PARAVIEW_VERSION=%{version}
 
@@ -224,9 +236,9 @@ export PARAVIEW_VERSION=%{version}
 #     specified directory to see if a given library is a paraview plugin.
 #     In the case of \$FOAM_LIBBIN, with over 80 libraries, this is a total waste of time that will slow down the
 #     startup of paraview or even make paraview crash on startup.
-export PV_PLUGIN_PATH=\$FOAM_LIBBIN/paraview_plugins
+export PV_PLUGIN_PATH=\$FOAM_LIBBIN/paraview-5.12_plugins
 
-[ -d \$PARAVIEW_LIB_DIR/paraview-4.3 ] && _foamAddLib \$PARAVIEW_LIB_DIR/paraview-4.3
+[ -d \$PARAVIEW_LIB_DIR/paraview-5.12 ] && _foamAddLib \$PARAVIEW_LIB_DIR/paraview-5.12
 
 # Enable access to the package applications if present
 [ -d \$PARAVIEW_BIN_DIR ] && _foamAddPath \$PARAVIEW_BIN_DIR
@@ -245,7 +257,7 @@ cat << DOT_CSH_EOF > $RPM_BUILD_ROOT/%{_installPrefix}/etc/%{name}-%{version}.cs
 setenv PARAVIEW_DIR \$WM_THIRD_PARTY_DIR/packages/%{name}-%{version}/platforms/\$WM_OPTIONS
 setenv PARAVIEW_BIN_DIR \$PARAVIEW_DIR/bin
 setenv PARAVIEW_LIB_DIR \$PARAVIEW_DIR/lib
-setenv PARAVIEW_INCLUDE_DIR \$PARAVIEW_DIR/include/paraview-4.3
+setenv PARAVIEW_INCLUDE_DIR \$PARAVIEW_DIR/include/paraview-5.12
 
 setenv PARAVIEW_VERSION %{version}
 
@@ -254,14 +266,14 @@ setenv PARAVIEW_VERSION %{version}
 #     specified directory to see if a given library is a paraview plugin.
 #     In the case of \$FOAM_LIBBIN, with over 80 libraries, this is a total waste of time that will slow down the
 #     startup of paraview or even make paraview crash on startup.
-setenv PV_PLUGIN_PATH \$FOAM_LIBBIN/paraview_plugins
+setenv PV_PLUGIN_PATH \$FOAM_LIBBIN/paraview-5.12_plugins
 
 if ( -e \$PARAVIEW_BIN_DIR ) then
     _foamAddPath \$PARAVIEW_BIN_DIR
 endif
 
-if ( -e \$PARAVIEW_LIB_DIR/paraview-4.3 ) then
-    _foamAddLib \$PARAVIEW_LIB_DIR/paraview-4.3
+if ( -e \$PARAVIEW_LIB_DIR/paraview-5.12 ) then
+    _foamAddLib \$PARAVIEW_LIB_DIR/paraview-5.12
 endif
 
 
@@ -280,4 +292,5 @@ DOT_CSH_EOF
 %files
 %defattr(-,root,root)
 %{_installPrefix}
+
 

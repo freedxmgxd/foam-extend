@@ -22,13 +22,14 @@
 #     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     RPM spec file for qt-everywhere-opensource-src-4.8.6
+#     RPM spec file for qt-everywhere-src-5.15.12
 #
 # Description
 #     RPM spec file for creating a relocatable RPM
 #
 # Author:
 #     Martin Beaudoin, Hydro-Quebec, (2015)
+#     Pascal Beckstein, HZDR, (2018)
 #
 #------------------------------------------------------------------------------
 
@@ -60,9 +61,9 @@
 #
 %define _prefix         %{_WM_THIRD_PARTY_DIR}
 
-%define name		qt-everywhere-opensource-src
+%define name		qt-everywhere-src
 %define release		%{_WM_OPTIONS}
-%define version 	4.8.6
+%define version 	5.15.12
 
 %define buildroot       %{_topdir}/BUILD/%{name}-%{version}-root
 
@@ -70,13 +71,13 @@
 %define _missing_doc_files_terminate_build 0
 
 BuildRoot:	        %{buildroot}
-Summary: 		qt-everywhere-opensource-src
+Summary: 		qt-everywhere-src
 License: 		Unkown
 Name: 			%{name}
 Version: 		%{version}
 Release: 		%{release}
-URL:                    http://download.qt.io/archive/qt/4.8/4.8.6/qt-everywhere-opensource-src-4.8.6.tar.gz
-Source: 		%url/%{name}-%{version}.tar.gz
+URL:                    https://download.qt.io/official_releases/qt/5.15/5.15.12/single/qt-everywhere-opensource-src-5.15.12.tar.xz
+Source: 		%url/%{name}-%{version}.tar.xz
 Prefix: 		%{_prefix}
 Group: 			Development/Tools
 
@@ -97,20 +98,11 @@ Group: 			Development/Tools
     [ -n "$WM_CXXFLAGS" ]   &&  export CXXFLAGS="$WM_CXXFLAGS"
     [ -n "$WM_LDFLAGS" ]    &&  export LDFLAGS="$WM_LDFLAGS"
 
-%ifos darwin
-    #   Under Mac OS X, Qt 4.8 will only compile using the stock native g++ compiler supplied with Xcode.
-    #   If your native Mac OS X g++ compiler is not located under /usr/bin, simply adjust the redefinition of the following variables accordingly.
-    #   This is ugly, I know...
-    export CC=/usr/bin/gcc
-    export CXX=/usr/bin/g++
-    export PATH=/usr/bin:$PATH
-%endif
-
     ./configure                           \
-        -opensource --confirm-license=yes \
+        -opensource -confirm-license      \
         -release -shared                  \
-        -nomake examples -nomake demos    \
-        --prefix=%{_installPrefix}
+        -nomake examples                  \
+        -prefix %{_installPrefix}
 
     # Explicitely specify LD_LIBRARY_PATH so it can find QT own libraries
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%{_builddir}/%{name}-%{version}/lib

@@ -78,7 +78,7 @@ skewCorrectedSnGrad<Type>::correction
             vf.dimensions()*mesh.deltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tssf.ref();
 
     ssf = dimensioned<Type>("0", ssf.dimensions(), pTraits<Type>::zero);
 
@@ -88,8 +88,8 @@ skewCorrectedSnGrad<Type>::correction
         outerProduct<vector, typename pTraits<Type>::cmptType>::type
         CmptGradType;
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const vectorField& Sf = mesh.Sf().internalField();
     const scalarField& magSf = mesh.magSf().internalField();

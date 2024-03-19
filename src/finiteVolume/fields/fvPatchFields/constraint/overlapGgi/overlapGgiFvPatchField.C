@@ -137,7 +137,7 @@ tmp<Field<Type> > overlapGgiFvPatchField<Type>::patchNeighbourField() const
     const Field<Type>& iField = this->internalField();
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = overlapGgiPatch_.shadow().faceCells();
+    const labelUList& sfc = overlapGgiPatch_.shadow().faceCells();
 
     Field<Type> sField(sfc.size());
 
@@ -166,7 +166,7 @@ overlapGgiFvPatchField<Type>::untransformedInterpolate
     const Field<Type>& iField = this->internalField();
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = overlapGgiPatch_.shadow().faceCells();
+    const labelUList& sfc = overlapGgiPatch_.shadow().faceCells();
 
     scalarField sField(sfc.size());
 
@@ -228,7 +228,7 @@ void overlapGgiFvPatchField<Type>::initInterfaceMatrixUpdate
     // patch comms.  HJ, 11/Jul/2011
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = overlapGgiPatch_.shadow().faceCells();
+    const labelUList& sfc = overlapGgiPatch_.shadow().faceCells();
 
     scalarField sField(sfc.size());
 
@@ -240,7 +240,7 @@ void overlapGgiFvPatchField<Type>::initInterfaceMatrixUpdate
     scalarField pnf = overlapGgiPatch_.interpolate(sField);
 
     // Multiply the field by coefficients and add into the result
-    const unallocLabelList& fc = overlapGgiPatch_.faceCells();
+    const labelUList& fc = overlapGgiPatch_.faceCells();
 
     if (switchToLhs)
     {

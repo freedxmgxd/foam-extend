@@ -303,7 +303,6 @@ int main(int argc, char *argv[])
                 (
                     "cellDist",
                     runTime.timeName(),
-                    mesh.dbDir(),
                     mesh,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE

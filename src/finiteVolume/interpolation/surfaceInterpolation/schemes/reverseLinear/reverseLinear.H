@@ -122,7 +122,8 @@ public:
                     dimless
                 )
             );
-            surfaceScalarField& reverseLinearWeights = treverseLinearWeights();
+            surfaceScalarField& reverseLinearWeights =
+                treverseLinearWeights.ref();
 
             reverseLinearWeights.internalField() =
                 1.0 - cdWeights.internalField();

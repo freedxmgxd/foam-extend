@@ -104,7 +104,7 @@ tmp<volScalarField> kOmegaSST::F23() const
 
     if (F3_)
     {
-        f23() *= F3();
+        f23.ref() *= F3();
     }
 
     return f23;

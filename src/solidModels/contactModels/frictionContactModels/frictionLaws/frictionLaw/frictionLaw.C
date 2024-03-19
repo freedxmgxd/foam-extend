@@ -57,16 +57,16 @@ frictionLaw::frictionLaw
 
 tmp<scalarField> frictionLaw::slipTraction(const scalarField& pressure)
 {
-  tmp<scalarField> tslipTrac ( new scalarField(pressure.size(), 0.0) );
+    tmp<scalarField> tslipTrac (new scalarField(pressure.size(), 0.0));
 
-  scalarField& slipTrac = tslipTrac();
+    scalarField& slipTrac = tslipTrac.ref();
 
-  forAll(slipTrac, facei)
+    forAll(slipTrac, facei)
     {
-      slipTrac[facei] = slipTraction(pressure[facei]);
-      }
+        slipTrac[facei] = slipTraction(pressure[facei]);
+    }
 
-  return tslipTrac;
+    return tslipTrac;
 }
 
 

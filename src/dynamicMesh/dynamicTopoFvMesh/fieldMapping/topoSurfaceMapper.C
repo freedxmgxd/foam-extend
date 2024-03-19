@@ -212,13 +212,13 @@ bool topoSurfaceMapper::direct() const
 
 
 //- Return direct addressing
-const unallocLabelList& topoSurfaceMapper::directAddressing() const
+const labelUList& topoSurfaceMapper::directAddressing() const
 {
     if (!direct())
     {
         FatalErrorIn
         (
-            "const unallocLabelList& "
+            "const labelUList& "
             "topoSurfaceMapper::directAddressing() const"
         )   << "Requested direct addressing for an interpolative mapper."
             << abort(FatalError);

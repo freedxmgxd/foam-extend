@@ -66,8 +66,8 @@ void Foam::largeStrainULSolidInterface::correct(fvVectorMatrix& UEqn)
 {
   const fvMesh& mesh = solidInterface::mesh();
 
-  const unallocLabelList& owner = mesh.owner();
-  const unallocLabelList& neighbour = mesh.neighbour();
+  const labelUList& owner = mesh.owner();
+  const labelUList& neighbour = mesh.neighbour();
 
   const volVectorField& U = UEqn.psi();
   const vectorField& UI = U.internalField();
@@ -239,7 +239,7 @@ void Foam::largeStrainULSolidInterface::correct(fvVectorMatrix& UEqn)
       const scalarField curProcNgbLambda =
     lambda.boundaryField()[curPatch].patchNeighbourField();
 
-      const unallocLabelList& curProcFaceCells =
+      const labelUList& curProcFaceCells =
     mesh.boundary()[curPatch].faceCells();
 
       forAll(processorPatchFaces()[patchI], faceI)

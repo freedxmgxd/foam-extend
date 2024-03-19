@@ -70,10 +70,10 @@ class outletStabilised
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        outletStabilised(const outletStabilised&);
+        outletStabilised(const outletStabilised&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const outletStabilised&);
+        void operator=(const outletStabilised&) = delete;
 
 
 public:
@@ -132,12 +132,12 @@ public:
         ) const
         {
             tmp<surfaceScalarField> tw = tScheme_().weights(vf);
-            surfaceScalarField& w = tw();
+            surfaceScalarField& w = tw.ref();
 
             const fvMesh& mesh_ = this->mesh();
             const cellList& cells = mesh_.cells();
 
-            forAll(vf.boundaryField(), patchi)
+            forAll (vf.boundaryField(), patchi)
             {
                 if
                 (
@@ -151,7 +151,7 @@ public:
                     const labelList& pFaceCells =
                         mesh_.boundary()[patchi].faceCells();
 
-                    forAll(pFaceCells, pFacei)
+                    forAll (pFaceCells, pFacei)
                     {
                         const cell& pFaceCell = cells[pFaceCells[pFacei]];
 
@@ -191,7 +191,8 @@ public:
                 tmp<GeometricField<Type, fvsPatchField, surfaceMesh> > tcorr =
                     tScheme_().correction(vf);
 
-                GeometricField<Type, fvsPatchField, surfaceMesh>& corr = tcorr();
+                GeometricField<Type, fvsPatchField, surfaceMesh>& corr =
+                    tcorr.ref();
 
                 const fvMesh& mesh_ = this->mesh();
                 const cellList& cells = mesh_.cells();
@@ -232,7 +233,8 @@ public:
             else
             {
                 return
-                    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >(nullptr);
+                    tmp<GeometricField<Type, fvsPatchField, surfaceMesh> >
+                    (nullptr);
             }
         }
 };

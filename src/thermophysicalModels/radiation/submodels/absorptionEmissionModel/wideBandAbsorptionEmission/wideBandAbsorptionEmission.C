@@ -170,7 +170,7 @@ Foam::radiation::wideBandAbsorptionEmission::aCont(const label bandI) const
         )
     );
 
-    scalarField& a = ta().internalField();
+    scalarField& a = ta.ref().internalField();
 
     forAll(a, i)
     {
@@ -262,7 +262,7 @@ Foam::radiation::wideBandAbsorptionEmission::ECont(const label bandI) const
     if (mesh().foundObject<volScalarField>("hrr"))
     {
         const volScalarField& hrr = mesh().lookupObject<volScalarField>("hrr");
-        E().internalField() =
+        E.ref().internalField() =
             iEhrrCoeffs_[bandI]
            *hrr.internalField()
            *(iBands_[bandI][1] - iBands_[bandI][0])

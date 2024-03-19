@@ -819,7 +819,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChanger::changeMesh
         const label curSize = boundary[patchI].size();
         const label curStart = boundary[patchI].start();
 
-        const unallocFaceList& curFaces = boundary[patchI];
+        const faceUList& curFaces = boundary[patchI];
 
         // Grab patch start
         patchStarts[patchI] = nNewFaces;

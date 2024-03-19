@@ -74,10 +74,10 @@ class BurgersViscoelastic
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        BurgersViscoelastic(const BurgersViscoelastic&);
+        BurgersViscoelastic(const BurgersViscoelastic&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const BurgersViscoelastic&);
+        void operator=(const BurgersViscoelastic&) = delete;
 
 
 public:
@@ -99,9 +99,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~BurgersViscoelastic();
+    //- Destructor
+    virtual ~BurgersViscoelastic() = default;
 
 
     // Member Functions

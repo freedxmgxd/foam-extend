@@ -64,7 +64,7 @@ gaussGrad<Type>::grad
         )
     );
 
-    GeometricField<GradType, faPatchField, areaMesh>& gGrad = tgGrad();
+    GeometricField<GradType, faPatchField, areaMesh>& gGrad = tgGrad.ref();
 
     // Removed for consistencty.  Matthias Rauter, 6/Dec/2016
     gGrad.correctBoundaryConditions();
@@ -86,7 +86,7 @@ void gaussGrad<Type>::correctBoundaryConditions
     >& gGrad
 )
 {
-    forAll(vsf.boundaryField(), patchI)
+    forAll (vsf.boundaryField(), patchI)
     {
         if (!vsf.boundaryField()[patchI].coupled())
         {

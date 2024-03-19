@@ -99,13 +99,12 @@ template<class Type>
 tmp<Field<Type> > jumpCyclicFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
-    const unallocLabelList& faceCells = this->cyclicPatch().faceCells();
+    const labelUList& faceCells = this->cyclicPatch().faceCells();
 
     tmp<Field<Type> > tpnf(new Field<Type>(this->size()));
-    Field<Type>& pnf = tpnf();
+    Field<Type>& pnf = tpnf.ref();
 
-    tmp<Field<Type> > tjf = jump();
-    const Field<Type>& jf = tjf();
+    const Field<Type> jf = jump();
 
     label sizeby2 = this->size()/2;
 
@@ -152,7 +151,7 @@ void jumpCyclicFvPatchField<Type>::updateInterfaceMatrix
     scalarField pnf(this->size());
 
     label sizeby2 = this->size()/2;
-    const unallocLabelList& faceCells = this->cyclicPatch().faceCells();
+    const labelUList& faceCells = this->cyclicPatch().faceCells();
 
     // Add void pointer cast to keep compiler happy when instantiated
     // for vector/tensor fields.  HJ, 4/Jun/2013

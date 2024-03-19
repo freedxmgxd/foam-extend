@@ -398,6 +398,7 @@ Foam::label Foam::FaceCellWave<Type>::getChangedPatchFaces
             nChangedPatchFaces++;
         }
     }
+
     return nChangedPatchFaces;
 }
 

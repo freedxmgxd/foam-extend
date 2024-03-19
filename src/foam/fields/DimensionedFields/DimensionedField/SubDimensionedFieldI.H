@@ -102,17 +102,6 @@ SubDimensionedField<Type, GeoMesh>::component
 }
 
 
-template<class Type, class GeoMesh>
-inline tmp<DimensionedField<Type, GeoMesh> >
-SubDimensionedField<Type, GeoMesh>::T() const
-{
-    return
-    (
-        reinterpret_cast<const DimensionedField<Type, GeoMesh>&>(*this)
-    ).T();
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type, class GeoMesh>

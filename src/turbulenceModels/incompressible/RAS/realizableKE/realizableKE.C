@@ -295,7 +295,7 @@ void realizableKE::correct()
 
 
     // Dissipation equation
-    tmp<fvScalarMatrix> epsEqn
+    fvScalarMatrix epsEqn
     (
         fvm::ddt(epsilon_)
       + fvm::div(phi_, epsilon_)
@@ -310,18 +310,18 @@ void realizableKE::correct()
         )
     );
 
-    epsEqn().relax();
-
     // No longer needed: matrix completes at the point of solution
     // HJ, 17/Apr/2012
 //     epsEqn().completeAssembly();
+
+    epsEqn.relax();
 
     solve(epsEqn);
     bound(epsilon_, epsilon0_);
 
 
     // Turbulent kinetic energy equation
-    tmp<fvScalarMatrix> kEqn
+    fvScalarMatrix kEqn
     (
         fvm::ddt(k_)
       + fvm::div(phi_, k_)
@@ -331,7 +331,7 @@ void realizableKE::correct()
         G - fvm::Sp(epsilon_/k_, k_)
     );
 
-    kEqn().relax();
+    kEqn.relax();
     solve(kEqn);
     bound(k_, k0_);
 

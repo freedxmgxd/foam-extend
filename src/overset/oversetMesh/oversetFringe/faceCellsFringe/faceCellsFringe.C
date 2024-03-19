@@ -76,7 +76,7 @@ void Foam::faceCellsFringe::calcAddressing() const
                 << abort(FatalError);
         }
 
-        const unallocLabelList& curFaceCells =
+        const labelUList& curFaceCells =
             mesh().boundaryMesh()[curFringePatch.index()].faceCells();
 
         forAll (curFaceCells, fcI)

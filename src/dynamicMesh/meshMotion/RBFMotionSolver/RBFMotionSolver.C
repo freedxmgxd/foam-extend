@@ -357,7 +357,7 @@ Foam::tmp<Foam::pointField> Foam::RBFMotionSolver::curPoints() const
     (
         new vectorField(mesh().nPoints(), vector::zero)
     );
-    pointField& curPoints = tcurPoints();
+    pointField& curPoints = tcurPoints.ref();
 
     // Add motion to existing points
 
@@ -395,7 +395,7 @@ Foam::tmp<Foam::pointField> Foam::RBFMotionSolver::curPoints() const
     // 4. Add old point positions
     curPoints += mesh().points();
 
-    twoDCorrectPoints(tcurPoints());
+    twoDCorrectPoints(curPoints);
 
     return tcurPoints;
 }

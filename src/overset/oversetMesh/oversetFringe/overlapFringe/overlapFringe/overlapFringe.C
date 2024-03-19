@@ -286,7 +286,7 @@ void Foam::overlapFringe::calcAddressing() const
                 << abort(FatalError);
         }
 
-        const unallocLabelList& curFaceCells =
+        const labelUList& curFaceCells =
             mesh.boundaryMesh()[curPatch.index()].faceCells();
 
         // Loop through face cells and mark candidate acceptors if
@@ -334,7 +334,7 @@ void Foam::overlapFringe::calcAddressing() const
                 chipf.patchNeighbourField();
 
             // Get face cells
-            const unallocLabelList& fc = chipf.patch().faceCells();
+            const labelUList& fc = chipf.patch().faceCells();
 
             // Loop through neighbouring processor field
             forAll (nbrProcIndicator, pfaceI)
@@ -586,8 +586,8 @@ bool Foam::overlapFringe::updateIteration
 
         // Get necessary mesh data
         const cellList& meshCells = mesh.cells();
-        const unallocLabelList& own = mesh.owner();
-        const unallocLabelList& nei = mesh.neighbour();
+        const labelUList& own = mesh.owner();
+        const labelUList& nei = mesh.neighbour();
 
         // List of acceptors to be converted to holes
         boolList accBecomingHoles(cumDAPairs.size(), false);
@@ -834,7 +834,7 @@ bool Foam::overlapFringe::updateIteration
                     chipf.patchNeighbourField();
 
                 // Get face cells
-                const unallocLabelList& fc = chipf.patch().faceCells();
+                const labelUList& fc = chipf.patch().faceCells();
 
                 // Loop through neighbouring processor field
                 forAll (nbrProcIndicator, pfaceI)

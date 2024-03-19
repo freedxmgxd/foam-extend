@@ -68,7 +68,7 @@ template<class T> class IndirectList;
 template<class T> class UIndirectList;
 template<class T> class BiIndirectList;
 
-typedef UList<label> unallocLabelList;
+typedef UList<label> labelUList;
 
 /*---------------------------------------------------------------------------*\
                            Class List Declaration
@@ -142,7 +142,7 @@ public:
         List(List<T>&, bool reuse);
 
         //- Construct as subset.
-        List(const UList<T>&, const unallocLabelList& mapAddressing);
+        List(const UList<T>&, const labelUList& mapAddressing);
 
         //- Construct given start and end iterators.
         template<class InputIterator>
@@ -234,6 +234,11 @@ public:
 
             //- Return subscript-checked element of UList.
             inline T& newElmt(const label);
+
+
+        //- Disallow implicit shallowCopy
+        void shallowCopy(const UList<T>&) = delete;
+
 
     // Member operators
 

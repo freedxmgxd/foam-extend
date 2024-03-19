@@ -308,7 +308,7 @@ Foam::tmp<Foam::volScalarField> Foam::sampledIsoSurface::average
             dimensionedScalar("zero", dimless, scalar(0.0))
         )
     );
-    volScalarField& cellAvg = tcellAvg();
+    volScalarField& cellAvg = tcellAvg.ref();
 
     labelField nPointCells(mesh.nCells(), 0);
     {
@@ -359,7 +359,7 @@ Foam::tmp<Foam::pointScalarField> Foam::sampledIsoSurface::average
             dimensionedScalar("zero", dimless, scalar(0.0))
         )
     );
-    pointScalarField& pointAvg = tpointAvg();
+    pointScalarField& pointAvg = tpointAvg.ref();
 
     for (label pointI = 0; pointI < fld.mesh().nPoints(); pointI++)
     {

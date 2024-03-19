@@ -37,8 +37,8 @@ void Foam::BlockLduMatrix<Type>::sumDiag()
 
     TypeCoeffField& Diag = this->diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (this->symmetric())
     {
@@ -173,8 +173,8 @@ void Foam::BlockLduMatrix<Type>::negSumDiag()
 
     TypeCoeffField& Diag = this->diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (this->symmetric())
     {
@@ -316,8 +316,8 @@ void Foam::BlockLduMatrix<Type>::check() const
     // Copy the diagonal.  It is initialised to zero
     TypeCoeffField SumOffDiag(d.size());
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (this->symmetric())
     {
@@ -591,8 +591,8 @@ void Foam::BlockLduMatrix<Type>::relax
     // Create multiplication function object
     typename BlockCoeff<Type>::multiply mult;
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (this->symmetric())
     {
@@ -1041,7 +1041,7 @@ void Foam::BlockLduMatrix<Type>::operator*=(const scalarField& sf)
     {
         TypeCoeffField& Upper = *upperPtr_;
 
-        const unallocLabelList& l = lduAddr().lowerAddr();
+        const labelUList& l = lduAddr().lowerAddr();
 
         if (Upper.activeType() == blockCoeffBase::SCALAR)
         {
@@ -1076,7 +1076,7 @@ void Foam::BlockLduMatrix<Type>::operator*=(const scalarField& sf)
     {
         TypeCoeffField& Lower = *lowerPtr_;
 
-        const unallocLabelList& u = lduAddr().upperAddr();
+        const labelUList& u = lduAddr().upperAddr();
 
         if (Lower.activeType() == blockCoeffBase::SCALAR)
         {

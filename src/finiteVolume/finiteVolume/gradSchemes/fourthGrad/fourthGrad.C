@@ -89,7 +89,7 @@ fourthGrad<Type>::calcGrad
             secondfGrad
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& fGrad = tfGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& fGrad = tfGrad.ref();
 
     const vectorField& C = mesh.C();
 
@@ -101,8 +101,8 @@ fourthGrad<Type>::calcGrad
     const surfaceVectorField& neiLs = lsv.nVectors();
 
     // owner/neighbour addressing
-    const unallocLabelList& own = mesh.owner();
-    const unallocLabelList& nei = mesh.neighbour();
+    const labelUList& own = mesh.owner();
+    const labelUList& nei = mesh.neighbour();
 
     // Assemble the fourth-order gradient
 
@@ -135,7 +135,7 @@ fourthGrad<Type>::calcGrad
             // Better version of d-vectors: Zeljko Tukovic, 25/Apr/2010
             vectorField pd = p.delta();
 
-            const unallocLabelList& faceCells = p.faceCells();
+            const labelUList& faceCells = p.faceCells();
 
             Field<GradType> neighbourSecondfGrad =
                 secondfGrad.boundaryField()[patchi].patchNeighbourField();

@@ -79,10 +79,10 @@ protected:
     // Private Member Functions
 
         //- Disallow copy construct
-        divScheme(const divScheme&);
+        divScheme(const divScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const divScheme&);
+        void operator=(const divScheme&) = delete;
 
 
 public:
@@ -130,9 +130,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~divScheme();
+    //- Destructor
+    virtual ~divScheme() = default;
 
 
     // Member Functions
@@ -150,7 +149,7 @@ public:
         > fvcDiv
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         //- Return the BlockLduSystem corresponding to the implicit div
         // discretization. For block coupled system.

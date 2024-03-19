@@ -48,7 +48,7 @@ void cyclicFaPatchField<Type>::updateInterfaceMatrix                          \
     Field<Type> pnf(this->size());                                            \
                                                                               \
     label sizeby2 = this->size()/2;                                           \
-    const unallocLabelList& faceCells = cyclicPatch_.faceCells();             \
+    const labelUList& faceCells = cyclicPatch_.faceCells();             \
                                                                               \
     for (label facei=0; facei<sizeby2; facei++)                               \
     {                                                                         \

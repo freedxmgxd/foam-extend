@@ -68,10 +68,10 @@ class MaxwellElasticViscoelastic
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MaxwellElasticViscoelastic(const MaxwellElasticViscoelastic&);
+        MaxwellElasticViscoelastic(const MaxwellElasticViscoelastic&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MaxwellElasticViscoelastic&);
+        void operator=(const MaxwellElasticViscoelastic&) = delete;
 
 
 public:
@@ -93,9 +93,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~MaxwellElasticViscoelastic();
+    //- Destructor
+    virtual ~MaxwellElasticViscoelastic() = default;
 
 
     // Member Functions

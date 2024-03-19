@@ -86,13 +86,6 @@ Foam::errorEstimate<Type>::errorEstimate(const Foam::errorEstimate<Type>& ee)
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::errorEstimate<Type>::~errorEstimate()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
@@ -117,7 +110,7 @@ Foam::errorEstimate<Type>::residual() const
         )
     );
 
-    GeometricField<Type, fvPatchField, volMesh>& res = tres();
+    GeometricField<Type, fvPatchField, volMesh>& res = tres.ref();
 
     res.internalField() = residual_;
     res.boundaryField() == pTraits<Type>::zero;
@@ -181,7 +174,7 @@ Foam::errorEstimate<Type>::error() const
         )
     );
 
-    GeometricField<Type, fvPatchField, volMesh>& resError = tresError();
+    GeometricField<Type, fvPatchField, volMesh>& resError = tresError.ref();
 
     resError.internalField() = residual_/normFactor_;
     resError.boundaryField() == pTraits<Type>::zero;
@@ -477,7 +470,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(A, B, "+");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC() += B;
+    tC.ref() += B;
     return tC;
 }
 
@@ -491,7 +484,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(tA(), B, "+");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC() += B;
+    tC.ref() += B;
     return tC;
 }
 
@@ -505,7 +498,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(A, tB(), "+");
     tmp<errorEstimate<Type> > tC(tB.ptr());
-    tC() += A;
+    tC.ref() += A;
     return tC;
 }
 
@@ -519,7 +512,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(tA(), tB(), "+");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC() += tB();
+    tC.ref() += tB();
     tB.clear();
     return tC;
 }
@@ -532,7 +525,7 @@ tmp<errorEstimate<Type> > operator-
 )
 {
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().negate();
+    tC.ref().negate();
     return tC;
 }
 
@@ -544,7 +537,7 @@ tmp<errorEstimate<Type> > operator-
 )
 {
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().negate();
+    tC.ref().negate();
     return tC;
 }
 
@@ -558,7 +551,7 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(A, B, "-");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC() -= B;
+    tC.ref() -= B;
     return tC;
 }
 
@@ -572,7 +565,7 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(tA(), B, "-");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC() -= B;
+    tC.ref() -= B;
     return tC;
 }
 
@@ -586,8 +579,8 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(A, tB(), "-");
     tmp<errorEstimate<Type> > tC(tB.ptr());
-    tC() -= A;
-    tC().negate();
+    tC.ref() -= A;
+    tC.ref().negate();
     return tC;
 }
 
@@ -601,7 +594,7 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(tA(), tB(), "-");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC() -= tB();
+    tC.ref() -= tB();
     tB.clear();
     return tC;
 }
@@ -664,7 +657,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() -= su.internalField();
+    tC.ref().res() -= su.internalField();
     return tC;
 }
 
@@ -677,7 +670,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() -= su.internalField();
+    tC.ref().res() -= su.internalField();
     return tC;
 }
 
@@ -690,7 +683,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() -= tsu().internalField();
+    tC.ref().res() -= tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -705,7 +698,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() -= tsu().internalField();
+    tC.ref().res() -= tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -719,7 +712,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() -= su.internalField();
+    tC.ref().res() -= su.internalField();
     return tC;
 }
 
@@ -732,7 +725,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() -= su.internalField();
+    tC.ref().res() -= su.internalField();
     return tC;
 }
 
@@ -745,7 +738,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() -= tsu().internalField();
+    tC.ref().res() -= tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -759,7 +752,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() -= tsu().internalField();
+    tC.ref().res() -= tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -774,7 +767,7 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() += su.internalField();
+    tC.ref().res() += su.internalField();
     return tC;
 }
 
@@ -787,7 +780,7 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() += su.internalField();
+    tC.ref().res() += su.internalField();
     return tC;
 }
 
@@ -800,7 +793,7 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() += tsu().internalField();
+    tC.ref().res() += tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -814,7 +807,7 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() += tsu().internalField();
+    tC.ref().res() += tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -829,8 +822,8 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().negate();
-    tC().res() -= su.internalField();
+    tC.ref().negate();
+    tC.ref().res() -= su.internalField();
     return tC;
 }
 
@@ -844,8 +837,8 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().negate();
-    tC().res() -= su.internalField();
+    tC.ref().negate();
+    tC.ref().res() -= su.internalField();
     return tC;
 }
 
@@ -858,8 +851,8 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().negate();
-    tC().res() -= tsu().internalField();
+    tC.ref().negate();
+    tC.ref().res() -= tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -874,8 +867,8 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().negate();
-    tC().res() -= tsu().internalField();
+    tC.ref().negate();
+    tC.ref().res() -= tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -890,7 +883,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() -= su.value();
+    tC.ref().res() -= su.value();
     return tC;
 }
 
@@ -904,7 +897,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() -= su.value();
+    tC.ref().res() -= su.value();
     return tC;
 }
 
@@ -918,7 +911,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() -= su.value();
+    tC.ref().res() -= su.value();
     return tC;
 }
 
@@ -932,7 +925,7 @@ tmp<errorEstimate<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() -= su.value();
+    tC.ref().res() -= su.value();
     return tC;
 }
 
@@ -946,7 +939,7 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() += su.value();
+    tC.ref().res() += su.value();
     return tC;
 }
 
@@ -960,7 +953,7 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() += su.value();
+    tC.ref().res() += su.value();
     return tC;
 }
 
@@ -974,8 +967,8 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().negate();
-    tC().res() -= su.value();
+    tC.ref().negate();
+    tC.ref().res() -= su.value();
     return tC;
 }
 
@@ -989,8 +982,8 @@ tmp<errorEstimate<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().negate();
-    tC().res() -= su.value();
+    tC.ref().negate();
+    tC.ref().res() -= su.value();
     return tC;
 }
 
@@ -1004,7 +997,7 @@ tmp<errorEstimate<Type> > operator==
 {
     checkMethod(A, su, "==");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() += su.internalField();
+    tC.ref().res() += su.internalField();
     return tC;
 }
 
@@ -1017,7 +1010,7 @@ tmp<errorEstimate<Type> > operator==
 {
     checkMethod(tA(), su, "==");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() += su.internalField();
+    tC.ref().res() += su.internalField();
     return tC;
 }
 
@@ -1030,7 +1023,7 @@ tmp<errorEstimate<Type> > operator==
 {
     checkMethod(A, tsu(), "==");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() += tsu().internalField();
+    tC.ref().res() += tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1044,7 +1037,7 @@ tmp<errorEstimate<Type> > operator==
 {
     checkMethod(tA(), tsu(), "==");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() += tsu().internalField();
+    tC.ref().res() += tsu().internalField();
     tsu.clear();
     return tC;
 }
@@ -1059,7 +1052,7 @@ tmp<errorEstimate<Type> > operator==
 {
     checkMethod(A, su, "==");
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC().res() += su.value();
+    tC.ref().res() += su.value();
     return tC;
 }
 
@@ -1073,7 +1066,7 @@ tmp<errorEstimate<Type> > operator==
 {
     checkMethod(tA(), su, "==");
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC().res() += su.value();
+    tC.ref().res() += su.value();
     return tC;
 }
 
@@ -1086,7 +1079,7 @@ tmp<errorEstimate<Type> > operator*
 )
 {
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC() *= vsf;
+    tC.ref() *= vsf;
     return tC;
 }
 
@@ -1098,7 +1091,7 @@ tmp<errorEstimate<Type> > operator*
 )
 {
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC() *= tvsf;
+    tC.ref() *= tvsf;
     return tC;
 }
 
@@ -1110,7 +1103,7 @@ tmp<errorEstimate<Type> > operator*
 )
 {
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC() *= vsf;
+    tC.ref() *= vsf;
     return tC;
 }
 
@@ -1122,7 +1115,7 @@ tmp<errorEstimate<Type> > operator*
 )
 {
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC() *= tvsf;
+    tC.ref() *= tvsf;
     return tC;
 }
 
@@ -1135,7 +1128,7 @@ tmp<errorEstimate<Type> > operator*
 )
 {
     tmp<errorEstimate<Type> > tC(new errorEstimate<Type>(A));
-    tC() *= ds;
+    tC.ref() *= ds;
     return tC;
 }
 
@@ -1148,7 +1141,7 @@ tmp<errorEstimate<Type> > operator*
 )
 {
     tmp<errorEstimate<Type> > tC(tA.ptr());
-    tC() *= ds;
+    tC.ref() *= ds;
     return tC;
 }
 

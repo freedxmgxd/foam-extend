@@ -311,7 +311,7 @@ void LienLeschzinerLowRe::correct()
 
 
     // Dissipation equation
-    tmp<fvScalarMatrix> epsEqn
+    fvScalarMatrix epsEqn
     (
         fvm::ddt(epsilon_)
       + fvm::div(phi_, epsilon_)
@@ -326,7 +326,7 @@ void LienLeschzinerLowRe::correct()
       - fvm::Sp(C2_*f2*epsilon_/k_, epsilon_)
     );
 
-    epsEqn().relax();
+    epsEqn.relax();
 
 #   include "LienLeschzinerLowReSetWallDissipation.H"
 #   include "wallDissipationI.H"
@@ -337,7 +337,7 @@ void LienLeschzinerLowRe::correct()
 
     // Turbulent kinetic energy equation
 
-    tmp<fvScalarMatrix> kEqn
+    fvScalarMatrix kEqn
     (
         fvm::ddt(k_)
       + fvm::div(phi_, k_)
@@ -348,7 +348,7 @@ void LienLeschzinerLowRe::correct()
       - fvm::Sp(epsilon_/k_, k_)
     );
 
-    kEqn().relax();
+    kEqn.relax();
     solve(kEqn);
     bound(k_, k0_);
 

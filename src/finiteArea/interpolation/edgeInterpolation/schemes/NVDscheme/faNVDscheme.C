@@ -79,12 +79,11 @@ tmp<edgeScalarField> faNVDscheme<Type,NVDweight>::weights
     (
         new edgeScalarField(mesh.edgeInterpolation::weights())
     );
-    edgeScalarField& weightingFactors = tWeightingFactors();
+    edgeScalarField& weightingFactors = tWeightingFactors.ref();
 
     scalarField& weights = weightingFactors.internalField();
 
-    tmp<areaScalarField> tvf = limiter(phi);
-    const areaScalarField& vf = tvf();
+    const areaScalarField vf = limiter(phi);
 
     areaVectorField gradc(fac::grad(vf));
 
@@ -99,8 +98,8 @@ tmp<edgeScalarField> faNVDscheme<Type,NVDweight>::weights
 //            /mesh.edgeInterpolation::deltaCoeffs();
 //     }
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
     const vectorField& n = mesh.faceAreaNormals().internalField();
     const vectorField& c = mesh.areaCentres().internalField();
 

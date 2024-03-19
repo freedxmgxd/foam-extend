@@ -87,7 +87,7 @@ void Foam::patchEnhancedDiff::enhance(elementScalarField& g) const
         if (pID > -1)
         {
             // Cannot use patch operations: they are made for point fields
-            const unallocLabelList& fc =
+            const labelUList& fc =
                 m.boundaryMesh()[pID].faceCells();
 
             forAll (fc, fcI)

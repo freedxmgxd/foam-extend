@@ -337,7 +337,7 @@ void NonlinearKEShih::correct()
 #   include "nonLinearWallFunctionsI.H"
 
     // Dissipation equation
-    tmp<fvScalarMatrix> epsEqn
+    fvScalarMatrix epsEqn
     (
         fvm::ddt(epsilon_)
       + fvm::div(phi_, epsilon_)
@@ -348,7 +348,7 @@ void NonlinearKEShih::correct()
       - fvm::Sp(C2_*epsilon_/k_, epsilon_)
     );
 
-    epsEqn().relax();
+    epsEqn.relax();
 
 #   include "wallDissipationI.H"
 
@@ -358,7 +358,7 @@ void NonlinearKEShih::correct()
 
     // Turbulent kinetic energy equation
 
-    tmp<fvScalarMatrix> kEqn
+    fvScalarMatrix kEqn
     (
         fvm::ddt(k_)
       + fvm::div(phi_, k_)
@@ -369,7 +369,7 @@ void NonlinearKEShih::correct()
       - fvm::Sp(epsilon_/k_, k_)
     );
 
-    kEqn().relax();
+    kEqn.relax();
     solve(kEqn);
     bound(k_, k0_);
 

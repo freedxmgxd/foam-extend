@@ -244,7 +244,7 @@ void correctedFvPatchField<Type>::makePatchSubMesh() const
 
     labelHashSet cellSet;
 
-    const unallocLabelList& faceCells = this->patch().faceCells();
+    const labelUList& faceCells = this->patch().faceCells();
 
     for(label faceI=0; faceI<faceCells.size(); faceI++)
     {

@@ -169,12 +169,8 @@ patchInternalField
     // Check size
     if (iF.size() != internalField().size())
     {
-        FatalErrorIn
-        (
-            "tmp<Field<Type1> > PointPatchField<PatchField, PointPatch, "
-            "Type>::"
-            "patchInternalField(const Field<Type1>& iF) const"
-        )   << "given internal field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
             << " mesh size: " << internalField().size()
             << abort(FatalError);
@@ -184,7 +180,7 @@ patchInternalField
     const labelList& meshPoints = patch().meshPoints();
 
     tmp<Field<Type1> > tvalues(new Field<Type1>(meshPoints.size()));
-    Field<Type1>& values = tvalues();
+    Field<Type1>& values = tvalues.ref();
 
     forAll (meshPoints, pointI)
     {
@@ -226,11 +222,8 @@ checkPointField() const
 {
     if (!isPointField())
     {
-        FatalErrorIn
-        (
-            "void PointPatchField<PatchField, Mesh, PointPatch, "
-            "MatrixType, Type>::checkPointField() const"
-        )   << "This " << type() << " patchField"
+        FatalErrorInFunction
+            << "This " << type() << " patchField"
             << " is not part of a pointTypeField which may cause "
             << "undefined behaviour from the evaluate and other functions"
             << abort(FatalError);
@@ -257,12 +250,8 @@ addToInternalField
     // Check size
     if (iF.size() != internalField().size())
     {
-        FatalErrorIn
-        (
-            "void PointPatchField<PatchField, Mesh, PointPatch, "
-            "MatrixType, Type>::addToInternalField("
-            "Field<Type1>& iF, const Field<Type1>& iF) const"
-        )   << "given internal field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
             << " mesh size: " << internalField().size()
             << abort(FatalError);
@@ -270,12 +259,8 @@ addToInternalField
 
     if (pF.size() != size())
     {
-        FatalErrorIn
-        (
-            "void PointPatchField<PatchField, Mesh, PointPatch, "
-            "MatrixType, Type>::addToInternalField("
-            "Field<Type1>& iF, const Field<Type1>& iF) const"
-        )   << "given patch field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given patch field does not correspond to the mesh. "
             << "Field size: " << pF.size()
             << " mesh size: " << size()
             << abort(FatalError);
@@ -310,12 +295,8 @@ setInInternalField
     // Check size
     if (iF.size() != internalField().size())
     {
-        FatalErrorIn
-        (
-            "void PointPatchField<PatchField, Mesh, PointPatch, "
-            "MatrixType, Type>::setInInternalField("
-            "Field<Type1>& iF, const Field<Type1>& iF) const"
-        )   << "given internal field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
             << " mesh size: " << internalField().size()
             << abort(FatalError);
@@ -323,12 +304,8 @@ setInInternalField
 
     if (pF.size() != size())
     {
-        FatalErrorIn
-        (
-            "void PointPatchField<PatchField, Mesh, PointPatch, "
-            "MatrixType, Type>::setInInternalField("
-            "Field<Type1>& iF, const Field<Type1>& iF) const"
-        )   << "given patch field does not correspond to the mesh. "
+        FatalErrorInFunction
+            << "given patch field does not correspond to the mesh. "
             << "Field size: " << pF.size()
             << " mesh size: " << size()
             << abort(FatalError);

@@ -125,8 +125,8 @@ void Foam::fluentFvMesh::writeFluentMesh() const
     fluentMeshFile
         << "))" << std::endl << std::endl;
 
-    const unallocLabelList& own = owner();
-    const unallocLabelList& nei = neighbour();
+    const labelUList& own = owner();
+    const labelUList& nei = neighbour();
 
     const faceList& fcs = faces();
 
@@ -159,7 +159,7 @@ void Foam::fluentFvMesh::writeFluentMesh() const
     // Writing boundary faces
     forAll (boundary(), patchI)
     {
-        const unallocFaceList& patchFaces = boundaryMesh()[patchI];
+        const faceUList& patchFaces = boundaryMesh()[patchI];
 
         const labelList& patchFaceCells =
             boundaryMesh()[patchI].faceCells();

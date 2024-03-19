@@ -50,7 +50,7 @@ tmp<DimensionedField<ReturnType, GeoMesh> > Func                              \
         )                                                                     \
     );                                                                        \
                                                                               \
-    Func(tRes().field(), df1.field());                                        \
+    Func(tRes.ref().field(), df1.field());                                    \
                                                                               \
     return tRes;                                                              \
 }                                                                             \
@@ -73,9 +73,9 @@ tmp<DimensionedField<ReturnType, GeoMesh> > Func                              \
         )                                                                     \
     );                                                                        \
                                                                               \
-    Func(tRes().field(), df1.field());                                        \
+    Func(tRes.ref().field(), df1.field());                                    \
                                                                               \
-    reuseTmpDimensionedField<ReturnType, Type1, GeoMesh>::clear(tdf1);        \
+    tdf1.clear();                                                             \
                                                                               \
     return tRes;                                                              \
 }
@@ -519,7 +519,7 @@ tmp<DimensionedField<ReturnType, GeoMesh> > operator Op                       \
                                                                               \
     Foam::OpFunc(tRes().field(), df1.field(), df2.field());                   \
                                                                               \
-    reuseTmpTmpDimensionedField<ReturnType, Type1, Type2, GeoMesh>::          \
+    reuseTmpTmpDimensionedField<ReturnType, Type1, Type1, Type2, GeoMesh>::   \
         clear(tdf1, tdf2);                                                    \
                                                                               \
     return tRes;                                                              \

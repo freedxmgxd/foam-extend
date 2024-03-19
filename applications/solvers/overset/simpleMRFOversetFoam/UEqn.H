@@ -4,9 +4,9 @@
         fvm::div(phi, U)
       + turbulence->divDevReff()
     );
-    mrfZones.addCoriolis(UEqn());
+    mrfZones.addCoriolis(UEqn.ref());
 
-    UEqn().relax();
+    UEqn.ref().relax();
 
     solve
     (

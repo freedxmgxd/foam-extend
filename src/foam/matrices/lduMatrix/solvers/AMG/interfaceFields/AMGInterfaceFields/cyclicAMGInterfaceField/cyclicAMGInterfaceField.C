@@ -85,7 +85,7 @@ void Foam::cyclicAMGInterfaceField::updateInterfaceMatrix
 
     label sizeby2 = size()/2;
 
-    const unallocLabelList& faceCells = cyclicInterface_.faceCells();
+    const labelUList& faceCells = cyclicInterface_.faceCells();
 
     for (label facei=0; facei<sizeby2; facei++)
     {

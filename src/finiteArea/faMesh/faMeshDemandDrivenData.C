@@ -159,7 +159,7 @@ void faMesh::calcLe() const
 
     forAll (boundary(), patchI)
     {
-        const unallocLabelList& bndEdgeFaces =
+        const labelUList& bndEdgeFaces =
             boundary()[patchI].edgeFaces();
 
         const edgeList::subList bndEdges =
@@ -669,7 +669,7 @@ void faMesh::calcEdgeTransformTensors() const
     const edgeVectorField& Ce = edgeCentres();
 
     const bool meshIsSkew = skew();
-    
+
     // Internal edges transformation tensors
     for (label edgeI = 0; edgeI < nInternalEdges(); edgeI++)
     {
@@ -1788,11 +1788,9 @@ tmp<edgeScalarField> faMesh::edgeLengthCorrection() const
             dimless
         )
     );
-    edgeScalarField& correction = tcorrection();
-
+    edgeScalarField& correction = tcorrection.ref();
 
     const vectorField& pointNormals = pointAreaNormals();
-
 
     forAll (correction.internalField(), edgeI)
     {
@@ -1807,7 +1805,6 @@ tmp<edgeScalarField> faMesh::edgeLengthCorrection() const
         correction.internalField()[edgeI] = cos(alpha/2.0);
     }
 
-
     forAll (boundary(), patchI)
     {
         const edgeList::subList patchEdges =
@@ -1816,10 +1813,10 @@ tmp<edgeScalarField> faMesh::edgeLengthCorrection() const
         forAll (patchEdges, edgeI)
         {
             scalar sinAlpha = mag
-                (
-                    pointNormals[patchEdges[edgeI].start()]^
-                    pointNormals[patchEdges[edgeI].end()]
-                );
+            (
+                pointNormals[patchEdges[edgeI].start()]^
+                pointNormals[patchEdges[edgeI].end()]
+            );
 
             scalar alpha = asin(sinAlpha);
 

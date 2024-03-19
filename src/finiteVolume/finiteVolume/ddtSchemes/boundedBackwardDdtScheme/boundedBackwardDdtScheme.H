@@ -82,10 +82,10 @@ class boundedBackwardDdtScheme
 
 
         //- Disallow default bitwise copy construct
-        boundedBackwardDdtScheme(const boundedBackwardDdtScheme&);
+        boundedBackwardDdtScheme(const boundedBackwardDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const boundedBackwardDdtScheme&);
+        void operator=(const boundedBackwardDdtScheme&) = delete;
 
 
 public:
@@ -109,82 +109,80 @@ public:
         {}
 
 
+    //- Destructor
+    virtual ~boundedBackwardDdtScheme() = default;
+
+
     // Member Functions
 
-        //- Return mesh reference
-        const fvMesh& mesh() const
-        {
-            return fv::ddtScheme<scalar>::mesh();
-        }
-
-        tmp<volScalarField> fvcDdt
+        virtual tmp<volScalarField> fvcDdt
         (
             const dimensionedScalar&
-        );
+        ) const;
 
-        tmp<volScalarField> fvcDdt
+        virtual tmp<volScalarField> fvcDdt
         (
             const volScalarField&
-        );
+        ) const;
 
-        tmp<volScalarField> fvcDdt
-        (
-            const dimensionedScalar&,
-            const volScalarField&
-        );
-
-        tmp<volScalarField> fvcDdt
-        (
-            const volScalarField&,
-            const volScalarField&
-        );
-
-        tmp<fvScalarMatrix> fvmDdt
-        (
-            const volScalarField&
-        );
-
-        tmp<fvScalarMatrix> fvmDdt
+        virtual tmp<volScalarField> fvcDdt
         (
             const dimensionedScalar&,
             const volScalarField&
-        );
+        ) const;
 
-        tmp<fvScalarMatrix> fvmDdt
+        virtual tmp<volScalarField> fvcDdt
         (
             const volScalarField&,
             const volScalarField&
-        );
+        ) const;
 
-        tmp<surfaceScalarField> fvcDdtPhiCorr
+        virtual tmp<fvScalarMatrix> fvmDdt
+        (
+            const volScalarField&
+        ) const;
+
+        virtual tmp<fvScalarMatrix> fvmDdt
+        (
+            const dimensionedScalar&,
+            const volScalarField&
+        ) const;
+
+        virtual tmp<fvScalarMatrix> fvmDdt
+        (
+            const volScalarField&,
+            const volScalarField&
+        ) const;
+
+        virtual tmp<surfaceScalarField> fvcDdtPhiCorr
         (
             const volScalarField& rA,
             const volScalarField& U,
             const surfaceScalarField& phi
-        );
+        ) const;
 
-        tmp<surfaceScalarField> fvcDdtPhiCorr
+        virtual tmp<surfaceScalarField> fvcDdtPhiCorr
         (
             const volScalarField& rA,
             const volScalarField& rho,
             const volScalarField& U,
             const surfaceScalarField& phi
-        );
+        ) const;
 
 
         // Member functions for the new time consistent formulation
-        tmp<surfaceScalarField> fvcDdtConsistentPhiCorr
+        virtual tmp<surfaceScalarField> fvcDdtConsistentPhiCorr
         (
             const surfaceScalarField& faceU,
             const volScalarField& U,
             const surfaceScalarField& rAUf
-        );
+        ) const;
 
 
-        tmp<surfaceScalarField> meshPhi
+        virtual tmp<surfaceScalarField> meshPhi
         (
             const volScalarField&
-        );
+        ) const;
 };
 
 

@@ -80,9 +80,8 @@ public:
         vtkMesh(const IOobject& io, const word& setName = "");
 
 
-    // Destructor
-
-        ~vtkMesh();
+    //- Destructor
+    virtual ~vtkMesh();
 
 
     // Member Functions
@@ -127,9 +126,9 @@ public:
             {
                 if (useSubMesh())
                 {
-                    tmp<GeoField> subFld = subsetMesh_.interpolate(fld);
-                    subFld().rename(fld.name());
-                    return subFld;
+                    tmp<GeoField> tsubFld = subsetMesh_.interpolate(fld);
+                    tsubFld.ref().rename(fld.name());
+                    return tsubFld;
                 }
                 else
                 {

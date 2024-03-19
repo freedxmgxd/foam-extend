@@ -57,7 +57,7 @@ tmp<surfaceScalarField> LimitedScheme<Type, Limiter, LimitFunc>::limiter
             dimless
         )
     );
-    surfaceScalarField& lim = tLimiter();
+    surfaceScalarField& lim = tLimiter.ref();
 
     tmp<GeometricField<typename Limiter::phiType, fvPatchField, volMesh> >
         tlPhi = LimitFunc<Type>()(phi);
@@ -85,8 +85,8 @@ tmp<surfaceScalarField> LimitedScheme<Type, Limiter, LimitFunc>::limiter
 
     const surfaceScalarField& CDweights = mesh.surfaceInterpolation::weights();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const vectorField& C = mesh.C();
 

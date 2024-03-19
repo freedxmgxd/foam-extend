@@ -73,7 +73,7 @@ public:
                 patchFieldDecomposer
                 (
                     const label sizeBeforeMapping,
-                    const unallocLabelList& addressingSlice,
+                    const labelUList& addressingSlice,
                     const label addressingOffset
                 );
 
@@ -95,7 +95,7 @@ public:
                     return true;
                 }
 
-                const unallocLabelList& directAddressing() const
+                const labelUList& directAddressing() const
                 {
                     return directAddressing_;
                 }
@@ -119,7 +119,7 @@ public:
             processorVolPatchFieldDecomposer
             (
                 const fvMesh& mesh,
-                const unallocLabelList& addressingSlice
+                const labelUList& addressingSlice
             );
 
 
@@ -167,7 +167,7 @@ public:
             processorSurfacePatchFieldDecomposer
             (
                 label sizeBeforeMapping,
-                const unallocLabelList& addressingSlice
+                const labelUList& addressingSlice
             );
 
 

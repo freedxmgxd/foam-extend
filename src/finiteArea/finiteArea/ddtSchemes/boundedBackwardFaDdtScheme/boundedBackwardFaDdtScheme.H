@@ -82,10 +82,10 @@ class boundedBackwardFaDdtScheme
 
 
         //- Disallow default bitwise copy construct
-        boundedBackwardFaDdtScheme(const boundedBackwardFaDdtScheme&);
+        boundedBackwardFaDdtScheme(const boundedBackwardFaDdtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const boundedBackwardFaDdtScheme&);
+        void operator=(const boundedBackwardFaDdtScheme&) = delete;
 
 
 public:
@@ -109,79 +109,77 @@ public:
         {}
 
 
+    //- Destructor
+    virtual ~boundedBackwardFaDdtScheme() = default;
+
+
     // Member Functions
 
-        //- Return mesh reference
-        const faMesh& mesh() const
-        {
-            return fa::faDdtScheme<scalar>::mesh();
-        }
-
-        tmp<areaScalarField> facDdt
+        virtual tmp<areaScalarField> facDdt
         (
-            const dimensionedScalar
-        );
+            const dimensionedScalar&
+        ) const;
 
-        tmp<areaScalarField> facDdt0
+        virtual tmp<areaScalarField> facDdt0
         (
-            const dimensionedScalar
-        );
+            const dimensionedScalar&
+        ) const;
 
-        tmp<areaScalarField> facDdt
+        virtual tmp<areaScalarField> facDdt
         (
             const areaScalarField&
-        );
+        ) const;
 
-        tmp<areaScalarField> facDdt0
+        virtual tmp<areaScalarField> facDdt0
         (
             const areaScalarField&
-        );
+        ) const;
 
-        tmp<edgeScalarField> facDdt0
+        virtual tmp<edgeScalarField> facDdt0
         (
             const edgeScalarField&
-        );
+        ) const;
 
-        tmp<areaScalarField> facDdt
+        virtual tmp<areaScalarField> facDdt
         (
             const dimensionedScalar&,
             const areaScalarField&
-        );
+        ) const;
 
-        tmp<areaScalarField> facDdt0
+        virtual tmp<areaScalarField> facDdt0
         (
             const dimensionedScalar&,
             const areaScalarField&
-        );
+        ) const;
 
-        tmp<areaScalarField> facDdt
+        virtual tmp<areaScalarField> facDdt
         (
             const areaScalarField&,
             const areaScalarField&
-        );
+        ) const;
 
-        tmp<areaScalarField> facDdt0
+        virtual tmp<areaScalarField> facDdt0
         (
             const areaScalarField&,
             const areaScalarField&
-        );
+        ) const;
 
-        tmp<faScalarMatrix> famDdt
+        virtual tmp<faScalarMatrix> famDdt
         (
             const areaScalarField&
-        );
+        ) const;
 
-        tmp<faScalarMatrix> famDdt
+        virtual tmp<faScalarMatrix> famDdt
         (
             const dimensionedScalar&,
             const areaScalarField&
-        );
+        ) const;
 
-        tmp<faScalarMatrix> famDdt
+        virtual tmp<faScalarMatrix> famDdt
         (
             const areaScalarField&,
             const areaScalarField&
-        );
+        ) const;
 };
 
 

@@ -59,7 +59,7 @@ void Foam::immersedBoundaryFvPatch::makeCf(slicedSurfaceVectorField& Cf) const
     // Note: use the face centres from the stand-alone patch within the IB
     // HJ, 30/Nov/2017
     // Inserting only local data
-    Cf.boundaryField()[index()].UList::operator=
+    Cf.boundaryField()[index()].UList::shallowCopy
     (
         ibPolyPatch().ibPatch().faceCentres()
     );
@@ -73,7 +73,7 @@ void Foam::immersedBoundaryFvPatch::makeSf(slicedSurfaceVectorField& Sf) const
     // the stand-alone patch areas within the IB
     // HJ, 30/Nov/2017
     // Inserting only local data
-    Sf.boundaryField()[index()].UList::operator=
+    Sf.boundaryField()[index()].UList::shallowCopy
     (
         ibPolyPatch().correctedIbPatchFaceAreas()
     );
@@ -86,7 +86,7 @@ void Foam::immersedBoundaryFvPatch::makeC(slicedVolVectorField& C) const
     // Note: use the face centres from the stand-alone patch within the IB
     // HJ, 30/Nov/2017
     // Inserting only local data
-    C.boundaryField()[index()].UList::operator=
+    C.boundaryField()[index()].UList::shallowCopy
     (
         ibPolyPatch().ibPatch().faceCentres()
     );
@@ -196,8 +196,8 @@ void Foam::immersedBoundaryFvPatch::updatePhi
     // First sum up all the fluxes
     scalarField divPhi(mesh.nCells(), 0);
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     forAll (owner, faceI)
     {
@@ -208,7 +208,7 @@ void Foam::immersedBoundaryFvPatch::updatePhi
     // Add the mesh motion fluxes from all patches including immersed boundary
     forAll (mesh.boundary(), patchI)
     {
-        const unallocLabelList& pFaceCells =
+        const labelUList& pFaceCells =
             mesh.boundary()[patchI].faceCells();
 
         const scalarField& pssf = phi.boundaryField()[patchI];
@@ -344,7 +344,7 @@ Foam::label Foam::immersedBoundaryFvPatch::size() const
 }
 
 
-const Foam::unallocLabelList&
+const Foam::labelUList&
 Foam::immersedBoundaryFvPatch::faceCells() const
 {
     return ibPolyPatch_.ibCells();

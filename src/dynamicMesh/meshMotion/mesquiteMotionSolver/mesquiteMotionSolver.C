@@ -4632,7 +4632,7 @@ tmp<pointField> mesquiteMotionSolver::curPoints() const
 {
     tmp<pointField> tcurPoints(refPoints_);
 
-    motionSolver::twoDCorrectPoints(tcurPoints());
+    motionSolver::twoDCorrectPoints(tcurPoints.ref());
 
     return tcurPoints;
 }

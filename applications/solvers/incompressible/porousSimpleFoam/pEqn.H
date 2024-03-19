@@ -1,6 +1,6 @@
 if (pressureImplicitPorosity)
 {
-    U = trTU()&UEqn().H();
+    U = (trTU() & UEqn().H());
 }
 else
 {
@@ -17,16 +17,16 @@ while (simple.correctNonOrthogonal())
 
     if (pressureImplicitPorosity)
     {
-        tpEqn = (fvm::laplacian(trTU(), p) == fvc::div(phi));
+        tpEqn.ref() = (fvm::laplacian(trTU(), p) == fvc::div(phi));
     }
     else
     {
-        tpEqn = (fvm::laplacian(trAU(), p) == fvc::div(phi));
+        tpEqn.ref() = (fvm::laplacian(trAU(), p) == fvc::div(phi));
     }
 
-    tpEqn().setReference(pRefCell, pRefValue);
+    tpEqn.ref().setReference(pRefCell, pRefValue);
 
-    tpEqn().solve();
+    tpEqn.ref().solve();
 
     if (simple.finalNonOrthogonalIter())
     {

@@ -77,10 +77,10 @@ protected:
     // Private Member Functions
 
         //- Disallow copy construct
-        d2dt2Scheme(const d2dt2Scheme&);
+        d2dt2Scheme(const d2dt2Scheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const d2dt2Scheme&);
+        void operator=(const d2dt2Scheme&) = delete;
 
 
 public:
@@ -126,9 +126,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~d2dt2Scheme();
+    //- Destructor
+    virtual ~d2dt2Scheme() = default;
 
 
     // Member Functions
@@ -142,30 +141,30 @@ public:
         virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<fvMatrix<Type> > fvmD2dt2
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<fvMatrix<Type> > fvmD2dt2
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<fvMatrix<Type> > fvmD2dt2
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 };
 
 

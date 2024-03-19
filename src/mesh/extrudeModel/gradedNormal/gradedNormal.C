@@ -53,14 +53,14 @@ gradedNormal::gradedNormal(const dictionary& dict)
     // Sanity checks
     if (thickness_ <= SMALL)
     {
-        FatalErrorIn("gradedNormal(const dictionary&)")
+        FatalErrorInFunction
             << "thickness should be positive: " << thickness_
             << exit(FatalError);
     }
 
     if (delta0_ <= SMALL)
     {
-        FatalErrorIn("gradedNormal(const dictionary&)")
+        FatalErrorInFunction
             << "initialCellLength should be positive: " << delta0_
             << exit(FatalError);
     }
@@ -70,7 +70,7 @@ gradedNormal::gradedNormal(const dictionary& dict)
 
     if (maxExpFactor <= SMALL)
     {
-        FatalErrorIn("gradedNormal(const dictionary&)")
+        FatalErrorInFunction
             << "maxExpansionFactor should be positive: " << maxExpFactor
             << exit(FatalError);
     }
@@ -80,7 +80,7 @@ gradedNormal::gradedNormal(const dictionary& dict)
 
     if (bisectionTol <= SMALL)
     {
-        FatalErrorIn("gradedNormal(const dictionary&)")
+        FatalErrorInFunction
             << "bisectionTolerance should be positive: " << bisectionTol
             << exit(FatalError);
     }
@@ -106,12 +106,6 @@ gradedNormal::gradedNormal(const dictionary& dict)
     // Report the result
     Info<< "Calculated expansion factor: " << expansionFactor_ << endl;
 }
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-gradedNormal::~gradedNormal()
-{}
 
 
 // * * * * * * * * * * * * * * * * Operators * * * * * * * * * * * * * * * * //

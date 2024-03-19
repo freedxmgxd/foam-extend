@@ -470,7 +470,7 @@ void processorFaPatch::makeEdgeTransformTensors
 {
     // Rewrite by Hrvoje Jasak: use local data
     
-    const unallocLabelList& ef = edgeFaces();
+    const labelUList& ef = edgeFaces();
 
     const vectorField& ec = edgeCentres();
 
@@ -605,7 +605,7 @@ const labelList& processorFaPatch::nonGlobalPatchPoints() const
 
 tmp<labelField> processorFaPatch::interfaceInternalField
 (
-    const unallocLabelList& internalData
+    const labelUList& internalData
 ) const
 {
     return patchInternalField(internalData);
@@ -615,7 +615,7 @@ tmp<labelField> processorFaPatch::interfaceInternalField
 void processorFaPatch::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     send(commsType, interfaceData);
@@ -625,7 +625,7 @@ void processorFaPatch::initTransfer
 tmp<labelField> processorFaPatch::transfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList&
+    const labelUList&
 ) const
 {
     return receive<label>(commsType, this->size());
@@ -635,7 +635,7 @@ tmp<labelField> processorFaPatch::transfer
 void processorFaPatch::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     send(commsType, patchInternalField(iF)());
@@ -645,7 +645,7 @@ void processorFaPatch::initInternalFieldTransfer
 tmp<labelField> processorFaPatch::internalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList&
+    const labelUList&
 ) const
 {
     return receive<label>(commsType, this->size());

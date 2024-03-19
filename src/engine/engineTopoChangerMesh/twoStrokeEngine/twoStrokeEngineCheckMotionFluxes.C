@@ -94,7 +94,7 @@ void Foam::twoStrokeEngine::checkMotionFluxes()
 
     forAll(boundary(), patchi)
     {
-        const unallocLabelList& pFaceCells =
+        const labelUList& pFaceCells =
             boundary()[patchi].faceCells();
 
         const fvsPatchField<scalar>& pssf = phi().boundaryField()[patchi];
@@ -166,7 +166,7 @@ void Foam::twoStrokeEngine::checkMotionFluxes()
 
         forAll(boundary(), patchi)
         {
-            const unallocLabelList& pFaceCells =
+            const labelUList& pFaceCells =
                 boundary()[patchi].faceCells();
 
             const fvsPatchField<scalar>& pssf = phi().boundaryField()[patchi];

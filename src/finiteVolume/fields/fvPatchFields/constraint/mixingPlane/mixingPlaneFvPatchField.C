@@ -449,7 +449,7 @@ mixingPlaneFvPatchField<Type>::untransformedInterpolate
     const Field<Type>& iField = this->internalField();
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = mixingPlanePatch_.shadow().faceCells();
+    const labelUList& sfc = mixingPlanePatch_.shadow().faceCells();
 
     scalarField sField(sfc.size());
 
@@ -926,7 +926,7 @@ void mixingPlaneFvPatchField<Type>::initInterfaceMatrixUpdate
     )
     {
         // Get shadow face-cells and assemble shadow field
-        const unallocLabelList& sfc = mixingPlanePatch_.shadow().faceCells();
+        const labelUList& sfc = mixingPlanePatch_.shadow().faceCells();
 
         scalarField sField(sfc.size());
 
@@ -936,7 +936,7 @@ void mixingPlaneFvPatchField<Type>::initInterfaceMatrixUpdate
         }
 
         // Get local faceCells
-        const unallocLabelList& fc = mixingPlanePatch_.faceCells();
+        const labelUList& fc = mixingPlanePatch_.faceCells();
 
         scalarField pnf = mixingPlanePatch_.interpolate(sField);
 

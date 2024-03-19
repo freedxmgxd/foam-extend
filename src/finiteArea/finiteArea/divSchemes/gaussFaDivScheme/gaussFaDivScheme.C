@@ -50,7 +50,7 @@ tmp
 gaussDivScheme<Type>::facDiv
 (
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     tmp
     <
@@ -65,7 +65,7 @@ gaussDivScheme<Type>::facDiv
         // Removed for consistencty.  Matthias Rauter, 6/Dec/2016
     );
 
-    tDiv().rename("div(" + vf.name() + ')');
+    tDiv.ref().rename("div(" + vf.name() + ')');
 
     return tDiv;
 }

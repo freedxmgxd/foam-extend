@@ -36,8 +36,9 @@ Foam::point Foam::wallPoint::greatPoint(GREAT, GREAT, GREAT);
 
 Foam::Ostream& Foam::operator<<(Foam::Ostream& os, const Foam::wallPoint& wDist)
 {
-    return os << wDist.origin() << wDist.distSqr();
+    return os << wDist.origin() << token::SPACE << wDist.distSqr();
 }
+
 
 Foam::Istream& Foam::operator>>(Foam::Istream& is, Foam::wallPoint& wDist)
 {

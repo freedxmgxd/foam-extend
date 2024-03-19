@@ -121,7 +121,7 @@ void jumpOverlapGgiFvPatchField<Type>::initInterfaceMatrixUpdate
 {
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = this->overlapGgiPatch().shadow().faceCells();
+    const labelUList& sfc = this->overlapGgiPatch().shadow().faceCells();
 
     scalarField sField(sfc.size());
 
@@ -133,7 +133,7 @@ void jumpOverlapGgiFvPatchField<Type>::initInterfaceMatrixUpdate
     scalarField pnf = this->overlapGgiPatch().interpolate(sField);
 
     // Multiply the field by coefficients and add into the result
-    const unallocLabelList& fc = this->overlapGgiPatch().faceCells();
+    const labelUList& fc = this->overlapGgiPatch().faceCells();
 
     if
     (

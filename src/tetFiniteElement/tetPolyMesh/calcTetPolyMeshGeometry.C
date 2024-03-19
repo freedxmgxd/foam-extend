@@ -100,7 +100,7 @@ label tetPolyMesh::nTets() const
 // Return number of tetrahedra in decomposition for cell
 label tetPolyMesh::nTetsForCell(const label cellID) const
 {
-    const unallocFaceList& f = mesh_.faces();
+    const faceUList& f = mesh_.faces();
 
     label nTetrasForCell = 0;
 
@@ -118,7 +118,7 @@ label tetPolyMesh::nTetsForCell(const label cellID) const
 tmp<pointField> tetPolyMesh::points() const
 {
     tmp<pointField> ttetPoints(new pointField(nPoints()));
-    pointField& tetPoints = ttetPoints();
+    pointField& tetPoints = ttetPoints.ref();
 
     const pointField& points = mesh_.points();
 
@@ -176,9 +176,9 @@ cellShapeList tetPolyMesh::tetCells() const
 // Return tetrahedral decomposition for cell
 tetCellList tetPolyMesh::tets(const label cellID) const
 {
-    const unallocFaceList& f = mesh_.faces();
+    const faceUList& f = mesh_.faces();
 
-    const unallocLabelList& owner = mesh_.faceOwner();
+    const labelUList& owner = mesh_.faceOwner();
 
     // Initialise the size of the return
     tetCellList t(nTetsForCell(cellID));
@@ -231,8 +231,8 @@ void tetPolyMesh::gradNiDotGradNj
     const labelList& globalToLocalBuffer
 ) const
 {
-    const unallocFaceList& meshFaces = mesh_.faces();
-    const unallocLabelList& owner = mesh_.faceOwner();
+    const faceUList& meshFaces = mesh_.faces();
+    const labelUList& owner = mesh_.faceOwner();
     const labelList& cellFaces = mesh_.cells()[cellID];
 
     const pointField& points = mesh_.points();
@@ -319,8 +319,8 @@ void tetPolyMesh::gradNiGradNj
     const labelList& globalToLocalBuffer
 ) const
 {
-    const unallocFaceList& meshFaces = mesh_.faces();
-    const unallocLabelList& owner = mesh_.faceOwner();
+    const faceUList& meshFaces = mesh_.faces();
+    const labelUList& owner = mesh_.faceOwner();
     const labelList& cellFaces = mesh_.cells()[cellID];
 
     const pointField& points = mesh_.points();
@@ -411,8 +411,8 @@ void tetPolyMesh::volIntegral
     // The addressing and volume distribution has been done tet-by-tet
     // and the combination is done later for the whole cell.
 
-    const unallocFaceList& meshFaces = mesh_.faces();
-    const unallocLabelList& owner = mesh_.faceOwner();
+    const faceUList& meshFaces = mesh_.faces();
+    const labelUList& owner = mesh_.faceOwner();
     const labelList& cellFaces = mesh_.cells()[cellID];
 
     const pointField& points = mesh_.points();

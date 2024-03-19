@@ -71,10 +71,10 @@ class gradScheme
     // Private Member Functions
 
         //- Disallow copy construct
-        gradScheme(const gradScheme&);
+        gradScheme(const gradScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const gradScheme&);
+        void operator=(const gradScheme&) = delete;
 
 
 public:
@@ -110,9 +110,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~gradScheme();
+    //- Destructor
+    virtual ~gradScheme() = default;
 
 
     // Member Functions

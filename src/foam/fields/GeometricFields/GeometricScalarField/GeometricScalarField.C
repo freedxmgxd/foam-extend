@@ -72,7 +72,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > stabilise
         )
     );
 
-    stabilise(tRes(), gsf, ds);
+    stabilise(tRes.ref(), gsf, ds);
 
     return tRes;
 }
@@ -97,9 +97,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > stabilise
         )
     );
 
-    stabilise(tRes(), gsf, ds);
+    stabilise(tRes.ref(), gsf, ds);
 
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf);
+    tgsf.clear();
 
     return tRes;
 }
@@ -158,7 +158,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
         )
     );
 
-    pow(tPow(), gsf1, gsf2);
+    pow(tPow.ref(), gsf1, gsf2);
 
     return tPow;
 }
@@ -187,9 +187,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
         )
     );
 
-    pow(tPow(), gsf1, gsf2);
+    pow(tPow.ref(), gsf1, gsf2);
 
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf1);
+    tgsf1.clear();
 
     return tPow;
 }
@@ -218,9 +218,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
         )
     );
 
-    pow(tPow(), gsf1, gsf2);
+    pow(tPow.ref(), gsf1, gsf2);
 
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf2);
+    tgsf2.clear();
 
     return tPow;
 }
@@ -238,7 +238,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
     tmp<GeometricField<scalar, PatchField, GeoMesh> > tPow
     (
         reuseTmpTmpGeometricField
-            <scalar, scalar, scalar, scalar, PatchField, GeoMesh>::New
+        <scalar, scalar, scalar, PatchField, GeoMesh>::New
         (
             tgsf1,
             tgsf2,
@@ -251,11 +251,10 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
         )
     );
 
-    pow(tPow(), gsf1, gsf2);
+    pow(tPow.ref(), gsf1, gsf2);
 
-    reuseTmpTmpGeometricField
-        <scalar, scalar, scalar, scalar, PatchField, GeoMesh>
-        ::clear(tgsf1, tgsf2);
+    tgsf1.clear();
+    tgsf2.clear();
 
     return tPow;
 }
@@ -298,7 +297,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
         )
     );
 
-    pow(tPow(), gsf, ds);
+    pow(tPow.ref(), gsf, ds);
 
     return tPow;
 }
@@ -322,9 +321,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
         )
     );
 
-    pow(tPow(), gsf, ds);
+    pow(tPow.ref(), gsf, ds);
 
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf);
+    tgsf.clear();
 
     return tPow;
 }
@@ -387,7 +386,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
         )
     );
 
-    pow(tPow(), ds, gsf);
+    pow(tPow.ref(), ds, gsf);
 
     return tPow;
 }
@@ -412,9 +411,9 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > pow
         )
     );
 
-    pow(tPow(), ds, gsf);
+    pow(tPow.ref(), ds, gsf);
 
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>::clear(tgsf);
+    tgsf.clear();
 
     return tPow;
 }
@@ -561,8 +560,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh> > func                      \
                                                                             \
     func(tFunc(), n, gsf);                                                  \
                                                                             \
-    reuseTmpGeometricField<scalar, scalar, PatchField, GeoMesh>             \
-    ::clear(tgsf);                                                          \
+    tgsf.clear();                                                           \
                                                                             \
     return tFunc;                                                           \
 }

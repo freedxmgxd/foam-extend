@@ -115,7 +115,7 @@ void Foam::fluxCorrectedVelocityFvPatchVectorField::evaluate
         patch().patchField<surfaceScalarField, scalar>(phi);
 
     vectorField n = patch().nf();
-    const Field<scalar>& magS = patch().magSf();
+    const scalarField& magS = patch().magSf();
 
     if (phi.dimensions() == dimVelocity*dimArea)
     {
@@ -136,10 +136,7 @@ void Foam::fluxCorrectedVelocityFvPatchVectorField::evaluate
     }
     else
     {
-        FatalErrorIn
-        (
-            "fluxCorrectedVelocityFvPatchVectorField::evaluate()"
-        )
+        FatalErrorInFunction
             << "dimensions of phi are incorrect\n"
             << "    on patch " << this->patch().name()
             << " of field " << this->dimensionedInternalField().name()

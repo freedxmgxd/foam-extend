@@ -86,11 +86,12 @@ void Foam::className::operator=(const className& rhs)
     // Check for assignment to self
     if (this == &rhs)
     {
-        FatalErrorIn("Foam::className::operator=(const Foam::className&)")
+        FatalErrorInFunction
             << "Attempted assignment to self"
             << abort(FatalError);
     }
 }
+
 
 // * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * * //
 

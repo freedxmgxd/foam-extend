@@ -44,7 +44,7 @@ template<class Type>
 tmp<fvMatrix<Type> >
 ddt
 (
-    GeometricField<Type, fvPatchField, volMesh>& vf,
+    const GeometricField<Type, fvPatchField, volMesh>& vf,
     const word& name
 )
 {
@@ -61,7 +61,7 @@ tmp<fvMatrix<Type> >
 ddt
 (
     const geometricOneField&,
-    GeometricField<Type, fvPatchField, volMesh>& vf,
+    const GeometricField<Type, fvPatchField, volMesh>& vf,
     const word& name
 )
 {
@@ -74,7 +74,7 @@ tmp<fvMatrix<Type> >
 ddt
 (
     const dimensionedScalar& rho,
-    GeometricField<Type, fvPatchField, volMesh>& vf,
+    const GeometricField<Type, fvPatchField, volMesh>& vf,
     const word& name
 )
 {
@@ -91,7 +91,7 @@ tmp<fvMatrix<Type> >
 ddt
 (
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& vf,
+    const GeometricField<Type, fvPatchField, volMesh>& vf,
     const word& name
 )
 {
@@ -107,7 +107,7 @@ template<class Type>
 tmp<fvMatrix<Type> >
 ddt
 (
-    GeometricField<Type, fvPatchField, volMesh>& vf
+    const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
     return fvm::ddt(vf, "ddt(" + vf.name() + ')');
@@ -119,7 +119,7 @@ tmp<fvMatrix<Type> >
 ddt
 (
     const geometricOneField&,
-    GeometricField<Type, fvPatchField, volMesh>& vf
+    const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
     return fvm::ddt(vf);
@@ -131,7 +131,7 @@ tmp<fvMatrix<Type> >
 ddt
 (
     const dimensionedScalar& rho,
-    GeometricField<Type, fvPatchField, volMesh>& vf
+    const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
     return fvm::ddt(rho, vf, "ddt(" + rho.name() + ',' + vf.name() + ')');
@@ -143,7 +143,7 @@ tmp<fvMatrix<Type> >
 ddt
 (
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& vf
+    const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
     return fvm::ddt(rho, vf, "ddt(" + rho.name() + ',' + vf.name() + ')');

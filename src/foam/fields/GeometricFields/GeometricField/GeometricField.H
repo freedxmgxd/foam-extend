@@ -191,6 +191,15 @@ public:
             );
 
 
+        //- Clone
+        tmp<GeometricBoundaryField> clone() const
+        {
+            return tmp<GeometricBoundaryField>
+            (
+                new GeometricBoundaryField(*this)
+            );
+        }
+
         // Member functions
 
             //- Update the boundary condition coefficients

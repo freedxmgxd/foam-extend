@@ -52,7 +52,7 @@ Foam::reconCentral<Type>::interpolate
         )
     );
 
-    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf();
+    GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
     const labelList& owner = mesh.owner();
     const labelList& neighbour = mesh.neighbour();
@@ -91,7 +91,7 @@ Foam::reconCentral<Type>::interpolate
 
         fvsPatchField<Type>& pSf = bSf[patchi];
 
-        const unallocLabelList& pOwner = p.faceCells();
+        const labelUList& pOwner = p.faceCells();
 
         const vectorField& pCf = Cf.boundaryField()[patchi];
 

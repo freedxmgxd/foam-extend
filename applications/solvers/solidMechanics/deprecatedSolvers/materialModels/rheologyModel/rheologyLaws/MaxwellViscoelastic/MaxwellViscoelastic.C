@@ -38,9 +38,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from dictionary
@@ -56,12 +53,6 @@ Foam::MaxwellViscoelastic::MaxwellViscoelastic
     k_(dict.lookup("k")),
     eta_(dict.lookup("eta")),
     nu_(dict.lookup("nu"))
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::MaxwellViscoelastic::~MaxwellViscoelastic()
 {}
 
 
@@ -87,7 +78,7 @@ Foam::tmp<Foam::volScalarField> Foam::MaxwellViscoelastic::rho(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -117,8 +108,8 @@ Foam::tmp<Foam::volScalarField> Foam::MaxwellViscoelastic::E(scalar t) const
 
     if (t < 0)
     {
-        tE().internalField() = 0.0;
-        tE().correctBoundaryConditions();
+        tE.ref().internalField() = 0.0;
+        tE.ref().correctBoundaryConditions();
     }
 
     return tE;
@@ -145,7 +136,7 @@ Foam::tmp<Foam::volScalarField> Foam::MaxwellViscoelastic::nu(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -178,8 +169,8 @@ Foam::tmp<Foam::volScalarField> Foam::MaxwellViscoelastic::J(scalar t) const
 
     if (t < 0)
     {
-        tJ().internalField() = 0.0;
-        tJ().correctBoundaryConditions();
+        tJ.ref().internalField() = 0.0;
+        tJ.ref().correctBoundaryConditions();
     }
 
     return tJ;

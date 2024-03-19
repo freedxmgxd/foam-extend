@@ -57,11 +57,8 @@ tmp<edgeInterpolationScheme<Type> > edgeInterpolationScheme<Type>::New
 
     if (schemeData.eof())
     {
-        FatalIOErrorIn
-        (
-            "edgeInterpolationScheme<Type>::New(const faMesh&, Istream&)",
-            schemeData
-        )   << "Discretisation scheme not specified"
+        FatalIOErrorInFunction(schemeData)
+            << "Discretisation scheme not specified"
             << endl << endl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -75,11 +72,8 @@ tmp<edgeInterpolationScheme<Type> > edgeInterpolationScheme<Type>::New
 
     if (constructorIter == MeshConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
-        (
-            "edgeInterpolationScheme<Type>::New(const faMesh&, Istream&)",
-            schemeData
-        )   << "Unknown discretisation scheme "
+        FatalIOErrorInFunction(schemeData)
+            << "Unknown discretisation scheme "
             << schemeName << nl << nl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -109,12 +103,8 @@ tmp<edgeInterpolationScheme<Type> > edgeInterpolationScheme<Type>::New
 
     if (schemeData.eof())
     {
-        FatalIOErrorIn
-        (
-            "edgeInterpolationScheme<Type>::New"
-            "(const faMesh&, const edgeScalarField&, Istream&)",
-            schemeData
-        )   << "Discretisation scheme not specified"
+        FatalIOErrorInFunction(schemeData)
+            << "Discretisation scheme not specified"
             << endl << endl
             << "Valid schemes are :" << endl
             << MeshConstructorTablePtr_->sortedToc()
@@ -128,12 +118,8 @@ tmp<edgeInterpolationScheme<Type> > edgeInterpolationScheme<Type>::New
 
     if (constructorIter == MeshFluxConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
-        (
-            "edgeInterpolationScheme<Type>::New"
-            "(const faMesh&, const edgeScalarField&, Istream&)",
-            schemeData
-        )   << "Unknown discretisation scheme "
+        FatalIOErrorInFunction(schemeData)
+            << "Unknown discretisation scheme "
             << schemeName << nl << nl
             << "Valid schemes are :" << endl
             << MeshFluxConstructorTablePtr_->sortedToc()
@@ -186,8 +172,8 @@ edgeInterpolationScheme<Type>::interpolate
     const scalarField& y = ys.internalField();
 
     const faMesh& mesh = vf.mesh();
-    const unallocLabelList& P = mesh.owner();
-    const unallocLabelList& N = mesh.neighbour();
+    const labelUList& P = mesh.owner();
+    const labelUList& N = mesh.neighbour();
 
     tmp<GeometricField<Type, faePatchField, edgeMesh> > tsf
     (
@@ -203,7 +189,7 @@ edgeInterpolationScheme<Type>::interpolate
             vf.dimensions()
         )
     );
-    GeometricField<Type, faePatchField, edgeMesh>& sf = tsf();
+    GeometricField<Type, faePatchField, edgeMesh>& sf = tsf.ref();
 
     Field<Type>& sfi = sf.internalField();
 
@@ -307,8 +293,8 @@ edgeInterpolationScheme<Type>::interpolate
     const scalarField& lambda = lambdas.internalField();
 
     const faMesh& mesh = vf.mesh();
-    const unallocLabelList& P = mesh.owner();
-    const unallocLabelList& N = mesh.neighbour();
+    const labelUList& P = mesh.owner();
+    const labelUList& N = mesh.neighbour();
 
     tmp<GeometricField<Type, faePatchField, edgeMesh> > tsf
     (
@@ -324,7 +310,7 @@ edgeInterpolationScheme<Type>::interpolate
             vf.dimensions()
         )
     );
-    GeometricField<Type, faePatchField, edgeMesh>& sf = tsf();
+    GeometricField<Type, faePatchField, edgeMesh>& sf = tsf.ref();
 
     Field<Type>& sfi = sf.internalField();
 
@@ -381,7 +367,7 @@ edgeInterpolationScheme<Type>::interpolate
                     );
             }
 
-//             tsf().boundaryField()[pi] =
+//             tsf.ref().boundaryField()[pi] =
 //                 pLambda*vf.boundaryField()[pi].patchInternalField()
 //              + (1 - pLambda)*vf.boundaryField()[pi].patchNeighbourField();
         }
@@ -426,8 +412,8 @@ edgeInterpolationScheme<Type>::euclidianInterpolate
     const scalarField& lambda = lambdas.internalField();
 
     const faMesh& mesh = vf.mesh();
-    const unallocLabelList& P = mesh.owner();
-    const unallocLabelList& N = mesh.neighbour();
+    const labelUList& P = mesh.owner();
+    const labelUList& N = mesh.neighbour();
 
     tmp<GeometricField<Type, faePatchField, edgeMesh> > tsf
     (
@@ -443,7 +429,7 @@ edgeInterpolationScheme<Type>::euclidianInterpolate
             vf.dimensions()
         )
     );
-    GeometricField<Type, faePatchField, edgeMesh>& sf = tsf();
+    GeometricField<Type, faePatchField, edgeMesh>& sf = tsf.ref();
 
     Field<Type>& sfi = sf.internalField();
 
@@ -461,7 +447,7 @@ edgeInterpolationScheme<Type>::euclidianInterpolate
 
         if (vf.boundaryField()[pi].coupled())
         {
-            tsf().boundaryField()[pi] =
+            tsf.ref().boundaryField()[pi] =
                 pLambda*vf.boundaryField()[pi].patchInternalField()
              + (1.0 - pLambda)*vf.boundaryField()[pi].patchNeighbourField();
         }
@@ -497,12 +483,12 @@ edgeInterpolationScheme<Type>::interpolate
             << endl;
     }
 
-    tmp<GeometricField<Type, faePatchField, edgeMesh> > tsf
-        = interpolate(vf, weights(vf));
+    tmp<GeometricField<Type, faePatchField, edgeMesh> > tsf =
+        interpolate(vf, weights(vf));
 
     if (corrected())
     {
-        tsf() += correction(vf);
+        tsf.ref() += correction(vf);
     }
 
     return tsf;
@@ -519,8 +505,7 @@ edgeInterpolationScheme<Type>::euclidianInterpolate
 {
     if (edgeInterpolation::debug)
     {
-        Info<< "edgeInterpolationScheme<Type>::interpolate"
-               "(const GeometricField<Type, faPatchField, areaMesh>&) : "
+        InfoInFunction
             << "interpolating "
             << vf.type() << " "
             << vf.name()

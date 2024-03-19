@@ -36,8 +36,8 @@ void BlockLduMatrix<scalar>::sumDiag()
 {
     scalarField& activeDiag = diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (symmetric())
     {
@@ -74,8 +74,8 @@ void BlockLduMatrix<scalar>::negSumDiag()
 {
     scalarField& activeDiag = diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (symmetric())
     {
@@ -113,8 +113,8 @@ void BlockLduMatrix<scalar>::check() const
     // Copy the diagonal
     scalarField activeDiagCopy = diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     if (symmetric())
     {
@@ -171,8 +171,8 @@ void BlockLduMatrix<scalar>::relax
 
     scalarField activeDiagOld = diag();
 
-    const unallocLabelList& l = lduAddr().lowerAddr();
-    const unallocLabelList& u = lduAddr().upperAddr();
+    const labelUList& l = lduAddr().lowerAddr();
+    const labelUList& u = lduAddr().upperAddr();
 
     scalarField sumOff(activeDiag.size(), 0.0);
 
@@ -218,7 +218,7 @@ void BlockLduMatrix<scalar>::operator*=(const scalarField& sf)
     {
         scalarField& activeUpper = *upperPtr_;
 
-        const unallocLabelList& l = lduAddr().lowerAddr();
+        const labelUList& l = lduAddr().lowerAddr();
 
         for (label coeffI = 0; coeffI < l.size(); coeffI++)
         {
@@ -230,7 +230,7 @@ void BlockLduMatrix<scalar>::operator*=(const scalarField& sf)
     {
         scalarField& activeLower = *lowerPtr_;
 
-        const unallocLabelList& u = lduAddr().upperAddr();
+        const labelUList& u = lduAddr().upperAddr();
 
         for (label coeffI = 0; coeffI < u.size(); coeffI++)
         {
@@ -391,7 +391,7 @@ template<>
 tmp<scalarField> BlockLduMatrix<scalar>::H(const scalarField& x) const
 {
     tmp<scalarField> tresult(new scalarField(lduAddr().size(), 0));
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     if (thereIsUpper() || thereIsLower())
     {
@@ -463,7 +463,7 @@ template<>
 tmp<scalarField> BlockLduMatrix<scalar>::faceH(const scalarField& x) const
 {
     tmp<scalarField> tresult(new scalarField(lduAddr().upperAddr().size(), 0));
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     if (thereIsUpper() || thereIsLower())
     {

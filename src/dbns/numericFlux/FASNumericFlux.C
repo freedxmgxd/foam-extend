@@ -89,8 +89,8 @@ inline
 void Foam::FASNumericFlux<Flux>::computeFlux()
 {
     // Get face-to-cell addressing: face area point from owner to neighbour
-    const unallocLabelList& owner     = meshLevel_.owner();
-    const unallocLabelList& neighbour = meshLevel_.neighbour();
+    const labelUList& owner     = meshLevel_.owner();
+    const labelUList& neighbour = meshLevel_.neighbour();
 
     // Get the face area vector
     const vectorField& Sf    = meshLevel_.faceAreas();
@@ -142,7 +142,7 @@ void Foam::FASNumericFlux<Flux>::computeFlux()
     // Update boundary field and values
     forAll(fineRhoFlux_.boundaryField(), patchi)
     {
-        unallocLabelList const& owner = meshLevel_.faceCells(patchi);
+        labelUList const& owner = meshLevel_.faceCells(patchi);
 
         const scalarField& pp = fieldLevel_.patchP(patchi);
         const vectorField& pU = fieldLevel_.patchU(patchi);

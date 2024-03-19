@@ -40,13 +40,8 @@ Foam::overlapGgiPolyPatch::expandData(const Field<Type>& pf) const
     // Check and expand the field from patch size to zone size
     if (pf.size() != size())
     {
-        FatalErrorIn
-        (
-            "tmp<Field<Type> > overlapGgiPolyPatch::expandData"
-            "("
-            "    const Field<Type>& pf"
-            ") const"
-        )   << "Incorrect patch field size.  Field size: "
+        FatalErrorInFunction
+            << "Incorrect patch field size.  Field size: "
             << pf.size() << " patch size: " << size()
             << abort(FatalError);
     }
@@ -60,7 +55,7 @@ Foam::overlapGgiPolyPatch::expandData(const Field<Type>& pf) const
         new Field<Type>(ncp*zone().size(), pTraits<Type>::zero)
     );
 
-    Field<Type>& expandField = texpandField();
+    Field<Type>& expandField = texpandField.ref();
 
     for (label copyI = 0; copyI < ncp; copyI++)
     {
@@ -95,22 +90,17 @@ Foam::overlapGgiPolyPatch::interpolate(const Field<Type>& pf) const
     // Check and expand the field from patch size to zone size
     if (pf.size() != shadow().size())
     {
-        FatalErrorIn
-        (
-            "tmp<Field<Type> > ggiPolyPatch::interpolate"
-            "("
-            "    const Field<Type>& pf"
-            ") const"
-        )   << "Incorrect slave patch field size.  Field size: "
+        FatalErrorInFunction
+            << "Incorrect slave patch field size.  Field size: "
             << pf.size() << " patch size: " << shadow().size()
             << abort(FatalError);
     }
 
     // Expand data
-    tmp<Field<Type> > expanddata = shadow().expandData(pf);
+    Field<Type> expanddata = shadow().expandData(pf);
 
     tmp<Field<Type> > tresult(new Field<Type>());
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     if (master())
     {

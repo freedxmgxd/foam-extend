@@ -68,10 +68,10 @@ class gaussGrad
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        gaussGrad(const gaussGrad&);
+        gaussGrad(const gaussGrad&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const gaussGrad&);
+        void operator=(const gaussGrad&) = delete;
 
 
 public:
@@ -112,6 +112,10 @@ public:
                     );
             }
         }
+
+
+    //- Destructor
+    virtual ~gaussGrad() = default;
 
 
     // Member Functions

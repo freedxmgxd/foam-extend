@@ -109,7 +109,7 @@ void Foam::mixingPlaneAMGInterfaceField::updateInterfaceMatrix
         mixingPlaneInterface_.internalFieldTransfer(commsType, psiInternal);
     transformCoupleField(pnf, cmpt);
 
-    const unallocLabelList& faceCells = mixingPlaneInterface_.faceCells();
+    const labelUList& faceCells = mixingPlaneInterface_.faceCells();
 
     if (switchToLhs)
     {

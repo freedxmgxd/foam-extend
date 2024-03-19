@@ -54,7 +54,7 @@ Foam::movingBodyTopoFvMesh::calcMotionMask() const
     Info<< "Updating vertex markup" << endl;
 
     tmp<scalarField> tvertexMarkup(new scalarField(allPoints().size(), 0));
-    scalarField& vertexMarkup = tvertexMarkup();
+    scalarField& vertexMarkup = tvertexMarkup.ref();
 
     cellZoneID movingCellsID(movingCellsName_, cellZones());
 

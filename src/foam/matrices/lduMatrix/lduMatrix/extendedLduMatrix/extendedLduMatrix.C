@@ -73,7 +73,7 @@ Foam::extendedLduMatrix::extendedLduMatrix
     else if (ldum.symmetric())
     {
         // Get reference to faceMap in extended addressing
-        const unallocLabelList& faceMap = extLduAddr_.faceMap();
+        const labelUList& faceMap = extLduAddr_.faceMap();
 
         // Matrix is considered symmetric if the upper is allocated and lower
         // is not allocated. Allocating extended upper only.
@@ -97,7 +97,7 @@ Foam::extendedLduMatrix::extendedLduMatrix
     else
     {
         // Get reference to faceMap in extended addressing
-        const unallocLabelList& faceMap = extLduAddr_.faceMap();
+        const labelUList& faceMap = extLduAddr_.faceMap();
 
         // Get number of extended faces
         const label nExtFaces = extLduAddr_.extendedUpperAddr().size();

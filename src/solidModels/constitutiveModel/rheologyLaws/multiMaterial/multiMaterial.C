@@ -49,7 +49,7 @@ Foam::tmp<Foam::scalarField> Foam::multiMaterial::indicator
     const scalarField& mat = materials_.internalField();
 
     tmp<scalarField> tresult(new scalarField(mat.size(), 0.0));
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     forAll (mat, matI)
     {
@@ -70,9 +70,9 @@ Foam::multiMaterial::indicator(const label index, const label cellID) const
     scalar result = 0.0;
 
     if (mat > index - SMALL && mat < index + 1 - SMALL)
-      {
-    result = 1.0;
-      }
+    {
+        result = 1.0;
+    }
 
     return result;
 }
@@ -171,7 +171,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterial::rho() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;
@@ -207,7 +207,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterial::E() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;
@@ -244,7 +244,7 @@ Foam::multiMaterial::E(const volScalarField& epsEq) const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;
@@ -290,7 +290,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterial::nu() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;
@@ -326,7 +326,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterial::Ep() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;
@@ -363,7 +363,7 @@ Foam::multiMaterial::Ep(const volScalarField& epsEq) const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;
@@ -409,7 +409,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterial::sigmaY() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& result = tresult();
+    volScalarField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;
@@ -478,7 +478,7 @@ Foam::tmp<Foam::volDiagTensorField> Foam::multiMaterial::K() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volDiagTensorField& result = tresult();
+    volDiagTensorField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;
@@ -514,7 +514,7 @@ Foam::tmp<Foam::volSymmTensor4thOrderField> Foam::multiMaterial::C() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volSymmTensor4thOrderField& result = tresult();
+    volSymmTensor4thOrderField& result = tresult.ref();
 
     // Accumulate data for all fields
     const PtrList<rheologyLaw>& laws = *this;

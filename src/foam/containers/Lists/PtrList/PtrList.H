@@ -188,10 +188,13 @@ public:
             //- Is element set
             inline bool set(const label) const;
 
-            //- Set element. Return old element (can be nullptr).
-            //  No checks on new element.
+            //- Set element to given T* and return old element (can be nullptr)
             inline autoPtr<T> set(const label, T*);
+
+            //- Set element to given autoPtr<T> and return old element
             inline autoPtr<T> set(const label, const autoPtr<T>&);
+
+            //- Set element to given tmp<T> and return old element
             inline autoPtr<T> set(const label, const tmp<T>&);
 
             //- Reorders elements. Ordering does not have to be done in

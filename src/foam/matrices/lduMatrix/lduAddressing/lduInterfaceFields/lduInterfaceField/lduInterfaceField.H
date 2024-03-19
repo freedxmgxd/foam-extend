@@ -61,16 +61,16 @@ class lduInterfaceField
 
         //- Update index used so that updateInterfaceMatrix is called only once
         //  during the construction of the matrix
-        bool updatedMatrix_;
+        mutable bool updatedMatrix_;
 
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        lduInterfaceField(const lduInterfaceField&);
+        lduInterfaceField(const lduInterfaceField&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const lduInterfaceField&);
+        void operator=(const lduInterfaceField&) = delete;
 
 
 public:
@@ -113,13 +113,7 @@ public:
         // Coupled interface matrix update
 
             //- Whether matrix has been updated
-            bool updatedMatrix() const
-            {
-                return updatedMatrix_;
-            }
-
-            //- Whether matrix has been updated
-            bool& updatedMatrix()
+            bool& updatedMatrix() const
             {
                 return updatedMatrix_;
             }
@@ -148,7 +142,9 @@ public:
                 const Pstream::commsTypes commsType,
                 const bool switchToLhs
             ) const
-            {}
+            {
+                NotImplemented;
+            }
 
             //- Update result field based on interface functionality
             virtual void updateInterfaceMatrix

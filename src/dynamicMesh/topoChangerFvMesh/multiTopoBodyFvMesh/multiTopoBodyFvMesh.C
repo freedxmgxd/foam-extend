@@ -141,8 +141,7 @@ Foam::tmp<Foam::vectorField> Foam::multiTopoBodyFvMesh::pointMotion() const
     (
         new vectorField(allPoints().size(), vector::zero)
     );
-
-    vectorField& pointMotion = tpointMotion();
+    vectorField& pointMotion = tpointMotion.ref();
 
     forAll (bodies_, bodyI)
     {

@@ -44,10 +44,8 @@ inline void Foam::CoeffField<Type>::checkSize(const UList<Type2>& f) const
 {
     if (f.size() != this->size())
     {
-        FatalErrorIn
-        (
-            "void CoeffField<Type>::checkSize(const Field<Type2>& f) const"
-        )   << "Incorrect field size: " << f.size()
+        FatalErrorInFunction
+            << "Incorrect field size: " << f.size()
             << " local size: " << size()
             << abort(FatalError);
     }
@@ -63,11 +61,8 @@ Foam::CoeffField<Type>::toScalar()
         // Debug check: demotion
         if (linearCoeffPtr_ || squareCoeffPtr_)
         {
-            FatalErrorIn
-            (
-                "CoeffField<Type>::scalarTypeField& "
-                "CoeffField<Type>::toScalar()"
-            )   << "Detected demotion to scalar.  Probably an error"
+            FatalErrorInFunction
+                << "Detected demotion to scalar.  Probably an error"
                 << abort(FatalError);
         }
 
@@ -88,11 +83,8 @@ Foam::CoeffField<Type>::toLinear()
         // Debug check: demotion
         if (squareCoeffPtr_)
         {
-            FatalErrorIn
-            (
-                "CoeffField<Type>::linearTypeField& "
-                "CoeffField<Type>::toLinear()"
-            )   << "Detected demotion to linear.  Probably an error"
+            FatalErrorInFunction
+                << "Detected demotion to linear.  Probably an error"
                 << abort(FatalError);
         }
 
@@ -289,7 +281,7 @@ template<class Type>
 Foam::tmp<Foam::CoeffField<Type> > Foam::CoeffField<Type>::transpose() const
 {
     tmp<CoeffField<Type> > tt(new CoeffField<Type>(this->size()));
-    CoeffField<Type>& t = tt();
+    CoeffField<Type>& t = tt.ref();
 
     if (scalarCoeffPtr_)
     {
@@ -347,7 +339,7 @@ void Foam::CoeffField<Type>::checkActive() const
 
     if (nActive > 1)
     {
-        FatalErrorIn("void Foam::CoeffField<Type>::checkActive() const")
+        FatalErrorInFunction
             << "Activation/deactivation error.  nActive = " << nActive
             << abort(FatalError);
     }
@@ -360,11 +352,8 @@ Foam::CoeffField<Type>::asScalar() const
 {
     if (!scalarCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "CoeffField<Type>::scalarTypeField& "
-            "CoeffField<Type>::asScalar()"
-        )   << "Requested scalar but active type is: "
+        FatalErrorInFunction
+            << "Requested scalar but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -380,11 +369,8 @@ Foam::CoeffField<Type>::asLinear() const
 {
     if (!linearCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "CoeffField<Type>::linearTypeField& "
-            "CoeffField<Type>::asLinear()"
-        )   << "Requested linear but active type is: "
+        FatalErrorInFunction
+            << "Requested linear but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -400,11 +386,8 @@ Foam::CoeffField<Type>::asSquare() const
 {
     if (!squareCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "CoeffField<Type>::squareTypeField& "
-            "CoeffField<Type>::asSquare()"
-        )   << "Requested square but active type is: "
+        FatalErrorInFunction
+            << "Requested square but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -420,11 +403,8 @@ Foam::CoeffField<Type>::asScalar()
 {
     if (linearCoeffPtr_ || squareCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "CoeffField<Type>::scalarTypeField& "
-            "CoeffField<Type>::asScalar()"
-        )   << "Requested scalar but active type is: "
+        FatalErrorInFunction
+            << "Requested scalar but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -445,11 +425,8 @@ Foam::CoeffField<Type>::asLinear()
 {
     if (squareCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "CoeffField<Type>::linearTypeField& "
-            "CoeffField<Type>::asLinear()"
-        )   << "Requested linear but active type is: "
+        FatalErrorInFunction
+            << "Requested linear but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -498,11 +475,8 @@ Foam::CoeffField<Type>::component(const direction dir) const
     }
     else
     {
-        FatalErrorIn
-        (
-            "tmp<CoeffField<Type>::scalarTypeField>"
-            "CoeffField<Type>::component(const direction dir) const"
-        )   << "Field not allocated."
+        FatalErrorInFunction
+            << "Field not allocated."
             << abort(FatalError);
     }
 
@@ -569,16 +543,8 @@ void Foam::CoeffField<Type>::getSubset
     // Check sizes
     if (f.size() != size)
     {
-        FatalErrorIn
-        (
-            "template<class Type>\n"
-            "void Foam::CoeffField<Type>::getSubset\n"
-            "(\n"
-            "    CoeffField<Type>& f,\n"
-            "    const label start,\n"
-            "    const label size\n"
-            ") const"
-        )   << "Incompatible sizes: " << f.size() << " and " << size
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << size
             << abort(FatalError);
     }
 
@@ -628,15 +594,8 @@ void Foam::CoeffField<Type>::getSubset
     // Check sizes
     if (f.size() != addr.size())
     {
-        FatalErrorIn
-        (
-            "template<class Type>\n"
-            "void Foam::CoeffField<Type>::getSubset\n"
-            "(\n"
-            "    CoeffField<Type>& f,\n"
-            "    const labelList addr\n"
-            ") const"
-        )   << "Incompatible sizes: " << f.size() << " and " << addr.size()
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << addr.size()
             << abort(FatalError);
     }
 
@@ -687,16 +646,8 @@ void Foam::CoeffField<Type>::setSubset
     // Check sizes
     if (f.size() != size)
     {
-        FatalErrorIn
-        (
-            "template<class Type>\n"
-            "void Foam::CoeffField<Type>::setSubset\n"
-            "(\n"
-            "     const CoeffField<Type>& f,\n"
-            "    const label start,\n"
-            "    const label size\n"
-            ")"
-        )   << "Incompatible sizes: " << f.size() << " and " << size
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << size
             << abort(FatalError);
     }
 
@@ -746,15 +697,8 @@ void Foam::CoeffField<Type>::setSubset
     // Check sizes
     if (f.size() != addr.size())
     {
-        FatalErrorIn
-        (
-            "template<class Type>\n"
-            "void Foam::CoeffField<Type>::setSubset\n"
-            "(\n"
-            "    const CoeffField<Type>& f,\n"
-            "    const labelList addr\n"
-            ")"
-        )   << "Incompatible sizes: " << f.size() << " and " << addr.size()
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << addr.size()
             << abort(FatalError);
     }
 
@@ -877,15 +821,8 @@ void Foam::CoeffField<Type>::addSubset
     // Check sizes
     if (f.size() != addr.size())
     {
-        FatalErrorIn
-        (
-            "template<class Type>\n"
-            "void Foam::CoeffField<Type>::addSubset\n"
-            "(\n"
-            "    const CoeffField<Type>& f,\n"
-            "    const labelList addr\n"
-            ")"
-        )   << "Incompatible sizes: " << f.size() << " and " << addr.size()
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << addr.size()
             << abort(FatalError);
     }
 
@@ -1035,15 +972,9 @@ void Foam::CoeffField<Type>::addSubset
                 localF[addr[ffI]] += ff[ffI];
             }
         }
-//         FatalErrorIn
-//         (
-//             "template<class Type>\n"
-//             "void Foam::CoeffField<Type>::addSubset\n"
-//             "(\n"
-//             "    const CoeffField<Type>& f,\n"
-//             "    const labelList addr\n"
-//             ")"
-//         )   << "Incompatible combination of types"
+
+//         FatalErrorInFunction
+//             << "Incompatible combination of types"
 //             << abort(FatalError);
     }
 }
@@ -1059,15 +990,8 @@ void Foam::CoeffField<Type>::subtractSubset
     // Check sizes
     if (f.size() != addr.size())
     {
-        FatalErrorIn
-        (
-            "template<class Type>\n"
-            "void Foam::CoeffField<Type>::subtractSubset\n"
-            "(\n"
-            "    const CoeffField<Type>& f,\n"
-            "    const labelList addr\n"
-            ")"
-        )   << "Incompatible sizes: " << f.size() << " and " << addr.size()
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << addr.size()
             << abort(FatalError);
     }
 
@@ -1217,15 +1141,8 @@ void Foam::CoeffField<Type>::subtractSubset
                 localF[addr[ffI]] -= ff[ffI];
             }
         }
-//         FatalErrorIn
-//         (
-//             "template<class Type>\n"
-//             "void Foam::CoeffField<Type>::subtractSubset\n"
-//             "(\n"
-//             "    const CoeffField<Type>& f,\n"
-//             "    const labelList addr\n"
-//             ")"
-//         )   << "Incompatible combination of types"
+//         FatalErrorInFunction
+//             << "Incompatible combination of types"
 //             << abort(FatalError);
     }
 }
@@ -1237,7 +1154,7 @@ void Foam::CoeffField<Type>::operator=(const CoeffField<Type>& f)
 {
     if (this == &f)
     {
-        FatalErrorIn("CoeffField<Type>::operator=(const CoeffField<Type>&)")
+        FatalErrorInFunction
             << "attempted assignment to self"
             << abort(FatalError);
     }
@@ -1245,10 +1162,8 @@ void Foam::CoeffField<Type>::operator=(const CoeffField<Type>& f)
     // Check field sizes
     if (f.size() != this->size())
     {
-        FatalErrorIn
-        (
-            "void CoeffField<Type>::operator=(const CoeffField<Type>& f)"
-        )   << "Incorrect field size: " << f.size()
+        FatalErrorInFunction
+            << "Incorrect field size: " << f.size()
             << " local size: " << size()
             << abort(FatalError);
     }
@@ -1277,7 +1192,7 @@ void Foam::CoeffField<Type>::operator=(const tmp<CoeffField<Type> >& tf)
 {
     if (this == &(tf()))
     {
-        FatalErrorIn("CoeffField<Type>::operator=(const tmp<CoeffField>&)")
+        FatalErrorInFunction
             << "attempted assignment to self"
             << abort(FatalError);
     }
@@ -1303,11 +1218,8 @@ void Foam::CoeffField<Type>::operator op(const CoeffField<Type>& f)           \
 {                                                                             \
     if (f.size() != this->size())                                             \
     {                                                                         \
-        FatalErrorIn                                                          \
-        (                                                                     \
-            "void CoeffField<tensor>::operator "                              \
-            "op(const CoeffField<tensor>& f)"                                 \
-        )   << "Incorrect field size: " << f.size()                           \
+        FatalErrorInFunction                                                  \
+            << "Incorrect field size: " << f.size()                           \
             << " local size: " << size()                                      \
             << abort(FatalError);                                             \
     }                                                                         \

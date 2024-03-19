@@ -55,11 +55,8 @@ tmp<ddtScheme<Type> > ddtScheme<Type>::New
 
     if (schemeData.eof())
     {
-        FatalIOErrorIn
-        (
-            "ddtScheme<Type>::New(const fvMesh&, Istream&)",
-            schemeData
-        )   << "Ddt scheme not specified" << nl << nl
+        FatalIOErrorInFunction(schemeData)
+            << "Ddt scheme not specified" << nl << nl
             << "Valid ddt schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -72,11 +69,8 @@ tmp<ddtScheme<Type> > ddtScheme<Type>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
-        (
-            "ddtScheme<Type>::New(const fvMesh&, Istream&)",
-            schemeData
-        )   << "Unknown ddt scheme " << schemeName << nl << nl
+        FatalIOErrorInFunction(schemeData)
+            << "Unknown ddt scheme " << schemeName << nl << nl
             << "Valid ddt schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -84,13 +78,6 @@ tmp<ddtScheme<Type> > ddtScheme<Type>::New
 
     return cstrIter()(mesh, schemeData);
 }
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type>
-ddtScheme<Type>::~ddtScheme()
-{}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -101,7 +88,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi,
     const fluxFieldType& phiCorr
-)
+) const
 {
     tmp<surfaceScalarField> tddtCouplingCoeff = scalar(1)
       - min
@@ -111,7 +98,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
             scalar(1)
         );
 
-    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff();
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
 
     forAll (U.boundaryField(), patchi)
     {
@@ -139,7 +126,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 (
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi
-)
+) const
 {
     dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
@@ -152,7 +139,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
             scalar(1)
         );
 
-    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff();
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
 
     forAll (U.boundaryField(), patchi)
     {
@@ -181,7 +168,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& rhoU,
     const fluxFieldType& phi
-)
+) const
 {
     dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
 
@@ -197,7 +184,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
             scalar(1)
         );
 
-    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff();
+    surfaceScalarField& ddtCouplingCoeff = tddtCouplingCoeff.ref();
 
     forAll (rhoU.boundaryField(), patchi)
     {

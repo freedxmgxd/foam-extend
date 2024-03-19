@@ -61,8 +61,7 @@ tetFemMatrix<Type>::tetFemMatrix
 {
     if (debug)
     {
-        Info<< "tetFemMatrix<Type>(GeometricField<Type, tetPolyPatchField, "
-            << "tetPointMesh>&, const dimensionSet&) : "
+        InfoInFunction
             << "constructing tetFemMatrix<Type> for field " << psi_.name()
             << endl;
     }
@@ -83,7 +82,7 @@ tetFemMatrix<Type>::tetFemMatrix(const tetFemMatrix<Type>& tetFem)
 {
     if (debug)
     {
-        Info<< "tetFemMatrix<Type>::tetFemMatrix(const tetFemMatrix<Type>&) : "
+        InfoInFunction
             << "copying tetFemMatrix<Type> for field " << psi_.name()
             << endl;
     }
@@ -107,8 +106,7 @@ tetFemMatrix<Type>::tetFemMatrix
 {
     if (debug)
     {
-        Info<< "tetFemMatrix<Type>(GeometricField<Type, tetPolyPatchField, "
-            << "tetPointMesh>&, Istream&) : "
+        InfoInFunction
             << "constructing tetFemMatrix<Type> for field " << psi_.name()
             << endl;
     }
@@ -120,7 +118,7 @@ tetFemMatrix<Type>::~tetFemMatrix()
 {
     if (debug)
     {
-        Info<< "tetFemMatrix<Type>::~tetFemMatrix<Type>() : "
+        InfoInFunction
             << "destroying tetFemMatrix<Type> for field " << psi_.name()
             << endl;
     }
@@ -223,7 +221,7 @@ void tetFemMatrix<Type>::relax()
     {
         if (debug)
         {
-            InfoIn("void tetFemMatrix<Type>::relax()")
+            InfoInFunction
                 << "Relaxation factor for field " << psi_.name()
                 << " not found.  Relaxation will not be used." << endl;
         }
@@ -238,19 +236,15 @@ void tetFemMatrix<Type>::operator=(const tetFemMatrix<Type>& tetFem)
 {
     if (this == &tetFem)
     {
-        FatalErrorIn
-        (
-            "tetFemMatrix<Type>::operator=(const tetFemMatrix<Type>&)"
-        )   << "attempted assignment to self"
+        FatalErrorInFunction
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 
     if (&psi_ != &(tetFem.psi_))
     {
-        FatalErrorIn
-        (
-            "tetFemMatrix<Type>::operator=(const tetFemMatrix<Type>&)"
-        )   << "different fields"
+        FatalErrorInFunction
+            << "different fields"
             << abort(FatalError);
     }
 
@@ -405,11 +399,8 @@ void checkMethod
 {
     if (&tetFem1.psi() != &tetFem2.psi())
     {
-        FatalErrorIn
-        (
-            "checkMethod(const tetFemMatrix<Type>&, "
-            "const tetFemMatrix<Type>&) : "
-        )   << "incompatible fields for operation "
+        FatalErrorInFunction
+            << "incompatible fields for operation "
             << endl << "    "
             << "[" << tetFem1.psi().name() << "] "
             << op
@@ -419,11 +410,8 @@ void checkMethod
 
     if (dimensionSet::debug && tetFem1.dimensions() != tetFem2.dimensions())
     {
-        FatalErrorIn
-        (
-            "checkMethod(const tetFemMatrix<Type>&, "
-            "const tetFemMatrix<Type>&) : "
-        )   << "incompatible dimensions for operation "
+        FatalErrorInFunction
+            << "incompatible dimensions for operation "
             << endl << "    "
             << "[" << tetFem1.psi().name() << tetFem1.dimensions()/dimVolume
             << " ] "
@@ -449,12 +437,8 @@ void checkMethod
      && tetFem.dimensions() != vf.dimensions()
     )
     {
-        FatalErrorIn
-        (
-            "checkMethod(const tetFemMatrix<Type>&, "
-            "const GeometricField<Type, elementPatchField, "
-            "elementMesh>&) : "
-        )   << "incompatible dimensions for operation "
+        FatalErrorInFunction
+            << "incompatible dimensions for operation "
             << endl << "    "
             << "[" << tetFem.psi().name() << tetFem.dimensions()/dimVolume
             << " ] "
@@ -479,11 +463,8 @@ void checkMethod
      && tetFem.dimensions() != dt.dimensions()
     )
     {
-        FatalErrorIn
-        (
-            "checkMethod(const tetFemMatrix<Type>&, "
-            "const dimensioned<Type>&) : "
-        )   << "incompatible dimensions for operation "
+        FatalErrorInFunction
+            << "incompatible dimensions for operation "
             << endl << "    "
             << "[" << tetFem.psi().name() << tetFem.dimensions()/dimVolume
             << " ] "
@@ -549,7 +530,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(A, B, "+");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() += B;
+    tC.ref() += B;
     return tC;
 }
 
@@ -563,7 +544,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(tA(), B, "+");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() += B;
+    tC.ref() += B;
     return tC;
 }
 
@@ -577,7 +558,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(A, tB(), "+");
     tmp<tetFemMatrix<Type> > tC(tB.ptr());
-    tC() += A;
+    tC.ref() += A;
     return tC;
 }
 
@@ -591,7 +572,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(tA(), tB(), "+");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() += tB();
+    tC.ref() += tB();
     tB.clear();
     return tC;
 }
@@ -604,7 +585,7 @@ tmp<tetFemMatrix<Type> > operator-
 )
 {
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC().negate();
+    tC.ref().negate();
     return tC;
 }
 
@@ -616,7 +597,7 @@ tmp<tetFemMatrix<Type> > operator-
 )
 {
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC().negate();
+    tC.ref().negate();
     return tC;
 }
 
@@ -630,7 +611,7 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(A, B, "-");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() -= B;
+    tC.ref() -= B;
     return tC;
 }
 
@@ -644,7 +625,7 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(tA(), B, "-");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() -= B;
+    tC.ref() -= B;
     return tC;
 }
 
@@ -658,8 +639,8 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(A, tB(), "-");
     tmp<tetFemMatrix<Type> > tC(tB.ptr());
-    tC() -= A;
-    tC().negate();
+    tC.ref() -= A;
+    tC.ref().negate();
     return tC;
 }
 
@@ -673,7 +654,7 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(tA(), tB(), "-");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() -= tB();
+    tC.ref() -= tB();
     tB.clear();
     return tC;
 }
@@ -736,7 +717,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() -= su;
+    tC.ref() -= su;
     return tC;
 }
 
@@ -749,7 +730,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() -= su;
+    tC.ref() -= su;
     return tC;
 }
 
@@ -762,7 +743,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() -= tsu();
+    tC.ref() -= tsu();
     tsu.clear();
     return tC;
 }
@@ -777,7 +758,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() -= tsu();
+    tC.ref() -= tsu();
     tsu.clear();
     return tC;
 }
@@ -791,7 +772,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() -= su;
+    tC.ref() -= su;
     return tC;
 }
 
@@ -804,7 +785,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() -= su;
+    tC.ref() -= su;
     return tC;
 }
 
@@ -817,7 +798,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(A, tsu(), "+");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() -= tsu();
+    tC.ref() -= tsu();
     tsu.clear();
     return tC;
 }
@@ -831,7 +812,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(tA(), tsu(), "+");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() -= tsu();
+    tC.ref() -= tsu();
     tsu.clear();
     return tC;
 }
@@ -846,7 +827,7 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() += su;
+    tC.ref() += su;
     return tC;
 }
 
@@ -859,7 +840,7 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() += su;
+    tC.ref() += su;
     return tC;
 }
 
@@ -872,7 +853,7 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() += tsu();
+    tC.ref() += tsu();
     tsu.clear();
     return tC;
 }
@@ -886,7 +867,7 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() += tsu();
+    tC.ref() += tsu();
     tsu.clear();
     return tC;
 }
@@ -901,8 +882,8 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC().negate();
-    tC() -= su;
+    tC.ref().negate();
+    tC.ref() -= su;
     return tC;
 }
 
@@ -916,8 +897,8 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC().negate();
-    tC() -= su;
+    tC.ref().negate();
+    tC.ref() -= su;
     return tC;
 }
 
@@ -930,8 +911,8 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(A, tsu(), "-");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC().negate();
-    tC() -= tsu();
+    tC.ref().negate();
+    tC.ref() -= tsu();
     tsu.clear();
     return tC;
 }
@@ -946,8 +927,8 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(tA(), tsu(), "-");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC().negate();
-    tC() -= tsu();
+    tC.ref().negate();
+    tC.ref() -= tsu();
     tsu.clear();
     return tC;
 }
@@ -962,7 +943,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() -= su;
+    tC.ref() -= su;
     return tC;
 }
 
@@ -976,7 +957,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() -= su;
+    tC.ref() -= su;
     return tC;
 }
 
@@ -990,7 +971,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(A, su, "+");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() -= su;
+    tC.ref() -= su;
     return tC;
 }
 
@@ -1004,7 +985,7 @@ tmp<tetFemMatrix<Type> > operator+
 {
     checkMethod(tA(), su, "+");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() -= su;
+    tC.ref() -= su;
     return tC;
 }
 
@@ -1018,7 +999,7 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() += su;
+    tC.ref() += su;
     return tC;
 }
 
@@ -1032,7 +1013,7 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() += su;
+    tC.ref() += su;
     return tC;
 }
 
@@ -1046,8 +1027,8 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(A, su, "-");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC().negate();
-    tC() -= su;
+    tC.ref().negate();
+    tC.ref() -= su;
     return tC;
 }
 
@@ -1061,8 +1042,8 @@ tmp<tetFemMatrix<Type> > operator-
 {
     checkMethod(tA(), su, "-");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC().negate();
-    tC() -= su;
+    tC.ref().negate();
+    tC.ref() -= su;
     return tC;
 }
 
@@ -1076,7 +1057,7 @@ tmp<tetFemMatrix<Type> > operator==
 {
     checkMethod(A, su, "==");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() += su;
+    tC.ref() += su;
     return tC;
 }
 
@@ -1089,7 +1070,7 @@ tmp<tetFemMatrix<Type> > operator==
 {
     checkMethod(tA(), su, "==");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() += su;
+    tC.ref() += su;
     return tC;
 }
 
@@ -1102,7 +1083,7 @@ tmp<tetFemMatrix<Type> > operator==
 {
     checkMethod(A, tsu(), "==");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() += tsu();
+    tC.ref() += tsu();
     tsu.clear();
     return tC;
 }
@@ -1116,7 +1097,7 @@ tmp<tetFemMatrix<Type> > operator==
 {
     checkMethod(tA(), tsu(), "==");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() += tsu();
+    tC.ref() += tsu();
     tsu.clear();
     return tC;
 }
@@ -1131,7 +1112,7 @@ tmp<tetFemMatrix<Type> > operator==
 {
     checkMethod(A, su, "==");
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() += su;
+    tC.ref() += su;
     return tC;
 }
 
@@ -1145,7 +1126,7 @@ tmp<tetFemMatrix<Type> > operator==
 {
     checkMethod(tA(), su, "==");
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() += su.value();
+    tC.ref() += su.value();
     return tC;
 }
 
@@ -1158,7 +1139,7 @@ tmp<tetFemMatrix<Type> > operator*
 )
 {
     tmp<tetFemMatrix<Type> > tC(new tetFemMatrix<Type>(A));
-    tC() *= ds;
+    tC.ref() *= ds;
     return tC;
 }
 
@@ -1171,7 +1152,7 @@ tmp<tetFemMatrix<Type> > operator*
 )
 {
     tmp<tetFemMatrix<Type> > tC(tA.ptr());
-    tC() *= ds;
+    tC.ref() *= ds;
     return tC;
 }
 

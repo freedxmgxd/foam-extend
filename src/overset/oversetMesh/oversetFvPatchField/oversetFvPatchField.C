@@ -608,8 +608,8 @@ void oversetFvPatchField<Type>::correctFringeConservation
     const boolList& fringeFaceFlips = om.fringeFaceFlips();
 
     // Owner/neighbour and fringe addressing
-    const unallocLabelList& own = m.lduAddr().lowerAddr();
-    const unallocLabelList& nei = m.lduAddr().upperAddr();
+    const labelUList& own = m.lduAddr().lowerAddr();
+    const labelUList& nei = m.lduAddr().upperAddr();
     const label nInternalFaces = nei.size();
 
     // Initialise variables for fringe continuity error and sum of off diagonal
@@ -1039,8 +1039,8 @@ void oversetFvPatchField<Type>::initInterfaceMatrixUpdate
             correctFringeConservation(psi, m);
         }
 
-        const unallocLabelList& own = m.lduAddr().lowerAddr();
-        const unallocLabelList& nei = m.lduAddr().upperAddr();
+        const labelUList& own = m.lduAddr().lowerAddr();
+        const labelUList& nei = m.lduAddr().upperAddr();
 
         const labelList& fringeFaces = oversetPatch_.overset().fringeFaces();
         const boolList& fringeFaceFlips =
@@ -1166,8 +1166,8 @@ void oversetFvPatchField<Type>::patchFlux
     fvMatrix<Type>& eqn = const_cast<fvMatrix<Type>&>(matrix);
 
     // Get addressing
-    const unallocLabelList& own = matrix.lduAddr().lowerAddr();
-    const unallocLabelList& nei = matrix.lduAddr().upperAddr();
+    const labelUList& own = matrix.lduAddr().lowerAddr();
+    const labelUList& nei = matrix.lduAddr().upperAddr();
     const label nInternalFaces = nei.size();
 
     // Get fringe addressing

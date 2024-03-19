@@ -35,7 +35,11 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(Foam::surfMesh, 0);
+namespace Foam
+{
+    defineTypeNameAndDebug(surfMesh, 0);
+}
+
 
 Foam::word Foam::surfMesh::meshSubDir = "surfMesh";
 
@@ -65,6 +69,32 @@ Foam::word Foam::surfMesh::meshSubDir = "surfMesh";
 //         0               // zone index
 //     );
 // }
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+void Foam::surfMesh::updatePointsRef()
+{
+    // Assign the reference to the points (this is truly ugly)
+    reinterpret_cast<SubField<point>&>
+    (
+        const_cast<Field<point>&>(MeshReference::points())
+    ) = reinterpret_cast<SubField<point>&>(this->storedPoints());
+}
+
+
+void Foam::surfMesh::updateFacesRef()
+{
+    // Assign the reference to the faces
+    shallowCopy(this->storedFaces());
+}
+
+
+void Foam::surfMesh::updateRefs()
+{
+    this->updatePointsRef();
+    this->updateFacesRef();
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -206,7 +236,7 @@ Foam::surfMesh::surfMesh
         Info<<"timeName: " << instance() << endl;
     }
 
-    // We can also send Xfer<..>::null just to initialize without allocating
+    // We can also send null just to initialise without allocating
     if (!surf().empty())
     {
         transfer(surf());
@@ -224,30 +254,6 @@ Foam::surfMesh::~surfMesh()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::surfMesh::updatePointsRef()
-{
-    // assign the reference to the points (this is truly ugly)
-    reinterpret_cast<SubField<point>&>
-    (
-        const_cast<Field<point>&>(MeshReference::points())
-    ) = reinterpret_cast<SubField<point>&>(this->storedPoints());
-}
-
-
-void Foam::surfMesh::updateFacesRef()
-{
-    // assign the reference to the faces
-    static_cast<UList<face>&>(*this) = this->storedFaces();
-}
-
-
-void Foam::surfMesh::updateRefs()
-{
-    this->updatePointsRef();
-    this->updateFacesRef();
-}
-
 
 void Foam::surfMesh::resetPrimitives
 (
@@ -368,22 +374,16 @@ void Foam::surfMesh::checkZones()
 
         if (count < nFaces())
         {
-            WarningIn
-            (
-                "surfMesh::checkZones()\n"
-            )
+            WarningInFunction
                 << "more faces " << nFaces() << " than zones " << count
                 << " ... extending final zone"
                 << endl;
 
-            zones[zones.size()-1].size() += count - nFaces();
+            zones[zones.size() - 1].size() += count - nFaces();
         }
         else if (count > size())
         {
-            FatalErrorIn
-            (
-                "surfMesh::checkZones()\n"
-            )
+            FatalErrorInFunction
                 << "more zones " << count << " than faces " << nFaces()
                 << exit(FatalError);
         }

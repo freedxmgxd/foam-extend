@@ -158,6 +158,8 @@ $(Pstreams)/IPstream.C
 $(Pstreams)/OPstream.C
 $(Pstreams)/IPread.C
 $(Pstreams)/OPwrite.C
+$(Pstreams)/PstreamAllToAll.C
+
 
 dictionary = db/dictionary
 $(dictionary)/dictionary.C

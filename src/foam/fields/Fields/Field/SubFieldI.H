@@ -101,26 +101,47 @@ Foam::SubField<Type>::component
 }
 
 
-template<class Type>
-inline Foam::tmp<Foam::Field<Type> > Foam::SubField<Type>::T() const
-{
-    return (reinterpret_cast<const Field<Type>&>(*this)).T();
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>
 inline void Foam::SubField<Type>::operator=(const SubField<Type>& rhs)
 {
-    UList<Type>::operator=(rhs);
+    SubList<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+inline void Foam::SubField<Type>::operator=(const Field<Type>& rhs)
+{
+    SubList<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+inline void Foam::SubField<Type>::operator=(const Type& rhs)
+{
+    SubList<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+template<class Form, Foam::direction Ncmpts>
+inline void Foam::SubField<Type>::operator=
+(
+    const VectorSpace<Form, Type, Ncmpts>& rhs
+)
+{
+    forAll(rhs, i)
+    {
+        this->operator[](i) = rhs[i];
+    }
 }
 
 
 template<class Type>
 inline Foam::SubField<Type>::operator const Foam::Field<Type>&() const
 {
-    return *reinterpret_cast< const Field<Type>* >(this);
+    return *reinterpret_cast<const Field<Type>* >(this);
 }
 
 

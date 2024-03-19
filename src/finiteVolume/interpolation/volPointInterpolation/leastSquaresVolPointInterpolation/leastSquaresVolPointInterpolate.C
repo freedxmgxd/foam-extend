@@ -226,7 +226,7 @@ void leastSquaresVolPointInterpolation::interpolate
             label start = mesh().boundaryMesh()[patchID].start();
             label localFaceID = faceID - start;
 
-            const unallocLabelList& faceCells =
+            const labelUList& faceCells =
                 mesh().boundary()[patchID].faceCells();
 
             const cyclicFvPatch& cycPatch =
@@ -811,7 +811,7 @@ tmp<Field<Type> > leastSquaresVolPointInterpolation::interpolate
             label start = mesh().boundaryMesh()[patchID].start();
             label localFaceID = faceID - start;
 
-            const unallocLabelList& faceCells =
+            const labelUList& faceCells =
                 mesh().boundary()[patchID].faceCells();
 
             label sizeby2 = faceCells.size()/2;
@@ -1291,7 +1291,7 @@ Type leastSquaresVolPointInterpolation::interpolate
             label start = mesh().boundaryMesh()[patchID].start();
             label localFaceID = faceID - start;
 
-            const unallocLabelList& faceCells =
+            const labelUList& faceCells =
                 mesh().boundary()[patchID].faceCells();
 
             label sizeby2 = faceCells.size()/2;
@@ -2031,7 +2031,7 @@ leastSquaresVolPointInterpolation::procCellsFieldData
     (
         new FieldField<Field, Type>(Pstream::nProcs())
     );
-    FieldField<Field, Type>& procPsi = tprocPsi();
+    FieldField<Field, Type>& procPsi = tprocPsi.ref();
 
     forAll (procPsi, procI)
     {
@@ -2124,7 +2124,7 @@ leastSquaresVolPointInterpolation::procBndFacesFieldData
     (
         new FieldField<Field, Type>(Pstream::nProcs())
     );
-    FieldField<Field, Type>& procPsi = tprocPsi();
+    FieldField<Field, Type>& procPsi = tprocPsi.ref();
 
     forAll (procPsi, procI)
     {

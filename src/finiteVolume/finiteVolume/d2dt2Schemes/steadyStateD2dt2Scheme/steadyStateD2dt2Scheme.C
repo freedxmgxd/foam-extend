@@ -44,7 +44,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> >
 steadyStateD2dt2Scheme<Type>::fvcD2dt2
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, fvPatchField, volMesh> >
     (
@@ -53,15 +53,15 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
             IOobject
             (
                 "d2dt2("+vf.name()+')',
-                mesh().time().timeName(),
-                mesh(),
+                this->mesh().time().timeName(),
+                this->mesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
-                "0",
+                "zero",
                 vf.dimensions()/dimTime/dimTime,
                 pTraits<Type>::zero
             )
@@ -76,7 +76,7 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     return tmp<GeometricField<Type, fvPatchField, volMesh> >
     (
@@ -85,15 +85,15 @@ steadyStateD2dt2Scheme<Type>::fvcD2dt2
             IOobject
             (
                 "d2dt2("+rho.name()+','+vf.name()+')',
-                mesh().time().timeName(),
-                mesh(),
+                this->mesh().time().timeName(),
+                this->mesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh(),
+            this->mesh(),
             dimensioned<Type>
             (
-                "0",
+                "zero",
                 rho.dimensions()*vf.dimensions()/dimTime/dimTime,
                 pTraits<Type>::zero
             )
@@ -107,7 +107,7 @@ tmp<fvMatrix<Type> >
 steadyStateD2dt2Scheme<Type>::fvmD2dt2
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -128,7 +128,7 @@ steadyStateD2dt2Scheme<Type>::fvmD2dt2
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (
@@ -149,7 +149,7 @@ steadyStateD2dt2Scheme<Type>::fvmD2dt2
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     tmp<fvMatrix<Type> > tfvm
     (

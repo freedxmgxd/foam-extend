@@ -54,12 +54,6 @@ Foam::constantThermal::constantThermal
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::constantThermal::~constantThermal()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField> Foam::constantThermal::C() const
@@ -82,7 +76,7 @@ Foam::tmp<Foam::volScalarField> Foam::constantThermal::C() const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -108,7 +102,7 @@ Foam::tmp<Foam::volScalarField> Foam::constantThermal::k() const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -134,7 +128,7 @@ Foam::tmp<Foam::volScalarField> Foam::constantThermal::alpha() const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -160,7 +154,7 @@ Foam::tmp<Foam::volScalarField> Foam::constantThermal::T0() const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }

@@ -82,6 +82,9 @@ public:
             const label startIndex
         );
 
+        //- Copy constructor
+        inline SubList(const SubList<T>& sl) = default;
+
 
     // Member functions
 
@@ -106,6 +109,12 @@ public:
 
         //- Allow cast to a const List<T>&
         inline operator const Foam::List<T>&() const;
+
+        //- Assignment of all entries to the given sub-list
+        inline void operator=(const SubList<T>&);
+
+        //- Assignment of all entries to the given list
+        inline void operator=(const UList<T>&);
 
         //- Assignment of all entries to the given value
         inline void operator=(const T&);

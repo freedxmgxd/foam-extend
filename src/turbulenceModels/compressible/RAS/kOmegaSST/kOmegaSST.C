@@ -103,7 +103,7 @@ tmp<volScalarField> kOmegaSST::F23() const
 
     if (F3_)
     {
-        f23() *= F3();
+        f23.ref() *= F3();
     }
 
     return f23;
@@ -467,7 +467,7 @@ void kOmegaSST::correct()
     volScalarField rhoGammaF1(rho_*gamma(F1));
 
     // Turbulent frequency equation
-    tmp<fvScalarMatrix> omegaEqn
+    fvScalarMatrix omegaEqn
     (
         fvm::ddt(rho_, omega_)
       + fvm::div(phi_, omega_)
@@ -488,7 +488,7 @@ void kOmegaSST::correct()
         )
     );
 
-    omegaEqn().relax();
+    omegaEqn.relax();
 
     // No longer needed: matrix completes at the point of solution
     // HJ, 17/Apr/2012
@@ -498,7 +498,7 @@ void kOmegaSST::correct()
     bound(omega_, omega0_);
 
     // Turbulent kinetic energy equation
-    tmp<fvScalarMatrix> kEqn
+    fvScalarMatrix kEqn
     (
         fvm::ddt(rho_, k_)
       + fvm::div(phi_, k_)
@@ -509,7 +509,7 @@ void kOmegaSST::correct()
       - fvm::Sp(rho_*betaStar_*omega_, k_)
     );
 
-    kEqn().relax();
+    kEqn.relax();
     solve(kEqn);
     bound(k_, k0_);
 

@@ -82,7 +82,7 @@ Foam::tmp<Foam::Field<Type> > Foam::Function1<Type>::value
 ) const
 {
     tmp<Field<Type> > tfld(new Field<Type>(x.size()));
-    Field<Type>& fld = tfld();
+    Field<Type>& fld = tfld.ref();
 
     forAll(x, i)
     {
@@ -100,7 +100,7 @@ Foam::tmp<Foam::Field<Type> > Foam::Function1<Type>::integrate
 ) const
 {
     tmp<Field<Type> > tfld(new Field<Type>(x1.size()));
-    Field<Type>& fld = tfld();
+    Field<Type>& fld = tfld.ref();
 
     forAll(x1, i)
     {

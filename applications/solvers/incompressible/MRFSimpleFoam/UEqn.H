@@ -5,7 +5,7 @@
         fvm::div(phi, U)
       + turbulence->divDevReff()
     );
-    mrfZones.addCoriolis(HUEqn());
+    mrfZones.addCoriolis(HUEqn.ref());
 
     // Get under-relaxation factor
     const scalar UUrf = mesh.solutionDict().equationRelaxationFactor(U.name());

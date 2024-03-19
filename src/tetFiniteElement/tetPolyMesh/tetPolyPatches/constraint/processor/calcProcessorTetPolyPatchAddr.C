@@ -304,7 +304,7 @@ void processorTetPolyPatch::calcCutEdgeAddressing() const
     cutEdgeNeighbourStartPtr_ = new labelList(meshPoints().size() + 1, -1);
     labelList& neiStart = *cutEdgeNeighbourStartPtr_;
 
-    const unallocLabelList& losort = ldu.losortAddr();
+    const labelUList& losort = ldu.losortAddr();
 
     // Go through all the local points and get all the edges coming
     // from that point.  Check if the edge has been marked as local;
@@ -407,8 +407,8 @@ void processorTetPolyPatch::calcOwnNeiDoubleMask() const
     // Get matrix addressing
     const labelList& mp = meshPoints();
 
-    const unallocLabelList& L = mesh.lduAddr().lowerAddr();
-    const unallocLabelList& U = mesh.lduAddr().upperAddr();
+    const labelUList& L = mesh.lduAddr().lowerAddr();
+    const labelUList& U = mesh.lduAddr().upperAddr();
 
     const labelList& cutOwn = cutEdgeOwnerIndices();
     const labelList& cutNei = cutEdgeNeighbourIndices();

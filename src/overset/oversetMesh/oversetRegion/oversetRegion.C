@@ -937,11 +937,12 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
     // acceptors that need to be sent to that processor
     List<dynamicLabelList> sendAcceptorMap(Pstream::nProcs());
 
-    // Allocate enough storage as if we are sending all acceptors to all
-    // processors (trading off memory for performance)
+    // Allocate enough storage (trading off memory for performance)
+    // Optimisation: this is not needed: storage does not scale in parallel
+    // HJ, 10/Jan/2023
     forAll (sendAcceptorMap, procI)
     {
-        sendAcceptorMap[procI].setCapacity(a.size());
+        sendAcceptorMap[procI].setCapacity(Foam::max(50, a.size()/10));
     }
 
     // Loop through all processors
@@ -1004,7 +1005,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
 
     // STAGE 4: Calculation of construct map for acceptors
 
-    // The construct map is simply an index offseted by the number of values
+    // The construct map is simply an index offset by the number of values
     // received by previous processors.
     // Example:
     /*
@@ -1193,6 +1194,10 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             }
             else if (oversetMesh::debug && !daPair.donorFound())
             {
+                // This is not right: a donor could be found on a different
+                // processor with an overlapping bounding box.
+                // HJ, 10/Jan/2023
+
                 // This donor is not valid and I did not find a hit in
                 // octree, issue a warning
                 WarningInFunction

@@ -111,8 +111,8 @@ Foam::ODEChemistryModel<CompType, ThermoType>::RR
 
     if (this->chemistry_)
     {
-        tRR().internalField() = RR_[i];
-        tRR().correctBoundaryConditions();
+        tRR.ref().internalField() = RR_[i];
+        tRR.ref().correctBoundaryConditions();
     }
     return tRR;
 }

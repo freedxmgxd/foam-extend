@@ -132,7 +132,7 @@ Foam::ThermoCloud<ParcelType>::Ep() const
     // Need to check if coupled as field is created on-the-fly
     if (radiation_ && this->coupled())
     {
-        scalarField& Ep = tEp().internalField();
+        scalarField& Ep = tEp.ref().internalField();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
 
@@ -175,7 +175,7 @@ Foam::ThermoCloud<ParcelType>::ap() const
     // Need to check if coupled as field is created on-the-fly
     if (radiation_ && this->coupled())
     {
-        scalarField& ap = tap().internalField();
+        scalarField& ap = tap.ref().internalField();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
 
@@ -218,7 +218,7 @@ Foam::ThermoCloud<ParcelType>::sigmap() const
     // Need to check if coupled as field is created on-the-fly
     if (radiation_ && this->coupled())
     {
-        scalarField& sigmap = tsigmap().internalField();
+        scalarField& sigmap = tsigmap.ref().internalField();
 
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();

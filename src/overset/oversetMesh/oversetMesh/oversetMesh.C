@@ -125,11 +125,11 @@ Foam::oversetMesh::oversetMesh(const fvMesh& mesh)
         {
             if (!uniqueNames.insert(regions_[regionI].name()))
             {
-                FatalErrorIn("oversetMesh::oversetMesh(const fvMesh& mesh)")
-                  << "Overset region: " << regions_[regionI].name()
-                  << " specified more than once."
-                  << nl << "This is not allowed."
-                  << abort(FatalError);
+                FatalErrorInFunction
+                    << "Overset region: " << regions_[regionI].name()
+                    << " specified more than once." << nl
+                    << "This is not allowed."
+                    << abort(FatalError);
             }
         }
     }
@@ -138,7 +138,7 @@ Foam::oversetMesh::oversetMesh(const fvMesh& mesh)
     // coupled boundaries (see oversetFvPatchField::patchFlux() member function)
     if (!isA<oversetPolyPatch>(mesh.boundaryMesh()[0]))
     {
-        FatalErrorIn("oversetMesh::oversetMesh(const fvMesh& mesh)")
+        FatalErrorInFunction
           << "Overset patch needs to come first for consistent reconstruction"
           << nl << " of fringe face fluxes on coupled boundaries."
           << nl << "First patch is: " << mesh.boundaryMesh()[0].name()
@@ -210,15 +210,10 @@ const Foam::oversetInterpolation& Foam::oversetMesh::interpolationScheme
     {
         // Didn't find an entry neither as specified interpolation scheme nor as
         // a default scheme, issue an error
-        FatalErrorIn
-        (
-            "const oversetInterpolation& oversetMesh::interpolationScheme"
-            "\n("
-            "\n    const fvMesh& mesh"
-            "\n) const"
-        ) << "Did not find overset interpolation scheme for field: "
-          << fieldName << " or a suitable default entry."
-          << abort(FatalError);
+        FatalErrorInFunction
+            << "Did not find overset interpolation scheme for field: "
+            << fieldName << " or a suitable default entry."
+            << abort(FatalError);
     }
 
     return interpolations_[interpolationIndices_[schemeName]];

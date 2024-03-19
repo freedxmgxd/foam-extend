@@ -361,8 +361,8 @@ void Foam::donorBasedLayeredOverlapFringe::calcAddressing() const
             const vectorField& cc = mesh.cellCentres();
             const vectorField& fc = mesh.faceCentres();
             const cellList& meshCells = mesh.cells();
-            const unallocLabelList& owner = mesh.faceOwner();
-            const unallocLabelList& neighbour = mesh.faceNeighbour();
+            const labelUList& owner = mesh.faceOwner();
+            const labelUList& neighbour = mesh.faceNeighbour();
 
             // Get bounding box of this region for additional check when marking
             // acceptors

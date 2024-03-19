@@ -60,10 +60,10 @@ class gaussLaplacianScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        gaussLaplacianScheme(const gaussLaplacianScheme&);
+        gaussLaplacianScheme(const gaussLaplacianScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const gaussLaplacianScheme&);
+        void operator=(const gaussLaplacianScheme&) = delete;
 
 
 public:
@@ -87,24 +87,28 @@ public:
         {}
 
 
+    //- Destructor
+    virtual ~gaussLaplacianScheme() = default;
+
+
     // Member Functions
 
-        tmp<faMatrix<Type> > famLaplacian
+        virtual tmp<faMatrix<Type> > famLaplacian
         (
             const edgeScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, faPatchField, areaMesh> > facLaplacian
+        virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facLaplacian
         (
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, faPatchField, areaMesh> > facLaplacian
+        virtual tmp<GeometricField<Type, faPatchField, areaMesh> > facLaplacian
         (
             const edgeScalarField&,
             const GeometricField<Type, faPatchField, areaMesh>&
-        );
+        ) const;
 };
 
 

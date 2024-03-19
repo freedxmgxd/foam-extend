@@ -141,10 +141,10 @@ template<class Type>
 tmp<Field<Type> > cyclicFaPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
-    const unallocLabelList& faceCells = cyclicPatch_.faceCells();
+    const labelUList& faceCells = cyclicPatch_.faceCells();
 
     tmp<Field<Type> > tpnf(new Field<Type>(this->size()));
-    Field<Type>& pnf = tpnf();
+    Field<Type>& pnf = tpnf.ref();
 
     label sizeby2 = this->size()/2;
 
@@ -191,7 +191,7 @@ void cyclicFaPatchField<Type>::updateInterfaceMatrix
     scalarField pnf(this->size());
 
     label sizeby2 = this->size()/2;
-    const unallocLabelList& faceCells = cyclicPatch_.faceCells();
+    const labelUList& faceCells = cyclicPatch_.faceCells();
 
     for (label facei=0; facei<sizeby2; facei++)
     {

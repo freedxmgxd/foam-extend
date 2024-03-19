@@ -111,7 +111,7 @@ Foam::ReactingCloud<ParcelType>::Srho() const
         )
     );
 
-    scalarField& sourceField = trhoTrans().field();
+    scalarField& sourceField = trhoTrans.ref().field();
     forAll (rhoTrans_, i)
     {
         sourceField += rhoTrans_[i];

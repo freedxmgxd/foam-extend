@@ -242,13 +242,9 @@ Foam::tmp<Foam::vectorField> Foam::sphericalCS::globalToLocal
     const scalarField r = mag(lc);
 
     tmp<vectorField> tresult(new vectorField(lc.size()));
-    vectorField& result = tresult();
+    vectorField& result = tresult.ref();
 
-    result.replace
-    (
-        vector::X, r
-
-    );
+    result.replace(vector::X, r);
 
     result.replace
     (

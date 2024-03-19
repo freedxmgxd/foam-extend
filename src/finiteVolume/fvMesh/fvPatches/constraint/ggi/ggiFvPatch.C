@@ -283,7 +283,7 @@ Foam::tmp<Foam::vectorField> Foam::ggiFvPatch::delta() const
         (
             shadow().Cn() - ggiPolyPatch_.shadow().reconFaceCellCentres()
         );
-        vectorField& delta = tdelta();
+        vectorField& delta = tdelta.ref();
 
         if (bridgeOverlap())
         {
@@ -482,7 +482,7 @@ void Foam::ggiFvPatch::expandCrMatrixToZone(crMatrix& patchP) const
 
 Foam::tmp<Foam::labelField> Foam::ggiFvPatch::interfaceInternalField
 (
-    const unallocLabelList& internalData
+    const labelUList& internalData
 ) const
 {
     return patchInternalField(internalData);
@@ -492,7 +492,7 @@ Foam::tmp<Foam::labelField> Foam::ggiFvPatch::interfaceInternalField
 void Foam::ggiFvPatch::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     labelTransferBuffer_ = interfaceData;
@@ -502,7 +502,7 @@ void Foam::ggiFvPatch::initTransfer
 Foam::tmp<Foam::labelField> Foam::ggiFvPatch::transfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     return this->shadow().labelTransferBuffer();
@@ -512,7 +512,7 @@ Foam::tmp<Foam::labelField> Foam::ggiFvPatch::transfer
 void Foam::ggiFvPatch::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     // Label transfer is local without global reduction
@@ -523,7 +523,7 @@ void Foam::ggiFvPatch::initInternalFieldTransfer
 Foam::tmp<Foam::labelField> Foam::ggiFvPatch::internalFieldTransfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     return shadow().labelTransferBuffer();

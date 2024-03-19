@@ -45,17 +45,8 @@ Foam::autoPtr<Foam::SAMGInterface> Foam::SAMGInterface::New
 
     if (cstrIter == lduInterfaceConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "SAMGInterface::New\n"
-            "(\n"
-            "    const lduPrimitiveMesh& lduMesh,\n"
-            "    const crMatrix& interfaceProlongation,\n"
-            "    const lduInterfacePtrsList& coarseInterfaces,\n"
-            "    const lduInterface& fineInterface,\n"
-            "    const crMatrix& nbrInterfaceProlongation\n"
-            ")"
-        )   << "Unknown SAMGInterface type " << coupleType << ".\n"
+        FatalErrorInFunction
+            << "Unknown SAMGInterface type " << coupleType << ".\n"
             << "Valid SAMGInterface types are :"
             << lduInterfaceConstructorTablePtr_->sortedToc()
             << exit(FatalError);

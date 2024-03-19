@@ -75,7 +75,7 @@ fourthLnGrad<Type>::correction
             vf.dimensions()*this->mesh().deltaCoeffs().dimensions()
         )
     );
-    GeometricField<Type, faePatchField, edgeMesh>& corr = tcorr();
+    GeometricField<Type, faePatchField, edgeMesh>& corr = tcorr.ref();
 
     edgeVectorField m = mesh.Le()/mesh.magLe();
 
@@ -113,7 +113,7 @@ fourthLnGrad<Type>::correction
 
     if (correctedLnGrad<Type>(mesh).corrected())
     {
-        tcorr() += correctedLnGrad<Type>(mesh).correction(vf);
+        tcorr.ref() += correctedLnGrad<Type>(mesh).correction(vf);
     }
 
     return tcorr;

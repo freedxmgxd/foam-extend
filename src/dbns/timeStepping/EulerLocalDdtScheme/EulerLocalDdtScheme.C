@@ -52,7 +52,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> >
 EulerLocalDdtScheme<Type>::fvcDdt
 (
     const dimensioned<Type>& dt
-)
+) const
 {
     const objectRegistry& registry = this->mesh();
 
@@ -87,7 +87,7 @@ EulerLocalDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt().internalField() =
+        tdtdt.ref().internalField() =
             rDeltaT.internalField()*dt.value()*(1.0 - mesh().V0()/mesh().V());
 
         return tdtdt;
@@ -118,7 +118,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh> >
 EulerLocalDdtScheme<Type>::fvcDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     const objectRegistry& registry = this->mesh();
 
@@ -177,7 +177,7 @@ EulerLocalDdtScheme<Type>::fvcDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     const objectRegistry& registry = this->mesh();
 
@@ -236,7 +236,7 @@ EulerLocalDdtScheme<Type>::fvcDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     const objectRegistry& registry = this->mesh();
 
@@ -297,7 +297,7 @@ tmp<fvMatrix<Type> >
 EulerLocalDdtScheme<Type>::fvmDdt
 (
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     const objectRegistry& registry = this->mesh();
 
@@ -314,7 +314,7 @@ EulerLocalDdtScheme<Type>::fvmDdt
         )
     );
 
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT =
         1.0/(beta[0]*registry.lookupObject<volScalarField>
@@ -343,7 +343,7 @@ EulerLocalDdtScheme<Type>::fvmDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     const objectRegistry& registry = this->mesh();
 
@@ -359,7 +359,7 @@ EulerLocalDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT =
         1.0/(beta[0]*registry.lookupObject<volScalarField>(deltaTauName_).internalField());
@@ -387,7 +387,7 @@ EulerLocalDdtScheme<Type>::fvmDdt
 (
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     const objectRegistry& registry = this->mesh();
 
@@ -403,7 +403,7 @@ EulerLocalDdtScheme<Type>::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     scalarField rDeltaT =
         1.0/(beta[0]*registry.lookupObject<volScalarField>
@@ -437,7 +437,7 @@ EulerLocalDdtScheme<Type>::fvcDdtPhiCorr
     const volScalarField& rA,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi
-)
+) const
 {
     IOobject ddtIOobject
     (
@@ -498,7 +498,7 @@ EulerLocalDdtScheme<Type>::fvcDdtPhiCorr
     const volScalarField& rho,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi
-)
+) const
 {
     IOobject ddtIOobject
     (
@@ -631,7 +631,7 @@ EulerLocalDdtScheme<Type>::fvcDdtConsistentPhiCorr
     const GeometricField<Type, fvsPatchField, surfaceMesh>& faceU,
     const GeometricField<Type, fvPatchField, volMesh>& U,
     const surfaceScalarField& rAUf
-)
+) const
 {
     const objectRegistry& registry = this->mesh();
 
@@ -652,7 +652,7 @@ template<class Type>
 tmp<surfaceScalarField> EulerLocalDdtScheme<Type>::meshPhi
 (
     const GeometricField<Type, fvPatchField, volMesh>&
-)
+) const
 {
     return tmp<surfaceScalarField>
     (

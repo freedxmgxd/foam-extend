@@ -95,7 +95,7 @@ Foam::multiMode::divTau(volVectorField& U) const
 
     for (label i = 1; i < models_.size(); i++)
     {
-        divMatrix() += models_[i].divTau(U);
+        divMatrix.ref() += models_[i].divTau(U);
     }
 
     return divMatrix;

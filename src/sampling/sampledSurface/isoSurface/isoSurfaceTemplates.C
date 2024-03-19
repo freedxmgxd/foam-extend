@@ -70,7 +70,7 @@ Foam::isoSurface::adaptPatchFields
             true        // preserveCouples
         )
     );
-    FieldType& sliceFld = tsliceFld();
+    FieldType& sliceFld = tsliceFld.ref();
 
     const fvMesh& mesh = fld.mesh();
 
@@ -102,7 +102,7 @@ Foam::isoSurface::adaptPatchFields
 
             // Note: cannot use patchInternalField since uses emptyFvPatch::size
             // Do our own internalField instead.
-            const unallocLabelList& faceCells =
+            const labelUList& faceCells =
                 mesh.boundary()[patchI].patch().faceCells();
 
             Field<Type>& pfld = sliceFld.boundaryField()[patchI];
@@ -125,9 +125,8 @@ Foam::isoSurface::adaptPatchFields
 
             const scalarField& w = mesh.weights().boundaryField()[patchI];
 
-            tmp<Field<Type> > f =
-                w*pfld.patchInternalField()
-              + (1.0-w)*pfld.patchNeighbourField();
+            Field<Type> f = w*pfld.patchInternalField()
+                + (1.0 - w)*pfld.patchNeighbourField();
 
             PackedBoolList isCollocated
             (
@@ -138,11 +137,12 @@ Foam::isoSurface::adaptPatchFields
             {
                 if (!isCollocated[i])
                 {
-                    pfld[i] = f()[i];
+                    pfld[i] = f[i];
                 }
             }
         }
     }
+
     return tsliceFld;
 }
 
@@ -698,13 +698,13 @@ Foam::isoSurface::interpolate
 ) const
 {
     // Recalculate boundary values
-    tmp<SlicedGeometricField
+    SlicedGeometricField
     <
         Type,
         fvPatchField,
         slicedFvPatchField,
         volMesh
-    > > c2(adaptPatchFields(cCoords));
+    > c2 = adaptPatchFields(cCoords);
 
 
     DynamicList<Type> triPoints(nCutCells_);
@@ -720,7 +720,7 @@ Foam::isoSurface::interpolate
         cValsPtr_(),
         pVals_,
 
-        c2(),
+        c2,
         pCoords,
 
         snappedPoints,
@@ -731,13 +731,13 @@ Foam::isoSurface::interpolate
         triMeshCells
     );
 
-
     // One value per point
     tmp<Field<Type> > tvalues
     (
         new Field<Type>(points().size(), pTraits<Type>::zero)
     );
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
+
     labelList nValues(values.size(), 0);
 
     forAll(triPoints, i)

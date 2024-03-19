@@ -218,7 +218,7 @@ void kNonEqWallFunctionFvPatchScalarField::updateCoeffs()
     const scalarField magGradUw = mag(Uw.snGrad());
 
     // Get face cells
-    const unallocLabelList& fc = patch().faceCells();
+    const labelUList& fc = patch().faceCells();
 
     // Averaged G and epsilon
     forAll (nutw, faceI)

@@ -41,13 +41,13 @@ namespace fv
 
 scalar boundedBackwardDdtScheme::deltaT_() const
 {
-    return mesh().time().deltaT().value();
+    return this->mesh().time().deltaT().value();
 }
 
 
 scalar boundedBackwardDdtScheme::deltaT0_() const
 {
-    return mesh().time().deltaT0().value();
+    return this->mesh().time().deltaT0().value();
 }
 
 
@@ -57,17 +57,17 @@ tmp<volScalarField>
 boundedBackwardDdtScheme::fvcDdt
 (
     const dimensionedScalar& dt
-)
+) const
 {
     // No change compared to backward
 
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+dt.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
     scalar deltaT = deltaT_();
@@ -77,14 +77,14 @@ boundedBackwardDdtScheme::fvcDdt
     scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalar coefft0  = coefft + coefft00;
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         tmp<volScalarField> tdtdt
         (
             new volScalarField
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 dimensionedScalar
                 (
                     "0",
@@ -94,9 +94,13 @@ boundedBackwardDdtScheme::fvcDdt
             )
         );
 
-        tdtdt().internalField() = rDeltaT.value()*dt.value()*
+        tdtdt.ref().internalField() = rDeltaT.value()*dt.value()*
         (
-            coefft - (coefft0*mesh().V0() - coefft00*mesh().V00())/mesh().V()
+            coefft
+          - (
+                coefft0*this->mesh().V0()
+              - coefft00*this->mesh().V00()
+            )/this->mesh().V()
         );
 
         return tdtdt;
@@ -108,7 +112,7 @@ boundedBackwardDdtScheme::fvcDdt
             new volScalarField
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 dimensionedScalar
                 (
                     "0",
@@ -126,15 +130,15 @@ tmp<volScalarField>
 boundedBackwardDdtScheme::fvcDdt
 (
     const volScalarField& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+vf.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
     scalar deltaT = deltaT_();
@@ -164,25 +168,25 @@ boundedBackwardDdtScheme::fvcDdt
     volScalarField coefft00 = limiter*sqr(deltaT)/(deltaT0*(deltaT + deltaT0));
     volScalarField coefft0  = coefft + coefft00;
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<volScalarField>
         (
             new volScalarField
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*vf.dimensions(),
                 rDeltaT.value()*
                 (
                     coefft*vf.internalField() -
                     (
                         coefft0.internalField()
-                        *vf.oldTime().internalField()*mesh().V0()
+                        *vf.oldTime().internalField()*this->mesh().V0()
                       - coefft00.internalField()
                         *vf.oldTime().oldTime().internalField()
-                       *mesh().V00()
-                    )/mesh().V()
+                       *this->mesh().V00()
+                    )/this->mesh().V()
                 ),
                 rDeltaT.value()*
                 (
@@ -221,15 +225,15 @@ boundedBackwardDdtScheme::fvcDdt
 (
     const dimensionedScalar& rho,
     const volScalarField& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+rho.name()+','+vf.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
     scalar deltaT = deltaT_();
@@ -259,25 +263,25 @@ boundedBackwardDdtScheme::fvcDdt
     volScalarField coefft00 = limiter*sqr(deltaT)/(deltaT0*(deltaT + deltaT0));
     volScalarField coefft0  = coefft + coefft00;
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<volScalarField>
         (
             new volScalarField
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.value()*rho.value()*
                 (
                     coefft*vf.internalField() -
                     (
                         coefft0.internalField()*
-                        vf.oldTime().internalField()*mesh().V0()
+                        vf.oldTime().internalField()*this->mesh().V0()
                       - coefft00.internalField()*
                         vf.oldTime().oldTime().internalField()
-                       *mesh().V00()
-                    )/mesh().V()
+                       *this->mesh().V00()
+                    )/this->mesh().V()
                 ),
                 rDeltaT.value()*rho.value()*
                 (
@@ -316,15 +320,15 @@ boundedBackwardDdtScheme::fvcDdt
 (
     const volScalarField& rho,
     const volScalarField& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+rho.name()+','+vf.name()+')',
-        mesh().time().timeName(),
-        mesh()
+        this->mesh().time().timeName(),
+        this->mesh()
     );
 
     scalar deltaT = deltaT_();
@@ -354,14 +358,14 @@ boundedBackwardDdtScheme::fvcDdt
     volScalarField coefft00 = limiter*sqr(deltaT)/(deltaT0*(deltaT + deltaT0));
     volScalarField coefft0  = coefft + coefft00;
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<volScalarField>
         (
             new volScalarField
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.value()*
                 (
@@ -369,11 +373,12 @@ boundedBackwardDdtScheme::fvcDdt
                     (
                         coefft0.internalField()*
                         rho.oldTime().internalField()*
-                        vf.oldTime().internalField()*mesh().V0()
+                        vf.oldTime().internalField()*this->mesh().V0()
                       - coefft00.internalField()*
-                        rho.oldTime().oldTime().internalField()
-                       *vf.oldTime().oldTime().internalField()*mesh().V00()
-                    )/mesh().V()
+                        rho.oldTime().oldTime().internalField()*
+                        vf.oldTime().oldTime().internalField()*
+                        this->mesh().V00()
+                    )/this->mesh().V()
                 ),
                 rDeltaT.value()*
                 (
@@ -413,7 +418,7 @@ tmp<fvScalarMatrix>
 boundedBackwardDdtScheme::fvmDdt
 (
     const volScalarField& vf
-)
+) const
 {
     tmp<fvScalarMatrix> tfvm
     (
@@ -424,7 +429,7 @@ boundedBackwardDdtScheme::fvmDdt
         )
     );
 
-    fvScalarMatrix& fvm = tfvm();
+    fvScalarMatrix& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -455,20 +460,20 @@ boundedBackwardDdtScheme::fvmDdt
     scalarField coefft00 = limiter*deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalarField coefft0  = coefft + coefft00;
 
-    fvm.diag() = (coefft*rDeltaT)*mesh().V();
+    fvm.diag() = (coefft*rDeltaT)*this->mesh().V();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         fvm.source() = rDeltaT*
         (
-            coefft0*vf.oldTime().internalField()*mesh().V0()
+            coefft0*vf.oldTime().internalField()*this->mesh().V0()
           - coefft00*vf.oldTime().oldTime().internalField()
-           *mesh().V00()
+           *this->mesh().V00()
         );
     }
     else
     {
-        fvm.source() = rDeltaT*mesh().V()*
+        fvm.source() = rDeltaT*this->mesh().V()*
         (
             coefft0*vf.oldTime().internalField()
           - coefft00*vf.oldTime().oldTime().internalField()
@@ -484,7 +489,7 @@ boundedBackwardDdtScheme::fvmDdt
 (
     const dimensionedScalar& rho,
     const volScalarField& vf
-)
+) const
 {
     tmp<fvScalarMatrix> tfvm
     (
@@ -494,7 +499,7 @@ boundedBackwardDdtScheme::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvScalarMatrix& fvm = tfvm();
+    fvScalarMatrix& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -525,20 +530,20 @@ boundedBackwardDdtScheme::fvmDdt
     scalarField coefft00 = limiter*deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalarField coefft0  = coefft + coefft00;
 
-    fvm.diag() = (coefft*rDeltaT*rho.value())*mesh().V();
+    fvm.diag() = (coefft*rDeltaT*rho.value())*this->mesh().V();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         fvm.source() = rDeltaT*rho.value()*
         (
-            coefft0*vf.oldTime().internalField()*mesh().V0()
+            coefft0*vf.oldTime().internalField()*this->mesh().V0()
           - coefft00*vf.oldTime().oldTime().internalField()
-           *mesh().V00()
+           *this->mesh().V00()
         );
     }
     else
     {
-        fvm.source() = rDeltaT*mesh().V()*rho.value()*
+        fvm.source() = rDeltaT*this->mesh().V()*rho.value()*
         (
             coefft0*vf.oldTime().internalField()
           - coefft00*vf.oldTime().oldTime().internalField()
@@ -554,7 +559,7 @@ boundedBackwardDdtScheme::fvmDdt
 (
     const volScalarField& rho,
     const volScalarField& vf
-)
+) const
 {
     tmp<fvScalarMatrix> tfvm
     (
@@ -564,7 +569,7 @@ boundedBackwardDdtScheme::fvmDdt
             rho.dimensions()*vf.dimensions()*dimVol/dimTime
         )
     );
-    fvScalarMatrix& fvm = tfvm();
+    fvScalarMatrix& fvm = tfvm.ref();
 
     scalar rDeltaT = 1.0/deltaT_();
 
@@ -599,21 +604,21 @@ boundedBackwardDdtScheme::fvmDdt
     scalarField coefft00 = limiter*deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalarField coefft0  = coefft + coefft00;
 
-    fvm.diag() = (coefft*rDeltaT)*rho.internalField()*mesh().V();
+    fvm.diag() = (coefft*rDeltaT)*rho.internalField()*this->mesh().V();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         fvm.source() = rDeltaT*
         (
             coefft0*rho.oldTime().internalField()
-           *vf.oldTime().internalField()*mesh().V0()
+           *vf.oldTime().internalField()*this->mesh().V0()
           - coefft00*rho.oldTime().oldTime().internalField()
-           *vf.oldTime().oldTime().internalField()*mesh().V00()
+           *vf.oldTime().oldTime().internalField()*this->mesh().V00()
         );
     }
     else
     {
-        fvm.source() = rDeltaT*mesh().V()*
+        fvm.source() = rDeltaT*this->mesh().V()*
         (
             coefft0*rho.oldTime().internalField()
            *vf.oldTime().internalField()
@@ -631,7 +636,7 @@ tmp<surfaceScalarField> boundedBackwardDdtScheme::fvcDdtPhiCorr
     const volScalarField& rA,
     const volScalarField& U,
     const surfaceScalarField& phi
-)
+) const
 {
     notImplemented
     (
@@ -648,7 +653,7 @@ tmp<surfaceScalarField> boundedBackwardDdtScheme::fvcDdtPhiCorr
     const volScalarField& rho,
     const volScalarField& U,
     const surfaceScalarField& phi
-)
+) const
 {
     notImplemented
     (
@@ -664,7 +669,7 @@ tmp<surfaceScalarField> boundedBackwardDdtScheme::fvcDdtConsistentPhiCorr
     const surfaceScalarField& faceU,
     const volScalarField& U,
     const surfaceScalarField& rAUf
-)
+) const
 {
     notImplemented
     (
@@ -678,7 +683,7 @@ tmp<surfaceScalarField> boundedBackwardDdtScheme::fvcDdtConsistentPhiCorr
 tmp<surfaceScalarField> boundedBackwardDdtScheme::meshPhi
 (
     const volScalarField& vf
-)
+) const
 {
     scalar deltaT = deltaT_();
     scalar deltaT0 = deltaT0_(vf);
@@ -686,7 +691,7 @@ tmp<surfaceScalarField> boundedBackwardDdtScheme::meshPhi
     scalar coefft   = 1 + deltaT/(deltaT + deltaT0);
     scalar coefft00 = deltaT/(deltaT + deltaT0);
 
-    return coefft*mesh().phi() - coefft00*mesh().phi().oldTime();
+    return coefft*this->mesh().phi() - coefft00*this->mesh().phi().oldTime();
 }
 
 

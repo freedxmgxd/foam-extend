@@ -61,12 +61,6 @@ Foam::BurgersViscoelastic::BurgersViscoelastic
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::BurgersViscoelastic::~BurgersViscoelastic()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField> Foam::BurgersViscoelastic::rho(scalar t) const
@@ -89,7 +83,7 @@ Foam::tmp<Foam::volScalarField> Foam::BurgersViscoelastic::rho(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -139,7 +133,7 @@ Foam::tmp<Foam::volScalarField> Foam::BurgersViscoelastic::E(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -165,7 +159,7 @@ Foam::tmp<Foam::volScalarField> Foam::BurgersViscoelastic::nu(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -200,7 +194,7 @@ Foam::tmp<Foam::volScalarField> Foam::BurgersViscoelastic::J(scalar t) const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }

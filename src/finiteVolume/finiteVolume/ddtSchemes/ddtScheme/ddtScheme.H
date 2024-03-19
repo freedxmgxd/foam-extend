@@ -71,16 +71,17 @@ protected:
 
     // Protected data
 
+        //- Reference to mesh
         const fvMesh& mesh_;
 
 
     // Private Member Functions
 
         //- Disallow copy construct
-        ddtScheme(const ddtScheme&);
+        ddtScheme(const ddtScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const ddtScheme&);
+        void operator=(const ddtScheme&) = delete;
 
 
 public:
@@ -126,9 +127,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~ddtScheme();
+    //- Destructor
+    virtual ~ddtScheme() = default;
 
 
     // Member Functions
@@ -142,41 +142,41 @@ public:
         virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const dimensioned<Type>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<fvMatrix<Type> > fvmDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<fvMatrix<Type> > fvmDdt
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
         virtual tmp<fvMatrix<Type> > fvmDdt
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 
 
         typedef GeometricField
@@ -191,27 +191,27 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi,
             const fluxFieldType& phiCorr
-        );
+        ) const;
 
         tmp<surfaceScalarField> fvcDdtPhiCoeff
         (
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
-        );
+        ) const;
 
         virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
             const volScalarField& rA,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
-        ) = 0;
+        ) const = 0;
 
         tmp<surfaceScalarField> fvcDdtPhiCoeff
         (
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& rhoU,
             const fluxFieldType& phi
-        );
+        ) const;
 
         virtual tmp<fluxFieldType> fvcDdtPhiCorr
         (
@@ -219,7 +219,7 @@ public:
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
-        ) = 0;
+        ) const = 0;
 
 
         // Member functions for the new time consistent formulation
@@ -228,13 +228,13 @@ public:
             const GeometricField<Type, fvsPatchField, surfaceMesh>& faceU,
             const GeometricField<Type, fvPatchField, volMesh>& U,
             const surfaceScalarField& rAUf
-        ) = 0;
+        ) const = 0;
 
-
+        //- Time scheme consistemt mesh flux
         virtual tmp<surfaceScalarField> meshPhi
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        ) = 0;
+        ) const = 0;
 };
 
 
@@ -274,7 +274,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtPhiCorr                              \
     const volScalarField& rA,                                                  \
     const volScalarField& U,                                                   \
     const surfaceScalarField& phi                                              \
-)                                                                              \
+) const                                                                        \
 {                                                                              \
     notImplemented(#SS"<scalar>::fvcDdtPhiCorr");                              \
     return surfaceScalarField::null();                                         \
@@ -287,7 +287,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtPhiCorr                              \
     const volScalarField& rho,                                                 \
     const volScalarField& U,                                                   \
     const surfaceScalarField& phi                                              \
-)                                                                              \
+) const                                                                        \
 {                                                                              \
     notImplemented(#SS"<scalar>::fvcDdtPhiCorr");                              \
     return surfaceScalarField::null();                                         \
@@ -299,7 +299,7 @@ tmp<surfaceScalarField> SS<scalar>::fvcDdtConsistentPhiCorr                    \
     const surfaceScalarField& faceU,                                           \
     const volScalarField& U,                                                   \
     const surfaceScalarField& rAUf                                             \
-)                                                                              \
+) const                                                                        \
 {                                                                              \
     notImplemented(#SS"<scalar>::fvcDdtConsistentPhiCorr");                    \
     return surfaceScalarField::null();                                         \

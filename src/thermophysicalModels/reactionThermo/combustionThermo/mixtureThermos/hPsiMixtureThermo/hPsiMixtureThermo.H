@@ -56,8 +56,8 @@ class hPsiMixtureThermo
 
         void calculate();
 
-        //- Construct as copy (not implemented)
-        hPsiMixtureThermo(const hPsiMixtureThermo<MixtureType>&);
+        //- Disable default construct as copy
+        hPsiMixtureThermo(const hPsiMixtureThermo<MixtureType>&) = delete;
 
 
 public:
@@ -73,7 +73,7 @@ public:
 
 
     //- Destructor
-    virtual ~hPsiMixtureThermo();
+    virtual ~hPsiMixtureThermo() = default;
 
 
     // Member functions

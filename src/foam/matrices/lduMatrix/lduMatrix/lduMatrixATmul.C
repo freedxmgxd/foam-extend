@@ -237,7 +237,7 @@ void Foam::lduMatrix::sumA
     {
         if (interfaces.set(patchI))
         {
-            const unallocLabelList& pa = lduAddr().patchAddr(patchI);
+            const labelUList& pa = lduAddr().patchAddr(patchI);
             const scalarField& pCoeffs = coupleBouCoeffs[patchI];
 
             forAll(pa, face)
@@ -286,7 +286,8 @@ Foam::tmp<Foam::scalarField> Foam::lduMatrix::residual
 ) const
 {
     tmp<scalarField> trA(new scalarField(x.size()));
-    residual(trA(), x, b, coupleBouCoeffs, interfaces, cmpt);
+    residual(trA.ref(), x, b, coupleBouCoeffs, interfaces, cmpt);
+
     return trA;
 }
 

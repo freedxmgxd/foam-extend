@@ -47,11 +47,8 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::pointInterpolate
 {
     if (pf.size() != fromPatch_.nPoints())
     {
-        FatalErrorIn
-        (
-            "PatchToPatchInterpolation::pointInterpolate"
-            "(const Field<Type> pf)"
-        )   << "given field does not correspond to patch. Patch size: "
+        FatalErrorInFunction
+            << "given field does not correspond to patch. Patch size: "
             << fromPatch_.nPoints() << " field size: " << pf.size()
             << abort(FatalError);
     }
@@ -71,7 +68,7 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::pointInterpolate
         return tresult;
     }
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     const List<typename FromPatch::FaceType>& fromPatchLocalFaces =
         fromPatch_.localFaces();
@@ -125,11 +122,8 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::faceInterpolate
 {
     if (ff.size() != fromPatch_.size())
     {
-        FatalErrorIn
-        (
-            "PatchToPatchInterpolation::faceInterpolate"
-            "(const Field<Type> ff)"
-        )   << "given field does not correspond to patch. Patch size: "
+        FatalErrorInFunction
+            << "given field does not correspond to patch. Patch size: "
             << fromPatch_.size() << " field size: " << ff.size()
             << abort(FatalError);
     }
@@ -149,7 +143,7 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::faceInterpolate
         return tresult;
     }
 
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     const labelListList& fromPatchFaceFaces = fromPatch_.faceFaces();
 

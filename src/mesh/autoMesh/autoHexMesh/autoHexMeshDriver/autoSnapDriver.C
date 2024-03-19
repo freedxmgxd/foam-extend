@@ -542,7 +542,7 @@ Foam::tmp<Foam::scalarField> Foam::autoSnapDriver::edgePatchDist
 
     // Copy edge values into scalarField
     tmp<scalarField> tedgeDist(new scalarField(mesh.nEdges()));
-    scalarField& edgeDist = tedgeDist();
+    scalarField& edgeDist = tedgeDist.ref();
 
     forAll(allEdgeInfo, edgeI)
     {
@@ -1204,8 +1204,9 @@ void Foam::autoSnapDriver::smoothDisplacement
 
         Pout<< "Writing displacement field ..." << endl;
         disp.write();
-        tmp<pointScalarField> magDisp(mag(disp));
-        magDisp().write();
+
+        pointScalarField magDisp(mag(disp));
+        magDisp.write();
 
         Pout<< "Writing actual patch displacement ..." << endl;
         vectorField actualPatchDisp(disp, pp.meshPoints());
@@ -1261,8 +1262,8 @@ void Foam::autoSnapDriver::scaleMesh
 
             Pout<< "Writing displacement field ..." << endl;
             meshMover.displacement().write();
-            tmp<pointScalarField> magDisp(mag(meshMover.displacement()));
-            magDisp().write();
+            pointScalarField magDisp(mag(meshMover.displacement()));
+            magDisp.write();
         }
     }
 

@@ -214,7 +214,7 @@ class primitiveMesh
             //  return (after optional creation) edge between two points
             static label getEdge
             (
-                List<dynamicLabelList >&,
+                List<dynamicLabelList>&,
                 DynamicList<edge>&,
                 const label,
                 const label
@@ -283,7 +283,7 @@ public:
         ClassName("primitiveMesh");
 
 
-    // Static mesh analysis data
+        // Static mesh analysis data
 
             //- Estimated number of cells per edge
             static const unsigned cellsPerEdge_ = 4;
@@ -314,6 +314,7 @@ public:
 
             //- Estimated number of points per face
             static const unsigned pointsPerFace_ = 4;
+
 
         //- Static data to control mesh checking
 
@@ -405,7 +406,7 @@ public:
                 //- Return faces
                 virtual const faceList& faces() const = 0;
 
-                //- Face face-owner addresing
+                //- Face face-owner addressing
                 virtual const labelList& faceOwner() const = 0;
 
                 //- Face face-neighbour addressing
@@ -429,8 +430,8 @@ public:
                 static void calcCells
                 (
                     cellList&,
-                    const unallocLabelList& own,
-                    const unallocLabelList& nei,
+                    const labelUList& own,
+                    const labelUList& nei,
                     const label nCells = -1
                 );
 

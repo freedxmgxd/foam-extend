@@ -90,13 +90,6 @@ tmp<gradScheme<Type> > gradScheme<Type>::New
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type>
-gradScheme<Type>::~gradScheme()
-{}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace fa

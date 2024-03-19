@@ -271,9 +271,9 @@ void Foam::ILUCp::precondition
     {
         // Get matrix addressing
         const extendedLduAddressing& addr = extMatrix_.extendedLduAddr();
-        const unallocLabelList& upperAddr = addr.extendedUpperAddr();
-        const unallocLabelList& lowerAddr = addr.extendedLowerAddr();
-        const unallocLabelList& losortAddr = addr.extendedLosortAddr();
+        const labelUList& upperAddr = addr.extendedUpperAddr();
+        const labelUList& lowerAddr = addr.extendedLowerAddr();
+        const labelUList& losortAddr = addr.extendedLosortAddr();
 
         // Get upper and lower matrix factors
         const scalarField& lower = extMatrix_.extendedLower();
@@ -346,9 +346,9 @@ void Foam::ILUCp::preconditionT
     {
         // Get matrix addressing
         const extendedLduAddressing& addr = extMatrix_.extendedLduAddr();
-        const unallocLabelList& upperAddr = addr.extendedUpperAddr();
-        const unallocLabelList& lowerAddr = addr.extendedLowerAddr();
-        const unallocLabelList& losortAddr = addr.extendedLosortAddr();
+        const labelUList& upperAddr = addr.extendedUpperAddr();
+        const labelUList& lowerAddr = addr.extendedLowerAddr();
+        const labelUList& losortAddr = addr.extendedLosortAddr();
 
         // Get upper and lower matrix factors
         const scalarField& lower = extMatrix_.extendedLower();

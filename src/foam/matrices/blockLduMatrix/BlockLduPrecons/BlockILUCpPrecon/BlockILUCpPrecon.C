@@ -365,9 +365,9 @@ void Foam::BlockILUCpPrecon<Type>::LUSubstitute
 
     // Get matrix addressing
     const extendedLduAddressing& addr = extBlockMatrix_.extendedLduAddr();
-    const unallocLabelList& upperAddr = addr.extendedUpperAddr();
-    const unallocLabelList& lowerAddr = addr.extendedLowerAddr();
-    const unallocLabelList& losortAddr = addr.extendedLosortAddr();
+    const labelUList& upperAddr = addr.extendedUpperAddr();
+    const labelUList& lowerAddr = addr.extendedLowerAddr();
+    const labelUList& losortAddr = addr.extendedLosortAddr();
 
     // Solve Lz = b with forward substitution in block form. lower is chosen
     // to be unit triangular. z does not need to be stored
@@ -437,9 +437,9 @@ void Foam::BlockILUCpPrecon<Type>::LUSubstituteT
 
     // Get matrix addressing
     const extendedLduAddressing& addr = extBlockMatrix_.extendedLduAddr();
-    const unallocLabelList& upperAddr = addr.extendedUpperAddr();
-    const unallocLabelList& lowerAddr = addr.extendedLowerAddr();
-    const unallocLabelList& losortAddr = addr.extendedLosortAddr();
+    const labelUList& upperAddr = addr.extendedUpperAddr();
+    const labelUList& lowerAddr = addr.extendedLowerAddr();
+    const labelUList& losortAddr = addr.extendedLosortAddr();
 
     // Solve U^T z = b with forward substitution in block form. lower is
     // chosen to be unit triangular - U^T (transpose U) "contains" diagonal

@@ -236,11 +236,11 @@ Foam::cyclicAMGInterface::~cyclicAMGInterface()
 Foam::tmp<Foam::labelField> Foam::cyclicAMGInterface::transfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     tmp<labelField> tpnf(new labelField(size()));
-    labelField& pnf = tpnf();
+    labelField& pnf = tpnf.ref();
 
     label sizeby2 = size()/2;
 
@@ -257,11 +257,11 @@ Foam::tmp<Foam::labelField> Foam::cyclicAMGInterface::transfer
 Foam::tmp<Foam::labelField> Foam::cyclicAMGInterface::internalFieldTransfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     tmp<labelField> tpnf(new labelField(size()));
-    labelField& pnf = tpnf();
+    labelField& pnf = tpnf.ref();
 
     label sizeby2 = size()/2;
 

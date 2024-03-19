@@ -124,7 +124,7 @@ sendField
     }
     else
     {
-        FatalErrorIn("ProcessorPointPatchField::send")
+        FatalErrorInFunction
             << "Unsupported communications type " << commsType
             << exit(FatalError);
     }
@@ -170,7 +170,10 @@ receivePointField
             outstandingSendRequest_ = -1;
             outstandingRecvRequest_ = -1;
 
-            memcpy(static_cast<void*>(tf().begin()), receiveBuf_.begin(), tf().byteSize());
+            memcpy
+            (
+                static_cast<void*>(tf.ref().begin()),
+                receiveBuf_.begin(), tf().byteSize());
         }
         else
         {
@@ -178,7 +181,7 @@ receivePointField
             (
                 commsType,
                 procPatch_.neighbProcNo(),
-                reinterpret_cast<char*>(tf().begin()),
+                reinterpret_cast<char*>(tf.ref().begin()),
                 tf().byteSize()
             );
         }
@@ -228,7 +231,7 @@ receiveEdgeField
             outstandingSendRequest_ = -1;
             outstandingRecvRequest_ = -1;
 
-            memcpy(tf().begin(), receiveBuf_.begin(), tf().byteSize());
+            memcpy(tf.ref().begin(), receiveBuf_.begin(), tf().byteSize());
         }
         else
         {
@@ -236,7 +239,7 @@ receiveEdgeField
             (
                 commsType,
                 procPatch_.neighbProcNo(),
-                reinterpret_cast<char*>(tf().begin()),
+                reinterpret_cast<char*>(tf.ref().begin()),
                 tf().byteSize()
             );
         }
@@ -289,8 +292,8 @@ addFieldTempl
 ) const
 {
     // Get the neighbour side values
-    tmp<Field<Type2> > tpNeighbour = receivePointField<Type2>(commsType);
-    this->addToInternalField(pField, tpNeighbour());
+    Field<Type2> tpNeighbour = receivePointField<Type2>(commsType);
+    this->addToInternalField(pField, tpNeighbour);
 }
 
 
@@ -531,8 +534,7 @@ evaluate
         if (this->isPointField())
         {
             // Get the neighbour side values
-            tmp<Field<Type> > tpNeighbour = receivePointField<Type>(commsType);
-            Field<Type>& tpn = tpNeighbour();
+            Field<Type> tpn = receivePointField<Type>(commsType);
 
             if (doTransform())
             {
@@ -755,7 +757,7 @@ initAddUpperLower
     const labelList& me = procPatch_.localEdgeIndices();
 
     tmp<scalarField> tresult(new scalarField(me.size()));
-    scalarField& result = tresult();
+    scalarField& result = tresult.ref();
 
     forAll (me, edgeI)
     {
@@ -789,7 +791,7 @@ addUpperLower
 
     // Get the neighbour side values
     tmp<scalarField> teNeighbour = receiveEdgeField<scalar>();
-    scalarField& eNeighbour = teNeighbour();
+    scalarField& eNeighbour = teNeighbour.ref();
 
     // Get the addressing
     const labelList& me = procPatch_.localEdgeIndices();
@@ -835,7 +837,7 @@ cutBouCoeffs
     (
         new scalarField(cutOwn.size() + cutNei.size() + 2*doubleCut.size(), 0)
     );
-    scalarField& cutCoeffs = tcutCoeffs();
+    scalarField& cutCoeffs = tcutCoeffs.ref();
 
     label coeffI = 0;
 
@@ -904,7 +906,7 @@ cutIntCoeffs
     (
         new scalarField(cutOwn.size() + cutNei.size() + 2*doubleCut.size(), 0)
     );
-    scalarField& cutCoeffs = tcutCoeffs();
+    scalarField& cutCoeffs = tcutCoeffs.ref();
 
     label coeffI = 0;
 
@@ -1012,13 +1014,13 @@ initInterfaceMatrixUpdate
 ) const
 {
     tmp<scalarField> tlocalMult(new scalarField(this->size(), 0));
-    scalarField& localMult = tlocalMult();
+    scalarField& localMult = tlocalMult.ref();
 
     const labelList& mp = procPatch_.meshPoints();
 
     // Get matrix addressing
-    const unallocLabelList& L = m.lduAddr().lowerAddr();
-    const unallocLabelList& U = m.lduAddr().upperAddr();
+    const labelUList& L = m.lduAddr().lowerAddr();
+    const labelUList& U = m.lduAddr().upperAddr();
 
     // Note that the addressing is into the local points of the patch.
     // Mesh points is used only for size
@@ -1151,8 +1153,8 @@ updateInterfaceMatrix
 ) const
 {
     // Get the neighbour side multiplication
-    tmp<scalarField> tneiMult = receivePointField<scalar>(commsType);
-    this->addToInternalField(result, tneiMult());
+    scalarField neiMult = receivePointField<scalar>(commsType);
+    this->addToInternalField(result, neiMult);
 }
 
 

@@ -193,6 +193,7 @@ template<class ParcelType>
 inline Foam::scalar Foam::KinematicCloud<ParcelType>::massInSystem() const
 {
     scalar sysMass = 0.0;
+
     forAllConstIter(typename KinematicCloud<ParcelType>, *this, iter)
     {
          const ParcelType& p = iter();
@@ -243,8 +244,8 @@ Foam::KinematicCloud<ParcelType>::SU() const
             )
         )
     );
+    vectorField& SU = tSU.ref().field();
 
-    vectorField& SU = tSU().field();
     SU = UTrans_/(mesh_.V()*this->db().time().deltaT());
 
     return tSU;
@@ -272,8 +273,8 @@ Foam::KinematicCloud<ParcelType>::theta() const
             dimensionedScalar("zero", dimless, 0.0)
         )
     );
+    scalarField& theta = ttheta.ref().internalField();
 
-    scalarField& theta = ttheta().internalField();
     forAllConstIter(typename KinematicCloud<ParcelType>, *this, iter)
     {
         const ParcelType& p = iter();
@@ -309,8 +310,8 @@ Foam::KinematicCloud<ParcelType>::alpha() const
             dimensionedScalar("zero", dimless, 0.0)
         )
     );
+    scalarField& alpha = talpha.ref().internalField();
 
-    scalarField& alpha = talpha().internalField();
     forAllConstIter(typename KinematicCloud<ParcelType>, *this, iter)
     {
         const ParcelType& p = iter();
@@ -346,8 +347,8 @@ Foam::KinematicCloud<ParcelType>::rhoEff() const
             dimensionedScalar("zero", dimDensity, 0.0)
         )
     );
+    scalarField& rhoEff = trhoEff.ref().internalField();
 
-    scalarField& rhoEff = trhoEff().internalField();
     forAllConstIter(typename KinematicCloud<ParcelType>, *this, iter)
     {
         const ParcelType& p = iter();

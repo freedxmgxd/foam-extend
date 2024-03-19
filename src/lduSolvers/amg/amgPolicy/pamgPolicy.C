@@ -78,8 +78,8 @@ void Foam::pamgPolicy::calcChild()
     // Get addressing
     const label nEqns = matrix().lduAddr().size();
 
-    const unallocLabelList& upperAddr = matrix().lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = matrix().lduAddr().lowerAddr();
+    const labelUList& upperAddr = matrix().lduAddr().upperAddr();
+    const labelUList& lowerAddr = matrix().lduAddr().lowerAddr();
 
     // Get off-diagonal matrix coefficients
     const scalarField& upper = matrix().upper();
@@ -375,8 +375,8 @@ Foam::autoPtr<Foam::amgMatrix> Foam::pamgPolicy::restrictMatrix() const
     // 4) Agglomerate the diagonal by summing up the fine diagonal
 
     // Get addressing
-    const unallocLabelList& upperAddr = matrix().lduAddr().upperAddr();
-    const unallocLabelList& lowerAddr = matrix().lduAddr().lowerAddr();
+    const labelUList& upperAddr = matrix().lduAddr().upperAddr();
+    const labelUList& lowerAddr = matrix().lduAddr().lowerAddr();
 
     const label nFineCoeffs = upperAddr.size();
 

@@ -262,7 +262,7 @@ public:
             }
 
             //- Return faceCells
-            virtual const unallocLabelList& faceCells() const;
+            virtual const labelUList& faceCells() const;
 
 
         // Access functions for geometrical data

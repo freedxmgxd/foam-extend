@@ -86,7 +86,7 @@ leastSquaresSolidInterfaceGrad<Type>::calcGrad
             zeroGradientFvPatchField<GradType>::typeName
         )
     );
-    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad();
+    GeometricField<GradType, fvPatchField, volMesh>& lsGrad = tlsGrad.ref();
 
     // Get reference to least square vectors
     const leastSquaresSolidInterfaceVectors& lsv =
@@ -95,8 +95,8 @@ leastSquaresSolidInterfaceGrad<Type>::calcGrad
     const surfaceVectorField& ownLs = lsv.pVectors();
     const surfaceVectorField& neiLs = lsv.nVectors();
 
-    const unallocLabelList& own = mesh.owner();
-    const unallocLabelList& nei = mesh.neighbour();
+    const labelUList& own = mesh.owner();
+    const labelUList& nei = mesh.neighbour();
 
     // interface fields
     const solidInterface& solInt =
@@ -183,7 +183,7 @@ leastSquaresSolidInterfaceGrad<Type>::calcGrad
     {
         const fvsPatchVectorField& patchOwnLs = ownLs.boundaryField()[patchi];
 
-        const unallocLabelList& faceCells =
+        const labelUList& faceCells =
             lsGrad.boundaryField()[patchi].patch().faceCells();
 
         if (vsf.boundaryField()[patchi].coupled())

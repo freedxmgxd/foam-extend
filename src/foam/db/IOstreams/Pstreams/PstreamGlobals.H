@@ -26,7 +26,7 @@ Namespace
 
 Description
     Global functions and variables for working with parallel streams,
-    but principally for gamma/mpi
+    but principally for mpi
 
 SourceFiles
     PstreamGlobals.C
@@ -36,7 +36,7 @@ SourceFiles
 #ifndef PstreamGlobals_H
 #define PstreamGlobals_H
 
-#include "mpi.h"
+#include <mpi.h>
 
 #include "DynamicList.H"
 
@@ -51,7 +51,6 @@ namespace Foam
 
 namespace PstreamGlobals
 {
-
     extern MPI_Comm MPI_COMM_FOAM;
 
     extern DynamicList<MPI_Request> outstandingRequests_;
@@ -61,7 +60,7 @@ namespace PstreamGlobals
     extern DynamicList<int> freedTags_;
 
 
-    // Current communicators. First element will be MPI_COMM_WORLD
+    // Current communicators. First element will be MPI_COMM_FOAM
     extern DynamicList<MPI_Comm> MPICommunicators_;
 
     extern DynamicList<MPI_Group> MPIGroups_;

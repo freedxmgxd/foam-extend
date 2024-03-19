@@ -56,7 +56,7 @@ explicitAdjConvectionScheme<Type>::fvmAdjDiv
             dimVol*Up.dimensions()*vf.dimensions()/dimLength
         )
     );
-    fvMatrix<Type>& fvm = tfvm();
+    fvMatrix<Type>& fvm = tfvm.ref();
 
     // Matrix consistency
     fvm.diag() = 0;
@@ -81,7 +81,7 @@ explicitAdjConvectionScheme<Type>::fvcAdjDiv
         fvc::grad(vf) & Up
     );
 
-    tAdjConvection().rename
+    tAdjConvection.ref().rename
     (
         "adjConvection(" + Up.name() + ',' + vf.name() + ')'
     );

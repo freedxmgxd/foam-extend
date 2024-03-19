@@ -43,28 +43,28 @@ template<class Type>
 tmp<GeometricField<Type, faPatchField, areaMesh> >
 EulerFaDdtScheme<Type>::facDdt
 (
-    const dimensioned<Type> dt
-)
+    const dimensioned<Type>& dt
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+dt.name()+')',
-        mesh()().time().timeName(),
-        mesh()(),
+        this->mesh()().time().timeName(),
+        this->mesh()(),
         IOobject::NO_READ,
         IOobject::NO_WRITE
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         tmp<GeometricField<Type, faPatchField, areaMesh> > tdtdt
         (
             new GeometricField<Type, faPatchField, areaMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 dimensioned<Type>
                 (
                     "0",
@@ -74,8 +74,9 @@ EulerFaDdtScheme<Type>::facDdt
             )
         );
 
-        tdtdt().internalField() =
-            rDeltaT.value()*dt.value()*(1.0 - mesh().S0()/mesh().S());
+        tdtdt.ref().internalField() =
+            rDeltaT.value()*dt.value()*(1.0 - this->mesh().S0()/
+            this->mesh().S());
 
         return tdtdt;
     }
@@ -86,7 +87,7 @@ EulerFaDdtScheme<Type>::facDdt
             new GeometricField<Type, faPatchField, areaMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 dimensioned<Type>
                 (
                     "0",
@@ -103,16 +104,16 @@ template<class Type>
 tmp<GeometricField<Type, faPatchField, areaMesh> >
 EulerFaDdtScheme<Type>::facDdt0
 (
-    const dimensioned<Type> dt
-)
+    const dimensioned<Type>& dt
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+dt.name()+')',
-        mesh()().time().timeName(),
-        mesh()(),
+        this->mesh()().time().timeName(),
+        this->mesh()(),
         IOobject::NO_READ,
         IOobject::NO_WRITE
     );
@@ -122,15 +123,15 @@ EulerFaDdtScheme<Type>::facDdt0
         new GeometricField<Type, faPatchField, areaMesh>
         (
             ddtIOobject,
-            mesh(),
+            this->mesh(),
             -rDeltaT*dt
         )
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
-        tdtdt0().internalField() =
-            (-rDeltaT.value()*dt.value())*mesh().S0()/mesh().S();
+        tdtdt0.ref().internalField() =
+            (-rDeltaT.value()*dt.value())*this->mesh().S0()/this->mesh().S();
     }
 
     return tdtdt0;
@@ -142,32 +143,32 @@ tmp<GeometricField<Type, faPatchField, areaMesh> >
 EulerFaDdtScheme<Type>::facDdt
 (
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+vf.name()+')',
-        mesh()().time().timeName(),
-        mesh()(),
+        this->mesh()().time().timeName(),
+        this->mesh()(),
         IOobject::NO_READ,
         IOobject::NO_WRITE
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, faPatchField, areaMesh> >
         (
             new GeometricField<Type, faPatchField, areaMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*vf.dimensions(),
                 rDeltaT.value()*
                 (
                     vf.internalField()
-                  - vf.oldTime().internalField()*mesh().S0()/mesh().S()
+                  - vf.oldTime().internalField()*this->mesh().S0()/this->mesh().S()
                 ),
                 rDeltaT.value()*
                 (
@@ -195,30 +196,31 @@ tmp<GeometricField<Type, faePatchField, edgeMesh> >
 EulerFaDdtScheme<Type>::facDdt0
 (
     const GeometricField<Type, faePatchField, edgeMesh>& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt0("+vf.name()+')',
-        mesh()().time().timeName(),
-        mesh()(),
+        this->mesh()().time().timeName(),
+        this->mesh()(),
         IOobject::NO_READ,
         IOobject::NO_WRITE
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, faePatchField, edgeMesh> >
         (
             new GeometricField<Type, faePatchField, edgeMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*vf.dimensions(),
                 (-rDeltaT.value())
-                   *vf.oldTime().internalField()*mesh().S0()/mesh().S(),
+                   *vf.oldTime().internalField()*this->mesh().S0()/
+                this->mesh().S(),
                 (-rDeltaT.value())
                    *vf.oldTime().boundaryField()
             )
@@ -243,27 +245,27 @@ tmp<GeometricField<Type, faPatchField, areaMesh> >
 EulerFaDdtScheme<Type>::facDdt0
 (
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt0("+vf.name()+')',
-        mesh()().time().timeName(),
-        mesh()(),
+        this->mesh()().time().timeName(),
+        this->mesh()(),
         IOobject::NO_READ,
         IOobject::NO_WRITE
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, faPatchField, areaMesh> >
         (
             new GeometricField<Type, faPatchField, areaMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*vf.dimensions(),
                 (-rDeltaT.value())*vf.oldTime().internalField(),
                 (-rDeltaT.value())*vf.oldTime().boundaryField()
@@ -290,32 +292,32 @@ EulerFaDdtScheme<Type>::facDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+rho.name()+','+vf.name()+')',
-        mesh()().time().timeName(),
-        mesh()(),
+        this->mesh()().time().timeName(),
+        this->mesh()(),
         IOobject::NO_READ,
         IOobject::NO_WRITE
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, faPatchField, areaMesh> >
         (
             new GeometricField<Type, faPatchField, areaMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.value()*rho.value()*
                 (
                     vf.internalField()
-                  - vf.oldTime().internalField()*mesh().S0()/mesh().S()
+                  - vf.oldTime().internalField()*this->mesh().S0()/this->mesh().S()
                 ),
                 rDeltaT.value()*rho.value()*
                 (
@@ -343,30 +345,30 @@ EulerFaDdtScheme<Type>::facDdt0
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt0("+rho.name()+','+vf.name()+')',
-        mesh()().time().timeName(),
-        mesh()(),
+        this->mesh()().time().timeName(),
+        this->mesh()(),
         IOobject::NO_READ,
         IOobject::NO_WRITE
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, faPatchField, areaMesh> >
         (
             new GeometricField<Type, faPatchField, areaMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 (-rDeltaT.value())*rho.value()*
-                    vf.oldTime().internalField()*mesh().S0()/mesh().S(),
+                    vf.oldTime().internalField()*this->mesh().S0()/this->mesh().S(),
                 (-rDeltaT.value())*rho.value()*
                     vf.oldTime().boundaryField()
             )
@@ -392,33 +394,34 @@ EulerFaDdtScheme<Type>::facDdt
 (
     const areaScalarField& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt("+rho.name()+','+vf.name()+')',
-        mesh()().time().timeName(),
-        mesh()(),
+        this->mesh()().time().timeName(),
+        this->mesh()(),
         IOobject::NO_READ,
         IOobject::NO_WRITE
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, faPatchField, areaMesh> >
         (
             new GeometricField<Type, faPatchField, areaMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.value()*
                 (
                     rho.internalField()*vf.internalField()
                   - rho.oldTime().internalField()
-                   *vf.oldTime().internalField()*mesh().S0()/mesh().S()
+                   *vf.oldTime().internalField()*this->mesh().S0()/
+                    this->mesh().S()
                 ),
                 rDeltaT.value()*
                 (
@@ -449,32 +452,33 @@ EulerFaDdtScheme<Type>::facDdt0
 (
     const areaScalarField& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
-    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+    dimensionedScalar rDeltaT = 1.0/this->mesh().time().deltaT();
 
     IOobject ddtIOobject
     (
         "ddt0("+rho.name()+','+vf.name()+')',
-        mesh()().time().timeName(),
-        mesh()(),
+        this->mesh()().time().timeName(),
+        this->mesh()(),
         IOobject::NO_READ,
         IOobject::NO_WRITE
     );
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         return tmp<GeometricField<Type, faPatchField, areaMesh> >
         (
             new GeometricField<Type, faPatchField, areaMesh>
             (
                 ddtIOobject,
-                mesh(),
+                this->mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.value()*
                 (
                   - rho.oldTime().internalField()
-                   *vf.oldTime().internalField()*mesh().S0()/mesh().S()
+                   *vf.oldTime().internalField()*this->mesh().S0()/
+                  this->mesh().S()
                 ),
                 rDeltaT.value()*
                 (
@@ -502,7 +506,7 @@ tmp<faMatrix<Type> >
 EulerFaDdtScheme<Type>::famDdt
 (
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     tmp<faMatrix<Type> > tfam
     (
@@ -513,19 +517,19 @@ EulerFaDdtScheme<Type>::famDdt
         )
     );
 
-    faMatrix<Type>& fam = tfam();
+    faMatrix<Type>& fam = tfam.ref();
 
-    scalar rDeltaT = 1.0/mesh().time().deltaT().value();
+    scalar rDeltaT = 1.0/this->mesh().time().deltaT().value();
 
-    fam.diag() = rDeltaT*mesh().S();
+    fam.diag() = rDeltaT*this->mesh().S();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
-        fam.source() = rDeltaT*vf.oldTime().internalField()*mesh().S0();
+        fam.source() = rDeltaT*vf.oldTime().internalField()*this->mesh().S0();
     }
     else
     {
-        fam.source() = rDeltaT*vf.oldTime().internalField()*mesh().S();
+        fam.source() = rDeltaT*vf.oldTime().internalField()*this->mesh().S();
     }
 
     return tfam;
@@ -538,7 +542,7 @@ EulerFaDdtScheme<Type>::famDdt
 (
     const dimensionedScalar& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     tmp<faMatrix<Type> > tfam
     (
@@ -548,21 +552,21 @@ EulerFaDdtScheme<Type>::famDdt
             rho.dimensions()*vf.dimensions()*dimArea/dimTime
         )
     );
-    faMatrix<Type>& fam = tfam();
+    faMatrix<Type>& fam = tfam.ref();
 
-    scalar rDeltaT = 1.0/mesh().time().deltaT().value();
+    scalar rDeltaT = 1.0/this->mesh().time().deltaT().value();
 
-    fam.diag() = rDeltaT*rho.value()*mesh().S();
+    fam.diag() = rDeltaT*rho.value()*this->mesh().S();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         fam.source() = rDeltaT
-            *rho.value()*vf.oldTime().internalField()*mesh().S0();
+            *rho.value()*vf.oldTime().internalField()*this->mesh().S0();
     }
     else
     {
         fam.source() = rDeltaT
-            *rho.value()*vf.oldTime().internalField()*mesh().S();
+            *rho.value()*vf.oldTime().internalField()*this->mesh().S();
     }
 
     return tfam;
@@ -575,7 +579,7 @@ EulerFaDdtScheme<Type>::famDdt
 (
     const areaScalarField& rho,
     const GeometricField<Type, faPatchField, areaMesh>& vf
-)
+) const
 {
     tmp<faMatrix<Type> > tfam
     (
@@ -585,23 +589,23 @@ EulerFaDdtScheme<Type>::famDdt
             rho.dimensions()*vf.dimensions()*dimArea/dimTime
         )
     );
-    faMatrix<Type>& fam = tfam();
+    faMatrix<Type>& fam = tfam.ref();
 
-    scalar rDeltaT = 1.0/mesh().time().deltaT().value();
+    scalar rDeltaT = 1.0/this->mesh().time().deltaT().value();
 
-    fam.diag() = rDeltaT*rho.internalField()*mesh().S();
+    fam.diag() = rDeltaT*rho.internalField()*this->mesh().S();
 
-    if (mesh().moving())
+    if (this->mesh().moving())
     {
         fam.source() = rDeltaT
             *rho.oldTime().internalField()
-            *vf.oldTime().internalField()*mesh().S0();
+            *vf.oldTime().internalField()*this->mesh().S0();
     }
     else
     {
         fam.source() = rDeltaT
             *rho.oldTime().internalField()
-            *vf.oldTime().internalField()*mesh().S();
+            *vf.oldTime().internalField()*this->mesh().S();
     }
 
     return tfam;

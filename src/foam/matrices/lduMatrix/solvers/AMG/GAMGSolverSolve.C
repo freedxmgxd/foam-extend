@@ -241,7 +241,7 @@ void Foam::GAMGSolver::Vcycle
         // Only store the preSmoothedCoarseCorrField is pre-smoothing is used
         if (nPreSweeps_)
         {
-            preSmoothedCoarseCorrField.assign(coarseCorrX[leveli]);
+            preSmoothedCoarseCorrField = coarseCorrX[leveli];
         }
 
         agglomeration_.prolongField

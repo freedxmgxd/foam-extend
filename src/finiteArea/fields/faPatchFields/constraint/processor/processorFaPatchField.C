@@ -354,7 +354,7 @@ void Foam::processorFaPatchField<Type>::updateInterfaceMatrix
 
     // Multiply the field by coefficients and add into the result
 
-    const unallocLabelList& edgeFaces = this->patch().edgeFaces();
+    const labelUList& edgeFaces = this->patch().edgeFaces();
 
     if (switchToLhs)
     {

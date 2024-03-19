@@ -96,7 +96,7 @@ void Foam::faPatch::makeEdgeTransformTensors
 
     // Regular patches
 
-    const unallocLabelList& ef = edgeFaces();
+    const labelUList& ef = edgeFaces();
 
     const vectorField& ec = edgeCentres();
 
@@ -420,7 +420,7 @@ Foam::labelList Foam::faPatch::ngbPolyPatchFaces() const
 Foam::tmp<Foam::vectorField> Foam::faPatch::ngbPolyPatchFaceNormals() const
 {
     tmp<vectorField> tfN(new vectorField());
-    vectorField& fN = tfN();
+    vectorField& fN = tfN.ref();
 
     if (ngbPolyPatchIndex() == -1)
     {
@@ -456,7 +456,7 @@ Foam::tmp<Foam::vectorField> Foam::faPatch::ngbPolyPatchPointNormals() const
     labelListList pntEdges = pointEdges();
 
     tmp<vectorField> tpN(new vectorField(pntEdges.size(), vector::zero));
-    vectorField& pN = tpN();
+    vectorField& pN = tpN.ref();
 
     vectorField faceNormals = ngbPolyPatchFaceNormals();
 
@@ -474,7 +474,7 @@ Foam::tmp<Foam::vectorField> Foam::faPatch::ngbPolyPatchPointNormals() const
 }
 
 
-const Foam::unallocLabelList& Foam::faPatch::edgeFaces() const
+const Foam::labelUList& Foam::faPatch::edgeFaces() const
 {
     if (!edgeFacesPtr_)
     {
@@ -512,9 +512,7 @@ const Foam::scalarField& Foam::faPatch::magEdgeLengths() const
 // Return the patch edge unit normals
 Foam::tmp<Foam::vectorField> Foam::faPatch::edgeNormals() const
 {
-    tmp<vectorField> eN(new vectorField(size()));
-
-    eN() = edgeLengths()/magEdgeLengths();
+    tmp<vectorField> eN(edgeLengths()/magEdgeLengths());
 
     return eN;
 }
@@ -524,13 +522,13 @@ Foam::tmp<Foam::vectorField> Foam::faPatch::edgeNormals() const
 Foam::tmp<Foam::vectorField> Foam::faPatch::edgeFaceCentres() const
 {
     tmp<vectorField> tfc(new vectorField(size()));
-    vectorField& fc = tfc();
+    vectorField& fc = tfc.ref();
 
     // Get reference to global face centres
     const vectorField& gfc =
         boundaryMesh().mesh().areaCentres().internalField();
 
-    const unallocLabelList& faceLabels = edgeFaces();
+    const labelUList& faceLabels = edgeFaces();
 
     forAll (faceLabels, edgeI)
     {
@@ -545,13 +543,13 @@ Foam::tmp<Foam::vectorField> Foam::faPatch::edgeFaceCentres() const
 Foam::tmp<Foam::vectorField> Foam::faPatch::edgeFaceNormals() const
 {
     tmp<vectorField> tfn(new vectorField(size()));
-    vectorField& fn = tfn();
+    vectorField& fn = tfn.ref();
 
     // Get reference to global face normals
     const vectorField& gfn =
         boundaryMesh().mesh().faceAreaNormals().internalField();
 
-    const unallocLabelList& faceLabels = edgeFaces();
+    const labelUList& faceLabels = edgeFaces();
 
     forAll (faceLabels, edgeI)
     {

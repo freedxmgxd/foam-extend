@@ -88,7 +88,10 @@ void setFieldType
         forAll (field.boundaryField(), patchi)
         {
             // Forced patch assignment.  HJ, 1/Aug/2010
-            field.boundaryField()[patchi] ==
+            // field.boundaryField()[patchi] ==
+            //     field.boundaryField()[patchi].patchInternalField();
+
+            field.boundaryField()[patchi] =
                 field.boundaryField()[patchi].patchInternalField();
         }
 
@@ -96,12 +99,8 @@ void setFieldType
     }
     else
     {
-        WarningIn
-        (
-            "void setFieldType"
-            "(const fvMesh& mesh, const labelList& selectedCells,"
-            "Istream& fieldValueStream)"
-        ) << "Field " << fieldName << " not found" << endl;
+        WarningInFunction
+            << "Field " << fieldName << " not found" << endl;
     }
 }
 
@@ -164,7 +163,7 @@ public:
             }
             else
             {
-                WarningIn("setField::iNew::operator()(Istream& is)")
+                WarningInFunction
                     << "field type " << fieldType << " not currently supported"
                     << endl;
             }

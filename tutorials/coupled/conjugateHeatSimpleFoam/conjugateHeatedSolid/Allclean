@@ -8,3 +8,5 @@ cleanCase
 
 \rm -f constant/solid/polyMesh/boundary
 \rm -rf constant/solid/polyMesh/[c-z]*
+\rm *.dat
+

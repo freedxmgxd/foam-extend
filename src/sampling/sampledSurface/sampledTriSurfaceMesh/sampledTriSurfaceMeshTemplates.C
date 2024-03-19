@@ -36,7 +36,7 @@ Foam::sampledTriSurfaceMesh::sampleField
 {
     // One value per face
     tmp<Field<Type> > tvalues(new Field<Type>(cellLabels_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(cellLabels_, triI)
     {
@@ -56,7 +56,7 @@ Foam::sampledTriSurfaceMesh::interpolateField
 {
     // One value per vertex
     tmp<Field<Type> > tvalues(new Field<Type>(pointToFace_.size()));
-    Field<Type>& values = tvalues();
+    Field<Type>& values = tvalues.ref();
 
     forAll(pointToFace_, pointI)
     {

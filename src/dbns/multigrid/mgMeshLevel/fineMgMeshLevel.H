@@ -137,19 +137,19 @@ public:
         // Addressing
 
             //- Return owner addressing
-            virtual const unallocLabelList& owner() const
+            virtual const labelUList& owner() const
             {
                 return mesh_.owner();
             }
 
             //- Return neighbour addressing
-            const unallocLabelList& neighbour() const
+            const labelUList& neighbour() const
             {
                 return mesh_.neighbour();
             }
 
             //- Return face-cell addressing for all patches
-            virtual const unallocLabelList& faceCells
+            virtual const labelUList& faceCells
             (
                 const label patchNo
             ) const

@@ -136,8 +136,7 @@ void Foam::ProcessorBlockAMGInterfaceField<Type>::initInterfaceMatrixUpdate
     }
 
     // Mark as ready for update
-    const_cast<ProcessorBlockAMGInterfaceField<Type>&>(*this).updatedMatrix() =
-        false;
+    this->updatedMatrix() = false;
 
     Pstream::warnComm = oldWarn;
 }
@@ -191,7 +190,7 @@ void Foam::ProcessorBlockAMGInterfaceField<Type>::updateInterfaceMatrix
     // of multiplication
     multiply(receiveBuf_, coeffs, receiveBuf_);
 
-    const unallocLabelList& faceCells = procInterface_.faceCells();
+    const labelUList& faceCells = procInterface_.faceCells();
 
     if (switchToLhs)
     {
@@ -209,8 +208,7 @@ void Foam::ProcessorBlockAMGInterfaceField<Type>::updateInterfaceMatrix
     }
 
     // Mark as updated
-    const_cast<ProcessorBlockAMGInterfaceField<Type>&>(*this).updatedMatrix() =
-        true;
+    this->updatedMatrix() = true;
 }
 
 

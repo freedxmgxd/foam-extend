@@ -117,10 +117,8 @@ public:
         }
 
 
-    // Destructor
-
-        virtual ~emptyPolyPatch()
-        {}
+    //- Destructor
+    virtual ~emptyPolyPatch() = default;
 };
 
 

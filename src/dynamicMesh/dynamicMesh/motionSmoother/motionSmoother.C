@@ -156,7 +156,7 @@ void Foam::motionSmoother::makePatchPatchAddressing()
             meshTools::writeOBJ(str, mesh_.points()[pointI]);
         }
 
-        Pout<< "motionSmoother::makePatchPatchAddressing() : "
+        InfoInFunction
             << "finished constructing boundary addressing"
             << endl;
     }
@@ -173,7 +173,7 @@ void Foam::motionSmoother::checkFld(const pointScalarField& fld)
         {}
         else
         {
-            FatalErrorIn("motionSmoother::checkFld")
+            FatalErrorInFunction
                 << "Problem : point:" << pointI << " value:" << val
                 << abort(FatalError);
         }
@@ -861,7 +861,7 @@ bool Foam::motionSmoother::scaleMesh
 {
     if (!smoothMesh && adaptPatchIDs_.empty())
     {
-        FatalErrorIn("motionSmoother::scaleMesh(const bool")
+        FatalErrorInFunction
             << "You specified both no movement on the internal mesh points"
             << " (smoothMesh = false)" << nl
             << "and no movement on the patch (adaptPatchIDs is empty)" << nl
@@ -1106,10 +1106,8 @@ void Foam::motionSmoother::updateMesh()
             )
         )
         {
-            FatalErrorIn
-            (
-                "motionSmoother::motionSmoother"
-            )   << "Patch " << patches[patchI].name()
+            FatalErrorInFunction
+                << "Patch " << patches[patchI].name()
                 << " has wrong boundary condition "
                 << displacement_.boundaryField()[patchI].type()
                 << " on field " << displacement_.name() << nl

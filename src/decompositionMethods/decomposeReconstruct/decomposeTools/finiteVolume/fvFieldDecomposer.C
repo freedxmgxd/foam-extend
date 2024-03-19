@@ -35,7 +35,7 @@ namespace Foam
 fvFieldDecomposer::patchFieldDecomposer::patchFieldDecomposer
 (
     const label sizeBeforeMapping,
-    const unallocLabelList& addressingSlice,
+    const labelUList& addressingSlice,
     const label addressingOffset
 )
 :
@@ -54,7 +54,7 @@ fvFieldDecomposer::processorVolPatchFieldDecomposer::
 processorVolPatchFieldDecomposer
 (
     const fvMesh& mesh,
-    const unallocLabelList& addressingSlice
+    const labelUList& addressingSlice
 )
 :
     sizeBeforeMapping_(mesh.nCells()),
@@ -108,7 +108,7 @@ fvFieldDecomposer::processorSurfacePatchFieldDecomposer::
 processorSurfacePatchFieldDecomposer
 (
     label sizeBeforeMapping,
-    const unallocLabelList& addressingSlice
+    const labelUList& addressingSlice
 )
 :
     sizeBeforeMapping_(sizeBeforeMapping),
@@ -186,7 +186,7 @@ fvFieldDecomposer::fvFieldDecomposer
                 new processorSurfacePatchFieldDecomposer
                 (
                     procMesh_.boundary()[patchi].size(),
-                    static_cast<const unallocLabelList&>
+                    static_cast<const labelUList&>
                     (
                         procMesh_.boundary()[patchi].patchSlice
                         (

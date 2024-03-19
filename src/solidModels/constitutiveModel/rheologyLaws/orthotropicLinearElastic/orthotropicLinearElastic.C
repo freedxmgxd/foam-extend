@@ -39,9 +39,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from dictionary
@@ -262,7 +259,7 @@ Foam::tmp<Foam::volScalarField> Foam::orthotropicLinearElastic::rho() const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -288,7 +285,7 @@ Foam::tmp<Foam::volScalarField> Foam::orthotropicLinearElastic::E() const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -314,7 +311,7 @@ Foam::tmp<Foam::volScalarField> Foam::orthotropicLinearElastic::nu() const
         )
     );
 
-    tresult().correctBoundaryConditions();
+    tresult.ref().correctBoundaryConditions();
 
     return tresult;
 }
@@ -374,7 +371,7 @@ Foam::scalar Foam::orthotropicLinearElastic::sigmaY
 //Foam::tmp<Foam::volTensorField> Foam::orthotropicLinearElastic::K() const
 Foam::tmp<Foam::volDiagTensorField> Foam::orthotropicLinearElastic::K() const
 {
-  tmp<volDiagTensorField> tresult
+    tmp<volDiagTensorField> tresult
     (
         new volDiagTensorField
         (
@@ -391,36 +388,37 @@ Foam::tmp<Foam::volDiagTensorField> Foam::orthotropicLinearElastic::K() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
+    volDiagTensorField& K = tresult.ref();
 
-  volDiagTensorField& K = tresult();
-
-  forAll(K, celli)
+    forAll(K, celli)
     {
-      K[celli].xx() = C_[celli].xxxx();
-      K[celli].yy() = C_[celli].yyyy();
-      K[celli].zz() = C_[celli].zzzz();
+        K[celli].xx() = C_[celli].xxxx();
+        K[celli].yy() = C_[celli].yyyy();
+        K[celli].zz() = C_[celli].zzzz();
     }
 
-  K.correctBoundaryConditions();
+    K.correctBoundaryConditions();
 
-  return tresult;
+    return tresult;
 }
 
 Foam::tmp<Foam::volSymmTensor4thOrderField>
 Foam::orthotropicLinearElastic::C() const
 {
-  tmp<volSymmTensor4thOrderField> tresult
+    tmp<volSymmTensor4thOrderField> tresult
     (
         new volSymmTensor4thOrderField
         (
-     C_
-     )
+            C_
+        )
     );
 
-  volSymmTensor4thOrderField& result = tresult();
+    volSymmTensor4thOrderField& result = tresult.ref();
 
-  result.correctBoundaryConditions();
+    result.correctBoundaryConditions();
 
-  return tresult;
+    return tresult;
 }
+
+
 // ************************************************************************* //

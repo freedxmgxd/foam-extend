@@ -190,7 +190,7 @@ public:
             }
 
             //- Return faceCell addressing
-            virtual const unallocLabelList& faceCells() const
+            virtual const labelUList& faceCells() const
             {
                 return faceCells_;
             }
@@ -224,7 +224,7 @@ public:
             //  the interface as a field
             virtual tmp<labelField> interfaceInternalField
             (
-                const unallocLabelList& internalData
+                const labelUList& internalData
             ) const;
 
 

@@ -1094,7 +1094,7 @@ Foam::tmp<Foam::scalarField> Foam::ggiAMGInterface::agglomerateCoeffs
     }
 
     tmp<scalarField> tcoarseCoeffs(new scalarField(size(), 0.0));
-    scalarField& coarseCoeffs = tcoarseCoeffs();
+    scalarField& coarseCoeffs = tcoarseCoeffs.ref();
 
     // Filter zone coefficients to local field
     const labelList& za = zoneAddressing();
@@ -1214,7 +1214,7 @@ const Foam::tensorField& Foam::ggiAMGInterface::reverseT() const
 void Foam::ggiAMGInterface::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     // Label transfer is local
@@ -1225,7 +1225,7 @@ void Foam::ggiAMGInterface::initTransfer
 Foam::tmp<Foam::labelField> Foam::ggiAMGInterface::transfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     // Label transfer is local without global reduction
@@ -1236,7 +1236,7 @@ Foam::tmp<Foam::labelField> Foam::ggiAMGInterface::transfer
 void Foam::ggiAMGInterface::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     // Label transfer is local without global reduction
@@ -1247,7 +1247,7 @@ void Foam::ggiAMGInterface::initInternalFieldTransfer
 Foam::tmp<Foam::labelField> Foam::ggiAMGInterface::internalFieldTransfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList&
+    const labelUList&
 ) const
 {
     return shadowInterface().labelTransferBuffer();

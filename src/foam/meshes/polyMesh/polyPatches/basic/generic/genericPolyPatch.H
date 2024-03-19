@@ -132,7 +132,7 @@ public:
 
 
     //- Destructor
-    ~genericPolyPatch();
+    virtual ~genericPolyPatch() = default;
 
 
     // Member functions

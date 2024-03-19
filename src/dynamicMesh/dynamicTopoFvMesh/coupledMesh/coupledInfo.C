@@ -120,7 +120,7 @@ coupledInfo<MeshType>::subMeshMapper::subMeshMapper
     // Offset indices
     label pStart = cInfo.baseMesh().boundary()[patchI].patch().start();
 
-    forAll(directAddressing_, faceI)
+    forAll (directAddressing_, faceI)
     {
         directAddressing_[faceI] -= pStart;
     }
@@ -257,7 +257,7 @@ coupledInfo<MeshType>::subSetField
     word processorType(processorPolyPatch::typeName);
 
     // Create dummy types for initial field creation
-    forAll(patchFields, patchI)
+    forAll (patchFields, patchI)
     {
         if (patchI == (nPatches - 1))
         {
@@ -289,7 +289,7 @@ coupledInfo<MeshType>::subSetField
     }
 
     // Create new field from pieces
-    tmp<GeomField> subFld
+    tmp<GeomField> tsubFld
     (
         new GeomField
         (
@@ -308,12 +308,13 @@ coupledInfo<MeshType>::subSetField
             patchFields
         )
     );
+    GeomField& subFld = tsubFld.ref();
 
     // Set correct references for patch internal fields,
     // and map values from the supplied geometric field
-    GeomBdyFieldType& bf = subFld().boundaryField();
+    GeomBdyFieldType& bf = subFld.boundaryField();
 
-    forAll(bf, patchI)
+    forAll (bf, patchI)
     {
         if (patchI == (nPatches - 1))
         {
@@ -325,7 +326,7 @@ coupledInfo<MeshType>::subSetField
                 (
                     emptyType,
                     subMesh().boundary()[patchI],
-                    subFld().dimensionedInternalField()
+                    subFld.dimensionedInternalField()
                 )
             );
         }
@@ -339,7 +340,7 @@ coupledInfo<MeshType>::subSetField
                 (
                     processorType,
                     subMesh().boundary()[patchI],
-                    subFld().dimensionedInternalField()
+                    subFld.dimensionedInternalField()
                 )
             );
 
@@ -356,14 +357,14 @@ coupledInfo<MeshType>::subSetField
                 (
                     f.boundaryField()[patchI],
                     subMesh().boundary()[patchI],
-                    subFld().dimensionedInternalField(),
+                    subFld.dimensionedInternalField(),
                     subMeshMapper(*this, patchI)
                 )
             );
         }
     }
 
-    return subFld;
+    return tsubFld;
 }
 
 
@@ -383,7 +384,7 @@ void coupledInfo<MeshType>::send
         << fieldType << token::NL
         << token::BEGIN_BLOCK << token::NL;
 
-    forAll(fieldNames, i)
+    forAll (fieldNames, i)
     {
         // Fetch object from registry
         const objectRegistry& db = mesh_.thisDb();
@@ -431,7 +432,7 @@ void coupledInfo<MeshType>::setField
     word emptyType(emptyPolyPatch::typeName);
     word processorType(processorPolyPatch::typeName);
 
-    forAll(fieldNames, i)
+    forAll (fieldNames, i)
     {
         // Create and map the patch field values
         label nPatches = subMesh().boundary().size();
@@ -454,7 +455,7 @@ void coupledInfo<MeshType>::setField
         );
 
         // Create dummy types for initial field creation
-        forAll(patchFields, patchI)
+        forAll (patchFields, patchI)
         {
             if (patchI == (nPatches - 1))
             {
@@ -511,7 +512,7 @@ void coupledInfo<MeshType>::setField
         // and fetch values from the supplied geometric field dictionaries
         GeomBdyFieldType& bf = fields[i].boundaryField();
 
-        forAll(bf, patchI)
+        forAll (bf, patchI)
         {
             if (patchI == (nPatches - 1))
             {
@@ -583,7 +584,7 @@ void coupledInfo<MeshType>::resizeMap
     field.internalField().autoMap(internalMapper);
 
     // Reverse map for additional cells
-    forAll(srcFields, pI)
+    forAll (srcFields, pI)
     {
         // Fetch field for this processor
         const GeomField& srcField = srcFields[pI][srcIndex];
@@ -596,13 +597,13 @@ void coupledInfo<MeshType>::resizeMap
     }
 
     // Map physical boundary-fields
-    forAll(boundaryMapper, patchI)
+    forAll (boundaryMapper, patchI)
     {
         // autoMap the patchField
         field.boundaryField()[patchI].autoMap(boundaryMapper[patchI]);
 
         // Reverse map for additional patch faces
-        forAll(srcFields, pI)
+        forAll (srcFields, pI)
         {
             // Fetch field for this processor
             const GeomField& srcField = srcFields[pI][srcIndex];
@@ -631,7 +632,7 @@ void coupledInfo<MeshType>::resizeMap
     const List<PtrList<GeomField> >& srcFields
 )
 {
-    forAll(names, indexI)
+    forAll (names, indexI)
     {
         // Fetch field from registry
         GeomField& field =

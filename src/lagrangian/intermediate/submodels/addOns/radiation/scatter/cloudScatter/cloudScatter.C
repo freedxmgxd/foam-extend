@@ -95,7 +95,7 @@ Foam::radiation::cloudScatter::sigmaEff() const
             mesh_.objectRegistry::lookupObject<thermoCloud>(cloudNames_[i])
         );
 
-        tsigma() += tc.sigmap();
+        tsigma.ref() += tc.sigmap();
     }
 
     return 3.0*tsigma;

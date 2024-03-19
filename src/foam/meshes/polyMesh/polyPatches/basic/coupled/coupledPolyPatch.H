@@ -150,7 +150,7 @@ public:
 
 
     //- Destructor
-    virtual ~coupledPolyPatch();
+    virtual ~coupledPolyPatch() = default;
 
 
     // Member Functions

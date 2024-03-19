@@ -107,14 +107,21 @@ public:
         //- Return a component field of the field
         inline tmp<Field<cmptType> > component(const direction) const;
 
-        //- Return the field transpose (only defined for second rank tensors)
-        tmp<Field<Type> > T() const;
-
 
     // Member operators
 
         //- Assignment via UList operator. Takes linear time.
         inline void operator=(const SubField<Type>&);
+
+        //- Assignment via UList operator. Takes linear time.
+        inline void operator=(const Field<Type>&);
+
+        //- Assignment via UList operator. Takes linear time.
+        inline void operator=(const Type&);
+
+        //- Assignment via UList operator. Takes linear time.
+        template<class Form, direction Ncmpts>
+        inline void operator=(const VectorSpace<Form, Type, Ncmpts>&);
 
         //- Allow cast to a const Field\<Type\>&
         inline operator const Field<Type>&() const;

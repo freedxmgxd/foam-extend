@@ -100,41 +100,39 @@ public:
         {}
 
 
+    //- Destructor
+    virtual ~backwardD2dt2Scheme() = default;
+
+
     // Member Functions
 
-        //- Return mesh reference
-        const fvMesh& mesh() const
-        {
-            return fv::d2dt2Scheme<Type>::mesh();
-        }
-
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
+        virtual tmp<GeometricField<Type, fvPatchField, volMesh> > fvcD2dt2
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<fvMatrix<Type> > fvmD2dt2
+        virtual tmp<fvMatrix<Type> > fvmD2dt2
         (
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<fvMatrix<Type> > fvmD2dt2
+        virtual tmp<fvMatrix<Type> > fvmD2dt2
         (
             const dimensionedScalar&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 
-        tmp<fvMatrix<Type> > fvmD2dt2
+        virtual tmp<fvMatrix<Type> > fvmD2dt2
         (
             const volScalarField&,
             const GeometricField<Type, fvPatchField, volMesh>&
-        );
+        ) const;
 };
 
 

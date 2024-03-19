@@ -84,10 +84,10 @@ tmp<areaVectorField> edgeLimitedGrad<scalar>::grad
         return tGrad;
     }
 
-    areaVectorField& g = tGrad();
+    areaVectorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const areaVectorField& C = mesh.areaCentres();
     const edgeVectorField& Cf = mesh.edgeCentres();
@@ -134,7 +134,7 @@ tmp<areaVectorField> edgeLimitedGrad<scalar>::grad
     {
         const faPatchScalarField& psf = bsf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].edgeFaces();
+        const labelUList& pOwner = mesh.boundary()[patchi].edgeFaces();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         if (psf.coupled())
@@ -218,10 +218,10 @@ tmp<areaTensorField> edgeLimitedGrad<vector>::grad
         return tGrad;
     }
 
-    areaTensorField& g = tGrad();
+    areaTensorField& g = tGrad.ref();
 
-    const unallocLabelList& owner = mesh.owner();
-    const unallocLabelList& neighbour = mesh.neighbour();
+    const labelUList& owner = mesh.owner();
+    const labelUList& neighbour = mesh.neighbour();
 
     const areaVectorField& C = mesh.areaCentres();
     const edgeVectorField& Cf = mesh.edgeCentres();
@@ -283,7 +283,7 @@ tmp<areaTensorField> edgeLimitedGrad<vector>::grad
     {
         const faPatchVectorField& psf = bvf[patchi];
 
-        const unallocLabelList& pOwner = mesh.boundary()[patchi].edgeFaces();
+        const labelUList& pOwner = mesh.boundary()[patchi].edgeFaces();
         const vectorField& pCf = Cf.boundaryField()[patchi];
 
         if (psf.coupled())

@@ -72,7 +72,7 @@ Foam::protectedInitialRefinement::cellLevelAsField() const
             zeroGradientFvPatchScalarField::typeName
         )
     );
-    volScalarField& cellLevelField = tCellLevelField();
+    volScalarField& cellLevelField = tCellLevelField.ref();
     scalarField& cellLevelFieldIn = cellLevelField.internalField();
 
     // Set the field

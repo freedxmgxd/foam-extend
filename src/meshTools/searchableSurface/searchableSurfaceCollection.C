@@ -330,7 +330,7 @@ Foam::searchableSurfaceCollection::coordinates() const
 {
     // Get overall size
     tmp<pointField> tCoords(new pointField(size()));
-    pointField& coords = tCoords();
+    pointField& coords = tCoords.ref();
 
     // Append individual coordinates
     label coordI = 0;

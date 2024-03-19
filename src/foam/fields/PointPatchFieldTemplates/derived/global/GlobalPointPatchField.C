@@ -74,7 +74,7 @@ tmp<Field<Type2> > GlobalPointPatchField
 
         // Prepare result
         tmp<Field<Type2> > tlpf(new Field<Type2>(sharedPointAddr.size()));
-        Field<Type2>& lpf = tlpf();
+        Field<Type2>& lpf = tlpf.ref();
 
 #       ifdef OLD_COMBINE_REDUCE
 
@@ -164,7 +164,7 @@ tmp<Field<Type2> > GlobalPointPatchField
 
         // Prepare result
         tmp<Field<Type2> > tlef(new Field<Type2>(sharedEdgeAddr.size()));
-        Field<Type2>& lef = tlef();
+        Field<Type2>& lef = tlef.ref();
 
 #       ifdef OLD_COMBINE_REDUCE
 
@@ -245,10 +245,8 @@ void GlobalPointPatchField
 ) const
 {
     // Set the values from the global sum
-    tmp<Field<Type2> > trpf =
+    Field<Type2> rpf =
         reduceExtractPoint<Type2>(this->patchInternalField(pField));
-
-    Field<Type2>& rpf = trpf();
 
     // Get addressing
     const labelList& addr = globalPointPatch_.meshPoints();
@@ -774,7 +772,7 @@ void GlobalPointPatchField
 
     // Get the local elements of the edge field
     tmp<scalarField> tlocalEdgeField(new scalarField(addr.size()));
-    scalarField& localEdgeField = tlocalEdgeField();
+    scalarField& localEdgeField = tlocalEdgeField.ref();
 
     forAll (addr, i)
     {
@@ -784,7 +782,7 @@ void GlobalPointPatchField
     // Set the edge values
     tmp<scalarField> tref =
         reduceExtractEdge<scalar>(tlocalEdgeField);
-    scalarField& ref = tref();
+    scalarField& ref = tref.ref();
 
     forAll (addr, i)
     {
@@ -833,7 +831,7 @@ tmp<scalarField> GlobalPointPatchField
     (
         new scalarField(cutOwn.size() + cutNei.size() + 2*doubleCut.size(), 0)
     );
-    scalarField& cutCoeffs = tcutCoeffs();
+    scalarField& cutCoeffs = tcutCoeffs.ref();
 
     label coeffI = 0;
 
@@ -908,7 +906,7 @@ tmp<scalarField> GlobalPointPatchField
     (
         new scalarField(cutOwn.size() + cutNei.size() + 2*doubleCut.size(), 0)
     );
-    scalarField& cutCoeffs = tcutCoeffs();
+    scalarField& cutCoeffs = tcutCoeffs.ref();
 
     label coeffI = 0;
 
@@ -1028,7 +1026,7 @@ void GlobalPointPatchField
 ) const
 {
     tmp<scalarField> tlocalMult(new scalarField(this->size(), 0));
-    scalarField& localMult = tlocalMult();
+    scalarField& localMult = tlocalMult.ref();
 
     const labelList& mp = globalPointPatch_.meshPoints();
 
@@ -1036,8 +1034,8 @@ void GlobalPointPatchField
     const scalarField& cutMask = globalPointPatch_.ownNeiDoubleMask();
 
     // Get matrix addressing
-    const unallocLabelList& L = m.lduAddr().lowerAddr();
-    const unallocLabelList& U = m.lduAddr().upperAddr();
+    const labelUList& L = m.lduAddr().lowerAddr();
+    const labelUList& U = m.lduAddr().upperAddr();
 
     // Note that the addressing is into the local points of the patch.
     // Mesh points is used only for size
@@ -1161,10 +1159,7 @@ void GlobalPointPatchField
             Pstream::waitRequests();
         }
 
-        tmp<Field<scalar> > trpf =
-            reduceExtractPoint<scalar>(localMult);
-
-        Field<scalar>& rpf = trpf();
+        scalarField rpf = reduceExtractPoint<scalar>(localMult);
 
         // Get addressing
         const labelList& addr = globalPointPatch_.meshPoints();
@@ -1288,10 +1283,8 @@ void GlobalPointPatchField
             Pstream::waitRequests();
         }
 
-        tmp<Field<scalar> > trpf =
+        scalarField rpf =
             reduceExtractPoint<scalar>(localMult);
-
-        Field<scalar>& rpf = trpf();
 
         // Get addressing
         const labelList& addr = globalPointPatch_.meshPoints();

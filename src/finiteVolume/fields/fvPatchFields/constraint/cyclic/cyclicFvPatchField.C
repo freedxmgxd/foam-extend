@@ -141,10 +141,10 @@ template<class Type>
 tmp<Field<Type> > cyclicFvPatchField<Type>::patchNeighbourField() const
 {
     const Field<Type>& iField = this->internalField();
-    const unallocLabelList& faceCells = cyclicPatch_.faceCells();
+    const labelUList& faceCells = cyclicPatch_.faceCells();
 
     tmp<Field<Type> > tpnf(new Field<Type>(this->size()));
-    Field<Type>& pnf = tpnf();
+    Field<Type>& pnf = tpnf.ref();
 
     label sizeby2 = this->size()/2;
 
@@ -181,10 +181,10 @@ tmp<scalarField>
 cyclicFvPatchField<Type>::untransformedInterpolate(const direction cmpt) const
 {
     const Field<Type>& iField = this->internalField();
-    const unallocLabelList& faceCells = cyclicPatch_.faceCells();
+    const labelUList& faceCells = cyclicPatch_.faceCells();
 
     tmp<scalarField> tpnf(new scalarField(this->size()));
-    scalarField& pnf = tpnf();
+    scalarField& pnf = tpnf.ref();
 
     label sizeby2 = this->size()/2;
 
@@ -213,7 +213,7 @@ void cyclicFvPatchField<Type>::updateInterfaceMatrix
     scalarField pnf(this->size());
 
     label sizeby2 = this->size()/2;
-    const unallocLabelList& faceCells = cyclicPatch_.faceCells();
+    const labelUList& faceCells = cyclicPatch_.faceCells();
 
     for (label facei = 0; facei < sizeby2; facei++)
     {

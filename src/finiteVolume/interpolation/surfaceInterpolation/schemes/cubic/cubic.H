@@ -56,10 +56,10 @@ class cubic
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        cubic(const cubic&);
+        cubic(const cubic&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cubic&);
+        void operator=(const cubic&) = delete;
 
 
 public:
@@ -138,9 +138,10 @@ public:
                 )
             );
 
-            GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr();
+            GeometricField<Type, fvsPatchField, surfaceMesh>& sfCorr =
+                tsfCorr.ref();
 
-            for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
+            for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
             {
                 sfCorr.replace
                 (

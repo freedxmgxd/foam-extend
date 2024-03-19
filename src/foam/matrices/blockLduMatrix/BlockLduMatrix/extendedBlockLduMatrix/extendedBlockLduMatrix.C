@@ -56,7 +56,7 @@ void Foam::extendedBlockLduMatrix<Type>::mapOffDiagCoeffs
     else if (blockLdum.symmetric())
     {
         // Get reference to faceMap in extended addressing
-        const unallocLabelList& faceMap = extLduAddr_.faceMap();
+        const labelUList& faceMap = extLduAddr_.faceMap();
 
         // Matrix is considered symmetric if the upper is allocated and lower
         // is not allocated. Allocating extended upper only.
@@ -133,7 +133,7 @@ void Foam::extendedBlockLduMatrix<Type>::mapOffDiagCoeffs
     else
     {
         // Get reference to faceMap in extended addressing
-        const unallocLabelList& faceMap = extLduAddr_.faceMap();
+        const labelUList& faceMap = extLduAddr_.faceMap();
 
         // Get number of extended faces
         const label nExtFaces = extLduAddr_.extendedUpperAddr().size();

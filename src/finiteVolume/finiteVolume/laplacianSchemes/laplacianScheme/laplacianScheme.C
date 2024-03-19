@@ -56,11 +56,8 @@ tmp<laplacianScheme<Type, GType> > laplacianScheme<Type, GType>::New
 
     if (schemeData.eof())
     {
-        FatalIOErrorIn
-        (
-            "laplacianScheme<Type, GType>::New(const fvMesh&, Istream&)",
-            schemeData
-        )   << "Laplacian scheme not specified" << nl << nl
+        FatalIOErrorInFunction(schemeData)
+            << "Laplacian scheme not specified" << nl << nl
             << "Valid laplacian schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -73,11 +70,8 @@ tmp<laplacianScheme<Type, GType> > laplacianScheme<Type, GType>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
-        (
-            "laplacianScheme<Type, GType>::New(const fvMesh&, Istream&)",
-            schemeData
-        )   << "Unknown laplacian scheme " << schemeName << nl << nl
+        FatalIOErrorInFunction(schemeData)
+            << "Unknown laplacian scheme " << schemeName << nl << nl
             << "Valid laplacian schemes are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -85,13 +79,6 @@ tmp<laplacianScheme<Type, GType> > laplacianScheme<Type, GType>::New
 
     return cstrIter()(mesh, schemeData);
 }
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type, class GType>
-laplacianScheme<Type, GType>::~laplacianScheme()
-{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -102,7 +89,7 @@ laplacianScheme<Type, GType>::fvmLaplacian
 (
     const GeometricField<GType, fvPatchField, volMesh>& gamma,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     return fvmLaplacian(tinterpGammaScheme_().interpolate(gamma)(), vf);
 }
@@ -114,7 +101,7 @@ laplacianScheme<Type, GType>::fvcLaplacian
 (
     const GeometricField<GType, fvPatchField, volMesh>& gamma,
     const GeometricField<Type, fvPatchField, volMesh>& vf
-)
+) const
 {
     return fvcLaplacian(tinterpGammaScheme_().interpolate(gamma)(), vf);
 }

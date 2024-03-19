@@ -35,7 +35,7 @@ Foam::tmp<Foam::Field<Type> > Foam::AMGInterface::interfaceInternalField
 ) const
 {
     tmp<Field<Type> > tresult(new Field<Type>(size()));
-    Field<Type>& result = tresult();
+    Field<Type>& result = tresult.ref();
 
     forAll (result, elemI)
     {

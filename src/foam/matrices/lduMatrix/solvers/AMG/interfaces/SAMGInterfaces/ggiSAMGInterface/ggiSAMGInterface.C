@@ -46,14 +46,14 @@ void Foam::ggiSAMGInterface::initFastReduce() const
 {
     if (mapPtr_)
     {
-        FatalErrorIn("void ggiSAMGInterface::initFastReduce() const")
+        FatalErrorInFunction
             << "map already calculated"
             << abort(FatalError);
     }
 
     if (!Pstream::parRun())
     {
-        FatalErrorIn("void ggiSAMGInterface::initFastReduce() const")
+        FatalErrorInFunction
             << "Requested calculation of send-receive addressing for a "
             << "serial run.  This is not allowed"
             << abort(FatalError);
@@ -1127,7 +1127,7 @@ Foam::ggiSAMGInterface::ggiSAMGInterface
                 }
                 else
                 {
-                    FatalErrorIn("...")
+                    FatalErrorInFunction
                         << "My proc number " << Pstream::myProcNo()
                             << " is neither a sender nor a receiver: "
                             << schedule[i]
@@ -1276,7 +1276,7 @@ Foam::tmp<Foam::scalarField> Foam::ggiSAMGInterface::selectCoeffs
     }
 
     tmp<scalarField> tcoarseCoeffs(new scalarField(size(), 0.0));
-    scalarField& coarseCoeffs = tcoarseCoeffs();
+    scalarField& coarseCoeffs = tcoarseCoeffs.ref();
 
     // Filter zone coefficients to local field
     const labelList& za = zoneAddressing();
@@ -1333,7 +1333,7 @@ const Foam::labelList& Foam::ggiSAMGInterface::zoneAddressing() const
 
 const Foam::labelListList& Foam::ggiSAMGInterface::ggiAddressing() const
 {
-    FatalErrorIn("const labelListList& ggiSAMGInterface::ggiAddressing() const")
+    FatalErrorInFunction
         << "Requested fine addressing at coarse level"
         << abort(FatalError);
 
@@ -1351,10 +1351,8 @@ const Foam::labelListList& Foam::ggiSAMGInterface::procMasterFaces() const
 {
     if (!master())
     {
-        FatalErrorIn
-        (
-            "const labelListList& ggiGAMGInterface::procMasterFaces() const"
-        )   << "Requester procMasterFaces from a slave.  This is not allowed"
+        FatalErrorInFunction
+            << "Requester procMasterFaces from a slave.  This is not allowed"
             << abort(FatalError);
     }
 
@@ -1375,7 +1373,7 @@ const Foam::mapDistribute& Foam::ggiSAMGInterface::map() const
 
 const Foam::scalarListList& Foam::ggiSAMGInterface::ggiWeights() const
 {
-    FatalErrorIn("const labelListList& ggiSAMGInterface::ggiWeights() const")
+    FatalErrorInFunction
         << "Requested fine addressing at coarse level"
         << abort(FatalError);
 
@@ -1398,7 +1396,7 @@ const Foam::tensorField& Foam::ggiSAMGInterface::reverseT() const
 void Foam::ggiSAMGInterface::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     // Label transfer is local
@@ -1409,7 +1407,7 @@ void Foam::ggiSAMGInterface::initTransfer
 Foam::tmp<Foam::labelField> Foam::ggiSAMGInterface::transfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     // Label transfer is local without global reduction
@@ -1420,7 +1418,7 @@ Foam::tmp<Foam::labelField> Foam::ggiSAMGInterface::transfer
 void Foam::ggiSAMGInterface::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     // Label transfer is local without global reduction
@@ -1431,7 +1429,7 @@ void Foam::ggiSAMGInterface::initInternalFieldTransfer
 Foam::tmp<Foam::labelField> Foam::ggiSAMGInterface::internalFieldTransfer
 (
     const Pstream::commsTypes,
-    const unallocLabelList&
+    const labelUList&
 ) const
 {
     return shadowInterface().labelTransferBuffer();

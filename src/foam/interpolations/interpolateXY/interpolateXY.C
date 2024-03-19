@@ -42,7 +42,7 @@ tmp<Field<Type> > interpolateXY
 )
 {
     tmp<Field<Type> > tyNew(new Field<Type>(xNew.size()));
-    Field<Type>& yNew = tyNew();
+    Field<Type>& yNew = tyNew.ref();
 
     forAll(xNew, i)
     {

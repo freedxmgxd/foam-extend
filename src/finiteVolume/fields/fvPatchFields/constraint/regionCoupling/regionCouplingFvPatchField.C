@@ -195,13 +195,13 @@ tmp<Field<Type> > regionCouplingFvPatchField<Type>::patchNeighbourField() const
 
     tmp<Field<Type> > tpnf
     (
-         regionCouplePatch_.interpolate
-         (
-             shadowPatchField().patchInternalField()
-         )
+        regionCouplePatch_.interpolate
+        (
+            shadowPatchField().patchInternalField()
+        )
     );
 
-    Field<Type>& pnf = tpnf();
+    Field<Type>& pnf = tpnf.ref();
 
     if (regionCouplePatch_.bridgeOverlap())
     {
@@ -393,31 +393,6 @@ void regionCouplingFvPatchField<Type>::initInterfaceMatrixUpdate
             (
                 this->patch().patchInternalField(psiInternal)
             );
-
-        if (regionCouplePatch_.bridgeOverlap())
-        {
-            const scalarField mirrorField =
-                transform
-                (
-                    (I - sqr(this->patch().nf())/
-                    (1.0 - regionCouplePatch_.fvPatch::weights())),
-                    regionCouplePatch_.patchInternalField(psiInternal)
-                );
-
-            // Set fully uncovered faces
-            regionCouplePatch_.setUncoveredFaces
-            (
-                mirrorField,
-                matrixUpdateBuffer_
-            );
-
-            // For partially covered faces, add mirror that causes no flux
-            regionCouplePatch_.addToPartialFaces
-            (
-                mirrorField,
-                matrixUpdateBuffer_
-            );
-        }
     }
     else
     {
@@ -450,7 +425,7 @@ void regionCouplingFvPatchField<Type>::updateInterfaceMatrix
         scalarField pnf = this->shadowPatchField().matrixUpdateBuffer();
 
         // Multiply the field by coefficients and add into the result
-        const unallocLabelList& fc = regionCouplePatch_.faceCells();
+        const labelUList& fc = regionCouplePatch_.faceCells();
 
         if (switchToLhs)
         {

@@ -59,7 +59,7 @@ void cyclicGgiFvPatchField<scalar>::initInterfaceMatrixUpdate
     // patch comms.  HJ, 11/Jul/2011
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = cyclicGgiPatch_.shadow().faceCells();
+    const labelUList& sfc = cyclicGgiPatch_.shadow().faceCells();
 
     scalarField sField(sfc.size());
 
@@ -73,7 +73,7 @@ void cyclicGgiFvPatchField<scalar>::initInterfaceMatrixUpdate
     scalarField pnf = cyclicGgiPatch_.interpolate(sField);
 
     // Multiply the field by coefficients and add into the result
-    const unallocLabelList& fc = cyclicGgiPatch_.faceCells();
+    const labelUList& fc = cyclicGgiPatch_.faceCells();
 
     forAll(fc, elemI)
     {
@@ -96,7 +96,7 @@ void cyclicGgiFvPatchField<vector>::initInterfaceMatrixUpdate
     // patch comms.  HJ, 11/Jul/2011
 
     // Get shadow face-cells and assemble shadow field
-    const unallocLabelList& sfc = cyclicGgiPatch_.shadow().faceCells();
+    const labelUList& sfc = cyclicGgiPatch_.shadow().faceCells();
 
     Field<vector> sField(sfc.size());
 
@@ -122,7 +122,7 @@ void cyclicGgiFvPatchField<vector>::initInterfaceMatrixUpdate
     }
 
     // Multiply the field by coefficients and add into the result
-    const unallocLabelList& fc = cyclicGgiPatch_.faceCells();
+    const labelUList& fc = cyclicGgiPatch_.faceCells();
 
     // Multiply the field by coefficients and add into the result
     forAll(fc, elemI)

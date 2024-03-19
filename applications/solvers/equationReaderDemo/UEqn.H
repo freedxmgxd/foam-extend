@@ -6,6 +6,6 @@
       + turbulence->divDevReff()
     );
 
-    UEqn().relax();
+    UEqn.ref().relax();
 
     solve(UEqn() == -fvc::grad(p));

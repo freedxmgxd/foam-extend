@@ -319,7 +319,7 @@ void Foam::cellDistFuncs::correctBoundaryFaceCells
         {
             const polyPatch& pPatch = mesh().boundaryMesh()[patchI];
             const pointField& points = pPatch.points();
-            const unallocLabelList& faceCells = pPatch.faceCells();
+            const labelUList& faceCells = pPatch.faceCells();
 
             forAll (pPatch, patchFaceI)
             {

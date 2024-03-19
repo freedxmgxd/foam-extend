@@ -23,8 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mpi.h"
-
 #include "Pstream.H"
 #include "PstreamReduceOps.H"
 #include "debug.H"
@@ -32,6 +30,8 @@ License
 #include "OSspecific.H"
 #include "PstreamGlobals.H"
 #include "SubList.H"
+
+#include <mpi.h>
 
 #include <cstring>
 #include <cstdlib>
@@ -68,7 +68,7 @@ void Foam::Pstream::setParRun(const label nProcs, const bool haveThreads)
 
         if (comm != Pstream::worldComm)
         {
-            FatalErrorIn("Pstream::setParRun(const label)")
+            FatalErrorInFunction
                 << "problem : comm:" << comm
                 << "  Pstream::worldComm:" << Pstream::worldComm
                 << Foam::exit(FatalError);
@@ -88,7 +88,7 @@ void Foam::Pstream::setParRun(const label nProcs, const bool haveThreads)
 
         if (comm != Pstream::worldComm)
         {
-            FatalErrorIn("Pstream::setParRun(const label)")
+            FatalErrorInFunction
                 << "problem : comm:" << comm
                 << "  Pstream::worldComm:" << Pstream::worldComm
                 << Foam::exit(FatalError);
@@ -116,14 +116,8 @@ void Foam::Pstream::allocatePstreamCommunicator
     }
     else if (index > PstreamGlobals::MPIGroups_.size())
     {
-        FatalErrorIn
-        (
-            "Pstream::allocatePstreamCommunicator\n"
-            "(\n"
-            "    const label parentIndex,\n"
-            "    const labelList& subRanks\n"
-            ")\n"
-        )   << "PstreamGlobals out of sync with Pstream data. Problem."
+        FatalErrorInFunction
+            << "PstreamGlobals out of sync with Pstream data. Problem."
             << Foam::exit(FatalError);
     }
 
@@ -134,15 +128,10 @@ void Foam::Pstream::allocatePstreamCommunicator
 
         if (index != Pstream::worldComm)
         {
-            FatalErrorIn
-            (
-                "Pstream::allocatePstreamCommunicator\n"
-                "(\n"
-                "    const label parentIndex,\n"
-                "    const labelList& subRanks\n"
-                ")\n"
-            )   << "world communicator should always be index "
-                << Pstream::worldComm << Foam::exit(FatalError);
+            FatalErrorInFunction
+                << "world communicator should always be index "
+                << Pstream::worldComm
+                << Foam::exit(FatalError);
         }
 
         PstreamGlobals::MPICommunicators_[index] =
@@ -202,14 +191,8 @@ void Foam::Pstream::allocatePstreamCommunicator
                 )
             )
             {
-                FatalErrorIn
-                (
-                    "Pstream::allocatePstreamCommunicator\n"
-                    "(\n"
-                    "    const label,\n"
-                    "    const labelList&\n"
-                    ")\n"
-                )   << "Problem :"
+                FatalErrorInFunction
+                    << "Problem :"
                     << " when allocating communicator at " << index
                     << " from ranks " << procIDs_[index]
                     << " of parent " << parentIndex
@@ -283,11 +266,8 @@ Foam::label Foam::Pstream::allocateCommunicator
         // Enforce incremental order (so index is rank in next communicator)
         if (i >= 1 && subRanks[i] <= subRanks[i - 1])
         {
-            FatalErrorIn
-            (
-                "Pstream::allocateCommunicator"
-                "(const label, const labelList&, const bool)"
-            )   << "subranks not sorted : " << subRanks
+            FatalErrorInFunction
+                << "subranks not sorted : " << subRanks
                 << " when allocating subcommunicator from parent "
                 << parentIndex
                 << Foam::abort(FatalError);

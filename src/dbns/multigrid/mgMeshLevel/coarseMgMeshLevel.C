@@ -62,8 +62,8 @@ void Foam::coarseMgMeshLevel::calcLevel()
     //    owner and neighbour addressing.
 
     // Get addressing
-    const unallocLabelList& upperAddr = fineLevel_.owner();
-    const unallocLabelList& lowerAddr = fineLevel_.neighbour();
+    const labelUList& upperAddr = fineLevel_.owner();
+    const labelUList& lowerAddr = fineLevel_.neighbour();
 
     const label nFineFaces = fineLevel_.nInternalFaces();
 

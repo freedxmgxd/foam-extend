@@ -179,34 +179,34 @@ public:
             }
 
             //- Return lower addressing (i.e. lower label = upper triangle)
-            const unallocLabelList& lowerAddr() const
+            const labelUList& lowerAddr() const
             {
                 return lduAddr_.lowerAddr();
             }
 
             //- Return upper addressing (i.e. upper label)
-            const unallocLabelList& upperAddr() const
+            const labelUList& upperAddr() const
             {
                 return lduAddr_.upperAddr();
             }
 
             //- Return extended lower addressing
-            const unallocLabelList& extendedLowerAddr() const;
+            const labelUList& extendedLowerAddr() const;
 
             //- Return extended upper addressing
-            const unallocLabelList& extendedUpperAddr() const;
+            const labelUList& extendedUpperAddr() const;
 
             //- Return basic to extended ldu addressing mapping list
-            const unallocLabelList& faceMap() const;
+            const labelUList& faceMap() const;
 
             //- Return extended losort addressing
-            const unallocLabelList& extendedLosortAddr() const;
+            const labelUList& extendedLosortAddr() const;
 
             //- Return extended owner start addressing
-            const unallocLabelList& extendedOwnerStartAddr() const;
+            const labelUList& extendedOwnerStartAddr() const;
 
             //- Return extended losort start addressing
-            const unallocLabelList& extendedLosortStartAddr() const;
+            const labelUList& extendedLosortStartAddr() const;
 
             //- Return off-diagonal index given extended owner and neighbour
             //  label

@@ -365,7 +365,7 @@ Foam::processorSAMGInterface::~processorSAMGInterface()
 void Foam::processorSAMGInterface::initTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     send(commsType, interfaceData);
@@ -375,7 +375,7 @@ void Foam::processorSAMGInterface::initTransfer
 Foam::tmp<Foam::labelField> Foam::processorSAMGInterface::transfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& interfaceData
+    const labelUList& interfaceData
 ) const
 {
     return receive<label>(commsType, this->size());
@@ -385,7 +385,7 @@ Foam::tmp<Foam::labelField> Foam::processorSAMGInterface::transfer
 void Foam::processorSAMGInterface::initInternalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList& iF
+    const labelUList& iF
 ) const
 {
     send(commsType, interfaceInternalField(iF)());
@@ -395,7 +395,7 @@ void Foam::processorSAMGInterface::initInternalFieldTransfer
 Foam::tmp<Foam::labelField> Foam::processorSAMGInterface::internalFieldTransfer
 (
     const Pstream::commsTypes commsType,
-    const unallocLabelList&
+    const labelUList&
 ) const
 {
     return receive<label>(commsType, this->size());

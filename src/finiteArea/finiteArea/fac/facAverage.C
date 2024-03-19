@@ -65,7 +65,7 @@ average
         )
     );
 
-    GeometricField<Type, faPatchField, areaMesh>& av = taverage();
+    GeometricField<Type, faPatchField, areaMesh>& av = taverage.ref();
 
     av.internalField() =
     (

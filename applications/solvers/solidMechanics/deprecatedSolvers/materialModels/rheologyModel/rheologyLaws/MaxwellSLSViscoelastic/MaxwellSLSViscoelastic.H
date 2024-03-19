@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class MaxwellSLSViscoelastic Declaration
+                     Class MaxwellSLSViscoelastic Declaration
 \*---------------------------------------------------------------------------*/
 
 class MaxwellSLSViscoelastic
@@ -70,10 +70,10 @@ class MaxwellSLSViscoelastic
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MaxwellSLSViscoelastic(const MaxwellSLSViscoelastic&);
+        MaxwellSLSViscoelastic(const MaxwellSLSViscoelastic&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MaxwellSLSViscoelastic&);
+        void operator=(const MaxwellSLSViscoelastic&) = delete;
 
 
 public:
@@ -95,9 +95,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~MaxwellSLSViscoelastic();
+    //- Destructor
+    virtual ~MaxwellSLSViscoelastic() = default;
 
 
     // Member Functions

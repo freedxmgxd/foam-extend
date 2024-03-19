@@ -57,14 +57,14 @@ void volPointInterpolation::interpolateInternalField
     const scalarListList& pWeights = this->pointWeights();
 
     // Multiply volField by weighting factor matrix to create pointField
-    forAll(pointCells, pointi)
+    forAll (pointCells, pointi)
     {
         const scalarList& pw = pWeights[pointi];
         const labelList& ppc = pointCells[pointi];
 
         pf[pointi] = pTraits<Type>::zero;
 
-        forAll(ppc, pointCelli)
+        forAll (ppc, pointCelli)
         {
             pf[pointi] += pw[pointCelli]*vf[ppc[pointCelli]];
         }
@@ -138,10 +138,10 @@ volPointInterpolation::interpolate
         )
     );
 
-    interpolateInternalField(vf, tpf());
+    interpolateInternalField(vf, tpf.ref());
 
     // Interpolate to the patches overriding fixed value BCs
-    boundaryInterpolator_.interpolate(vf, tpf(), true);
+    boundaryInterpolator_.interpolate(vf, tpf.ref(), true);
 
     return tpf;
 }
@@ -187,8 +187,8 @@ volPointInterpolation::interpolate
         )
     );
 
-    interpolateInternalField(vf, tpf());
-    boundaryInterpolator_.interpolate(vf, tpf(), false);
+    interpolateInternalField(vf, tpf.ref());
+    boundaryInterpolator_.interpolate(vf, tpf.ref(), false);
 
     return tpf;
 }

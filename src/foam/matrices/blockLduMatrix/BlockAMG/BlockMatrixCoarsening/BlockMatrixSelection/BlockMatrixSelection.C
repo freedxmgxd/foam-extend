@@ -141,11 +141,11 @@ void Foam::BlockMatrixSelection<Type>::calcCoarsening()
 
     // Get addressing
     const label nRows = matrix_.lduAddr().size();
-    const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
-    const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
-    const unallocLabelList& losortAddr = matrix_.lduAddr().losortAddr();
-    const unallocLabelList& ownerStart = matrix_.lduAddr().ownerStartAddr();
-    const unallocLabelList& losortStart = matrix_.lduAddr().losortStartAddr();
+    const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
+    const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+    const labelUList& losortAddr = matrix_.lduAddr().losortAddr();
+    const labelUList& ownerStart = matrix_.lduAddr().ownerStartAddr();
+    const labelUList& losortStart = matrix_.lduAddr().losortStartAddr();
 
     // Note: not taking norm magnitudes.  HJ, 28/Feb/2017
 
@@ -767,13 +767,13 @@ Foam::BlockMatrixSelection<Type>::restrictMatrix() const
     const labelList& colR = crR.column();
 
     // Matrix A addressing
-    const unallocLabelList& rowA = matrix_.lduAddr().ownerStartAddr();
-    const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
+    const labelUList& rowA = matrix_.lduAddr().ownerStartAddr();
+    const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
 
     // Addressing for lower triangle loop
-    const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
-    const unallocLabelList& losortAddr = matrix_.lduAddr().losortAddr();
-    const unallocLabelList& losortStart = matrix_.lduAddr().losortStartAddr();
+    const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
+    const labelUList& losortAddr = matrix_.lduAddr().losortAddr();
+    const labelUList& losortStart = matrix_.lduAddr().losortStartAddr();
 
     // Prolongation addressing
     const labelList& rowP = crP.rowStart();
@@ -1146,17 +1146,17 @@ void Foam::BlockMatrixSelection<Type>::updateMatrix
     const labelList& colR = crR.column();
 
     // Matrix A addressing
-    const unallocLabelList& rowA = matrix_.lduAddr().ownerStartAddr();
-    const unallocLabelList& upperAddr = matrix_.lduAddr().upperAddr();
+    const labelUList& rowA = matrix_.lduAddr().ownerStartAddr();
+    const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
 
     // Get interfaces from fine matrix
     const typename BlockLduInterfaceFieldPtrsList<Type>::Type&
         interfaceFields = matrix_.interfaces();
 
     // Addressing for lower triangle loop
-    const unallocLabelList& lowerAddr = matrix_.lduAddr().lowerAddr();
-    const unallocLabelList& losortAddr = matrix_.lduAddr().losortAddr();
-    const unallocLabelList& losortStart = matrix_.lduAddr().losortStartAddr();
+    const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
+    const labelUList& losortAddr = matrix_.lduAddr().losortAddr();
+    const labelUList& losortStart = matrix_.lduAddr().losortStartAddr();
 
     // Prolongation addressing
     const labelList& rowP = crP.rowStart();
@@ -1220,14 +1220,14 @@ void Foam::BlockMatrixSelection<Type>::updateMatrix
         squareTypeField& activeCoarseLower = coarseLower.asSquare();
 
         // Get coarse matrix addressing
-        const unallocLabelList& rowC = coarseMatrix.lduAddr().ownerStartAddr();
-        const unallocLabelList& upperCoarseAddr =
+        const labelUList& rowC = coarseMatrix.lduAddr().ownerStartAddr();
+        const labelUList& upperCoarseAddr =
             coarseMatrix.lduAddr().upperAddr();
-        const unallocLabelList& lowerCoarseAddr =
+        const labelUList& lowerCoarseAddr =
             coarseMatrix.lduAddr().lowerAddr();
-        const unallocLabelList& losortCoarseAddr =
+        const labelUList& losortCoarseAddr =
             coarseMatrix.lduAddr().losortAddr();
-        const unallocLabelList& losortCoarseStart =
+        const labelUList& losortCoarseStart =
             coarseMatrix.lduAddr().losortStartAddr();
 
         // Re-initialise coeffLabel vector

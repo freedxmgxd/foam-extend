@@ -67,10 +67,10 @@ Foam::tmp<Foam::surfaceScalarField> Foam::harmonic<Type>::weights
 
     const surfaceScalarField& longDelta = this->mesh().magLongDeltas();
 
-    surfaceScalarField& w = tw();
+    surfaceScalarField& w = tw.ref();
 
-    const unallocLabelList& owner = this->mesh().owner();
-    const unallocLabelList& neighbour = this->mesh().neighbour();
+    const labelUList& owner = this->mesh().owner();
+    const labelUList& neighbour = this->mesh().neighbour();
 
     scalarField magPhi = mag(phi);
 
@@ -152,7 +152,7 @@ Foam::tmp<Foam::scalarField> Foam::harmonic<Type>::weights
     // 5) Use weights to interpolate values
 
     tmp<scalarField> tweights(new scalarField(fOwn.size(), 0.5));
-    scalarField& weights = tweights();
+    scalarField& weights = tweights.ref();
 
     // Larger small for complex arithmetic accuracy
     const scalar kSmall = 1000*SMALL;

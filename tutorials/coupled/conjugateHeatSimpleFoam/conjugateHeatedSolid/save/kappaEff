@@ -22,22 +22,19 @@ boundaryField
 {
     topWall
     {
-        type            zeroGradient;
-    }
-
-    left
-    {
-        type            zeroGradient;
-    }
-
-    right
-    {
         type            chtRcThermalDiffusivity;
         remoteField     k;
         value           uniform 1e-3;
     }
-
-    bottom
+    left
+    {
+        type            zeroGradient;
+    }
+    right
+    {
+        type            zeroGradient;
+    }
+    bottomWall
     {
         type            zeroGradient;
     }
