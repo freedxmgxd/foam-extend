@@ -95,10 +95,10 @@ class oversetAMGInterface
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        oversetAMGInterface(const oversetAMGInterface&);
+        oversetAMGInterface(const oversetAMGInterface&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const oversetAMGInterface&);
+        void operator=(const oversetAMGInterface&) = delete;
 
 
         //- Init map

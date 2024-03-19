@@ -79,8 +79,8 @@ void Foam::oversetAMGInterface::initMap() const
     // Create construct map: what I am receiving from each processor
     labelListList constructMap(Pstream::nProcs());
 
-    // Create list containing number of donors A processor is sending to other
-    // processors.
+    // Create list containing number of donors this processor is sending to
+    // other processors.
     forAll (nDonorsFromProcessorMap, procI)
     {
         nDonorsFromProcessorMap[procI].setSize(Pstream::nProcs(), 0);
