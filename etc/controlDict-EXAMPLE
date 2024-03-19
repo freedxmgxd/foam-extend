@@ -879,6 +879,7 @@ DebugSwitches
 
 InfoSwitches
 {
+    allowSystemOperations 1;
     writePrecision  6;
     writeJobInfo    0;
 }
