@@ -149,7 +149,7 @@ void Foam::radiation::fvDOM::initialise()
 
 
     // Construct absorption field for each wavelength
-    forAll(aLambda_, lambdaI)
+    forAll (aLambda_, lambdaI)
     {
         aLambda_.set
         (
@@ -209,7 +209,7 @@ void Foam::radiation::fvDOM::initialise()
         {
             fvRayDiv_[lambdaI].setSize(nRay_);
 
-            forAll(IRay_, rayId)
+            forAll (IRay_, rayId)
             {
                 const surfaceScalarField Ji(IRay_[rayId].dAve() & mesh().Sf());
                 volScalarField& iRayLambdaI = IRay_[rayId].ILambda(lambdaI);
@@ -226,7 +226,7 @@ void Foam::radiation::fvDOM::initialise()
         }
     }
 
-    forAll(IRay_, rayId)
+    forAll (IRay_, rayId)
     {
         if (omegaMax_ <  IRay_[rayId].omega())
         {
@@ -446,7 +446,7 @@ Foam::radiation::fvDOM::Qin() const
 
     sumQin = 0;
 
-    forAll(Qin_, lambdaI)
+    forAll (Qin_, lambdaI)
     {
         sumQin += Qin(lambdaI);
     }
@@ -471,7 +471,7 @@ Foam::radiation::fvDOM::Qem() const
 
     sumQem = 0;
 
-    forAll(Qem_, lambdaI)
+    forAll (Qem_, lambdaI)
     {
         sumQem += Qem(lambdaI);
     }
@@ -510,7 +510,7 @@ void Foam::radiation::fvDOM::calculate()
         Info << "Radiation solver iter: " << radIter << endl;
 
         Info << "Updating Radiation BCs..." << flush;
-        forAll(IRay_, rayI)
+        forAll (IRay_, rayI)
         {
             IRay_[rayI].updateBCs();
         }
@@ -520,15 +520,15 @@ void Foam::radiation::fvDOM::calculate()
         if (debug)
         {
             // Update radiation balances
-            forAll(aLambda_, lambdaI)
+            forAll (aLambda_, lambdaI)
             {
                 Qem_[lambdaI] = 0;
                 Qin_[lambdaI] = 0;
 
-                forAll(Qem_[lambdaI], patchI)
+                forAll (Qem_[lambdaI], patchI)
                 {
                     // Loop over all rays
-                    forAll(IRay_, rayI)
+                    forAll (IRay_, rayI)
                     {
                         const fvPatchScalarField& curPatch =
                             IRay_[rayI].ILambda
@@ -558,7 +558,7 @@ void Foam::radiation::fvDOM::calculate()
         }
 
         // Solve ray transport equations
-        forAll(IRay_, rayI)
+        forAll (IRay_, rayI)
         {
             maxResidual = 0;
             scalar maxRayResidual = IRay_[rayI].correct();
@@ -566,15 +566,15 @@ void Foam::radiation::fvDOM::calculate()
         }
 
         // Update radiation balances
-        forAll(aLambda_, lambdaI)
+        forAll (aLambda_, lambdaI)
         {
             Qem_[lambdaI] = 0;
             Qin_[lambdaI] = 0;
 
-            forAll(Qem_[lambdaI], patchI)
+            forAll (Qem_[lambdaI], patchI)
             {
                 // Loop over all rays
-                forAll(IRay_, rayI)
+                forAll (IRay_, rayI)
                 {
                     const fvPatchScalarField& curPatch =
                         IRay_[rayI].ILambda(lambdaI).boundaryField()[patchI];
@@ -651,17 +651,18 @@ void Foam::radiation::fvDOM::updateG()
     G_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0.0);
     Qr_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0.0);
 
-    forAll(IRay_, rayI)
+    forAll (IRay_, rayI)
     {
         IRay_[rayI].addIntensity();
         G_ += IRay_[rayI].I()*IRay_[rayI].omega();
     }
 
-    forAll(Qr_.boundaryField(), patchI)
+    forAll (Qr_.boundaryField(), patchI)
     {
-        forAll(aLambda_, lambdaI)
+        forAll (aLambda_, lambdaI)
         {
-            Qr_.boundaryField()[patchI] += Qin_[lambdaI][patchI] - Qem_[lambdaI][patchI];
+            Qr_.boundaryField()[patchI] +=
+                Qin_[lambdaI][patchI] - Qem_[lambdaI][patchI];
         }
     }
 }
