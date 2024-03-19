@@ -226,7 +226,7 @@ Foam::chtRcThermalDiffusivityFvPatchScalarField::calcThermalDiffusivity
             lData[facei][1] = lfNei[facei];
         }
 
-        if(TwOwn.shadowPatchField().radiation())
+        if (TwOwn.shadowPatchField().radiation())
         {
             const scalarField& lTwNei = TwOwn.shadowPatchField().Tw();
             const scalarField& lQrNei =
