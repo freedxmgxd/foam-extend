@@ -41,7 +41,7 @@ writeFormat     ascii;
 
 writePrecision  6;
 
-writeCompression uncompressed;
+writeCompression yes;
 
 timeFormat      general;
 
@@ -55,7 +55,7 @@ functions
     {
         // Type of functionObject
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libconjugateHeatTransfer.so");
         patch left;
         outputControl timeStep;
         outputInterval 1;
@@ -69,7 +69,7 @@ functions
     {
         // Type of functionObject
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libconjugateHeatTransfer.so");
         patch right;
         outputControl timeStep;
         outputInterval 1;
@@ -83,7 +83,7 @@ functions
     {
         // Type of functionObject
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libconjugateHeatTransfer.so");
         patch bottomWall;
         outputControl timeStep;
         outputInterval 1;
@@ -97,7 +97,7 @@ functions
     {
         // Type of functionObject
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libconjugateHeatTransfer.so");
         patch topWall;
         outputControl timeStep;
         outputInterval 1;
@@ -111,7 +111,7 @@ functions
     {
         // Type of functionObject
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libconjugateHeatTransfer.so");
         region solid;
         patch bottom;
         outputControl timeStep;
