@@ -198,7 +198,7 @@ tmp<fvVectorMatrix> laminar::divDevReff() const
     return
     (
       - fvm::laplacian(nuEff(), U_)
-      - fvc::div(nuEff()*dev(T(fvc::grad(U_))))
+      - fvc::div(nuEff()*dev2(T(fvc::grad(U_))))
     );
 }
 
