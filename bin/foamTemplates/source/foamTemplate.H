@@ -70,10 +70,10 @@ class className
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        className(const className&);
+        className(const className&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const className&);
+        void operator=(const className&) = delete;
 
 
 public:
@@ -106,7 +106,7 @@ public:
 
 
     //- Destructor
-    ~className();
+    ~className() = default;
 
 
     // Member Functions
