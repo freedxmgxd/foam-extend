@@ -30,7 +30,8 @@ boundaryField
     }
     right
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 0;
     }
     bottomWall
     {

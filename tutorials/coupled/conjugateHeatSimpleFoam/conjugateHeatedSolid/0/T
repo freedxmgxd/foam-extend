@@ -23,7 +23,7 @@ boundaryField
     topWall
     {
         type            chtRcTemperature;
-        radiation       off;
+        radiation       on;
         K               kappaEff;
         remoteField     T;
         value           uniform 273;
@@ -39,7 +39,8 @@ boundaryField
     }
     bottomWall
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 273;
     }
     frontAndBack
     {

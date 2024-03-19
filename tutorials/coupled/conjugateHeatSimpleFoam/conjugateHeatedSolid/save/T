@@ -39,7 +39,8 @@ boundaryField
     }
     bottomWall
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 273;
     }
     frontAndBack
     {

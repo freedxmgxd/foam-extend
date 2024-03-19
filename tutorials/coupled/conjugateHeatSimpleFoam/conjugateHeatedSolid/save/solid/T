@@ -20,17 +20,21 @@ internalField   uniform 373;
 
 boundaryField
 {
-    topAndBottom
+    top
     {
         type            zeroGradient;
     }
-    left
+    bottom
     {
         type            chtRcTemperature;
         radiation       off;
         K               k;
         remoteField     T;
         value           uniform 373;
+    }
+    left
+    {
+        type            zeroGradient;
     }
     right
     {

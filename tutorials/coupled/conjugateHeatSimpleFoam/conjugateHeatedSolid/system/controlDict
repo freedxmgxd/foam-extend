@@ -27,13 +27,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         100;
+endTime         500;
 
 deltaT          1;
 
 writeControl    timeStep;
 
-writeInterval   10;
+writeInterval   100;
 
 purgeWrite      0;
 
@@ -51,24 +51,76 @@ runTimeModifiable yes;
 
 functions
 (
-    heatFlux
+    heatFluxLeft
     {
         // Type of functionObject
-        type heatFlux;
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        patch left;
         outputControl timeStep;
         outputInterval 1;
 
-        K              kappaEff;
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "fluid-left_heat.dat";
     }
-    heatFlux
+    heatFluxRight
     {
         // Type of functionObject
-        type heatFlux;
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        patch right;
         outputControl timeStep;
         outputInterval 1;
-        region solid;
 
-        K              k;
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "fluid-right_heat.dat";
+    }
+    heatFluxBottomWall
+    {
+        // Type of functionObject
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        patch bottomWall;
+        outputControl timeStep;
+        outputInterval 1;
+
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "fluid-bottomWall_heat.dat";
+    }
+    heatFluxCHTFluid
+    {
+        // Type of functionObject
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        patch topWall;
+        outputControl timeStep;
+        outputInterval 1;
+
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "fluid-topWall_heat.dat";
+    }
+    heatFluxCHTSolid
+    {
+        // Type of functionObject
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        region solid;
+        patch bottom;
+        outputControl timeStep;
+        outputInterval 1;
+
+        T T;
+        phi none;
+        gamma k;
+        file "solid-bottom_heat.dat";
     }
     minMaxT
     {
