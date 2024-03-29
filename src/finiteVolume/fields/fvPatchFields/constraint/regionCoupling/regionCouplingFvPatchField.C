@@ -191,8 +191,6 @@ regionCouplingFvPatchField<Type>::shadowPatchField() const
 template<class Type>
 tmp<Field<Type> > regionCouplingFvPatchField<Type>::patchNeighbourField() const
 {
-    Field<Type> sField = shadowPatchField().patchInternalField();
-
     tmp<Field<Type> > tpnf
     (
         regionCouplePatch_.interpolate
