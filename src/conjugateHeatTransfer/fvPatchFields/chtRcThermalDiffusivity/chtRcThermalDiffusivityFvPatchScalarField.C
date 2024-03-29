@@ -117,6 +117,9 @@ void Foam::chtRcThermalDiffusivityFvPatchScalarField::updateCoeffs()
     const fvPatchScalarField& Tw =
         lookupPatchField<volScalarField, scalar>("T");
 
+    // Note: in hs-T CHT system, diffusivity on the solid side k
+    // is equal to diffusivity on the fluid side times linearised Cp
+    // HJ, 29/Mar/2024
     if
     (
         dimensionedInternalField().dimensions()
@@ -144,8 +147,9 @@ void Foam::chtRcThermalDiffusivityFvPatchScalarField::updateCoeffs()
                     thermo.h().boundaryField()[patchi]
                 );
 
+            // Note: use Cp(Tc) linearisation for consistency
             *this == calcThermalDiffusivity(*this, shadowPatchField(), h)
-                /thermo.Cp(Tw, patchi);
+                /thermo.Cp(h.Tc(), patchi);
         }
         else if
         (
@@ -158,8 +162,9 @@ void Foam::chtRcThermalDiffusivityFvPatchScalarField::updateCoeffs()
                     thermo.hs().boundaryField()[patchi]
                 );
 
+            // Note: use Cp(Tc) linearisation for consistency
             *this == calcThermalDiffusivity(*this, shadowPatchField(), hs)
-                /thermo.Cp(Tw, patchi);
+                /thermo.Cp(hs.Tc(), patchi);
         }
         else
         {
@@ -196,6 +201,14 @@ Foam::chtRcThermalDiffusivityFvPatchScalarField::calcThermalDiffusivity
             << endl;
     }
 
+    if (owner.size() != TwOwn.size())
+    {
+        FatalErrorInFunction
+            << "Problem with field sizes: owner = " << owner.size()
+            << " TwOwn = " << TwOwn.size()
+                << abort(FatalError);
+    }
+    
     const fvPatch& p = owner.patch();
     const fvMesh& mesh = p.boundaryMesh().mesh();
 
@@ -306,6 +319,14 @@ Foam::chtRcThermalDiffusivityFvPatchScalarField::calcTemperature
             << endl;
     }
 
+    if (TwOwn.size() != ownerK.size())
+    {
+        FatalErrorInFunction
+            << "Problem with field sizes: TwOwn = " << TwOwn.size()
+            << " ownerK = " << ownerK.size()
+            << abort(FatalError);
+    }
+    
     const fvPatch& p = TwOwn.patch();
     const fvMesh& mesh = p.boundaryMesh().mesh();
 

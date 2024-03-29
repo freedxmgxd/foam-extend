@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class regionCouplingResistanceFvPatchField Declaration
+     Class chtRcThermalDiffusivityResistanceFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class chtRcThermalDiffusivityResistanceFvPatchScalarField
@@ -117,9 +117,17 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new chtRcThermalDiffusivityResistanceFvPatchScalarField(*this, iF)
+                new chtRcThermalDiffusivityResistanceFvPatchScalarField
+                (
+                    *this,
+                    iF
+                )
             );
         }
+
+
+    //- Destructor
+    ~chtRcThermalDiffusivityResistanceFvPatchScalarField() = default;
 
 
     // Member functions

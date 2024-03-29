@@ -126,28 +126,13 @@ public:
 
     // Member functions
 
-        // Access functions
-
-            //- Return shadow patch field
-            virtual const chtRcTemperatureFvPatchScalarField&
-                shadowPatchField() const;
-
-            //- Return neighbour field given internal cell data
-            virtual tmp<scalarField> patchNeighbourField() const;
-
-
         // Evaluation functions
 
-            //- Evaluate the patch field
-            virtual void evaluate(const Pstream::commsTypes commsType);
+            //- Calculate source term
+            virtual tmp<scalarField> source() const;
 
-            //- Evaluate the patch field
-            virtual void updateCoeffs();
-
-
-        //- Write
-    //virtual void write(Ostream&) const;
-
+            //- Manipulate matrix
+            virtual void manipulateMatrix(fvScalarMatrix& matrix);
 };
 
 

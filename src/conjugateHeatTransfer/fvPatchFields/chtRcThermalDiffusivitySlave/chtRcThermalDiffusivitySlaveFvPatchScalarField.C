@@ -113,41 +113,14 @@ void Foam::chtRcThermalDiffusivitySlaveFvPatchScalarField::updateCoeffs()
 
     scalarField& k = *this;
 
-    if
-    (
-        dimensionedInternalField().dimensions()
-     == dimensionSet(1, -1, -1, 0, 0, 0, 0)
-    )
-    {
-        const label patchi = patch().index();
-
-        const basicThermo& thermo = db().lookupObject<basicThermo>
+    // Note: use only on slave (solid T) side
+    const chtRcTemperatureFvPatchScalarField& Tw =
+        refCast<const chtRcTemperatureFvPatchScalarField>
         (
-            "thermophysicalProperties"
+            lookupPatchField<volScalarField, scalar>("T")
         );
 
-        const chtRcTemperatureFvPatchScalarField& h =
-            refCast<const chtRcTemperatureFvPatchScalarField>
-            (
-                thermo.h().boundaryField()[patchi]
-            );
-
-        const scalarField Tw =
-            lookupPatchField<volScalarField, scalar>("T");
-
-        k = calcThermalDiffusivity(*this, shadowPatchField(), h)
-            /thermo.Cp(Tw, patchi);
-    }
-    else
-    {
-        const chtRcTemperatureFvPatchScalarField& Tw =
-            refCast<const chtRcTemperatureFvPatchScalarField>
-            (
-                lookupPatchField<volScalarField, scalar>("T")
-            );
-
-        k = calcThermalDiffusivity(*this, shadowPatchField(), Tw);
-    }
+    k = calcThermalDiffusivity(*this, shadowPatchField(), Tw);
 }
 
 

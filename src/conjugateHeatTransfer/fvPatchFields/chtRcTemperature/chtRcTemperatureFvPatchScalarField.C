@@ -117,14 +117,17 @@ Foam::chtRcTemperatureFvPatchScalarField::shadowPatchField() const
 }
 
 
-// Return neighbour field given internal cell data
 Foam::tmp<Foam::scalarField>
 Foam::chtRcTemperatureFvPatchScalarField::patchNeighbourField() const
 {
-    return regionCouplingFvPatchScalarField::patchNeighbourField
-    (
-        remoteFieldName()
-    );
+    // Note
+    // In case the other side of the CHT pair is a h or hs field, shadow
+    // patch neighbour field will handle the conversion to temperature
+    // HJ, 29/Mar/2024
+    return regionCouplePatch().interpolate(shadowPatchField().Tc());
+
+    // Add partial overlap correction here???
+    // HJ, 29/Mar/2024
 }
 
 

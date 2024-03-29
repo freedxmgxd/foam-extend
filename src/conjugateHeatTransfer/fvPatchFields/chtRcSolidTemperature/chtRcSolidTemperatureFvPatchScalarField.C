@@ -87,51 +87,18 @@ chtRcSolidTemperatureFvPatchScalarField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
-// Return neighbour field given internal cell data
 Foam::tmp<Foam::scalarField>
-Foam::chtRcSolidTemperatureFvPatchScalarField::patchNeighbourField() const
+Foam::chtRcSolidTemperatureFvPatchScalarField::source() const
 {
-    return regionCouplingFvPatchScalarField::patchNeighbourField("T");
+    return tmp<scalarField>(new scalarField(patch().size(), 0));
 }
 
 
-// Return a named shadow patch field
-const Foam::chtRcTemperatureFvPatchScalarField&
-Foam::chtRcSolidTemperatureFvPatchScalarField::shadowPatchField() const
-{
-    return refCast<const chtRcTemperatureFvPatchScalarField>
-    (
-        regionCouplingFvPatchScalarField::shadowPatchField()
-    );
-}
-
-
-void Foam::chtRcSolidTemperatureFvPatchScalarField::evaluate
+void Foam::chtRcSolidTemperatureFvPatchScalarField::manipulateMatrix
 (
-    const Pstream::commsTypes
+    fvScalarMatrix& matrix
 )
-{
-    fvPatchScalarField::evaluate();
-}
-
-
-void Foam::chtRcSolidTemperatureFvPatchScalarField::updateCoeffs()
-{
-    if (updated())
-    {
-        return;
-    }
-
-    const chtRegionCoupleBase& K =
-        refCast<const chtRegionCoupleBase>
-        (
-            lookupPatchField<volScalarField, scalar>(kName())
-        );
-
-    *this == K.calcTemperature(*this, shadowPatchField(), K);
-
-    fvPatchScalarField::updateCoeffs();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -161,7 +161,8 @@ public:
             virtual const chtRcTemperatureFvPatchScalarField&
                 shadowPatchField() const;
 
-            //- Return neighbour field given internal cell data
+            //- Return neighbour temperature field
+            //  Note: for hs and derived fields, conversion is required
             virtual tmp<scalarField> patchNeighbourField() const;
 
             //- Return wall temperature
