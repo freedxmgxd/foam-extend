@@ -129,10 +129,10 @@ public:
         // Evaluation functions
 
             //- Calculate source term
-            virtual tmp<scalarField> source() const;
+//            virtual tmp<scalarField> source() const;
 
             //- Manipulate matrix
-            virtual void manipulateMatrix(fvScalarMatrix& matrix);
+//            virtual void manipulateMatrix(fvScalarMatrix& matrix);
 };
 
 

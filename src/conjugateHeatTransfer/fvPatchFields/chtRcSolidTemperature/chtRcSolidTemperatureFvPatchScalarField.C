@@ -87,20 +87,6 @@ chtRcSolidTemperatureFvPatchScalarField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
-Foam::tmp<Foam::scalarField>
-Foam::chtRcSolidTemperatureFvPatchScalarField::source() const
-{
-    return tmp<scalarField>(new scalarField(patch().size(), 0));
-}
-
-
-void Foam::chtRcSolidTemperatureFvPatchScalarField::manipulateMatrix
-(
-    fvScalarMatrix& matrix
-)
-{}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
