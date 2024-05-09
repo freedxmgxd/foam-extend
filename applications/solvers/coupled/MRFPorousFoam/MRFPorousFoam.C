@@ -85,9 +85,11 @@ int main(int argc, char *argv[])
         maxResidual = cmptMax(residual.initialResidual());
 
         // Check for divergence
-        if (mag(residual.finalResidual() - residual.initialResidual()) > 1)
+        if (cmptMax(residual.finalResidual() - residual.initialResidual()) > 0)
         {
-            Info<< "DIVERGENCE: rescue step" << endl;
+            Info<< "DIVERGENCE: rescue step: "
+                << residual.finalResidual() - residual.initialResidual()
+                << endl;
 
             // Solving potential flow equation and correcting velocities
             phi = (fvc::interpolate(U) & mesh.Sf());
