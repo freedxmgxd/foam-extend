@@ -132,6 +132,10 @@ public:
         ) const = 0;
 
 
+    //- Destructor
+    virtual ~CoupledPointPatchField() = default;
+
+
     // Member functions
 
         // Access
