@@ -71,12 +71,6 @@ Foam::mixingPlaneAMGInterfaceField::mixingPlaneAMGInterfaceField
 }
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
-
-Foam::mixingPlaneAMGInterfaceField::~mixingPlaneAMGInterfaceField()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::mixingPlaneAMGInterfaceField::initInterfaceMatrixUpdate

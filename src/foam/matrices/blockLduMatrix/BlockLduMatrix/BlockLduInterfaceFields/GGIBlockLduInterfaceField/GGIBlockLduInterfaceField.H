@@ -68,7 +68,7 @@ public:
 
 
     //- Destructor
-    virtual ~GGIBlockLduInterfaceField();
+    virtual ~GGIBlockLduInterfaceField() = default;
 
 
     // Member Functions

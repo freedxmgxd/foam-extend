@@ -64,12 +64,6 @@ Foam::ggiSAMGInterfaceField::ggiSAMGInterfaceField
 }
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
-
-Foam::ggiSAMGInterfaceField::~ggiSAMGInterfaceField()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::ggiSAMGInterfaceField::initInterfaceMatrixUpdate

@@ -249,12 +249,6 @@ Foam::processorAMGInterface::processorAMGInterface
 }
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
-
-Foam::processorAMGInterface::~processorAMGInterface()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::processorAMGInterface::initTransfer

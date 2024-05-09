@@ -68,7 +68,7 @@ public:
 
 
     //- Destructor
-    virtual ~OverlapGGIBlockLduInterfaceField();
+    virtual ~OverlapGGIBlockLduInterfaceField() = default;
 
 
     // Member Functions

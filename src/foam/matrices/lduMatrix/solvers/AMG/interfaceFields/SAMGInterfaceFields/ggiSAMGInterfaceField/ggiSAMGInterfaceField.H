@@ -94,7 +94,7 @@ public:
 
 
     //- Destructor
-    virtual ~ggiSAMGInterfaceField();
+    virtual ~ggiSAMGInterfaceField() = default;
 
 
     // Member Functions

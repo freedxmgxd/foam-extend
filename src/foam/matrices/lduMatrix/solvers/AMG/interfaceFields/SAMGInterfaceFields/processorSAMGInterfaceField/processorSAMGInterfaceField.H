@@ -106,7 +106,7 @@ public:
 
 
     //- Destructor
-    virtual ~processorSAMGInterfaceField();
+    virtual ~processorSAMGInterfaceField() = default;
 
 
     // Member Functions

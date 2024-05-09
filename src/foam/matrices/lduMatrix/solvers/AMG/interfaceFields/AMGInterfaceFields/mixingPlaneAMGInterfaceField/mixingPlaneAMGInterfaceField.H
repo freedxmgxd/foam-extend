@@ -99,9 +99,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~mixingPlaneAMGInterfaceField();
+    //- Destructor
+    virtual ~mixingPlaneAMGInterfaceField() = default;
 
 
     // Member Functions

@@ -64,12 +64,6 @@ Foam::ggiAMGInterfaceField::ggiAMGInterfaceField
 }
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
-
-Foam::ggiAMGInterfaceField::~ggiAMGInterfaceField()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::ggiAMGInterfaceField::initInterfaceMatrixUpdate

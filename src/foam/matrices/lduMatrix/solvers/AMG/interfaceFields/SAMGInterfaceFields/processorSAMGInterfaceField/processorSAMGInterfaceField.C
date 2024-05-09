@@ -66,12 +66,6 @@ Foam::processorSAMGInterfaceField::processorSAMGInterfaceField
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::processorSAMGInterfaceField::~processorSAMGInterfaceField()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::processorSAMGInterfaceField::initInterfaceMatrixUpdate

@@ -66,12 +66,6 @@ Foam::processorAMGInterfaceField::processorAMGInterfaceField
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::processorAMGInterfaceField::~processorAMGInterfaceField()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::processorAMGInterfaceField::initInterfaceMatrixUpdate

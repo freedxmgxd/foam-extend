@@ -75,9 +75,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~regionCoupleAMGInterfaceField();
+    //- Destructor
+    virtual ~regionCoupleAMGInterfaceField() = default;
 
 
     // Member Functions

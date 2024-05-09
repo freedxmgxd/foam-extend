@@ -90,9 +90,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~cyclicAMGInterfaceField();
+    //- Destructor
+    virtual ~cyclicAMGInterfaceField() = default;
 
 
     // Member Functions
@@ -117,6 +116,19 @@ public:
             {
                 cyclicLduInterfaceField::transformCoupleField(pnf, cmpt);
             }
+
+            //- Initialise neighbour matrix update
+            virtual void initInterfaceMatrixUpdate
+            (
+                const scalarField&,
+                scalarField&,
+                const lduMatrix&,
+                const scalarField&,
+                const direction,
+                const Pstream::commsTypes commsType,
+                const bool switchToLhs
+            ) const
+            {}
 
             //- Update result field based on interface functionality
             virtual void updateInterfaceMatrix

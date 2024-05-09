@@ -354,12 +354,6 @@ Foam::processorSAMGInterface::processorSAMGInterface
 }
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
-
-Foam::processorSAMGInterface::~processorSAMGInterface()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::processorSAMGInterface::initTransfer

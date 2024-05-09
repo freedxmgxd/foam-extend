@@ -53,10 +53,4 @@ Foam::cyclicGgiAMGInterfaceField::cyclicGgiAMGInterfaceField
 {}
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
-
-Foam::cyclicGgiAMGInterfaceField::~cyclicGgiAMGInterfaceField()
-{}
-
-
 // ************************************************************************* //

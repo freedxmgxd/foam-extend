@@ -56,12 +56,6 @@ Foam::regionCoupleAMGInterfaceField::regionCoupleAMGInterfaceField
 {}
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
-
-Foam::regionCoupleAMGInterfaceField::~regionCoupleAMGInterfaceField()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::regionCoupleAMGInterfaceField::initInterfaceMatrixUpdate

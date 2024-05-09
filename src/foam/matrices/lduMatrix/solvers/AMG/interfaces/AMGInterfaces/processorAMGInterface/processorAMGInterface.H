@@ -96,7 +96,7 @@ public:
 
 
     //- Destructor
-    virtual ~processorAMGInterface();
+    virtual ~processorAMGInterface() = default;
 
 
     // Member Functions

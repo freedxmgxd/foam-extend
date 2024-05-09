@@ -27,13 +27,6 @@ License
 #include "diagTensorField.H"
 #include "transformField.H"
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::GGIBlockLduInterfaceField<Type>::~GGIBlockLduInterfaceField()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>

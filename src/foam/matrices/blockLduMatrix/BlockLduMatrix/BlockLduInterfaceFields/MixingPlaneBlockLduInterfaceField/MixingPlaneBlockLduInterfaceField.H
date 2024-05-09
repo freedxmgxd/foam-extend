@@ -68,7 +68,7 @@ public:
 
 
     //- Destructor
-    virtual ~MixingPlaneBlockLduInterfaceField();
+    virtual ~MixingPlaneBlockLduInterfaceField() = default;
 
 
     // Member Functions

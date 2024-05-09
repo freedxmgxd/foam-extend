@@ -62,12 +62,6 @@ Foam::cyclicAMGInterfaceField::cyclicAMGInterfaceField
 }
 
 
-// * * * * * * * * * * * * * * * * Desstructor * * * * * * * * * * * * * * * //
-
-Foam::cyclicAMGInterfaceField::~cyclicAMGInterfaceField()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::cyclicAMGInterfaceField::updateInterfaceMatrix

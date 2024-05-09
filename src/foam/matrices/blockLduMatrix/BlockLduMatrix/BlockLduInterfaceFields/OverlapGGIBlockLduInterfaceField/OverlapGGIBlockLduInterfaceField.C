@@ -27,14 +27,6 @@ License
 #include "diagTensorField.H"
 #include "transformField.H"
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::OverlapGGIBlockLduInterfaceField<Type>::
-~OverlapGGIBlockLduInterfaceField()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>

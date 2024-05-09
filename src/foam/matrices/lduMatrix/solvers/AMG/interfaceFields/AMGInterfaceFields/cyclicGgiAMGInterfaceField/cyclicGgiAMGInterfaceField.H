@@ -70,9 +70,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~cyclicGgiAMGInterfaceField();
+    //- Destructor
+    virtual ~cyclicGgiAMGInterfaceField() = default;
 };
 
 
