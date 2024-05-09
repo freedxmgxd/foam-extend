@@ -9,3 +9,4 @@ cleanCase
 \rm -rf constant/cellDecomposition
 \rm -f constant/polyMesh/boundary
 \rm -rf constant/polyMesh/sets
+\cp -r save 0

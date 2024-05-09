@@ -7,11 +7,12 @@ application="pimpleDyMFoam"
 m4 -P system/blockMeshDict.m4 > system/blockMeshDict
 runApplication blockMesh
 
+\rm -rf 0
+\cp -r save 0
 \sed -i s/empty/symmetryPlane/g constant/polyMesh/boundary
 runApplication regionCellSets
 runApplication setSet -batch setBatch.batch
 runApplication setsToZones -noFlipMap
-\cp -r 0_orig 0
 
 # Running is serial
 #runApplication $application

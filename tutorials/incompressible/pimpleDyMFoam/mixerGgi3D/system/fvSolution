@@ -82,11 +82,23 @@ PIMPLE
 
 relaxationFactors
 {
-    p               0.3;
-    U               0.7;
-    UFinal          0.7; // To avoid sudden increase in pressure residual
-    k               0.7;
-    epsilon         0.7;
+    equations
+    {
+        U               0.7;
+        UFinal          0.7; // To avoid sudden increase in pressure residual
+        k               0.7;
+        epsilon         0.7;
+    }
+    fields
+    {
+        p               0.3;
+    }
+}
+
+fieldBounds
+{
+    U 10;
+    p -1000 1000;
 }
 
 potentialFlow
