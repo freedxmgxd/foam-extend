@@ -197,16 +197,8 @@ Foam::forces::forces
     if (!isA<fvMesh>(obr_))
     {
         active_ = false;
-        WarningIn
-        (
-            "Foam::forces::forces"
-            "("
-                "const word&, "
-                "const objectRegistry&, "
-                "const dictionary&, "
-                "const bool"
-            ")"
-        )   << "No fvMesh available, deactivating."
+        WarningInFunction
+            << "No fvMesh available, deactivating."
             << endl;
     }
 
