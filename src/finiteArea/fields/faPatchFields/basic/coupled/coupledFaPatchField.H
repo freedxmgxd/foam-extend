@@ -117,6 +117,10 @@ public:
         ) const = 0;
 
 
+    //- Destructor
+    virtual ~coupledFaPatchField() = default;
+
+
     // Member functions
 
         // Access
