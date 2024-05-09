@@ -82,11 +82,8 @@ Foam::donorSuitability::patchDistance::patchDistance
         }
         else
         {
-            FatalErrorIn
-            (
-                "donorSuitability::"
-                "patchDistance::patchDistance()"
-            )   << "Cannot find distance patch named: "
+            FatalErrorInFunction
+                << "Cannot find distance patch named: "
                 << masterRegionPatchNames[patchI]
                 << " for master region." << nl
                 << "Available patch names: " << mesh.boundaryMesh().names()

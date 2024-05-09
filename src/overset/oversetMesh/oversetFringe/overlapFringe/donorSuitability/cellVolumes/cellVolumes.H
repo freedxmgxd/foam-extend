@@ -76,8 +76,7 @@ public:
 
 
     //- Destructor
-    virtual ~cellVolumes()
-    {}
+    virtual ~cellVolumes() = default;
 };
 
 

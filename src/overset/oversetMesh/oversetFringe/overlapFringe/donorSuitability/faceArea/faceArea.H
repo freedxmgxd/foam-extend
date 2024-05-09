@@ -76,8 +76,7 @@ public:
 
 
     //- Destructor
-    virtual ~faceArea()
-    {}
+    virtual ~faceArea() = default;
 };
 
 

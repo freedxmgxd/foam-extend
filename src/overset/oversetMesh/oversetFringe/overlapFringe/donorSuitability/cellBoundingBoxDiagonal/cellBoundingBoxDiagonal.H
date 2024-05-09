@@ -79,8 +79,7 @@ public:
 
 
     //- Destructor
-    virtual ~cellBoundingBoxDiagonal()
-    {}
+    virtual ~cellBoundingBoxDiagonal() = default;
 };
 
 

@@ -205,7 +205,7 @@ void Foam::oversetMesh::calcDomainMarkup() const
         ),
         mesh(),
         dimensionedScalar("minusOne", dimless, -1.0),
-        "zeroGradient"
+        zeroGradientFvPatchScalarField::typeName
     );
     volScalarField& regionID = *regionIDPtr_;
     scalarField& regionIDIn = regionID.internalField();
@@ -217,10 +217,29 @@ void Foam::oversetMesh::calcDomainMarkup() const
 
         forAll (curCells, curCellI)
         {
+            if (regionIDIn[curCells[curCellI]] != -1)
+            {
+                WarningInFunction
+                    << "Cell " << curCells[curCellI] << " present in mutiple "
+                    << "regions: " << curCells[curCellI] << " and " << regionI
+                    << endl;
+            }
+
             regionIDIn[curCells[curCellI]] = regionI;
         }
     }
 
+    forAll (regionIDIn, cellI)
+    {
+        if (regionIDIn[cellI] == -1)
+        {
+            WarningInFunction
+                << "Cell " << cellI << " not present in any region: "
+                << regionIDIn[cellI]
+                << endl;
+        }
+    }
+    
     // Update boundary values, making sure that we skip the overset patch
     volScalarField::GeometricBoundaryField& regionIDb =
         regionID.boundaryField();
@@ -240,7 +259,8 @@ void Foam::oversetMesh::calcDomainMarkup() const
     if (min(regionID).value() < 0)
     {
         FatalErrorInFunction
-            << "Found cells without region ID.  Please check overset setup"
+            << "Found cells without region ID.  Please check overset setup.  "
+            << "Is your overset patch created with zero faces?"
             << abort(FatalError);
     }
 }

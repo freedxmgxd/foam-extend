@@ -73,8 +73,7 @@ public:
 
 
     //- Destructor
-    virtual ~noSuitability()
-    {}
+    virtual ~noSuitability() = default;
 };
 
 

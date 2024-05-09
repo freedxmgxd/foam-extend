@@ -77,8 +77,7 @@ public:
 
 
     //- Destructor
-    virtual ~patchDistance()
-    {}
+    virtual ~patchDistance() = default;
 };
 
 
