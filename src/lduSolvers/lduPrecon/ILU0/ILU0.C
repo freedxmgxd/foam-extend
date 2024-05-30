@@ -267,15 +267,8 @@ void Foam::ILU0::preconditionT
 {
     if (matrix_.symmetric())
     {
-        FatalErrorIn
-        (
-            "void ILU0::precondition\n"
-            "(\n"
-            "    scalarField& x,\n"
-            "    const scalarField& b,\n"
-            "    const direction cmpt\n"
-            ") const"
-        )   << "Calling ILU0 on a symetric matrix.  "
+        FatalErrorInFunction
+            << "Calling ILU0 on a symetric matrix.  "
             << "Please use CholeskyPrecon instead"
             << abort(FatalError);
     }

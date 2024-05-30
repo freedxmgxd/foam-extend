@@ -330,11 +330,8 @@ void Foam::ILUC0::precondition
     }
     else
     {
-        WarningIn
-        (
-            "void ILUC0::precondition"
-            "(scalarField& x, const scalarField& b, const direction cmpt)"
-        )   << "Unnecessary use of ILUC0 preconditioner for diagonal matrix. "
+        WarningInFunction
+            << "Unnecessary use of ILUC0 preconditioner for diagonal matrix. "
             << nl
             << "Use diagonal preconditioner instead."
             << endl;
@@ -402,11 +399,8 @@ void Foam::ILUC0::preconditionT
     }
     else
     {
-        WarningIn
-        (
-            "void ILUC0::preconditionT"
-            "(scalarField& x, const scalarField& b, const direction cmpt)"
-        )   << "Unnecessary use of ILUC0 preconditioner for diagonal matrix. "
+        WarningInFunction
+            << "Unnecessary use of ILUC0 preconditioner for diagonal matrix. "
             << nl
             << "Use diagonal preconditioner instead."
             << endl;
