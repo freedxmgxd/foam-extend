@@ -282,12 +282,40 @@ transFunc(tan)
 transFunc(asin)
 transFunc(acos)
 transFunc(atan)
-transFunc(sinh)
-transFunc(cosh)
+// transFunc(sinh)
+// transFunc(cosh)
 transFunc(tanh)
 transFunc(asinh)
 transFunc(acosh)
 transFunc(atanh)
+
+// Hyperbolic functions with overflow protection
+
+inline Scalar sinh(const Scalar s)
+{
+    if (s > 50)
+    {
+        return ScalarGREAT;
+    }
+    else if (s < -50)
+    {
+        return -ScalarGREAT;
+    }
+    
+    return ::sinh(s);
+}
+
+
+inline Scalar cosh(const Scalar s)
+{
+    if (mag(s) > 50)
+    {
+        return ScalarGREAT;
+    }
+    
+    return ::cosh(s);
+}
+
 
 // Standard ANSI-C (but not in <cmath>) transcendental functions
 

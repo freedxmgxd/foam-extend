@@ -69,6 +69,7 @@ inline bool readScalar(const char* buf, longDoubleScalar& s)
 }
 
 #define Scalar longDoubleScalar
+#define ScalarGREAT longDoubleScalarGREAT
 #define ScalarVGREAT longDoubleScalarVGREAT
 #define ScalarVSMALL longDoubleScalarVSMALL
 #define ScalarROOTVGREAT longDoubleScalarROOTVGREAT
@@ -122,6 +123,7 @@ inline Scalar yn(const int n, const Scalar s)
 }
 
 #undef Scalar
+#undef ScalarGREAT
 #undef ScalarVGREAT
 #undef ScalarVSMALL
 #undef ScalarROOTVGREAT
