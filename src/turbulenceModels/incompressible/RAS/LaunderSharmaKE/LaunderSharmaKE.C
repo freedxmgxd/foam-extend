@@ -247,7 +247,7 @@ void LaunderSharmaKE::correct()
 
     volScalarField S2 = 2*magSqr(symm(fvc::grad(U_)));
 
-    volScalarField G("RASModel::G", nut_*S2);
+    volScalarField G(GName(), nut_*S2);
 
     volScalarField E = 2.0*nu()*nut_*fvc::magSqrGradGrad(U_);
     volScalarField D = 2.0*nu()*magSqr(fvc::grad(sqrt(k_)));

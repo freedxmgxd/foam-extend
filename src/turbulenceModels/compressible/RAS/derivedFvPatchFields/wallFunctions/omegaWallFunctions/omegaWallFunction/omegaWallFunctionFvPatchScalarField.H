@@ -72,24 +72,6 @@ class omegaWallFunctionFvPatchScalarField
 {
     // Private data
 
-        //- Name of velocity field
-        word UName_;
-
-        //- Name of density field
-        word rhoName_;
-
-        //- Name of turbulence kinetic energy field
-        word kName_;
-
-        //- Name of turbulence generation field
-        word GName_;
-
-        //- Name of laminar viscosity field
-        word muName_;
-
-        //- Name of turbulent viscosity field
-        word mutName_;
-
         //- Cmu coefficient
         scalar Cmu_;
 
@@ -115,13 +97,6 @@ protected:
 
         //- Write local wall function variables
         virtual void writeLocalEntries(Ostream&) const;
-
-        //- Return name of turbulence generation field
-        inline const word& GName() const
-        {
-            return GName_;
-        }
-
 
 public:
 

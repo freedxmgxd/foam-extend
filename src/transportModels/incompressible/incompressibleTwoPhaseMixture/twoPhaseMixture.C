@@ -35,7 +35,7 @@ namespace Foam
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-//- Calculate and return the laminar viscosity
+// Calculate and return the laminar viscosity
 word twoPhaseMixture::getPhaseName(const word& key) const
 {
     if (isDict(key))
@@ -116,7 +116,7 @@ twoPhaseMixture::twoPhaseMixture
             U_.db()
         ),
         U_.mesh(),
-        dimensionedScalar("nu", dimensionSet(0, 2, -1, 0, 0), 0),
+        dimensionedScalar("nu", dimensionSet(0, 2, -1, 0, 0), scalar(0)),
         calculatedFvPatchScalarField::typeName
     )
 {

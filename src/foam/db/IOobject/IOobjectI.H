@@ -41,6 +41,21 @@ inline Foam::word Foam::IOobject::groupName(Name name, const word& group)
 }
 
 
+inline Foam::word Foam::IOobject::scopedName
+(
+    const std::string& scope,
+    const word& name
+)
+{
+    if (scope.empty())
+    {
+        return name;
+    }
+
+    return scope + (IOobject::scopeSeparator + name);
+}
+
+
 template<class Stream>
 inline Stream& Foam::IOobject::writeBanner(Stream& os, bool noHint, bool noCopyright)
 {

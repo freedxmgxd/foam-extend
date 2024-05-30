@@ -44,7 +44,7 @@ void omegaWallFunctionFvPatchScalarField::checkType()
 {
     if (!patch().isWall())
     {
-        FatalErrorIn("omegaWallFunctionFvPatchScalarField::checkType()")
+        FatalErrorInFunction
             << "Invalid wall function specification" << nl
             << "    Patch type for patch " << patch().name()
             << " must be wall" << nl
@@ -58,11 +58,6 @@ void omegaWallFunctionFvPatchScalarField::checkType()
 
 void omegaWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
 {
-    writeEntryIfDifferent<word>(os, "U", "U", UName_);
-    writeEntryIfDifferent<word>(os, "k", "k", kName_);
-    writeEntryIfDifferent<word>(os, "G", "RASModel::G", GName_);
-    writeEntryIfDifferent<word>(os, "mu", "mu", muName_);
-    writeEntryIfDifferent<word>(os, "mut", "mut", mutName_);
     os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
     os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
     os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
@@ -79,12 +74,6 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchField<scalar>(p, iF),
-    UName_("U"),
-    rhoName_("rho"),
-    kName_("k"),
-    GName_("RASModel::G"),
-    muName_("mu"),
-    mutName_("mut"),
     Cmu_(0.09),
     kappa_(0.41),
     E_(9.8),
@@ -103,12 +92,6 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchField<scalar>(ptf, p, iF, mapper),
-    UName_(ptf.UName_),
-    rhoName_(ptf.rhoName_),
-    kName_(ptf.kName_),
-    GName_(ptf.GName_),
-    muName_(ptf.muName_),
-    mutName_(ptf.mutName_),
     Cmu_(ptf.Cmu_),
     kappa_(ptf.kappa_),
     E_(ptf.E_),
@@ -126,12 +109,6 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchField<scalar>(p, iF, dict),
-    UName_(dict.lookupOrDefault<word>("U", "U")),
-    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    kName_(dict.lookupOrDefault<word>("k", "k")),
-    GName_(dict.lookupOrDefault<word>("G", "RASModel::G")),
-    muName_(dict.lookupOrDefault<word>("mu", "mu")),
-    mutName_(dict.lookupOrDefault<word>("mut", "mut")),
     Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
     E_(dict.lookupOrDefault<scalar>("E", 9.8)),
@@ -147,12 +124,6 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchField<scalar>(owfpsf),
-    UName_(owfpsf.UName_),
-    rhoName_(owfpsf.rhoName_),
-    kName_(owfpsf.kName_),
-    GName_(owfpsf.GName_),
-    muName_(owfpsf.muName_),
-    mutName_(owfpsf.mutName_),
     Cmu_(owfpsf.Cmu_),
     kappa_(owfpsf.kappa_),
     E_(owfpsf.E_),
@@ -169,12 +140,6 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchField<scalar>(owfpsf, iF),
-    UName_(owfpsf.UName_),
-    rhoName_(owfpsf.rhoName_),
-    kName_(owfpsf.kName_),
-    GName_(owfpsf.GName_),
-    muName_(owfpsf.muName_),
-    mutName_(owfpsf.mutName_),
     Cmu_(owfpsf.Cmu_),
     kappa_(owfpsf.kappa_),
     E_(owfpsf.E_),
@@ -193,12 +158,14 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
+    const RASModel& rasModel = db().lookupObject<RASModel>("RASProperties");
+
     // If G field is not present, execute zero gradient evaluation
     // HJ, 20/Mar/2011
-    if (!db().foundObject<volScalarField>(GName_))
+    if (!db().foundObject<volScalarField>(rasModel.GName()))
     {
-        InfoIn("void omegaWallFunctionFvPatchScalarField::updateCoeffs()")
-            << "Cannot access " << GName_ << " field for patch "
+        InfoInFunction
+            << "Cannot access " << rasModel.GName() << " field for patch "
             << patch().name() << ".  Evaluating as zeroGradient"
             << endl;
 
@@ -208,32 +175,32 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const RASModel& rasModel = db().lookupObject<RASModel>("RASProperties");
     const scalar yPlusLam = rasModel.yPlusLam(kappa_, E_);
     const scalarField& y = rasModel.y()[patch().index()];
 
     const scalar Cmu25 = pow(Cmu_, 0.25);
 
     volScalarField& G = const_cast<volScalarField&>
-        (db().lookupObject<volScalarField>(GName_));
+        (db().lookupObject<volScalarField>(rasModel.GName()));
 
     // Note: omega is now a refValue and set in fixedInternalValueFvPatchField
     // HJ, 3/Aug/2011
     scalarField& omega = refValue();
 
-    const scalarField& k = db().lookupObject<volScalarField>(kName_);
+    const tmp<volScalarField> tk = rasModel.k();
+    const volScalarField& k = tk();
 
     const scalarField& rhow =
-        lookupPatchField<volScalarField, scalar>(rhoName_);
+        rasModel.thermo().rho()().boundaryField()[patch().index()];
 
     const scalarField& muw =
-        lookupPatchField<volScalarField, scalar>(muName_);
+        rasModel.mu().boundaryField()[patch().index()];
 
     const scalarField& mutw =
-        lookupPatchField<volScalarField, scalar>(mutName_);
+        rasModel.mut()().boundaryField()[patch().index()];
 
     const fvPatchVectorField& Uw =
-        lookupPatchField<volVectorField, vector>(UName_);
+        rasModel.U().boundaryField()[patch().index()];
 
     const scalarField magGradUw = mag(Uw.snGrad());
 

@@ -452,7 +452,7 @@ void kOmegaSST::correct()
 
     volScalarField S2(2*magSqr(symm(gradU)));
     volScalarField GbyMu((gradU && dev(twoSymm(gradU))));
-    volScalarField G("RASModel::G", mut_*GbyMu);
+    volScalarField G(GName(), mut_*GbyMu);
     tgradU.clear();
 
     // Update omega and G at the wall

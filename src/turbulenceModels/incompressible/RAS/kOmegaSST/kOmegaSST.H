@@ -119,24 +119,44 @@ class kOmegaSST
     // Private data
 
         // Model coefficients
+
+            //- Coefficient alphaK1
             dimensionedScalar alphaK1_;
+
+            //- Coefficient alphaK1
             dimensionedScalar alphaK2_;
 
+            //- Coefficient alphaOmega1
             dimensionedScalar alphaOmega1_;
+
+            //- Coefficient
             dimensionedScalar alphaOmega2_;
 
+            //- Coefficient gamma1
             dimensionedScalar gamma1_;
+
+            //- Coefficient gamma2
             dimensionedScalar gamma2_;
 
+            //- Coefficient beta1
             dimensionedScalar beta1_;
+
+            //- Coefficient beta2
             dimensionedScalar beta2_;
 
+            //- Coefficient betaStar
             dimensionedScalar betaStar_;
 
+            //- Coefficient a1
             dimensionedScalar a1_;
+
+            //- Coefficient b1
             dimensionedScalar b1_;
+
+            //- Coefficient c1
             dimensionedScalar c1_;
 
+            //- F3 switch
             Switch F3_;
 
 
@@ -147,18 +167,38 @@ class kOmegaSST
 
         // Fields
 
+            //- Turbulence kinetic energy field
             volScalarField k_;
+
+            //- Eddy turnover time field (omega = epsilon/(betaStar k)), betaStar = Cmu
             volScalarField omega_;
+
+            //- Turbulence viscosity
             volScalarField nut_;
 
 
     // Private member functions
 
+        //- Disallow default bitwise copy construct
+        kOmegaSST(const kOmegaSST&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const kOmegaSST&) = delete;
+
+
+        //- Function F1
         tmp<volScalarField> F1(const volScalarField& CDkOmega) const;
+
+        //- Function F1
         tmp<volScalarField> F2() const;
+
+        //- Function F1
         tmp<volScalarField> F3() const;
+
+        //- Function F1
         tmp<volScalarField> F23() const;
 
+        //- Blending function (ke-kw)
         tmp<volScalarField> blend
         (
             const volScalarField& F1,
@@ -169,6 +209,7 @@ class kOmegaSST
             return F1*(psi1 - psi2) + psi2;
         }
 
+        //- Return F1 alphaK blend field
         tmp<volScalarField> alphaK
         (
             const volScalarField& F1
@@ -177,6 +218,7 @@ class kOmegaSST
             return blend(F1, alphaK1_, alphaK2_);
         }
 
+        //- Return F1 alphaOmega blend field
         tmp<volScalarField> alphaOmega
         (
             const volScalarField& F1
@@ -185,6 +227,7 @@ class kOmegaSST
             return blend(F1, alphaOmega1_, alphaOmega2_);
         }
 
+        //- Return beta blend field
         tmp<volScalarField> beta
         (
             const volScalarField& F1
@@ -193,6 +236,7 @@ class kOmegaSST
             return blend(F1, beta1_, beta2_);
         }
 
+        //- Return gamma blend field
         tmp<volScalarField> gamma
         (
             const volScalarField& F1

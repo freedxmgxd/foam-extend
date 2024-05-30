@@ -31,6 +31,18 @@ License
 
 defineTypeNameAndDebug(Foam::IOobject, 0);
 
+
+char Foam::IOobject::scopeSeparator
+(
+    #ifdef _WIN32
+    // Windows: using ':' causes scoping conflicts with d:/path etc
+    Foam::debug::debugSwitch("scopeSeparator", '_')()
+    #else
+    Foam::debug::debugSwitch("scopeSeparator", ':')()
+    #endif
+);
+
+
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
 
 bool Foam::IOobject::fileNameComponents

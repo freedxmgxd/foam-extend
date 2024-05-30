@@ -46,12 +46,6 @@ singlePhaseTransportModel::singlePhaseTransportModel
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
-
-singlePhaseTransportModel::~singlePhaseTransportModel()
-{}
-
-
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 const volScalarField& singlePhaseTransportModel::nu() const

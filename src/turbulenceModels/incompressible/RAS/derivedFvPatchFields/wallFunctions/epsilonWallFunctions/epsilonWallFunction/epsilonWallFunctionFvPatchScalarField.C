@@ -44,7 +44,7 @@ void epsilonWallFunctionFvPatchScalarField::checkType()
 {
     if (!patch().isWall())
     {
-        FatalErrorIn("epsilonWallFunctionFvPatchScalarField::checkType()")
+        FatalErrorInFunction
             << "Invalid wall function specification" << nl
             << "    Patch type for patch " << patch().name()
             << " must be wall" << nl
@@ -58,11 +58,6 @@ void epsilonWallFunctionFvPatchScalarField::checkType()
 
 void epsilonWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
 {
-    writeEntryIfDifferent<word>(os, "U", "U", UName_);
-    writeEntryIfDifferent<word>(os, "k", "k", kName_);
-    writeEntryIfDifferent<word>(os, "G", "RASModel::G", GName_);
-    writeEntryIfDifferent<word>(os, "nu", "nu", nuName_);
-    writeEntryIfDifferent<word>(os, "nut", "nut", nutName_);
     os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
     os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
     os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
@@ -78,11 +73,6 @@ epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchScalarField(p, iF),
-    UName_("U"),
-    kName_("k"),
-    GName_("RASModel::G"),
-    nuName_("nu"),
-    nutName_("nut"),
     Cmu_(0.09),
     kappa_(0.41),
     E_(9.8)
@@ -100,11 +90,6 @@ epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchScalarField(ptf, p, iF, mapper),
-    UName_(ptf.UName_),
-    kName_(ptf.kName_),
-    GName_(ptf.GName_),
-    nuName_(ptf.nuName_),
-    nutName_(ptf.nutName_),
     Cmu_(ptf.Cmu_),
     kappa_(ptf.kappa_),
     E_(ptf.E_)
@@ -121,11 +106,6 @@ epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchScalarField(p, iF, dict),
-    UName_(dict.lookupOrDefault<word>("U", "U")),
-    kName_(dict.lookupOrDefault<word>("k", "k")),
-    GName_(dict.lookupOrDefault<word>("G", "RASModel::G")),
-    nuName_(dict.lookupOrDefault<word>("nu", "nu")),
-    nutName_(dict.lookupOrDefault<word>("nut", "nut")),
     Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
     E_(dict.lookupOrDefault<scalar>("E", 9.8))
@@ -140,11 +120,6 @@ epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchScalarField(ewfpsf),
-    UName_(ewfpsf.UName_),
-    kName_(ewfpsf.kName_),
-    GName_(ewfpsf.GName_),
-    nuName_(ewfpsf.nuName_),
-    nutName_(ewfpsf.nutName_),
     Cmu_(ewfpsf.Cmu_),
     kappa_(ewfpsf.kappa_),
     E_(ewfpsf.E_)
@@ -160,11 +135,6 @@ epsilonWallFunctionFvPatchScalarField::epsilonWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchScalarField(ewfpsf, iF),
-    UName_(ewfpsf.UName_),
-    kName_(ewfpsf.kName_),
-    GName_(ewfpsf.GName_),
-    nuName_(ewfpsf.nuName_),
-    nutName_(ewfpsf.nutName_),
     Cmu_(ewfpsf.Cmu_),
     kappa_(ewfpsf.kappa_),
     E_(ewfpsf.E_)
@@ -182,12 +152,14 @@ void epsilonWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
+    const RASModel& rasModel = db().lookupObject<RASModel>("RASProperties");
+
     // If G field is not present, execute zero gradient evaluation
     // HJ, 20/Mar/2011
-    if (!db().foundObject<volScalarField>(GName_))
+    if (!db().foundObject<volScalarField>(rasModel.GName()))
     {
-        InfoIn("void epsilonWallFunctionFvPatchScalarField::updateCoeffs()")
-            << "Cannot access " << GName_ << " field for patch "
+        InfoInFunction
+            << "Cannot access " << rasModel.GName() << " field for patch "
             << patch().name() << ".  Evaluating as zeroGradient"
             << endl;
 
@@ -197,7 +169,6 @@ void epsilonWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const RASModel& rasModel = db().lookupObject<RASModel>("RASProperties");
     const scalar yPlusLam = rasModel.yPlusLam(kappa_, E_);
     const scalarField& y = rasModel.y()[patch().index()];
 
@@ -205,23 +176,24 @@ void epsilonWallFunctionFvPatchScalarField::updateCoeffs()
     const scalar Cmu75 = pow(Cmu_, 0.75);
 
     volScalarField& G = const_cast<volScalarField&>
-        (db().lookupObject<volScalarField>(GName_));
+        (db().lookupObject<volScalarField>(rasModel.GName()));
 
     // Note: epsilon is now a refValue and set in
     // fixedInternalValueFvPatchField
     // HJ, 3/Aug/2011
     scalarField& epsilon = refValue();
 
-    const volScalarField& k = db().lookupObject<volScalarField>(kName_);
+    const tmp<volScalarField> tk = rasModel.k();
+    const volScalarField& k = tk();
 
     const scalarField& nuw =
-        lookupPatchField<volScalarField, scalar>(nuName_);
+        rasModel.nu().boundaryField()[patch().index()];
 
     const scalarField& nutw =
-        lookupPatchField<volScalarField, scalar>(nutName_);
+        rasModel.nut()().boundaryField()[patch().index()];
 
     const fvPatchVectorField& Uw =
-        lookupPatchField<volVectorField, vector>(UName_);
+        rasModel.U().boundaryField()[patch().index()];
 
     const scalarField magGradUw = mag(Uw.snGrad());
 

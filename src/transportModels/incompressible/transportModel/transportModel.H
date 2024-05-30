@@ -56,10 +56,10 @@ class transportModel
     // Private Member Functions
 
         //- Disallow copy construct
-        transportModel(const transportModel&);
+        transportModel(const transportModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const transportModel&);
+        void operator=(const transportModel&) = delete;
 
 
 public:
@@ -74,9 +74,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~transportModel();
+    //- Destructor
+    virtual ~transportModel() = default;
 
 
     // Member Functions

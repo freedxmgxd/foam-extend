@@ -32,9 +32,82 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+void Foam::oversetMesh::calcHoleCells() const
+{
+    if (debug)
+    {
+        InfoInFunction
+            << "Calculating hole cells" << endl;
+    }
+
+    if (holeCellsPtr_)
+    {
+        FatalErrorInFunction
+            << "Hole cells already calculated"
+            << abort(FatalError);
+    }
+
+    label nHoleCells = 0;
+
+    forAll (regions_, regionI)
+    {
+        nHoleCells += regions_[regionI].holes().size();
+    }
+
+    holeCellsPtr_ = new labelList(nHoleCells);
+    labelList& hole = *holeCellsPtr_;
+
+    // Print out processor specific information in debug
+    if (oversetMesh::debug)
+    {
+        Pout<< "Number of hole cells: " << nHoleCells << endl;
+    }
+    // Else print global information
+    else
+    {
+        Info<< "Number of hole cells: "
+            << returnReduce(nHoleCells, sumOp<label>()) << endl;
+    }
+
+    // Reset counters
+    nHoleCells = 0;
+
+    // Collect hole cells
+    forAll (regions_, regionI)
+    {
+        // Holes
+        const labelList& curHoles = regions_[regionI].holes();
+
+        forAll (curHoles, hI)
+        {
+            hole[nHoleCells] = curHoles[hI];
+            nHoleCells++;
+        }
+    }
+
+    if (debug)
+    {
+        InfoInFunction
+            << "Finished calculating hole cells" << endl;
+    }
+}
+
+
+
 void Foam::oversetMesh::calcCellClassification() const
 {
-    if (acceptorCellsPtr_ || donorCellsPtr_ || donorCellsPtr_ || holeCellsPtr_)
+    if (debug)
+    {
+        InfoInFunction
+            << "Calculating donor-acceptor cell classification" << endl;
+    }
+
+    if
+    (
+        acceptorCellsPtr_
+     || donorCellsPtr_
+     || donorCellsProcPtr_
+    )
     {
         FatalErrorInFunction
             << "Cell classification already calculated"
@@ -44,13 +117,15 @@ void Foam::oversetMesh::calcCellClassification() const
     // Count acceptor and donor and hole cells
     label nAcceptorCells = 0;
     label nDonorCells = 0;
-    label nHoleCells = 0;
 
     forAll (regions_, regionI)
     {
         nAcceptorCells += regions_[regionI].acceptors().size();
+    }
+
+    forAll (regions_, regionI)
+    {
         nDonorCells += regions_[regionI].donors().size();
-        nHoleCells += regions_[regionI].holes().size();
     }
 
     acceptorCellsPtr_ = new labelList(nAcceptorCells);
@@ -62,15 +137,11 @@ void Foam::oversetMesh::calcCellClassification() const
     donorCellsProcPtr_ = new labelList(nDonorCells);
     labelList& donorProc = *donorCellsProcPtr_;
 
-    holeCellsPtr_ = new labelList(nHoleCells);
-    labelList& hole = *holeCellsPtr_;
-
     // Print out processor specific information in debug
     if (oversetMesh::debug)
     {
         Pout<< "Number of acceptor cells: " << nAcceptorCells << endl;
         Pout<< "Number of donor cells: " << nDonorCells << endl;
-        Pout<< "Number of hole cells: " << nHoleCells << endl;
     }
     // Else print global information
     else
@@ -79,14 +150,11 @@ void Foam::oversetMesh::calcCellClassification() const
             << returnReduce(nAcceptorCells, sumOp<label>()) << endl;
         Info<< "Number of donor cells: "
             << returnReduce(nDonorCells, sumOp<label>()) << endl;
-        Info<< "Number of hole cells: "
-            << returnReduce(nHoleCells, sumOp<label>()) << endl;
     }
 
     // Reset counters
     nAcceptorCells = 0;
     nDonorCells = 0;
-    nHoleCells = 0;
 
     forAll (regions_, regionI)
     {
@@ -108,15 +176,6 @@ void Foam::oversetMesh::calcCellClassification() const
             donorProc[nDonorCells] = curDonors[dI].acceptorProcNo();
             nDonorCells++;
         }
-
-        // Holes
-        const labelList& curHoles = regions_[regionI].holes();
-
-        forAll (curHoles, hI)
-        {
-            hole[nHoleCells] = curHoles[hI];
-            nHoleCells++;
-        }
     }
 
     // Check donor and acceptor assembly
@@ -127,6 +186,13 @@ void Foam::oversetMesh::calcCellClassification() const
     // Check for donors that are holes
 
     // Check for donors that are acceptors
+
+    if (debug)
+    {
+        InfoInFunction
+            << "Finished calculating donor-acceptor cell classification"
+                << endl;
+    }
 }
 
 
@@ -239,7 +305,7 @@ void Foam::oversetMesh::calcDomainMarkup() const
                 << endl;
         }
     }
-    
+
     // Update boundary values, making sure that we skip the overset patch
     volScalarField::GeometricBoundaryField& regionIDb =
         regionID.boundaryField();
@@ -279,6 +345,7 @@ void Foam::oversetMesh::calcGamma() const
     // communications in case the lazy evaluation mechanism is invoked in
     // GeometricField::evaluate() member function. Temporary solution.
     // To-do: examine stack trace for fvMesh::makeC(), VV, 8/Feb/2016.
+
     mesh().C();
 
     // Fluid cells indicator, marking only live cells
@@ -1211,7 +1278,7 @@ const Foam::labelList& Foam::oversetMesh::holeCells() const
 {
     if (!holeCellsPtr_)
     {
-        calcCellClassification();
+        calcHoleCells();
     }
 
     return *holeCellsPtr_;

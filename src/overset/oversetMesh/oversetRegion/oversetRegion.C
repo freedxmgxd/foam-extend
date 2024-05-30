@@ -35,6 +35,13 @@ License
 
 void Foam::oversetRegion::calcDonorRegions() const
 {
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Calculating oversetRegion donorRegions for region " << name()
+            << endl;
+    }
+
     if (donorRegionsPtr_)
     {
         FatalErrorInFunction
@@ -87,6 +94,14 @@ void Foam::oversetRegion::calcDonorRegions() const
                 << curName << ".  Please check overset definition"
                 << abort(FatalError);
         }
+    }
+
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Finished calculating oversetRegion donorRegions for region "
+            << name()
+            << endl;
     }
 }
 
@@ -436,6 +451,13 @@ void Foam::oversetRegion::calcEligibleDonorCells() const
 
 void Foam::oversetRegion::calcHoleTriMesh() const
 {
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Calculating hole tri mesh for region " << name()
+            << endl;
+    }
+
     if (holeTriMeshPtr_)
     {
         FatalErrorInFunction
@@ -542,17 +564,33 @@ void Foam::oversetRegion::calcHoleTriMesh() const
     {
         // Combine all faces and points into a single list
 
-        List<triFaceList> allTriFaces(Pstream::nProcs());
+        // Gather-scatter triPoints
         List<pointField> allTriPoints(Pstream::nProcs());
 
-        allTriFaces[Pstream::myProcNo()] = triFaces;
-        allTriPoints[Pstream::myProcNo()] = triPoints;
+        {
+            allTriPoints[Pstream::myProcNo()] = triPoints;
 
-        Pstream::gatherList(allTriFaces);
-        Pstream::scatterList(allTriFaces);
+            Pstream::gatherList(allTriPoints);
 
-        Pstream::gatherList(allTriPoints);
-        Pstream::scatterList(allTriPoints);
+            Pstream::scatterList(allTriPoints);
+
+            // Block for all requests and remove storage
+            Pstream::waitRequests();
+        }
+
+
+        // Gather-scatter triFaces
+        List<triFaceList> allTriFaces(Pstream::nProcs());
+
+        {
+            allTriFaces[Pstream::myProcNo()] = triFaces;
+
+            Pstream::gatherList(allTriFaces);
+            Pstream::scatterList(allTriFaces);
+
+            // Block for all requests and remove storage
+            Pstream::waitRequests();
+        }
 
         // Re-pack points and faces
 
@@ -627,7 +665,7 @@ void Foam::oversetRegion::calcHoleTriMesh() const
     // Clean up duplicate points and zero sized triangles
     holeTriMeshPtr_->cleanup(false);
 
-    Info<< "Region " << name() << ": "
+    Info<< "Overset region " << name() << ": "
         << holeTriMeshPtr_->size() << " triangles in hole cutting"
         << endl;
 
@@ -639,11 +677,25 @@ void Foam::oversetRegion::calcHoleTriMesh() const
             holeTriMeshPtr_->write(word("holeTriSurface_") + name() + ".vtk");
         }
     }
+
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Finished calculating hole tri mesh for region " << name()
+            << endl;
+    }
 }
 
 
 void Foam::oversetRegion::calcBounds() const
 {
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Calculating oversetRegion bounds for region " << name()
+            << endl;
+    }
+
     if (localBoundsPtr_ || globalBoundsPtr_)
     {
         FatalErrorInFunction
@@ -704,11 +756,25 @@ void Foam::oversetRegion::calcBounds() const
 
     // Global bounding box is calculated with a reduce
     globalBoundsPtr_ = new boundBox(regionPoints, true);
+
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Finished calculating oversetRegion bounds for region " << name()
+            << endl;
+    }
 }
 
 
 void Foam::oversetRegion::calcCellSearch() const
 {
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Calculating oversetRegion cellSearch for region " << name()
+            << endl;
+    }
+
     if (cellSearchPtr_)
     {
         FatalErrorInFunction
@@ -740,11 +806,26 @@ void Foam::oversetRegion::calcCellSearch() const
         10,         // leafsize
         3.0         // duplicity
     );
+
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Finished calculating oversetRegion cellSearch for region "
+            << name()
+            << endl;
+    }
 }
 
 
 void Foam::oversetRegion::calcProcBoundBoxes() const
 {
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Calculating oversetRegion procBoundBoxes for region " << name()
+            << endl;
+    }
+
     if (procBoundBoxesPtr_)
     {
         FatalErrorInFunction
@@ -768,27 +849,38 @@ void Foam::oversetRegion::calcProcBoundBoxes() const
     // Loop through overset regions and populate the list
     forAll (regions, orI)
     {
-        if (useLocalBoundBoxes_)
-        {
-            // Use local bounds to optimise sending of acceptors
-            localBoundBoxes[orI] = regions[orI].localBounds();
-        }
-        else
-        {
-            // Use global bounds to make sure we find donors to all acceptors,
-            // even if the bounding boxes of certain regions do not overlap
-            localBoundBoxes[orI] = this->globalBounds();
-        }
+        // Use local bounds to optimise sending of acceptors
+        localBoundBoxes[orI] = regions[orI].localBounds();
     }
 
     // Now that each processor has filled in its own part, combine the data
-    Pstream::gatherList(procBoundBoxes);
-    Pstream::scatterList(procBoundBoxes);
+    {
+        Pstream::gatherList(procBoundBoxes);
+        Pstream::scatterList(procBoundBoxes);
+
+        // Block for all requests and remove storage
+        Pstream::waitRequests();
+    }
+
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Finished calculating oversetRegion procBoundBoxes for region "
+            << name()
+            << endl;
+    }
 }
 
 
 void Foam::oversetRegion::clearOut() const
 {
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "Called clearOut for region " << name()
+            << endl;
+    }
+
     deleteDemandDrivenData(donorRegionsPtr_);
     deleteDemandDrivenData(acceptorRegionsPtr_);
 
@@ -811,6 +903,13 @@ void Foam::oversetRegion::clearOut() const
 
 bool Foam::oversetRegion::updateDonorAcceptors() const
 {
+    if (oversetMesh::debug)
+    {
+        InfoInFunction
+            << "updateDonorAcceptors for region " << name()
+            << endl;
+    }
+
     // If a suitable fringe on this region has been found, simply return true
     if (fringePtr_->foundSuitableOverlap())
     {
@@ -992,8 +1091,13 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
     // each processor so that all processors have all necessary information
     // when creating the map distribute tool for distributing acceptor
     // points
-    Pstream::gatherList(nAcceptorsToProcessorMap);
-    Pstream::scatterList(nAcceptorsToProcessorMap);
+    {
+        Pstream::gatherList(nAcceptorsToProcessorMap);
+        Pstream::scatterList(nAcceptorsToProcessorMap);
+
+        // Block for all requests and remove storage
+        Pstream::waitRequests();
+    }
 
     // Count how many acceptors I'm going to receive from others
     label nAcceptorReceives = 0;
@@ -1063,13 +1167,20 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
     // Need to create a labelListList from List<dynamicLabelList> for sending
     // map.
     labelListList sendAcceptorFixedMap(Pstream::nProcs());
+
     forAll (sendAcceptorFixedMap, procI)
     {
         // Transfer the content of dynamic list into this processor list,
         // sendAcceptorMap is invalid from now on
-        sendAcceptorFixedMap[procI].transfer(sendAcceptorMap[procI]);
+        sendAcceptorFixedMap[procI].transfer(sendAcceptorMap[procI].shrink());
     }
 
+    // Note
+    // Extensive problems with mapDistribute of donorAcceptors lists
+    // This is non-contiguous information and I had to change the
+    // Pstream comms type to blocking in mapDistributeTemplates.C
+    // to make it work.  Not resolved.  HJ, 22/May/2024
+    
     // Create mapDistribute object for distributing acceptor points. Note:
     // reusing maps, meaning that arguments are invalid from now onward.
     mapDistribute acceptorDistribution
@@ -1202,7 +1313,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
                 // octree, issue a warning
                 WarningInFunction
                     << "Could not find a hit for acceptor,"
-                    << "donor may remain invalid."
+                    << "donor may remain invalid.  Region " << name()
                     << endl;
             }
         } // End for all acceptor cell centres
@@ -1297,7 +1408,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             {
                 FatalErrorInFunction
                     << "Received donor/acceptor pair where acceptor belongs to "
-                    << "a different processor. " << nl
+                        << "a different processor for region " << name() << nl
                     << "My processor number: " << Pstream::myProcNo()
                     << "Acceptor processor number: "
                     << completeDonorAcceptorList[daI].acceptorProcNo()
@@ -1404,26 +1515,10 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
 
         if (!allVisited)
         {
-            if (!useLocalBoundBoxes_)
-            {
-                FatalErrorInFunction
-                    << "Did not visit all acceptors when recombining data..."
-                    << nl
-                    << "... and we did not use local processor bounding boxes."
-                    << nl
-                    << "Something went wrong."
-                    << abort(FatalError);
-            }
-            else
-            {
-                FatalErrorInFunction
-                    << "Did not visit all acceptors when recombining data..."
-                    << nl
-                    << "Try switching off useLocalBoundingBoxes for all regions"
-                    << nl
-                    << "(this optimisation is switched off by default)."
-                    << abort(FatalError);
-            }
+            FatalErrorInFunction
+                << "Did not visit all acceptors when recombining data..."
+                << "Something went wrong: Please check overset setup"
+                << abort(FatalError);
         }
     }
 
@@ -1575,8 +1670,13 @@ void Foam::oversetRegion::finaliseDonorAcceptors() const
 
     // Gather/scatter in order to have complete data: how many donor/acceptor
     // pairs are actually sent from each processor to all other processors
-    Pstream::gatherList(nPairsToProcessorMap);
-    Pstream::scatterList(nPairsToProcessorMap);
+    {
+        Pstream::gatherList(nPairsToProcessorMap);
+        Pstream::scatterList(nPairsToProcessorMap);
+
+        // Block for all requests and remove storage
+        Pstream::waitRequests();
+    }
 
     // Count how many donor/acceptor pairs I'm going to receive from others
     label nReceives = 0;
@@ -1682,15 +1782,7 @@ Foam::oversetRegion::oversetRegion
     localBoundsPtr_(nullptr),
     globalBoundsPtr_(nullptr),
     cellSearchPtr_(nullptr),
-    procBoundBoxesPtr_(nullptr),
-    useLocalBoundBoxes_
-    (
-        dict.lookupOrDefault<Switch>
-        (
-            "useLocalBoundBoxes",
-            false
-        )
-    )
+    procBoundBoxesPtr_(nullptr)
 {
     // Check zone index
     if (zoneIndex_ < 0)

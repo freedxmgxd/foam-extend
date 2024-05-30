@@ -244,7 +244,7 @@ void coupledKEpsilon::correct()
     // Make coupled matrix
     fvBlockMatrix<vector2> keEqn(kEpsilon_);
 
-    volScalarField G("RASModel::G", nut_*2*magSqr(symm(fvc::grad(U_))));
+    volScalarField G(GName(), nut_*2*magSqr(symm(fvc::grad(U_))));
 
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();

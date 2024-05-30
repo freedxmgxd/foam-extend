@@ -201,14 +201,6 @@ class oversetRegion
                 //  2 on processor 3
                 mutable List<List<boundBox> >* procBoundBoxesPtr_;
 
-                //- Whether to use processor bounding box to determine where to
-                //  send candidate acceptors. By default, this is switched on
-                //  for parallel efficiency but it might fail for overset
-                //  regions where one of the region bounding boxes is not fully
-                //  within the other bounding box. Controls the behaviour of
-                //  calcProcBoundBoxes()
-                Switch useLocalBoundBoxes_;
-
 
     // Private Member Functions
 

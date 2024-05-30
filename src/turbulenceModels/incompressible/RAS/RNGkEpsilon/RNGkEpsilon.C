@@ -260,7 +260,7 @@ void RNGkEpsilon::correct()
 
     volScalarField S2 = 2*magSqr(symm(fvc::grad(U_)));
 
-    volScalarField G("RASModel::G", nut_*S2);
+    volScalarField G(GName(), nut_*S2);
 
     volScalarField eta = sqrt(S2)*k_/epsilon_;
     volScalarField R =

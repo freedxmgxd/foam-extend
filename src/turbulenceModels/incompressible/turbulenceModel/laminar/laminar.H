@@ -81,18 +81,6 @@ public:
         );
 
 
-    // Selectors
-
-        //- Return a reference to the selected turbulence model
-        static autoPtr<laminar> New
-        (
-            const volVectorField& U,
-            const surfaceScalarField& phi,
-            transportModel& transport,
-            const word& turbulenceModelName = turbulenceModel::typeName
-        );
-
-
     //- Destructor
     virtual ~laminar() = default;
 

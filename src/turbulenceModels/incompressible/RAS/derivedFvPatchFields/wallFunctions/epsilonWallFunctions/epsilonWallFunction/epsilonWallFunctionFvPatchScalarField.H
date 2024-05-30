@@ -58,21 +58,6 @@ class epsilonWallFunctionFvPatchScalarField
 {
     // Private data
 
-        //- Name of velocity field
-        word UName_;
-
-        //- Name of turbulence kinetic energy field
-        word kName_;
-
-        //- Name of turbulence generation field
-        word GName_;
-
-        //- Name of laminar viscosity field
-        word nuName_;
-
-        //- Name of turbulent viscosity field
-        word nutName_;
-
         //- Cmu coefficient
         scalar Cmu_;
 
@@ -95,12 +80,6 @@ protected:
 
         //- Write local wall function variables
         virtual void writeLocalEntries(Ostream&) const;
-
-        //- Return name of turbulence generation field
-        inline const word& GName() const
-        {
-            return GName_;
-        }
 
 
 public:

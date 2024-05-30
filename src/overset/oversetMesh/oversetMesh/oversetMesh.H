@@ -208,6 +208,9 @@ private:
 
     // Private member functions
 
+        //- Calculate hole cells
+        void calcHoleCells() const;
+
         //- Calculate cell classification
         void calcCellClassification() const;
 

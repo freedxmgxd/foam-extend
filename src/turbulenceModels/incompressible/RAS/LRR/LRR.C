@@ -306,7 +306,7 @@ void LRR::correct()
     }
 
     volSymmTensorField P = -twoSymm(R_ & fvc::grad(U_));
-    volScalarField G("RASModel::G", 0.5*mag(tr(P)));
+    volScalarField G(GName(), 0.5*mag(tr(P)));
 
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();

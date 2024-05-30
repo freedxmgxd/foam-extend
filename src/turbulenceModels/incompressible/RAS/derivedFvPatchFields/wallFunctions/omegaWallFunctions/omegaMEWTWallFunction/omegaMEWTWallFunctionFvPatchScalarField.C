@@ -66,7 +66,7 @@ omegaMEWTWallFunctionFvPatchScalarField::omegaMEWTWallFunctionFvPatchScalarField
     pName_("p"),
     UName_("U"),
     kName_("k"),
-    GName_("RASModel::G"),
+    GName_(GName()),
     nuName_("nu"),
     nutName_("nut"),
     Cmu_(0.09),
@@ -113,7 +113,7 @@ omegaMEWTWallFunctionFvPatchScalarField::omegaMEWTWallFunctionFvPatchScalarField
     pName_(dict.lookupOrDefault<word>("p", "p")),
     UName_(dict.lookupOrDefault<word>("U", "U")),
     kName_(dict.lookupOrDefault<word>("k", "k")),
-    GName_(dict.lookupOrDefault<word>("G", "RASModel::G")),
+    GName_(dict.lookupOrDefault<word>("G", GName())),
     nuName_(dict.lookupOrDefault<word>("nu", "nu")),
     nutName_(dict.lookupOrDefault<word>("nut", "nut")),
     Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
@@ -346,7 +346,7 @@ void omegaMEWTWallFunctionFvPatchScalarField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
     writeEntryIfDifferent<word>(os, "k", "k", kName_);
-    writeEntryIfDifferent<word>(os, "G", "RASModel::G", GName_);
+    writeEntryIfDifferent<word>(os, "G", GName(), GName_);
     writeEntryIfDifferent<word>(os, "nu", "nu", nuName_);
     writeEntryIfDifferent<word>(os, "nut", "nut", nutName_);
     os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;

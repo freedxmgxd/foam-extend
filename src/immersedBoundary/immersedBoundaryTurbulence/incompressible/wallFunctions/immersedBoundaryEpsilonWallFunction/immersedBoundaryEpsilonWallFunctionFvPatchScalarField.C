@@ -215,10 +215,12 @@ void immersedBoundaryEpsilonWallFunctionFvPatchScalarField::updateCoeffs()
         refValue() = patchInternalField();
     }
 
+    const RASModel& rasModel = db().lookupObject<RASModel>("RASProperties");
+
     // If G field is present, execute evaluation
     // Remove the warning from the IB patch
     // HJ, 20/May/2018
-    if (db().foundObject<volScalarField>(GName()))
+    if (db().foundObject<volScalarField>(rasModel.GName()))
     {
         epsilonWallFunctionFvPatchScalarField::updateCoeffs();
     }

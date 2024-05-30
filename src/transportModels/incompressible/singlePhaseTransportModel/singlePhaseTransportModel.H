@@ -39,6 +39,7 @@ SourceFiles
 #define singlePhaseTransportModel_H
 
 #include "incompressible/transportModel/transportModel.H"
+#include "viscosityModel.H"
 #include "autoPtr.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,10 +47,8 @@ SourceFiles
 namespace Foam
 {
 
-class viscosityModel;
-
 /*---------------------------------------------------------------------------*\
-                Class singlePhaseTransportModel Declaration
+                  Class singlePhaseTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class singlePhaseTransportModel
@@ -58,16 +57,17 @@ class singlePhaseTransportModel
 {
     // Private Data
 
+        //- Viscosity model
         autoPtr<viscosityModel> viscosityModelPtr_;
 
 
     // Private Member Functions
 
         //- Disallow copy construct
-        singlePhaseTransportModel(const singlePhaseTransportModel&);
+        singlePhaseTransportModel(const singlePhaseTransportModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const singlePhaseTransportModel&);
+        void operator=(const singlePhaseTransportModel&) = delete;
 
 
 public:
@@ -82,9 +82,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~singlePhaseTransportModel();
+    //- Destructor
+    virtual ~singlePhaseTransportModel() = default;
 
 
     // Member Functions

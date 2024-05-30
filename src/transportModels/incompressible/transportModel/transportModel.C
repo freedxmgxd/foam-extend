@@ -54,12 +54,6 @@ transportModel::transportModel
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
-
-transportModel::~transportModel()
-{}
-
-
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 bool transportModel::read()

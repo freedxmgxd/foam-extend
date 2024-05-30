@@ -415,7 +415,7 @@ void blockKOmegaSST::correct()
     }
 
     const volScalarField S2(2*magSqr(symm(fvc::grad(U_))));
-    volScalarField G("RASModel::G", nut_*S2);
+    volScalarField G(GName(), nut_*S2);
 
     // Make coupled matrix
     fvBlockMatrix<vector2> kOmegaEqn(kOmega_);

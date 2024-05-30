@@ -57,24 +57,45 @@ protected:
 
     // Protected data
 
+        //- Name of phase 1
         word phase1Name_;
+
+        //- Name of phase 1
         word phase2Name_;
 
+        //- Viscosity model for phase 1
         autoPtr<viscosityModel> nuModel1_;
+
+        //- Viscosity model for phase 1
         autoPtr<viscosityModel> nuModel2_;
 
+        //- Density for phase 1
         dimensionedScalar rho1_;
+
+        //- Density for phase 1
         dimensionedScalar rho2_;
 
+        //- Reference to velocity field
         const volVectorField& U_;
+
+        //- Reference to phase flux field
         const surfaceScalarField& phi_;
 
+        //- Reference to phase indicator field alpha
         const volScalarField& alpha1_;
 
+        //- Mixture viscosity
         volScalarField nu_;
 
 
     // Private Member Functions
+
+        //- Disallow copy construct
+        twoPhaseMixture(const twoPhaseMixture&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const twoPhaseMixture&) = delete;
+
 
         //- Get phase name (backward compatibility)
         word getPhaseName(const word& key) const;
@@ -102,11 +123,13 @@ public:
 
     // Member Functions
 
+        //- Return name for phase 1
         const word& phase1Name() const
         {
             return phase1Name_;
         }
 
+        //- Return name for phase 2
         const word& phase2Name() const
         {
             return phase2Name_;
@@ -136,22 +159,25 @@ public:
             return rho2_;
         };
 
-        //- Return the density
+        //- Return the mixture density
         tmp<volScalarField> rho() const;
 
-        //- Return the dynamic laminar viscosity
-        tmp<volScalarField> mu() const;
-
-        //- Return the face-interpolated dynamic laminar viscosity
-        tmp<surfaceScalarField> muf() const;
-
-        //- Return the kinematic laminar viscosity
+        //- Return the kinematic laminar viscosity for the mixture
         virtual const volScalarField& nu() const
         {
             return nu_;
         }
 
+        //- Return the dynamic laminar viscosity for the mixture
+        tmp<volScalarField> mu() const;
+
         //- Return the face-interpolated dynamic laminar viscosity
+        //  for the mixture
+        tmp<surfaceScalarField> muf() const;
+
+
+        //- Return the face-interpolated dynamic laminar viscosity
+        //  for the mixture
         tmp<surfaceScalarField> nuf() const;
 
         //- Correct the laminar viscosity

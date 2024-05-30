@@ -182,6 +182,13 @@ public:
     //- Runtime type information
     TypeName("IOobject");
 
+    
+    // Static Data
+
+        //- Character for scoping object names (':' or '_')
+        //  Change with caution.
+        static char scopeSeparator;
+
 
     // Static Member Functions
 
@@ -202,8 +209,18 @@ public:
             word& name
         );
 
+        //- Create dot-delimited name.group string
+        //  An empty group is ignored.
         template<class Name>
         static inline word groupName(Name name, const word& group);
+
+        //- Create scope:name or scope_name string
+        //  An empty scope is ignored.
+        static inline word scopedName
+        (
+            const std::string& scope,
+            const word& name
+        );
 
 
     // Constructors

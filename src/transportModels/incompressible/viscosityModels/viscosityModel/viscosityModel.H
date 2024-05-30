@@ -67,20 +67,26 @@ protected:
 
     // Protected data
 
+        //- Model name
         word name_;
+
+        //- Properties dictionary
         dictionary viscosityProperties_;
 
+        //- Reference to velocity field
         const volVectorField& U_;
+
+        //- Reference to face flux field
         const surfaceScalarField& phi_;
 
 
     // Private Member Functions
 
         //- Disallow copy construct
-        viscosityModel(const viscosityModel&);
+        viscosityModel(const viscosityModel&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const viscosityModel&);
+        void operator=(const viscosityModel&) = delete;
 
 
 public:
@@ -130,10 +136,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~viscosityModel()
-        {}
+    //- Destructor
+    virtual ~viscosityModel() = default;
 
 
     // Member Functions

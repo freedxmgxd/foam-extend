@@ -72,8 +72,7 @@ void Foam::overlapFringe::evaluateNonOversetBoundaries
         // Block for any outstanding requests
         if (Pstream::defaultComms() == Pstream::nonBlocking)
         {
-            IPstream::waitRequests();
-            OPstream::waitRequests();
+            Pstream::waitRequests();
         }
 
         forAll(psib, patchI)

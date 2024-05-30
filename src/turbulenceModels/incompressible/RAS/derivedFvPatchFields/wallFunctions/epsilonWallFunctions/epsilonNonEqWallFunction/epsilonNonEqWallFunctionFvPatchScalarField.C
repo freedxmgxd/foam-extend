@@ -44,7 +44,7 @@ void epsilonNonEqWallFunctionFvPatchScalarField::checkType()
 {
     if (!this->patch().isWall())
     {
-        FatalErrorIn("epsilonNonEqWallFunctionFvPatchScalarField::checkType()")
+        FatalErrorInFunction
             << "Invalid wall function specification" << nl
             << "    Patch type for patch " << patch().name()
             << " must be wall" << nl
@@ -60,10 +60,6 @@ void epsilonNonEqWallFunctionFvPatchScalarField::
 writeLocalEntries(Ostream& os) const
 {
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
-    writeEntryIfDifferent<word>(os, "k", "k", kName_);
-    writeEntryIfDifferent<word>(os, "G", "RASModel::G", GName_);
-    writeEntryIfDifferent<word>(os, "nu", "nu", nuName_);
-    writeEntryIfDifferent<word>(os, "nut", "nut", nutName_);
     os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
     os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
 }
@@ -79,10 +75,6 @@ epsilonNonEqWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchScalarField(p, iF),
-    UName_("U"),
-    kName_("k"),
-    nuName_("nu"),
-    nutName_("nut"),
     Cmu_(0.09),
     kappa_(0.41)
 {
@@ -100,10 +92,6 @@ epsilonNonEqWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchScalarField(ptf, p, iF, mapper),
-    UName_(ptf.UName_),
-    kName_(ptf.kName_),
-    nuName_(ptf.nuName_),
-    nutName_(ptf.nutName_),
     Cmu_(ptf.Cmu_),
     kappa_(ptf.kappa_)
 {
@@ -120,10 +108,6 @@ epsilonNonEqWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchScalarField(p, iF, dict),
-    UName_(dict.lookupOrDefault<word>("U", "U")),
-    kName_(dict.lookupOrDefault<word>("k", "k")),
-    nuName_(dict.lookupOrDefault<word>("nu", "nu")),
-    nutName_(dict.lookupOrDefault<word>("nut", "nut")),
     Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41))
 {
@@ -138,10 +122,6 @@ epsilonNonEqWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchScalarField(ewfpsf),
-    UName_(ewfpsf.UName_),
-    kName_(ewfpsf.kName_),
-    nuName_(ewfpsf.nuName_),
-    nutName_(ewfpsf.nutName_),
     Cmu_(ewfpsf.Cmu_),
     kappa_(ewfpsf.kappa_)
 {
@@ -157,10 +137,6 @@ epsilonNonEqWallFunctionFvPatchScalarField
 )
 :
     fixedInternalValueFvPatchScalarField(ewfpsf, iF),
-    UName_(ewfpsf.UName_),
-    kName_(ewfpsf.kName_),
-    nuName_(ewfpsf.nuName_),
-    nutName_(ewfpsf.nutName_),
     Cmu_(ewfpsf.Cmu_),
     kappa_(ewfpsf.kappa_)
 {
@@ -186,13 +162,17 @@ void epsilonNonEqWallFunctionFvPatchScalarField::updateCoeffs()
     // Epsilon is now a refValue (derived from fixedInternalValueFvPatchField)
     scalarField& epsilon = refValue();
 
-    const volScalarField& k = db().lookupObject<volScalarField>(kName_);
+    const tmp<volScalarField> tk = rasModel.k();
+    const volScalarField& k = tk();
 
     const scalarField& nuw =
-        lookupPatchField<volScalarField, scalar>(nuName_);
+        rasModel.nu().boundaryField()[patch().index()];
 
-     const scalarField& nutw =
-        lookupPatchField<volScalarField, scalar>(nutName_);
+    const scalarField& nutw =
+        rasModel.nut()().boundaryField()[patch().index()];
+
+    const fvPatchVectorField& Uw =
+        rasModel.U().boundaryField()[patch().index()];
 
     // Get face cells
     const labelUList& fc = patch().faceCells();

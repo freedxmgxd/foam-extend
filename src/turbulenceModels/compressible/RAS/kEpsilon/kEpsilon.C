@@ -293,7 +293,7 @@ void kEpsilon::correct()
     const tmp<volTensorField> tgradU = fvc::grad(U_);
     const volTensorField& gradU = tgradU();
 
-    volScalarField G("RASModel::G", mut_*(gradU && dev(twoSymm(gradU))));
+    volScalarField G(GName(), mut_*(gradU && dev(twoSymm(gradU))));
 
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();

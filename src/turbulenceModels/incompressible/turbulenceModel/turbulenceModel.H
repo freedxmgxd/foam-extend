@@ -184,6 +184,12 @@ public:
             return transportModel_;
         }
 
+        //- Helper function to return the name of the turbulence G field
+        inline word GName() const
+        {
+            return IOobject::scopedName(type(), "G");
+        }
+
         //- Return the near wall distances
         const nearWallDist& y() const
         {
