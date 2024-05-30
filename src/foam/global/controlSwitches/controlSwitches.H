@@ -234,10 +234,10 @@ class controlSwitches
     // Private member functions
 
         //- Disallow construct as copy
-        controlSwitches(const controlSwitches<T>&);
+        controlSwitches(const controlSwitches<T>&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const controlSwitches<T>&);
+        void operator=(const controlSwitches<T>&) = delete;
 
 
 public:

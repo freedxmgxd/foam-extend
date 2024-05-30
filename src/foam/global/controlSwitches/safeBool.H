@@ -85,8 +85,7 @@ public:
 protected:
 
     //- Destructor
-    ~safeBool()
-    {}
+    ~safeBool() = default;
 };
 
 

@@ -62,10 +62,10 @@ class constantsSwitch
     // Private member functions
 
         //- Disallow construct as copy
-        constantsSwitch(const constantsSwitch&);
+        constantsSwitch(const constantsSwitch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const constantsSwitch&);
+        void operator=(const constantsSwitch&) = delete;
 
 
 public:
@@ -92,8 +92,7 @@ public:
 
 
     //- Destructor
-    virtual ~constantsSwitch()
-    {}
+    virtual ~constantsSwitch() = default;
 
 
     // Member operators

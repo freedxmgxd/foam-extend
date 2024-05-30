@@ -61,10 +61,10 @@ class tolerancesSwitch
     // Private member functions
 
         //- Disallow construct as copy
-        tolerancesSwitch(const tolerancesSwitch&);
+        tolerancesSwitch(const tolerancesSwitch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const tolerancesSwitch&);
+        void operator=(const tolerancesSwitch&) = delete;
 
 
 public:
@@ -91,8 +91,7 @@ public:
 
 
     //- Destructor
-    virtual ~tolerancesSwitch()
-    {}
+    virtual ~tolerancesSwitch() = default;
 
 
     // Member operators

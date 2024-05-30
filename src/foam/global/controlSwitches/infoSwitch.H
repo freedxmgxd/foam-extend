@@ -60,10 +60,10 @@ class infoSwitch
     // Private member functions
 
         //- Disallow construct as copy
-        infoSwitch(const infoSwitch&);
+        infoSwitch(const infoSwitch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const infoSwitch&);
+        void operator=(const infoSwitch&) = delete;
 
 
 public:
@@ -90,8 +90,7 @@ public:
 
 
     //- Destructor
-    virtual ~infoSwitch()
-    {}
+    virtual ~infoSwitch() = default;
 
 
     // Member operators

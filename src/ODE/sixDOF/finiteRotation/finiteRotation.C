@@ -134,12 +134,6 @@ Foam::finiteRotation::finiteRotation(const tensor& R)
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::finiteRotation::~finiteRotation()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::finiteRotation::updateRotation(const tensor& R)

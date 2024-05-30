@@ -83,9 +83,8 @@ public:
         explicit finiteRotation(const tensor& R);
 
 
-    // Destructor
-
-        ~finiteRotation();
+    //- Destructor
+    ~finiteRotation() = default;
 
 
     // Static Functions

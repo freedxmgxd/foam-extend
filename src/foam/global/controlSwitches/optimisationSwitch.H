@@ -62,10 +62,10 @@ class optimisationSwitch
     // Private member functions
 
         //- Disallow construct as copy
-        optimisationSwitch(const optimisationSwitch&);
+        optimisationSwitch(const optimisationSwitch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const optimisationSwitch&);
+        void operator=(const optimisationSwitch&) = delete;
 
 
 public:
@@ -119,8 +119,8 @@ public:
 
 
     //- Destructor
-    virtual ~optimisationSwitch()
-    {}
+    virtual ~optimisationSwitch() = default;
+
 
     // Member operators
 

@@ -61,10 +61,10 @@ class debugSwitch
     // Private member functions
 
         //- Disallow construct as copy
-        debugSwitch(const debugSwitch&);
+        debugSwitch(const debugSwitch&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const debugSwitch&);
+        void operator=(const debugSwitch&) = delete;
 
 
 public:
@@ -91,8 +91,7 @@ public:
 
 
     //- Destructor
-    virtual ~debugSwitch()
-    {}
+    virtual ~debugSwitch() = default;
 
 
     // Member operators

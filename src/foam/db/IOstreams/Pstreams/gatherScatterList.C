@@ -65,16 +65,8 @@ void Pstream::gatherList
     {
         if (Values.size() != Pstream::nProcs(comm))
         {
-            FatalErrorIn
-            (
-                "void Pstream::gatherList\n"
-                "(\n"
-                "    const List<Pstream::commsStruct>& comms,\n"
-                "    List<T>& Values,\n"
-                "    const int tag,\n"
-                "    const label comm\n"
-                ")"
-            )   << "Size of list:" << Values.size()
+            FatalErrorInFunction
+                << "Size of list:" << Values.size()
                 << " does not equal the number of processors:"
                 << Pstream::nProcs(comm)
                 << Foam::abort(FatalError);
@@ -236,16 +228,8 @@ void Pstream::scatterList
     {
         if (Values.size() != Pstream::nProcs(comm))
         {
-            FatalErrorIn
-            (
-                "void Pstream::scatterList\n"
-                "(\n"
-                "    const List<Pstream::commsStruct>& comms,\n"
-                "    List<T>& Values,\n"
-                "    const int tag,\n"
-                "    const label comm\n"
-                ")"
-            )   << "Size of list:" << Values.size()
+            FatalErrorInFunction
+                << "Size of list:" << Values.size()
                 << " does not equal the number of processors:"
                 << Pstream::nProcs(comm)
                 << Foam::abort(FatalError);
