@@ -21,10 +21,6 @@ License
     You should have received a copy of the GNU General Public License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Efficient cell-centre calculation using face-addressing, face-centres and
-    face-areas.
-
 \*---------------------------------------------------------------------------*/
 
 #include "primitiveMesh.H"
@@ -46,7 +42,7 @@ void Foam::primitiveMesh::calcCellCentresAndVols() const
     // if the pointer is already set
     if (cellCentresPtr_ || cellVolumesPtr_)
     {
-        FatalErrorIn("primitiveMesh::calcCellCentresAndVols() const")
+        FatalErrorInFunction
             << "Cell centres or cell volumes already calculated"
             << abort(FatalError);
     }

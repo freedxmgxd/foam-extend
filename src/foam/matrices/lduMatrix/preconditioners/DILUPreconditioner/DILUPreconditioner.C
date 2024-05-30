@@ -84,7 +84,7 @@ void Foam::DILUPreconditioner::calcReciprocalD
     const scalar* const __restrict__ lowerPtr = matrix.lower().begin();
 
     label nFaces = matrix.upper().size();
-    for (label face=0; face<nFaces; face++)
+    for (label face = 0; face < nFaces; face++)
     {
         rDPtr[uPtr[face]] -= upperPtr[face]*lowerPtr[face]/rDPtr[lPtr[face]];
     }
@@ -133,14 +133,14 @@ void Foam::DILUPreconditioner::precondition
 
     label sface;
 
-    for (label face=0; face<nFaces; face++)
+    for (label face = 0; face < nFaces; face++)
     {
         sface = losortPtr[face];
         wAPtr[uPtr[sface]] -=
             rDPtr[uPtr[sface]]*lowerPtr[sface]*wAPtr[lPtr[sface]];
     }
 
-    for (label face=nFacesM1; face>=0; face--)
+    for (label face = nFacesM1; face >= 0; face--)
     {
         wAPtr[lPtr[face]] -=
             rDPtr[lPtr[face]]*upperPtr[face]*wAPtr[uPtr[face]];

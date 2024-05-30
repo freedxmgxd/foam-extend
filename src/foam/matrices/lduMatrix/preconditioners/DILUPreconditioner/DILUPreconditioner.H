@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class DILUPreconditioner Declaration
+                     Class DILUPreconditioner Declaration
 \*---------------------------------------------------------------------------*/
 
 class DILUPreconditioner
