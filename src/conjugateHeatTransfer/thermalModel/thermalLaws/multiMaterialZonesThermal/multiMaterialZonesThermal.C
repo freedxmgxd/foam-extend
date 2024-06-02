@@ -78,6 +78,11 @@ Foam::multiMaterialZonesThermal::multiMaterialZonesThermal
         }
     }
 
+    // In order to avoid tangled comms, force weithgs calculation.
+    // Otherwise, code fails in correctBoundaryConditions.
+    // HJ, 2/Jun/2024
+    mesh().weights();
+
     materials_.correctBoundaryConditions();
     materials_.write();
 

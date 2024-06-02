@@ -46,22 +46,15 @@ autoPtr<thermalSource> thermalSource::New
 {
     word rheoTypeName = dict.lookup("type");
 
-    Info<< "Selecting thermal model " << rheoTypeName << endl;
+    Info<< "Selecting thermal source model " << rheoTypeName << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(rheoTypeName);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
-        (
-            "thermalSource::New(\n"
-            "    const word& name,\n"
-            "    const volScalarField& T,\n"
-            "    const dictionary& dict\n"
-            ")",
-            dict
-        )   << "Unknown thermalSource type "
+        FatalIOErrorInFunction(dict)
+            << "Unknown thermalSource type "
             << rheoTypeName << endl << endl
             << "Valid  thermalSources are : " << endl
             << dictionaryConstructorTablePtr_->toc()

@@ -116,7 +116,7 @@ void Foam::multiMaterialThermal::checkLaws() const
 
     if
     (
-        max(materials_).value() > laws.size() + SMALL
+        gMax(materials_.internalField()) > laws.size() + SMALL
     )
     {
         FatalErrorInFunction
@@ -129,7 +129,7 @@ void Foam::multiMaterialThermal::checkLaws() const
 
     if
     (
-        min(materials_).value() < 0
+        min(materials_.internalField()) < -SMALL
     )
     {
         FatalErrorInFunction
@@ -198,6 +198,9 @@ Foam::multiMaterialThermal::multiMaterialThermal
     )
 {
     readLaws(T, dict);
+
+    // Cannot check laws: they are set in a derived class
+    // HJ, 2/Jun/2024
 }
 
 
