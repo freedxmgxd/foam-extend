@@ -137,7 +137,7 @@ void fanFvPatchField<Type>::autoMap
 
         for (label i = oldSize; i < jump_.size(); i++)
         {
-            jump_[i] = jump_[i-oldSize];
+            jump_[i] = jump_[i - oldSize];
         }
 
         jump_.autoMap(m);
@@ -163,7 +163,7 @@ void fanFvPatchField<Type>::rmap
 
         for (label i = oldSize; i < jump_.size(); i++)
         {
-            jump_[i] = jump_[i-oldSize];
+            jump_[i] = jump_[i - oldSize];
         }
 
         const fanFvPatchField<Type>& tiptf =

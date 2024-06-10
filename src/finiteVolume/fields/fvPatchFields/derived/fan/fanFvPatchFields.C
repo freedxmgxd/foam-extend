@@ -37,7 +37,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-//- Specialisation of the jump-condition for the pressure
+// Specialisation of the jump-condition for the pressure
 template<>
 void Foam::fanFvPatchField<Foam::scalar>::updateCoeffs()
 {
