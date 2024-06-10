@@ -158,7 +158,7 @@ public:
                 return true;
             }
 
-            //- Return neighbour coupled given internal cell data
+            //- Return neighbour field across coupled patch
             virtual tmp<Field<Type> > patchNeighbourField() const;
 
             //- Return neighbour field of internal field, untransformed
