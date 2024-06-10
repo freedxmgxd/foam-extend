@@ -162,7 +162,7 @@ void jumpCyclicFvPatchField<Type>::updateInterfaceMatrix
     )
     {
         // Get component of jump.  HJ, 11/Aug/2009
-        const Field<scalar> jf = jump()().component(cmpt);
+        const scalarField jf = jump()().component(cmpt);
 
         for (label facei = 0; facei < sizeby2; facei++)
         {
