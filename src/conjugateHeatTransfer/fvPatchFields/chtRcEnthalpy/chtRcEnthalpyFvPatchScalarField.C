@@ -31,6 +31,7 @@ Author
 #include "chtRcEnthalpyFvPatchScalarField.H"
 #include "volFields.H"
 #include "fvMatrices.H"
+#include "basicThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

@@ -52,7 +52,6 @@ SourceFiles
 
 #include "chtRcTemperatureFvPatchScalarField.H"
 #include "fvMatricesFwd.H"
-#include "basicThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -125,7 +125,7 @@ public:
 
         // Access functions
 
-            //- Remove thermal diffusivity for temperature from decoupled state
+            //- Return thermal diffusivity for temperature from decoupled state
             tmp<scalarField> k() const;
 
 
