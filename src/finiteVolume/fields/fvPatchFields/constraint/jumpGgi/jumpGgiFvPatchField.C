@@ -142,7 +142,7 @@ void jumpGgiFvPatchField<Type>::initInterfaceMatrixUpdate
      == reinterpret_cast<const void*>(&this->internalField())
     )
     {
-        forAll(pnf, elemI)
+        forAll (pnf, elemI)
         {
             pnf[elemI] += jf[elemI];
         }
@@ -152,20 +152,21 @@ void jumpGgiFvPatchField<Type>::initInterfaceMatrixUpdate
 
     if (switchToLhs)
     {
-        forAll(fc, elemI)
+        forAll (fc, elemI)
         {
             result[fc[elemI]] += pnf[elemI];
         }
     }
     else
     {
-        forAll(fc, elemI)
+        forAll (fc, elemI)
         {
             result[fc[elemI]] -= pnf[elemI];
         }
     }
 }
 
+    
 template<class Type>
 void jumpGgiFvPatchField<Type>::updateInterfaceMatrix
 (
