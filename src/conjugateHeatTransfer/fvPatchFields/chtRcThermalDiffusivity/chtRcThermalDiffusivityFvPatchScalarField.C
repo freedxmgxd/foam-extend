@@ -22,20 +22,14 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Author
-    Henrik Rusche, Wikki GmbH.  All rights reserved
+    Code removed in entirety: Henrik Rusche, Wikki GmbH.
+    This was a disastrous heap of junk
+    Written anew by Hrvoje Jasak, Wikki Ltd.  All rights reserved
 
 \*---------------------------------------------------------------------------*/
 
 #include "chtRcThermalDiffusivityFvPatchScalarField.H"
-#include "chtRcThermalDiffusivitySlaveFvPatchScalarField.H"
-#include "chtRcTemperatureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
-#include "volFields.H"
-#include "harmonic.H"
-#include "radiationConstants.H"
-#include "VectorN.H"
-#include "basicThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -46,7 +40,7 @@ chtRcThermalDiffusivityFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    chtRegionCoupleBase(p, iF)
+    regionCouplingFvPatchScalarField(p, iF)
 {}
 
 
@@ -58,7 +52,7 @@ chtRcThermalDiffusivityFvPatchScalarField
     const dictionary& dict
 )
 :
-    chtRegionCoupleBase(p, iF, dict)
+    regionCouplingFvPatchScalarField(p, iF, dict)
 {}
 
 
@@ -71,7 +65,7 @@ chtRcThermalDiffusivityFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    chtRegionCoupleBase(ptf, p, iF, mapper)
+    regionCouplingFvPatchScalarField(ptf, p, iF, mapper)
 {}
 
 
@@ -82,11 +76,65 @@ chtRcThermalDiffusivityFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    chtRegionCoupleBase(ptf, iF)
+    regionCouplingFvPatchScalarField(ptf, iF)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::scalarField>
+Foam::chtRcThermalDiffusivityFvPatchScalarField::k() const
+{
+    // For thermal diffusivity (solving T equation), return decoupled k
+    return decoupledField();
+}
+
+
+void Foam::chtRcThermalDiffusivityFvPatchScalarField::initEvaluate
+(
+    const Pstream::commsTypes
+)
+{
+    if (!this->updated())
+    {
+        this->updateCoeffs();
+    }
+
+    // In order to deal with wall functions, decoupled patch field values
+    // need to be interpolated
+    // HJ, 7/Jun/2024
+
+    if (!regionCouplePatch().coupled())
+    {
+        // Store coupled field
+        decoupledField();
+    }
+    else
+    {
+        // Do interpolation
+    
+        // Get local decoupled patch field values
+        const scalarField& diffOwn = decoupledField();
+
+        // Interpolate neighbour decoupled patch field values
+
+        // Get neighbour k
+        const chtRcThermalDiffusivityFvPatchScalarField& pCht =
+            refCast<const chtRcThermalDiffusivityFvPatchScalarField>
+            (
+                shadowPatchField()
+            );
+        
+        const scalarField diffNei =
+            regionCouplePatch().interpolate(pCht.k());
+
+        // Evaluate patch field by direct interpolation.
+        // There is no need for distances, as two sets of data
+        // are on top of each other.
+        scalarField::operator=(diffOwn*diffNei/(diffOwn + diffNei));
+    }
+}
+
 
 void Foam::chtRcThermalDiffusivityFvPatchScalarField::evaluate
 (
@@ -94,330 +142,6 @@ void Foam::chtRcThermalDiffusivityFvPatchScalarField::evaluate
 )
 {
     fvPatchScalarField::evaluate();
-}
-
-
-void Foam::chtRcThermalDiffusivityFvPatchScalarField::updateCoeffs()
-{
-    if (updated())
-    {
-        return;
-    }
-
-    if (!this->db().objectRegistry::foundObject<volScalarField>("T"))
-    {
-        InfoInFunction
-            << "Temperature field T not found.  Returning"
-            << endl;
-
-        return;
-    }
-
-    // Get wall temperature
-    const fvPatchScalarField& Tw =
-        lookupPatchField<volScalarField, scalar>("T");
-
-    // Note: in hs-T CHT system, diffusivity on the solid side k
-    // is equal to diffusivity on the fluid side times linearised Cp
-    // HJ, 29/Mar/2024
-    if
-    (
-        dimensionedInternalField().dimensions()
-     == dimensionSet(1, -1, -1, 0, 0, 0, 0)
-    )
-    {
-        const label patchi = patch().index();
-
-        const basicThermo& thermo = db().lookupObject<basicThermo>
-        (
-            "thermophysicalProperties"
-        );
-
-        // Note: BUG work-around
-        // Selection of enthaly field cannot just rely on dimensions
-        // Appropriate function should be added into basicThermo
-        // which identifies the active form or enthalpy at run-time
-        // in order to avoid nonImplemented virtual function call
-        // Fix it.  HJ, 15/Jun/2018
-        if (this->db().objectRegistry::foundObject<volScalarField>("h"))
-        {
-            const chtRcTemperatureFvPatchScalarField& h =
-                refCast<const chtRcTemperatureFvPatchScalarField>
-                (
-                    thermo.h().boundaryField()[patchi]
-                );
-
-            // Note: use Cp(Tc) linearisation for consistency
-            *this == calcThermalDiffusivity(*this, shadowPatchField(), h)
-                /thermo.Cp(h.Tc(), patchi);
-        }
-        else if
-        (
-            this->db().objectRegistry::foundObject<volScalarField>("hs")
-        )
-        {
-            const chtRcTemperatureFvPatchScalarField& hs =
-                refCast<const chtRcTemperatureFvPatchScalarField>
-                (
-                    thermo.hs().boundaryField()[patchi]
-                );
-
-            // Note: use Cp(Tc) linearisation for consistency
-            *this == calcThermalDiffusivity(*this, shadowPatchField(), hs)
-                /thermo.Cp(hs.Tc(), patchi);
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Cannot find enthalpy for field "
-                << dimensionedInternalField().name() << " on patch "
-                << patch().name()
-                << abort(FatalError);
-        }
-    }
-    else
-    {
-        const chtRcTemperatureFvPatchScalarField& patchT =
-            refCast<const chtRcTemperatureFvPatchScalarField>(Tw);
-                
-        *this == calcThermalDiffusivity(*this, shadowPatchField(), patchT);
-    }
-}
-
-
-Foam::tmp<Foam::scalarField>
-Foam::chtRcThermalDiffusivityFvPatchScalarField::calcThermalDiffusivity
-(
-    const chtRegionCoupleBase& owner,
-    const chtRegionCoupleBase& neighbour,
-    const chtRcTemperatureFvPatchScalarField& TwOwn
-) const
-{
-    if (debug)
-    {
-        InfoInFunction
-            << "for field " << this->dimensionedInternalField().name()
-            << " in " << this->patch().boundaryMesh().mesh().name()
-            << endl;
-    }
-
-    if (owner.size() != TwOwn.size())
-    {
-        FatalErrorInFunction
-            << "Problem with field sizes: owner = " << owner.size()
-            << " TwOwn = " << TwOwn.size()
-                << abort(FatalError);
-    }
-    
-    const fvPatch& p = owner.patch();
-    const fvMesh& mesh = p.boundaryMesh().mesh();
-
-    const scalarField fOwn = owner.forig();
-    const scalarField TcOwn = TwOwn.Tc();
-
-    scalarField fNei(p.size());
-    scalarField TcNei(p.size());
-
-    scalarField Qr(p.size(), 0.0);
-    scalarField fourQro(p.size(), 0.0);
-
-    if (TwOwn.radiation())
-    {
-        Qr += p.lookupPatchField<volScalarField, scalar>("Qr");
-        fourQro += 4.0*radiation::sigmaSB.value()*pow4(TwOwn.Tw());
-    }
-
-    {
-        Field<VectorN<scalar, 4> > lData(neighbour.size());
-
-        const scalarField lfNei = neighbour.forig();
-        const scalarField lTcNei = TwOwn.shadowPatchField().Tc();
-
-        forAll(lData, facei)
-        {
-            lData[facei][0] = lTcNei[facei];
-            lData[facei][1] = lfNei[facei];
-        }
-
-        if (TwOwn.shadowPatchField().radiation())
-        {
-            const scalarField& lTwNei = TwOwn.shadowPatchField().Tw();
-            const scalarField& lQrNei =
-                owner.lookupShadowPatchField<volScalarField, scalar>("Qr");
-
-            forAll (lData, facei)
-            {
-                lData[facei][2] = lTwNei[facei];
-                lData[facei][3] = lQrNei[facei];
-            }
-        }
-        else
-        {
-            forAll (lData, facei)
-            {
-                lData[facei][2] = 0.0;
-                lData[facei][3] = 0.0;
-            }
-        }
-
-        const Field<VectorN<scalar, 4> > iData =
-            owner.regionCouplePatch().interpolate(lData);
-
-        forAll (iData, facei)
-        {
-            TcNei[facei] = iData[facei][0];
-            fNei[facei] = iData[facei][1];
-        }
-
-        if (TwOwn.shadowPatchField().radiation())
-        {
-            forAll (iData, facei)
-            {
-                Qr[facei] += iData[facei][3];
-                fourQro[facei] +=
-                    4.0*radiation::sigmaSB.value()*pow4(iData[facei][2]);
-            }
-        }
-    }
-
-    // Do interpolation
-    harmonic<scalar> interp(mesh);
-    const scalarField weights = interp.weights(fOwn, fNei, p);
-    const scalarField kHarm = weights*fOwn + (1.0 - weights)*fNei;
-
-    const scalarField kOwn = fOwn/((1.0 - p.weights())*p.magLongDeltas());
-    const scalarField kNei = fNei/(p.weights()*p.magLongDeltas());
-
-    tmp<scalarField> kTmp(new scalarField(p.size()));
-    scalarField& k = kTmp.ref();
-
-    k = kOwn*(kNei + Qr/stabilise(TcNei - TcOwn, SMALL));
-    k /= p.deltaCoeffs()*(kOwn + kNei);
-
-    forAll (k, facei)
-    {
-        k[facei] = max(min(k[facei], 100*kHarm[facei]), 0.01*kHarm[facei]);
-    }
-
-    return kTmp;
-}
-
-
-Foam::tmp<Foam::scalarField>
-Foam::chtRcThermalDiffusivityFvPatchScalarField::calcTemperature
-(
-    const chtRcTemperatureFvPatchScalarField& TwOwn,
-    const chtRcTemperatureFvPatchScalarField& neighbour,
-    const chtRegionCoupleBase& ownerK
-) const
-{
-    if (debug)
-    {
-        InfoInFunction
-            << "for field " << this->dimensionedInternalField().name()
-            << " in " << this->patch().boundaryMesh().mesh().name()
-            << endl;
-    }
-
-    if (TwOwn.size() != ownerK.size())
-    {
-        FatalErrorInFunction
-            << "Problem with field sizes: TwOwn = " << TwOwn.size()
-            << " ownerK = " << ownerK.size()
-            << abort(FatalError);
-    }
-    
-    const fvPatch& p = TwOwn.patch();
-    const fvMesh& mesh = p.boundaryMesh().mesh();
-
-    const scalarField fOwn = ownerK.forig();
-    const scalarField TcOwn = TwOwn.Tc();
-
-    scalarField fNei(p.size());
-    scalarField TcNei(p.size());
-
-    scalarField Qr(p.size(), 0.0);
-    scalarField fourQro(p.size(), 0.0);
-
-    if (TwOwn.radiation())
-    {
-        Qr += p.lookupPatchField<volScalarField, scalar>("Qr");
-        fourQro += 4.0*radiation::sigmaSB.value()*pow4(TwOwn.Tw());
-    }
-
-    {
-        Field<VectorN<scalar, 4> > lData(neighbour.size());
-
-        const scalarField lfNei = ownerK.shadowPatchField().forig();
-        const scalarField lTcNei = TwOwn.shadowPatchField().Tc();
-
-        forAll (lData, facei)
-        {
-            lData[facei][0] = lTcNei[facei];
-            lData[facei][1] = lfNei[facei];
-        }
-
-        if (TwOwn.shadowPatchField().radiation())
-        {
-            const scalarField& lTwNei = TwOwn.shadowPatchField().Tw();
-            const scalarField& lQrNei =
-                TwOwn.lookupShadowPatchField<volScalarField, scalar>("Qr");
-
-            forAll (lData, facei)
-            {
-                lData[facei][2] = lTwNei[facei];
-                lData[facei][3] = lQrNei[facei];
-            }
-        }
-        else
-        {
-            forAll (lData, facei)
-            {
-                lData[facei][2] = 0.0;
-                lData[facei][3] = 0.0;
-            }
-        }
-
-        const Field<VectorN<scalar, 4> > iData =
-            TwOwn.regionCouplePatch().interpolate(lData);
-
-        forAll (iData, facei)
-        {
-            TcNei[facei] = iData[facei][0];
-            fNei[facei] = iData[facei][1];
-        }
-
-        if (TwOwn.shadowPatchField().radiation())
-        {
-            forAll (iData, facei)
-            {
-                fourQro[facei] +=
-                    4.0*radiation::sigmaSB.value()*pow4(iData[facei][2]);
-                Qr[facei] += iData[facei][3];
-            }
-        }
-    }
-
-    // Do interpolation
-    harmonic<scalar> interp(mesh);
-    scalarField weights = interp.weights(fOwn, fNei, p);
-    const scalarField kHarm = weights*fOwn + (1.0 - weights)*fNei;
-
-    const scalarField kOwn = fOwn/((1.0 - p.weights())*p.magLongDeltas());
-    const scalarField kNei = fNei/(p.weights()*p.magLongDeltas());
-
-    tmp<scalarField> TwTmp(new scalarField(TwOwn.Tw()));
-    scalarField& Tw = TwTmp.ref();
-
-    Tw = (Qr + kOwn*TcOwn + kNei*TcNei)/(kOwn + kNei);
-
-    scalarField q1 = (Tw - TcOwn)*kOwn;
-
-    scalarField q2 = (TcNei - Tw)*kNei;
-
-    scalarField q3 = (TcNei - TcOwn)*ownerK*p.deltaCoeffs();
-
-    return TwTmp;
 }
 
 

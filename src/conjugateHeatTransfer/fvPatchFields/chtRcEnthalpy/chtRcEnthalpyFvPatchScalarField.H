@@ -1,31 +1,33 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
-  \\      /  F ield         | foam-extend: Open Source CFD
-   \\    /   O peration     | Version:     5.0
-    \\  /    A nd           | Web:         http://www.foam-extend.org
-     \\/     M anipulation  | For copyright notice see file Copyright
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Copyright held by original author
+     \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of foam-extend.
+    This file is part of OpenFOAM.
 
-    foam-extend is free software: you can redistribute it and/or modify it
+    OpenFOAM is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the
-    Free Software Foundation, either version 3 of the License, or (at your
+    Free Software Foundation; either version 2 of the License, or (at your
     option) any later version.
 
-    foam-extend is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
 
     You should have received a copy of the GNU General Public License
-    along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
+    along with OpenFOAM; if not, write to the Free Software Foundation,
+    Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 Class
-    chtRcTemperatureFvPatchScalarField
+    chtRcEnthalpyFvPatchScalarField
 
 Description
-    Region couple patch field (solving for T), taking radiation into account
+    Region couple patch field (solving for enthalpy),
+    taking radiation into account.
     Complete rewrite and functionality reimplementation of garbage provided
     by Henrik Rusche.  That was shameful shit with unbalanced fluxes across
     the interface, indicating total ignorance of CFD.  Programming-wise,
@@ -41,15 +43,16 @@ Author
     Hrvoje Jasak, Wikki Ltd.  All rights reserved.
 
 SourceFiles
-    chtRcTemperatureFvPatchScalarField.C
+    chtRcEnthalpyFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef chtRcTemperatureFvPatchScalarField_H
-#define chtRcTemperatureFvPatchScalarField_H
+#ifndef chtRcEnthalpyFvPatchScalarField_H
+#define chtRcEnthalpyFvPatchScalarField_H
 
-#include "jumpRegionCouplingFvPatchFields.H"
+#include "chtRcTemperatureFvPatchScalarField.H"
 #include "fvMatricesFwd.H"
+#include "basicThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,63 +60,68 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-             Class chtRcTemperatureFvPatchScalarField Declaration
+               Class chtRcEnthalpyFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class chtRcTemperatureFvPatchScalarField
+class chtRcEnthalpyFvPatchScalarField
 :
-    public jumpRegionCouplingFvPatchScalarField
+    public chtRcTemperatureFvPatchScalarField
 {
     // Private data
 
-        //- Name of thermal diffusivity field
-        word kName_;
+        //- Linearisation for thermo: Cp
+        //  This is temporary storage used in matrix update
+        mutable scalarField Cp_;
 
-        //- Take radiation into account for this patch
-        Switch radiation_;
-
-        //- Radiation jump
-        scalarField jump_;
+        //- Linearisation for thermo: H0
+        //  This is temporary storage used in matrix update
+        mutable scalarField H0_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("chtRcTemperature");
+    TypeName("chtRcEnthalpy");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        chtRcTemperatureFvPatchScalarField
+        chtRcEnthalpyFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        chtRcTemperatureFvPatchScalarField
+        chtRcEnthalpyFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const dictionary&
         );
 
-        //- Construct by mapping given chtRcTemperatureFvPatchScalarField
+        //- Construct by mapping given chtRcEnthalpyFvPatchScalarField
         //  onto a new patch
-        chtRcTemperatureFvPatchScalarField
+        chtRcEnthalpyFvPatchScalarField
         (
-            const chtRcTemperatureFvPatchScalarField&,
+            const chtRcEnthalpyFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Construct as copy setting internal field reference
-        chtRcTemperatureFvPatchScalarField
+        chtRcEnthalpyFvPatchScalarField
         (
-            const chtRcTemperatureFvPatchScalarField&,
+            const chtRcEnthalpyFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
+        );
+
+        //- Construct as copy setting internal field reference
+        chtRcEnthalpyFvPatchScalarField
+        (
+            const chtRcEnthalpyFvPatchScalarField&
         );
 
         //- Construct and return a clone
@@ -121,7 +129,7 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new chtRcTemperatureFvPatchScalarField(*this)
+                new chtRcEnthalpyFvPatchScalarField(*this)
             );
         }
 
@@ -133,50 +141,16 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new chtRcTemperatureFvPatchScalarField(*this, iF)
+                new chtRcEnthalpyFvPatchScalarField(*this, iF)
             );
         }
 
 
     //- Destructor
-    virtual ~chtRcTemperatureFvPatchScalarField() = default;
+    virtual ~chtRcEnthalpyFvPatchScalarField() = default;
 
 
     // Member functions
-
-        // Access functions
-
-            //- Return kName
-            const word& kName() const
-            {
-                return kName_;
-            }
-
-            //- Return access to kName
-            word& kName()
-            {
-                return kName_;
-            }
-
-            //- Return radiation
-            const Switch& radiation() const
-            {
-                return radiation_;
-            }
-
-            //- Return access to radiation
-            Switch& radiation()
-            {
-                return radiation_;
-            }
-
-            //- Return the "jump" across the patch as a "half" field
-            virtual tmp<scalarField> jump() const;
-
-            //- Return shadow patch field
-            virtual const chtRcTemperatureFvPatchScalarField&
-                shadowPatchField() const;
-
 
         // Mapping functions
 
@@ -195,12 +169,35 @@ public:
 
         // Evaluation functions
 
-            //- Update the coefficients associated with the patch field
+            //- Return neighbour field given internal cell data
+            virtual tmp<scalarField> patchNeighbourField() const;
+
+            //- Evaluate the patch field
             virtual void updateCoeffs();
 
+            //- Initialise neighbour matrix update
+            virtual void initInterfaceMatrixUpdate
+            (
+                const scalarField& psiInternal,
+                scalarField& result,
+                const lduMatrix& m,
+                const scalarField& coeffs,
+                const direction cmpt,
+                const Pstream::commsTypes commsType,
+                const bool switchToLhs
+            ) const;
 
-        //- Write
-        virtual void write(Ostream&) const;
+            //- Update result field based on interface functionality
+            virtual void updateInterfaceMatrix
+            (
+                const scalarField& psiInternal,
+                scalarField& result,
+                const lduMatrix&,
+                const scalarField& coeffs,
+                const direction cmpt,
+                const Pstream::commsTypes commsType,
+                const bool switchToLhs
+            ) const;
 };
 
 

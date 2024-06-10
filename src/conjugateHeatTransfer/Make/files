@@ -26,12 +26,9 @@ BCs          = fvPatchFields
 
 $(BCs)/controlledParabolicVelocity/controlledParabolicVelocityFvPatchVectorField.C
 
-$(BCs)/chtRegionCoupleBase/chtRegionCoupleBase.C
 $(BCs)/chtRcThermalDiffusivity/chtRcThermalDiffusivityFvPatchScalarField.C
 $(BCs)/chtRcTemperature/chtRcTemperatureFvPatchScalarField.C
-$(BCs)/chtRcSolidTemperature/chtRcSolidTemperatureFvPatchScalarField.C
-$(BCs)/chtRcThermalDiffusivityResistance/chtRcThermalDiffusivityResistanceFvPatchScalarField.C
-$(BCs)/chtRcThermalDiffusivitySlave/chtRcThermalDiffusivitySlaveFvPatchScalarField.C
+$(BCs)/chtRcEnthalpy/chtRcEnthalpyFvPatchScalarField.C
 
 $(BCs)/extendedWallHeatTransfer/extendedWallHeatTransferFvPatchScalarField.C
 

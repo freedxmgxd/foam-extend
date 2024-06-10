@@ -25,12 +25,12 @@ Class
     chtRcThermalDiffusivityFvPatchScalarField
 
 Description
-    Diffusivity for the region couple patch field taking radiation into account
-    Master side
+    Diffusivity for the region couple patch field when solving for T.
 
 Author
-    Henrik Rusche, Wikki GmbH.  All rights reserved
-    Cleaned up by Hrvoje Jasak
+    Code removed in entirety: Henrik Rusche, Wikki GmbH.
+    This was a disastrous heap of junk
+    Written anew by Hrvoje Jasak, Wikki Ltd.  All rights reserved
 
 SourceFiles
     chtRcThermalDiffusivityFvPatchScalarField.C
@@ -40,7 +40,7 @@ SourceFiles
 #ifndef chtRcThermalDiffusivityFvPatchScalarField_H
 #define chtRcThermalDiffusivityFvPatchScalarField_H
 
-#include "chtRegionCoupleBase.H"
+#include "regionCouplingFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,7 +53,7 @@ namespace Foam
 
 class chtRcThermalDiffusivityFvPatchScalarField
 :
-    public chtRegionCoupleBase
+    public regionCouplingFvPatchScalarField
 {
 public:
 
@@ -119,33 +119,23 @@ public:
 
     //- Destructor
     virtual ~chtRcThermalDiffusivityFvPatchScalarField() = default;
-    
+
 
     // Member functions
 
+        // Access functions
+
+            //- Remove thermal diffusivity for temperature from decoupled state
+            tmp<scalarField> k() const;
+
+
         // Evaluation functions
 
-            //- Evaluate the patch field
-            virtual void updateCoeffs();
+            //- Initialise the evaluation of the patch field
+            virtual void initEvaluate(const Pstream::commsTypes commsType);
 
             //- Evaluate the patch field
             virtual void evaluate(const Pstream::commsTypes commsType);
-
-            //- Calculate the thermal diffusivity
-            virtual tmp<scalarField> calcThermalDiffusivity
-            (
-                const chtRegionCoupleBase& owner,
-                const chtRegionCoupleBase& neighbour,
-                const chtRcTemperatureFvPatchScalarField& TwOwn
-            ) const;
-
-            //- Calculate the temperature
-            virtual tmp<scalarField> calcTemperature
-            (
-                const chtRcTemperatureFvPatchScalarField& TwOwn,
-                const chtRcTemperatureFvPatchScalarField& neighbour,
-                const chtRegionCoupleBase& ownerK
-            ) const;
 
 
         //- Write

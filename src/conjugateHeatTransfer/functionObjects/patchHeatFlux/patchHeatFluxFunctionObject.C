@@ -121,7 +121,7 @@ Foam::patchHeatFluxFunctionObject::patchHeatFluxFunctionObject
 
         // Write header
         ofPtr_()
-            << "# Time, patch convective, diffusive, radiative, ptSource, total flux"
+            << "# Time, patch convective, diffusive, radiative, total flux"
             << endl;
     }
 }
@@ -247,23 +247,6 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
             );
         }
 
-        // Account for heat sources at region couple BCs
-        scalar ptSourceFlux = 0;
-        
-        if (isA<chtRcTemperatureFvPatchScalarField>(T.boundaryField()[patchID]))
-        {
-            const chtRcTemperatureFvPatchScalarField& pT =
-                dynamic_cast<const chtRcTemperatureFvPatchScalarField&>
-                (
-                    T.boundaryField()[patchID]
-                );
-
-            ptSourceFlux = gSum
-            (
-                pT.source()*mesh.magSf().boundaryField()[patchID]
-            );
-        }
-
         if (ofPtr_.valid())
         {
             ofPtr_()
@@ -271,19 +254,17 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
                 << convectiveFlux << tab
                 << -diffusiveFlux << tab
                 << radiativeFlux << tab
-                << -ptSourceFlux << tab
-                << convectiveFlux - diffusiveFlux + radiativeFlux + ptSourceFlux
+                << convectiveFlux - diffusiveFlux + radiativeFlux
                 << endl;
         }
 
         Info<< "Heat flux through " << patchName_
             << " region " << regionName_
-            << " (convective, diffusive, radiative, ptSource, total): "
+            << " (convective, diffusive, radiative, total): "
             << convectiveFlux << tab
             << -diffusiveFlux << tab
             << radiativeFlux << tab
-            << ptSourceFlux << tab
-            << convectiveFlux - diffusiveFlux + radiativeFlux + ptSourceFlux
+            << convectiveFlux - diffusiveFlux + radiativeFlux
             << endl;
 
         return true;
