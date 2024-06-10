@@ -134,6 +134,10 @@ public:
         }
 
 
+    //- Destructor
+    virtual ~adiabaticFvPatchScalarField() = default;
+
+
     // Member functions
 
         // Evaluation functions
