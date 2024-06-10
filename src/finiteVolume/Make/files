@@ -129,6 +129,7 @@ $(constraintFvPatchFields)/jumpOverlapGgi/jumpOverlapGgiFvPatchFields.C
 $(constraintFvPatchFields)/mixingPlane/mixingPlaneFvPatchFields.C
 $(constraintFvPatchFields)/jumpMixingPlane/jumpMixingPlaneFvPatchFields.C
 $(constraintFvPatchFields)/regionCoupling/regionCouplingFvPatchFields.C
+$(constraintFvPatchFields)/jumpRegionCoupling/jumpRegionCouplingFvPatchFields.C
 
 derivedFvPatchFields = $(fvPatchFields)/derived
 $(derivedFvPatchFields)/activeBaffleVelocity/activeBaffleVelocityFvPatchVectorField.C
