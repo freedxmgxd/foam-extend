@@ -68,12 +68,10 @@ class regionCouplingFvPatchField
         //- Matrix update buffer
         mutable scalarField matrixUpdateBuffer_;
 
-        //- Original patch field.  Required for correct evaluation
+        //- Decoupled patch field values.  Required for correct evaluation
         //  in harmonic averaging
-        mutable Field<Type> originalPatchField_;
-
-        //- Current time index used to store originalPatchField_
-        mutable label curTimeIndex_;
+        // Does not work for multiple evaluation within a single time-step
+        mutable Field<Type> decoupledField_;
 
 
 protected:
@@ -89,9 +87,6 @@ protected:
         {
             matrixUpdateBuffer_ = field;
         }
-
-        //- Return original patch field
-        const Field<Type>& originalPatchField() const;
 
 
 public:
@@ -201,6 +196,12 @@ public:
                 return true;
             }
 
+            //- Return decoupled patch field
+            //  Stores patch field in decoupled state.
+            //  Used to achieve consistent evaluation across the interface
+            //  on both sides of coupling.
+            const Field<Type>& decoupledField() const;
+
             //- Return patch neighbour field
             virtual tmp<Field<Type> > patchNeighbourField() const;
 
@@ -215,9 +216,6 @@ public:
 
             //- Evaluate the patch field
             virtual void evaluate(const Pstream::commsTypes commsType);
-
-            //- Update the coefficients associated with the patch field
-            virtual void updateCoeffs();
 
             //- Return patch-normal gradient
             virtual tmp<Field<Type> > snGrad() const;
@@ -291,7 +289,6 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
-
 };
 
 

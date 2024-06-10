@@ -22,7 +22,7 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Author
-    Hrvoje Jasak, Wikki Ltd.  All rights reserved
+    Hrvoje Jasak, Wikki Ltd.  All rights reserved.
 
 \*---------------------------------------------------------------------------*/
 
@@ -37,25 +37,6 @@ Author
 namespace Foam
 {
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-const Foam::Field<Type>&
-regionCouplingFvPatchField<Type>::originalPatchField() const
-{
-    if (curTimeIndex_ != this->db().time().timeIndex())
-    {
-        // Store original field for symmetric evaluation
-        // Henrik Rusche, Aug/2011
-
-        originalPatchField_ = *this;
-        curTimeIndex_ = this->db().time().timeIndex();
-    }
-
-    return originalPatchField_;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -69,8 +50,7 @@ regionCouplingFvPatchField<Type>::regionCouplingFvPatchField
     regionCouplePatch_(refCast<const regionCoupleFvPatch>(p)),
     remoteFieldName_(iF.name()),
     matrixUpdateBuffer_(),
-    originalPatchField_(),
-    curTimeIndex_(-1)
+    decoupledField_()
 {}
 
 
@@ -86,8 +66,7 @@ regionCouplingFvPatchField<Type>::regionCouplingFvPatchField
     regionCouplePatch_(refCast<const regionCoupleFvPatch>(p)),
     remoteFieldName_(dict.lookupOrDefault<word>("remoteField", iF.name())),
     matrixUpdateBuffer_(),
-    originalPatchField_(),
-    curTimeIndex_(-1)
+    decoupledField_()
 {
     if (!isType<regionCoupleFvPatch>(p))
     {
@@ -118,8 +97,7 @@ regionCouplingFvPatchField<Type>::regionCouplingFvPatchField
     regionCouplePatch_(refCast<const regionCoupleFvPatch>(p)),
     remoteFieldName_(ptf.remoteFieldName_),
     matrixUpdateBuffer_(),
-    originalPatchField_(),
-    curTimeIndex_(-1)
+    decoupledField_()
 {
     if (!isType<regionCoupleFvPatch>(this->patch()))
     {
@@ -145,8 +123,7 @@ regionCouplingFvPatchField<Type>::regionCouplingFvPatchField
     regionCouplePatch_(refCast<const regionCoupleFvPatch>(ptf.patch())),
     remoteFieldName_(ptf.remoteFieldName_),
     matrixUpdateBuffer_(),
-    originalPatchField_(),
-    curTimeIndex_(-1)
+    decoupledField_()
 {}
 
 
@@ -184,6 +161,31 @@ regionCouplingFvPatchField<Type>::shadowPatchField() const
     (
         lookupShadowPatchField<GeoField, Type>(remoteFieldName_)
     );
+}
+
+
+template<class Type>
+const Foam::Field<Type>&
+regionCouplingFvPatchField<Type>::decoupledField() const
+{
+    if (decoupledField_.empty())
+    {
+        // Decoupled field not available.
+        // If mesh is in detached state, grab current field
+        if (!regionCouplePatch_.coupled())
+        {
+            decoupledField_ = *this;
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "decoupledField not available.  Evaluate function was not "
+                << "called in detached state."
+                << abort(FatalError);
+        }
+    }
+
+    return decoupledField_;
 }
 
 
@@ -256,22 +258,20 @@ void regionCouplingFvPatchField<Type>::initEvaluate
             << " " << this->updated() << endl;
     }
 
+    // If evaluate is called in detached state, store decoupled field
+    // and return
+    if (!regionCouplePatch_.coupled())
+    {
+        decoupledField_ = *this;
+
+        return;
+    }
+
+    // Interpolation is only allowed in attached state
     // Interpolation must happen at init
 
-    // Note: If used with interpolation - either on explicitly or called by the
-    // laplacian operator, the values set here are overridden by the
-    // interpolation scheme. In order to get the same diffusivities on
-    //  both sides an identical interpolation scheme must be used.
-    // Note^2: Even if harmonic used, the interpolation is still wrong for most
-    // CHT cases since (cell values vs. face values)
-    // Note^3: None of this is intuitiv - fix requires low-level changes!
-    // HR, 8/Jun/2012
-
-    const Field<Type>& fOwn = this->originalPatchField();
-    const Field<Type> fNei = regionCouplePatch_.interpolate
-    (
-        this->shadowPatchField().originalPatchField()
-    );
+    const Field<Type> fOwn = this->patchInternalField();
+    const Field<Type> fNei = this->patchNeighbourField();
 
     // Do interpolation
     harmonic<Type> interp(this->patch().boundaryMesh().mesh());
@@ -284,10 +284,8 @@ void regionCouplingFvPatchField<Type>::initEvaluate
         // Symmetry treatment used for overlap
         vectorField nHat = this->patch().nf();
 
-        Field<Type> pif = this->patchInternalField();
-
         Field<Type> bridgeField =
-            0.5*(pif + transform(I - 2.0*sqr(nHat), pif));
+            0.5*(fOwn + transform(I - 2.0*sqr(nHat), fOwn));
 
         regionCouplePatch_.setUncoveredFaces(bridgeField, *this);
 
@@ -305,49 +303,6 @@ void regionCouplingFvPatchField<Type>::evaluate
     // No interpolation allowed
 
     fvPatchField<Type>::evaluate();
-}
-
-
-template<class Type>
-void regionCouplingFvPatchField<Type>::updateCoeffs()
-{
-    if (debug)
-    {
-        InfoInFunction
-            << this->dimensionedInternalField().name()
-            << " in " << this->patch().boundaryMesh().mesh().name()
-            << " " << this->updated() << endl;
-    }
-
-    if (this->updated())
-    {
-        return;
-    }
-
-    Field<Type> fOwn = this->patchInternalField();
-    Field<Type> fNei = this->patchNeighbourField();
-
-    // Do interpolation
-    harmonic<Type> interp(this->patch().boundaryMesh().mesh());
-
-    scalarField weights = interp.weights(fOwn, fNei, this->patch());
-
-    Field<Type>::operator=(weights*fOwn + (1.0 - weights)*fNei);
-
-    if (regionCouplePatch_.bridgeOverlap())
-    {
-        // Symmetry treatment used for overlap
-        vectorField nHat = this->patch().nf();
-
-        Field<Type> pif = this->patchInternalField();
-
-        Field<Type> bridgeField =
-            0.5*(pif + transform(I - 2.0*sqr(nHat), pif));
-
-        regionCouplePatch_.setUncoveredFaces(bridgeField, *this);
-
-        regionCouplePatch_.addToPartialFaces(bridgeField, *this);
-    }
 }
 
 
@@ -454,6 +409,7 @@ template<class Type>
 void regionCouplingFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
+
     os.writeKeyword("remoteField")
         << remoteFieldName_ << token::END_STATEMENT << nl;
     this->writeEntry("value", os);
