@@ -142,9 +142,7 @@ void Foam::chtRcEnthalpyDiffusivityFvPatchScalarField::initEvaluate
 
         const scalarField patchCp = Cp();
 
-        // Get local decoupled patch field values, convert to k
-        // k = KEff*Cp
-        // const scalarField diffOwn = decoupledField()*patchCp;
+        // Get local decoupled k
         const scalarField diffOwn = k();
 
         // Interpolate neighbour decoupled patch field values

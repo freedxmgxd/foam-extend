@@ -68,14 +68,24 @@ class chtRcEnthalpyFvPatchScalarField
 {
     // Private data
 
-        //- Linearisation for thermo: Cp
+        //- Linearisation for thermo: CpBar
         //  This is temporary storage used in matrix update
-        mutable scalarField Cp_;
+        mutable scalarField* CpBarPtr_;
 
         //- Linearisation for thermo: H0
         //  This is temporary storage used in matrix update
-        mutable scalarField H0_;
+        mutable scalarField* H0Ptr_;
 
+
+    // Private Member Functions
+
+        //- Clear storage
+        void clearOut();
+
+        //- Check Cp and H0
+        void checkCpH0() const;
+
+    
 
 public:
 
@@ -146,7 +156,7 @@ public:
 
 
     //- Destructor
-    virtual ~chtRcEnthalpyFvPatchScalarField() = default;
+    virtual ~chtRcEnthalpyFvPatchScalarField();
 
 
     // Member functions

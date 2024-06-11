@@ -70,7 +70,13 @@ class regionCouplingFvPatchField
 
         //- Decoupled patch field values.  Required for correct evaluation
         //  in harmonic averaging
-        mutable Field<Type> decoupledField_;
+        mutable Field<Type>* decoupledFieldPtr_;
+
+
+    // Private Member Functions
+
+        //- Clear storage
+        void clearOut();
 
 
 protected:
@@ -148,6 +154,10 @@ public:
                 new regionCouplingFvPatchField<Type>(*this, iF)
             );
         }
+
+
+    //- Destructor
+    virtual ~regionCouplingFvPatchField();
 
 
     // Member functions

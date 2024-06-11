@@ -34,6 +34,28 @@ Author
 #include "basicThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::chtRcEnthalpyFvPatchScalarField::clearOut()
+{
+    deleteDemandDrivenData(CpBarPtr_);
+    deleteDemandDrivenData(H0Ptr_);
+}
+
+
+void Foam::chtRcEnthalpyFvPatchScalarField::checkCpH0() const
+{
+    // Perform conversion from hs to T using stored H0 and Cp
+    // linearisation
+    if (!CpBarPtr_ || !H0Ptr_)
+    {
+        FatalErrorInFunction
+            << "H0 and Cp not available.  Call updateCoeffs before evaluating"
+            << abort(FatalError);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::chtRcEnthalpyFvPatchScalarField::chtRcEnthalpyFvPatchScalarField
@@ -43,8 +65,8 @@ Foam::chtRcEnthalpyFvPatchScalarField::chtRcEnthalpyFvPatchScalarField
 )
 :
     chtRcTemperatureFvPatchScalarField(p, iF),
-    Cp_(0),
-    H0_(0)
+    CpBarPtr_(nullptr),
+    H0Ptr_(nullptr)
 {
     // Set coupling conditions from T.  Reconsider.
     // HJ, 10/Jun/2024
@@ -68,8 +90,8 @@ Foam::chtRcEnthalpyFvPatchScalarField::chtRcEnthalpyFvPatchScalarField
 )
 :
     chtRcTemperatureFvPatchScalarField(p, iF, dict),
-    Cp_(0),
-    H0_(0)
+    CpBarPtr_(nullptr),
+    H0Ptr_(nullptr)
 {}
 
 
@@ -82,8 +104,8 @@ Foam::chtRcEnthalpyFvPatchScalarField::chtRcEnthalpyFvPatchScalarField
 )
 :
     chtRcTemperatureFvPatchScalarField(ptf, p, iF, mapper),
-    Cp_(0),
-    H0_(0)
+    CpBarPtr_(nullptr),
+    H0Ptr_(nullptr)
 {}
 
 
@@ -94,8 +116,8 @@ Foam::chtRcEnthalpyFvPatchScalarField::chtRcEnthalpyFvPatchScalarField
 )
 :
     chtRcTemperatureFvPatchScalarField(ptf, iF),
-    Cp_(ptf.Cp_),
-    H0_(ptf.H0_)
+    CpBarPtr_(nullptr),
+    H0Ptr_(nullptr)
 {}
 
 
@@ -105,9 +127,17 @@ Foam::chtRcEnthalpyFvPatchScalarField::chtRcEnthalpyFvPatchScalarField
 )
 :
     chtRcTemperatureFvPatchScalarField(ptf),
-    Cp_(ptf.Cp_),
-    H0_(ptf.H0_)
+    CpBarPtr_(nullptr),
+    H0Ptr_(nullptr)
 {}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::chtRcEnthalpyFvPatchScalarField::~chtRcEnthalpyFvPatchScalarField()
+{
+    clearOut();
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -120,8 +150,7 @@ void Foam::chtRcEnthalpyFvPatchScalarField::autoMap
     chtRcTemperatureFvPatchScalarField::autoMap(m);
 
     // Clear Cp and H0
-    Cp_.clear();
-    H0_.clear();
+    clearOut();
 }
 
 
@@ -134,33 +163,32 @@ void Foam::chtRcEnthalpyFvPatchScalarField::rmap
     chtRcTemperatureFvPatchScalarField::rmap(ptf, addr);
 
     // Clear Cp and H0
-    Cp_.clear();
-    H0_.clear();
+    clearOut();
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::chtRcEnthalpyFvPatchScalarField::patchInternalT() const
 {
-    // Perform conversion from hs to T using stored H0_ and Cp_
-    // linearisation
-    return (patchInternalField() - H0_)/Cp_;
+    // Check if Cp and H0 are available
+    checkCpH0();
+
+    const scalarField& CpBar = *CpBarPtr_;
+    const scalarField& H0 = *H0Ptr_;
+    
+    return (patchInternalField() - H0)/CpBar;
 }
 
 
 Foam::tmp<Foam::scalarField>
 Foam::chtRcEnthalpyFvPatchScalarField::patchNeighbourField() const
 {
-    // For enthalpy, convert mapped patchInternalT from other side into h
-    // Find thermo if it exists
-    if (H0_.empty() || Cp_.empty())
-    {
-        // Dummy return
-        FatalErrorInFunction
-            << "H0 and Cp not available.  Call updateCoeffs before evaluating"
-            << abort(FatalError);
-    }
+    // Check if Cp and H0 are available
+    checkCpH0();
 
+    const scalarField& CpBar = *CpBarPtr_;
+    const scalarField& H0 = *H0Ptr_;
+    
     // Get neighbour T
     const chtRcTemperatureFvPatchScalarField& pCht =
         refCast<const chtRcTemperatureFvPatchScalarField>
@@ -170,8 +198,8 @@ Foam::chtRcEnthalpyFvPatchScalarField::patchNeighbourField() const
 
     // Interpolate and add jump
     return
-        H0_
-      + regionCouplePatch().interpolate(pCht.patchInternalT())*Cp_
+        H0
+      + regionCouplePatch().interpolate(pCht.patchInternalT())*CpBar
       + jump();
 }
 
@@ -207,8 +235,23 @@ void Foam::chtRcEnthalpyFvPatchScalarField::updateCoeffs()
         const scalarField patchT =
             patch().lookupPatchField<volScalarField, scalar>("T");
 
-        Cp_ = thermo.Cp(patchT, patch().faceCells());
-        H0_ = patchInternalField() - Cp_*patchT;
+        // Allocate fields if needed
+        if (!CpBarPtr_)
+        {
+            CpBarPtr_ = new scalarField(patch().size());
+        }
+        scalarField& CpBar = *CpBarPtr_;
+
+        if (!H0Ptr_)
+        {
+            H0Ptr_ = new scalarField(patch().size());
+        }
+        scalarField& H0 = *H0Ptr_;
+
+        // Collect CpBar and H0 for linearisation
+        CpBar = thermo.Cp(patchT, patch().faceCells());
+
+        H0 = patchInternalField() - CpBar*patchT;
     }
     else
     {
@@ -235,6 +278,12 @@ void Foam::chtRcEnthalpyFvPatchScalarField::initInterfaceMatrixUpdate
 {
     if (regionCouplePatch().coupled())
     {
+        // Check if Cp and H0 are available
+        checkCpH0();
+
+        const scalarField& CpBar = *CpBarPtr_;
+        const scalarField& H0 = *H0Ptr_;
+    
         // Prepare local matrix update buffer for the remote side.
         // Note that only remote side will have access to its psiInternal
         // as they are on different regions
@@ -254,7 +303,7 @@ void Foam::chtRcEnthalpyFvPatchScalarField::initInterfaceMatrixUpdate
             (
                 shadowPatchField().regionCouplePatch().interpolate
                 (
-                    (patch().patchInternalField(psiInternal) - H0_)/Cp_
+                    (patch().patchInternalField(psiInternal) - H0)/CpBar
                     // Add jump
                   + jump()
                 )
@@ -266,7 +315,7 @@ void Foam::chtRcEnthalpyFvPatchScalarField::initInterfaceMatrixUpdate
             (
                 shadowPatchField().regionCouplePatch().interpolate
                 (
-                    patch().patchInternalField(psiInternal)/Cp_
+                    patch().patchInternalField(psiInternal)/CpBar
                 )
                 // Add jump
               + jump()
@@ -296,6 +345,12 @@ void Foam::chtRcEnthalpyFvPatchScalarField::updateInterfaceMatrix
 {
     if (regionCouplePatch().coupled())
     {
+        // Check if Cp and H0 are available
+        checkCpH0();
+
+        const scalarField& CpBar = *CpBarPtr_;
+        const scalarField& H0 = *H0Ptr_;
+    
         scalarField pnf = shadowPatchField().matrixUpdateBuffer();
 
         if
@@ -304,11 +359,11 @@ void Foam::chtRcEnthalpyFvPatchScalarField::updateInterfaceMatrix
          == reinterpret_cast<const void*>(&this->internalField())
         )
         {
-            pnf = H0_ + pnf*Cp_;
+            pnf = H0 + pnf*CpBar;
         }
         else
         {
-            pnf *= Cp_;
+            pnf *= CpBar;
         }
 
         // Multiply the field by coefficients and add into the result

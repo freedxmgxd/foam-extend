@@ -37,6 +37,15 @@ Author
 namespace Foam
 {
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+void regionCouplingFvPatchField<Type>::clearOut()
+{
+    deleteDemandDrivenData(decoupledFieldPtr_);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -50,7 +59,7 @@ regionCouplingFvPatchField<Type>::regionCouplingFvPatchField
     regionCouplePatch_(refCast<const regionCoupleFvPatch>(p)),
     remoteFieldName_(iF.name()),
     matrixUpdateBuffer_(),
-    decoupledField_()
+    decoupledFieldPtr_(nullptr)
 {}
 
 
@@ -66,7 +75,7 @@ regionCouplingFvPatchField<Type>::regionCouplingFvPatchField
     regionCouplePatch_(refCast<const regionCoupleFvPatch>(p)),
     remoteFieldName_(dict.lookupOrDefault<word>("remoteField", iF.name())),
     matrixUpdateBuffer_(),
-    decoupledField_()
+    decoupledFieldPtr_(nullptr)
 {
     if (!isType<regionCoupleFvPatch>(p))
     {
@@ -97,7 +106,7 @@ regionCouplingFvPatchField<Type>::regionCouplingFvPatchField
     regionCouplePatch_(refCast<const regionCoupleFvPatch>(p)),
     remoteFieldName_(ptf.remoteFieldName_),
     matrixUpdateBuffer_(),
-    decoupledField_()
+    decoupledFieldPtr_(nullptr)
 {
     if (!isType<regionCoupleFvPatch>(this->patch()))
     {
@@ -123,8 +132,17 @@ regionCouplingFvPatchField<Type>::regionCouplingFvPatchField
     regionCouplePatch_(refCast<const regionCoupleFvPatch>(ptf.patch())),
     remoteFieldName_(ptf.remoteFieldName_),
     matrixUpdateBuffer_(),
-    decoupledField_()
+    decoupledFieldPtr_(nullptr)
 {}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+template<class Type>
+regionCouplingFvPatchField<Type>::~regionCouplingFvPatchField()
+{
+    this->clearOut();
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -168,24 +186,27 @@ template<class Type>
 const Foam::Field<Type>&
 regionCouplingFvPatchField<Type>::decoupledField() const
 {
-    if (decoupledField_.empty())
+    if (!decoupledFieldPtr_)
     {
         // Decoupled field not available.
         // If mesh is in detached state, grab current field
         if (!regionCouplePatch_.coupled())
         {
-            decoupledField_ = *this;
+            decoupledFieldPtr_ = new Field<Type>(*this);
         }
         else
         {
             FatalErrorInFunction
                 << "decoupledField not available.  Evaluate function was not "
-                << "called in detached state."
+                << "called in detached state for field "
+                << this->dimensionedInternalField().name()
+                << " on patch " << this->patch().name()
+                << " in mesh " << this->patch().boundaryMesh().mesh().name()
                 << abort(FatalError);
         }
     }
 
-    return decoupledField_;
+    return *decoupledFieldPtr_;
 }
 
 
@@ -253,16 +274,31 @@ void regionCouplingFvPatchField<Type>::initEvaluate
     if (debug)
     {
         InfoInFunction
-            << this->dimensionedInternalField().name()
-            << " in " << this->patch().boundaryMesh().mesh().name()
-            << " " << this->updated() << endl;
+            << "Field " << this->dimensionedInternalField().name()
+            << " on patch " << this->patch().name()
+            << " in mesh " << this->patch().boundaryMesh().mesh().name()
+            << " updated = " << this->updated() << endl;
     }
 
     // If evaluate is called in detached state, store decoupled field
     // and return
     if (!regionCouplePatch_.coupled())
     {
-        decoupledField_ = *this;
+        Pout<< "Decoupled evaluate: "
+            << "Field " << this->dimensionedInternalField().name()
+            << " on patch " << this->patch().name()
+            << " in mesh " << this->patch().boundaryMesh().mesh().name()
+            << " updated = " << this->updated() << endl;
+
+        if (!decoupledFieldPtr_)
+        {
+            decoupledFieldPtr_ = new Field<Type>(*this);
+        }
+        else
+        {
+            Field<Type>& decField = *decoupledFieldPtr_;
+            decField = *this;
+        }
 
         return;
     }
