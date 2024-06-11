@@ -47,7 +47,8 @@ void Foam::fvFieldReconstructor::reconstructField
     Field<Type>& iField = reconField;
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& bouField = reconField.boundaryFieldNoStoreOldTimes();
+        GeometricBoundaryField& bouField =
+        reconField.boundaryFieldNoStoreOldTimes();
 
     forAll (procFields, procI)
     {
