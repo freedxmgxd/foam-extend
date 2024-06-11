@@ -207,6 +207,7 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::radiation::radiationModel::Sh
     );
 }
 
+
 Foam::tmp<Foam::fvScalarMatrix> Foam::radiation::radiationModel::Shs
 (
     basicThermo& thermo
@@ -223,5 +224,6 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::radiation::radiationModel::Shs
       - Rp()*T3*(T_ - 4.0*hs/cp)
     );
 }
+
 
 // ************************************************************************* //

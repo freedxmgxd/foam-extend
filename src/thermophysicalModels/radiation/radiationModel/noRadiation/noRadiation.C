@@ -59,12 +59,6 @@ Foam::radiation::noRadiation::noRadiation
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::radiation::noRadiation::~noRadiation()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::radiation::noRadiation::read()

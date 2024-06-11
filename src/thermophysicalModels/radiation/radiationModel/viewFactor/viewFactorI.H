@@ -28,6 +28,4 @@ inline const Foam::volScalarField& Foam::radiation::viewFactor::Qr() const
     return Qr_;
 }
 
-
-
 // ************************************************************************* //
