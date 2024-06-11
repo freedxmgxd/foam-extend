@@ -70,7 +70,6 @@ class regionCouplingFvPatchField
 
         //- Decoupled patch field values.  Required for correct evaluation
         //  in harmonic averaging
-        // Does not work for multiple evaluation within a single time-step
         mutable Field<Type> decoupledField_;
 
 

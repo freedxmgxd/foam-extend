@@ -267,6 +267,11 @@ void regionCouplingFvPatchField<Type>::initEvaluate
         return;
     }
 
+    if (!this->updated())
+    {
+        this->updateCoeffs();
+    }
+
     // Interpolation is only allowed in attached state
     // Interpolation must happen at init
 

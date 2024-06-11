@@ -105,7 +105,6 @@ public:
                 return regionCouplingFvPatchField<Type>::type();
             }
 
-
             //- Return the "jump" across the patch
             virtual tmp<Field<Type> > jump() const = 0;
 
