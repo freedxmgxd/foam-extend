@@ -184,11 +184,8 @@ void Foam::mixingPlaneEnthalpyJumpFvPatchScalarField::updateCoeffs()
         )
         {
             // Velocities not available, do not update
-            InfoIn
-            (
-                "void gradientEnthalpyFvPatchScalarField::"
-                "updateCoeffs(const vectorField& Up)"
-            )   << "Velocity fields " << URotName << " or "
+            InfoInFunction
+                << "Velocity fields " << URotName << " or "
                 << UThetaName << " not found.  "
                 << "Performing enthalpy value update" << endl;
 
