@@ -76,7 +76,7 @@ labelList regionBandCompression
 
     labelList cellOrder(cellToRegion.size());
 
-    label nRegions = max(cellToRegion)+1;
+    label nRegions = max(cellToRegion) + 1;
 
     labelListList regionToCells(invertOneToMany(nRegions, cellToRegion));
 
