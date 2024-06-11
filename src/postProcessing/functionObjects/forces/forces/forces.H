@@ -174,10 +174,10 @@ protected:
         scalar rho(const volScalarField& p) const;
 
         //- Disallow default bitwise copy construct
-        forces(const forces&);
+        forces(const forces&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const forces&);
+        void operator=(const forces&) = delete;
 
 
 public:
@@ -200,7 +200,7 @@ public:
 
 
     //- Destructor
-    virtual ~forces();
+    virtual ~forces() = default;
 
 
     // Member Functions

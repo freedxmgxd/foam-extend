@@ -111,7 +111,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::forces::devRhoReff() const
     }
     else
     {
-        FatalErrorIn("forces::devRhoReff()")
+        FatalErrorInFunction
             << "No valid model for viscous stress calculation."
             << exit(FatalError);
 
@@ -158,7 +158,7 @@ Foam::scalar Foam::forces::rho(const volScalarField& p) const
     {
         if (rhoName_ != "rhoInf")
         {
-            FatalErrorIn("forces::rho(const volScalarField& p)")
+            FatalErrorInFunction
                 << "Dynamic pressure is expected but kinematic is provided."
                 << exit(FatalError);
         }
@@ -204,12 +204,6 @@ Foam::forces::forces
 
     read(dict);
 }
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::forces::~forces()
-{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -266,7 +260,7 @@ void Foam::forces::read(const dictionary& dict)
             {
                 active_ = false;
 
-                WarningIn("void forces::read(const dictionary& dict)")
+                WarningInFunction
                     << "Could not find " << UName_ << ", " << pName_;
 
                 if (rhoName_ != "rhoInf")
