@@ -42,18 +42,13 @@ Foam::labelList Foam::bandCompression(const labelListList& cellCellAddressing)
     // the business bit of the renumbering
     SLList<label> nextCell;
 
-    labelList visited(cellCellAddressing.size());
+    // Reset the visited cells list
+    labelList visited(cellCellAddressing.size(), 0);
 
     label currentCell;
     label cellInOrder = 0;
 
-    // reset the visited cells list
-    forAll (visited, cellI)
-    {
-        visited[cellI] = 0;
-    }
-
-    // loop over the cells
+    // Loop over the cells
     forAll (visited, cellI)
     {
         // find the first cell that has not been visited yet
