@@ -151,6 +151,12 @@ public:
 
     // Member functions
 
+        // Access functions
+
+            //- Return patch internal temperature
+            virtual tmp<scalarField> patchInternalT() const;
+
+
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
@@ -168,7 +174,7 @@ public:
 
         // Evaluation functions
 
-            //- Return neighbour field given internal cell data
+            //- Return neighbour field of internal field across coupled patch
             virtual tmp<scalarField> patchNeighbourField() const;
 
             //- Evaluate the patch field

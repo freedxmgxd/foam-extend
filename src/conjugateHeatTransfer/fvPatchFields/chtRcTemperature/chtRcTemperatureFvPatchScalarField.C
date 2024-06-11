@@ -116,6 +116,13 @@ Foam::chtRcTemperatureFvPatchScalarField::shadowPatchField() const
     );
 }
 
+Foam::tmp<Foam::scalarField>
+Foam::chtRcTemperatureFvPatchScalarField::patchInternalT() const
+{
+    // For temperature, return patchInternalField
+    return patchInternalField();
+}
+
 
 void Foam::chtRcTemperatureFvPatchScalarField::autoMap
 (
@@ -139,6 +146,30 @@ void Foam::chtRcTemperatureFvPatchScalarField::rmap
         refCast<const chtRcTemperatureFvPatchScalarField>(ptf);
 
     jump_.rmap(mptf.jump_, addr);
+}
+
+
+Foam::tmp<Foam::scalarField>
+Foam::chtRcTemperatureFvPatchScalarField::patchNeighbourField() const
+{
+    // For temperature, return mapped patchInternalT from other side
+
+    if (!regionCouplePatch().coupled())
+    {
+        FatalErrorInFunction
+            << "Requested patchNeighbourField in decoupled state"
+            << abort(FatalError);
+    }
+
+    // Get neighbour T
+    const chtRcTemperatureFvPatchScalarField& pCht =
+        refCast<const chtRcTemperatureFvPatchScalarField>
+        (
+            shadowPatchField()
+        );
+
+    // Interpolate and add jump
+    return regionCouplePatch().interpolate(pCht.patchInternalT()) + jump();
 }
 
 

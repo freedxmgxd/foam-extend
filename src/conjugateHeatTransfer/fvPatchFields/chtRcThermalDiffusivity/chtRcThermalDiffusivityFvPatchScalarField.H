@@ -126,7 +126,7 @@ public:
         // Access functions
 
             //- Return thermal diffusivity for temperature from decoupled state
-            tmp<scalarField> k() const;
+            virtual tmp<scalarField> k() const;
 
 
         // Evaluation functions

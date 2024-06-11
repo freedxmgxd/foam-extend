@@ -124,14 +124,14 @@ void Foam::chtRcThermalDiffusivityFvPatchScalarField::initEvaluate
             (
                 shadowPatchField()
             );
-        
+
         const scalarField diffNei =
             regionCouplePatch().interpolate(pCht.k());
 
         // Evaluate patch field by direct interpolation.
         // There is no need for distances, as two sets of data
         // are on top of each other.
-        scalarField::operator=(diffOwn*diffNei/(diffOwn + diffNei));
+        scalarField::operator=(2*diffOwn*diffNei/(diffOwn + diffNei));
     }
 }
 

@@ -177,6 +177,9 @@ public:
             virtual const chtRcTemperatureFvPatchScalarField&
                 shadowPatchField() const;
 
+            //- Return patch internal temperature
+            virtual tmp<scalarField> patchInternalT() const;
+
 
         // Mapping functions
 
@@ -194,6 +197,9 @@ public:
             );
 
         // Evaluation functions
+
+            //- Return neighbour field of internal field across coupled patch
+            virtual tmp<scalarField> patchNeighbourField() const;
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();

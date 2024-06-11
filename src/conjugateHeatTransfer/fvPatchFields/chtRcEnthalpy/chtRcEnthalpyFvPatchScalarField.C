@@ -140,67 +140,39 @@ void Foam::chtRcEnthalpyFvPatchScalarField::rmap
 
 
 Foam::tmp<Foam::scalarField>
+Foam::chtRcEnthalpyFvPatchScalarField::patchInternalT() const
+{
+    // Perform conversion from hs to T using stored H0_ and Cp_
+    // linearisation
+    return (patchInternalField() - H0_)/Cp_;
+}
+
+
+Foam::tmp<Foam::scalarField>
 Foam::chtRcEnthalpyFvPatchScalarField::patchNeighbourField() const
 {
+    // For enthalpy, convert mapped patchInternalT from other side into h
     // Find thermo if it exists
-    if (db().foundObject<basicThermo>("thermophysicalProperties"))
+    if (H0_.empty() || Cp_.empty())
     {
-        const basicThermo& thermo =
-            db().lookupObject<basicThermo>("thermophysicalProperties");
-
-        // Check name of shadow patch field
-        if (shadowPatchField().dimensionedInternalField().name() != "T")
-        {
-            FatalErrorInFunction
-                << "chtRcEnthalpyFvPatchScalarField boundary condition "
-                    << " for patch " << patch().name()
-            << " works with T shadow patch field only.  Field name: "
-            << this->shadowPatchField().dimensionedInternalField().name()
+        // Dummy return
+        FatalErrorInFunction
+            << "H0 and Cp not available.  Call updateCoeffs before evaluating"
             << abort(FatalError);
-        }
-
-        // Get shadow temperature
-        scalarField shadowT =
-            this->regionCouplePatch().interpolate
-            (
-                this->shadowPatchField().patchInternalField()
-            );
-
-        // Prepare return
-        tmp<scalarField> tshadowH(new scalarField(patch().size(), scalar(0)));
-        scalarField& shadowH = tshadowH.ref();
-
-        // Pick correct form of h-T conversion based on field name
-        // HJ, 16/Jun/2018
-        if (dimensionedInternalField().name() == "h")
-        {
-            shadowH = thermo.h(shadowT, patch().faceCells());
-        }
-        else if (dimensionedInternalField().name() == "hs")
-        {
-            shadowH = thermo.hs(shadowT, patch().faceCells());
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Cannot recognise enthalpy field type for h-T conversion"
-                << abort(FatalError);
-        }
-
-        // Add jump
-        shadowH += jump();
-
-        return tshadowH;
     }
-    else
-    {
-        // Dummy return if thermo cannot be found
-        InfoInFunction
-            << "Cannot find thermo.  Simple return"
-                << endl;
 
-        return *this;
-    }
+    // Get neighbour T
+    const chtRcTemperatureFvPatchScalarField& pCht =
+        refCast<const chtRcTemperatureFvPatchScalarField>
+        (
+            shadowPatchField()
+        );
+
+    // Interpolate and add jump
+    return
+        H0_
+      + regionCouplePatch().interpolate(pCht.patchInternalT())*Cp_
+      + jump();
 }
 
 
@@ -269,8 +241,6 @@ void Foam::chtRcEnthalpyFvPatchScalarField::initInterfaceMatrixUpdate
 
         // Since interpolation needs to happen on the shadow, and within the
         // init, prepare interpolation for the other side.
-
-        // Initialise Cp for this linear solution - Reset in initEvaluate.
 
         // Add void pointer cast to keep compiler happy when instantiated
         // for vector/tensor fields.  HJ, 4/Jun/2013

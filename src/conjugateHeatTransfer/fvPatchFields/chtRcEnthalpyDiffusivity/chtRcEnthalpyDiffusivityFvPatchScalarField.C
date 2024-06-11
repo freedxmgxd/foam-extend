@@ -85,7 +85,7 @@ chtRcEnthalpyDiffusivityFvPatchScalarField
 Foam::tmp<Foam::scalarField>
 Foam::chtRcEnthalpyDiffusivityFvPatchScalarField::k() const
 {
-    return decoupledField()/Cp();
+    return decoupledField()*Cp();
 }
 
 
@@ -93,7 +93,7 @@ Foam::tmp<Foam::scalarField>
 Foam::chtRcEnthalpyDiffusivityFvPatchScalarField::Cp() const
 {
     // For thermal diffusivity (solving h or hs equation), return decoupled k
-    
+
     // Find thermo if it exists
     if (db().foundObject<basicThermo>("thermophysicalProperties"))
     {
@@ -139,9 +139,13 @@ void Foam::chtRcEnthalpyDiffusivityFvPatchScalarField::initEvaluate
     else
     {
         // Do interpolation
-    
-        // Get local decoupled patch field values
-        const scalarField& diffOwn = decoupledField();
+
+        const scalarField patchCp = Cp();
+
+        // Get local decoupled patch field values, convert to k
+        // k = KEff*Cp
+        // const scalarField diffOwn = decoupledField()*patchCp;
+        const scalarField diffOwn = k();
 
         // Interpolate neighbour decoupled patch field values
 
@@ -151,14 +155,17 @@ void Foam::chtRcEnthalpyDiffusivityFvPatchScalarField::initEvaluate
             (
                 shadowPatchField()
             );
-        
-        const scalarField diffNei =
-            regionCouplePatch().interpolate(pCht.k())/Cp();
 
-        // Evaluate patch field by direct interpolation.
+        const scalarField diffNei =
+            regionCouplePatch().interpolate(pCht.k());
+
+        // Evaluate patch field by harmonic interpolation of k.
+        // Divide by Cp to create thermal diffusivity for hs
         // There is no need for distances, as two sets of data
         // are on top of each other.
-        scalarField::operator=(diffOwn*diffNei/(diffOwn + diffNei));
+        scalarField interpolatedK = 2*diffOwn*diffNei/(diffOwn + diffNei);
+
+        scalarField::operator=(interpolatedK/patchCp);
     }
 }
 
