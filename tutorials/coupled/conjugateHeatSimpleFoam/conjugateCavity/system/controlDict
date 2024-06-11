@@ -51,24 +51,28 @@ runTimeModifiable yes;
 
 functions
 (
-    heatFlux
+    heatFluxFluid
     {
         // Type of functionObject
-        type heatFlux;
+        type patchHeatFlux;
+        patch right;
         outputControl timeStep;
         outputInterval 1;
-
-        K              kappaEff;
+        T              T;
+        gamma          kappaEff;
+        file "heatFluxFluid.dat";
     }
-    heatFlux
+    heatFluxSolid
     {
         // Type of functionObject
-        type heatFlux;
+        type patchHeatFlux;
+        patch left;
         outputControl timeStep;
         outputInterval 1;
         region solid;
-
-        K              k;
+        T              T;
+        gamma          k;
+        file "heatFluxSolid.dat";
     }
 );
 

@@ -33,10 +33,7 @@ divSchemes
     div(rhoCpPhi,T) Gauss upwind;
     div(phi,k)      Gauss upwind;
     div(phi,epsilon) Gauss upwind;
-    // div(phi,R)      Gauss upwind;
-    // div(R)          Gauss linear;
-    // div(phi,nuTilda) Gauss upwind;
-    div((nuEff*dev(T(grad(U))))) Gauss linear;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes

@@ -26,13 +26,11 @@ boundaryField
         K               kappaEff;
         value           uniform 273;
     }
-
     left
     {
         type            fixedValue;
         value           uniform 273;
     }
-
     right
     {
         type            chtRcTemperature;
@@ -41,14 +39,12 @@ boundaryField
         remoteField     T;
         value           uniform 273;
     }
-
     bottom
     {
         type            adiabatic;
         K               kappaEff;
         value           uniform 273;
     }
-
     frontAndBack
     {
         type            empty;
