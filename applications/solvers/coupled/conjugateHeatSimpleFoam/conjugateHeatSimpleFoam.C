@@ -81,11 +81,15 @@ int main(int argc, char *argv[])
         radiation->correct();
 
         // Update thermal diffusivity in the fluid
+        // Correct boundary conditions to capture decoupled field
         kappaEff = rho*Cp*(turbulence->nu()/Pr + turbulence->nut()/Prt);
+        kappaEff.correctBoundaryConditions();
 
         // Update thermal conductivity in the solid
+        // Correct boundary conditions to capture decoupled field
         solidThermalModel.correct();
         kSolid = solidThermalModel.k();
+        kSolid.correctBoundaryConditions();
 
         // Attached coupled CHT patches
 #       include "attachChtPatches.H"
