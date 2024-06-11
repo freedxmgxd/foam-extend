@@ -58,6 +58,23 @@ laminar::laminar
 {}
 
 
+// * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
+
+autoPtr<laminar> laminar::New
+(
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    transportModel& transport,
+    const word& turbulenceModelName
+)
+{
+    return autoPtr<laminar>
+    (
+        new laminar(U, phi, transport, turbulenceModelName)
+    );
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 tmp<volScalarField> laminar::nut() const
