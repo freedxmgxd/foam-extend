@@ -22,7 +22,7 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Author
-    Henrik Rusche, Wikki GmbH.  All rights reserved
+    Hrvoje Jasak, Wikki Ltd.  All rights reserved.
 
 \*---------------------------------------------------------------------------*/
 
@@ -40,10 +40,9 @@ Foam::chtRcTemperatureFvPatchScalarField::chtRcTemperatureFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    jumpRegionCouplingFvPatchScalarField(p, iF),
+    regionCouplingFvPatchScalarField(p, iF),
     kName_("none"),
-    radiation_(false),
-    jump_(p.size(), scalar(0))
+    radiation_(false)
 {}
 
 
@@ -54,10 +53,9 @@ Foam::chtRcTemperatureFvPatchScalarField::chtRcTemperatureFvPatchScalarField
     const dictionary& dict
 )
 :
-    jumpRegionCouplingFvPatchScalarField(p, iF, dict),
+    regionCouplingFvPatchScalarField(p, iF, dict),
     kName_(dict.lookup("K")),
-    radiation_(readBool(dict.lookup("radiation"))),
-    jump_(p.size(), scalar(0))
+    radiation_(readBool(dict.lookup("radiation")))
 {}
 
 
@@ -69,10 +67,9 @@ Foam::chtRcTemperatureFvPatchScalarField::chtRcTemperatureFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    jumpRegionCouplingFvPatchScalarField(ptf, p, iF, mapper),
+    regionCouplingFvPatchScalarField(ptf, p, iF, mapper),
     kName_(ptf.kName_),
-    radiation_(ptf.radiation_),
-    jump_(ptf.jump_, mapper)
+    radiation_(ptf.radiation_)
 {}
 
 
@@ -82,23 +79,22 @@ Foam::chtRcTemperatureFvPatchScalarField::chtRcTemperatureFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    jumpRegionCouplingFvPatchScalarField(ptf, iF),
+    regionCouplingFvPatchScalarField(ptf, iF),
     kName_(ptf.kName_),
-    radiation_(ptf.radiation_),
-    jump_(ptf.jump_)
+    radiation_(ptf.radiation_)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 const Foam::chtRcTemperatureFvPatchScalarField&
-Foam::chtRcTemperatureFvPatchScalarField::shadowPatchField() const
+Foam::chtRcTemperatureFvPatchScalarField::shadowPatchRcTemperatureField() const
 {
     if
     (
         !isA<chtRcTemperatureFvPatchScalarField>
         (
-            jumpRegionCouplingFvPatchScalarField::shadowPatchField()
+            regionCouplingFvPatchScalarField::shadowPatchField()
         )
     )
     {
@@ -106,13 +102,13 @@ Foam::chtRcTemperatureFvPatchScalarField::shadowPatchField() const
             << "Incorrect shadow patch type for patch " << this->patch().name()
             << " of field " << this->dimensionedInternalField().name()
             << " Should be chtRcTemperatureFvPatchScalarField.  Actual type "
-            << jumpRegionCouplingFvPatchScalarField::shadowPatchField().type()
+            << regionCouplingFvPatchScalarField::shadowPatchField().type()
             << abort(FatalError);
     }
 
     return dynamic_cast<const chtRcTemperatureFvPatchScalarField&>
     (
-        jumpRegionCouplingFvPatchScalarField::shadowPatchField()
+        regionCouplingFvPatchScalarField::shadowPatchField()
     );
 }
 
@@ -121,31 +117,6 @@ Foam::chtRcTemperatureFvPatchScalarField::patchInternalT() const
 {
     // For temperature, return patchInternalField
     return patchInternalField();
-}
-
-
-void Foam::chtRcTemperatureFvPatchScalarField::autoMap
-(
-    const fvPatchFieldMapper& m
-)
-{
-    fvPatchScalarField::autoMap(m);
-    jump_.autoMap(m);
-}
-
-
-void Foam::chtRcTemperatureFvPatchScalarField::rmap
-(
-    const fvPatchScalarField& ptf,
-    const labelList& addr
-)
-{
-    fvPatchScalarField::rmap(ptf, addr);
-
-    const chtRcTemperatureFvPatchScalarField& mptf =
-        refCast<const chtRcTemperatureFvPatchScalarField>(ptf);
-
-    jump_.rmap(mptf.jump_, addr);
 }
 
 
@@ -161,15 +132,12 @@ Foam::chtRcTemperatureFvPatchScalarField::patchNeighbourField() const
             << abort(FatalError);
     }
 
-    // Get neighbour T
-    const chtRcTemperatureFvPatchScalarField& pCht =
-        refCast<const chtRcTemperatureFvPatchScalarField>
+    // Get neighbour T, interpolate and add jump
+    return
+        regionCouplePatch().interpolate
         (
-            shadowPatchField()
+            this->shadowPatchRcTemperatureField().patchInternalT()
         );
-
-    // Interpolate and add jump
-    return regionCouplePatch().interpolate(pCht.patchInternalT()) + jump();
 }
 
 
@@ -191,37 +159,40 @@ void Foam::chtRcTemperatureFvPatchScalarField::updateCoeffs()
             << abort(FatalError);
     }
 
+    fvPatchScalarField::updateCoeffs();
+}
+
+
+void Foam::chtRcTemperatureFvPatchScalarField::manipulateMatrix
+(
+    fvScalarMatrix& matrix
+)
+{
+    const fvPatch& p = patch();
+    const scalarField& magSf = p.magSf();
+    const labelList& faceCells = p.faceCells();
+    scalarField& source = matrix.source();
+
+    // Move Qr to solid
     if (radiation())
     {
+        scalarField Qr =
+            this->regionCouplePatch().interpolate
+            (
+                this->shadowPatchRcTemperatureField().
+                lookupPatchField<volScalarField, scalar>("Qr")
+            );
+
         Info<< "Radiation active - updating radiative jump Qr for field "
             << this->dimensionedInternalField().name()
             << " on region " << this->dimensionedInternalField().mesh().name()
             << endl;
 
-        // Get radiative heat flux. Qr [W/m^2]
-        scalarField Qr = lookupPatchField<volScalarField, scalar>("Qr");
-
-        // Get thermal conductivity
-        const fvPatchScalarField& kpf =
-            lookupPatchField<volScalarField, scalar>(kName_);
-
-        // Update jump.  Units of jump_ are [K/m^2]
-        jump_ = Qr/(kpf*patch().deltaCoeffs());
+        forAll(faceCells, faceI)
+        {
+            source[faceCells[faceI]] += Qr[faceI]*magSf[faceI];
+        }
     }
-    else
-    {
-        // No radiation
-        jump_ = scalarField(patch().size(), scalar(0));
-    }
-
-    fvPatchScalarField::updateCoeffs();
-}
-
-
-Foam::tmp<Foam::scalarField>
-Foam::chtRcTemperatureFvPatchScalarField::jump() const
-{
-    return jump_;
 }
 
 

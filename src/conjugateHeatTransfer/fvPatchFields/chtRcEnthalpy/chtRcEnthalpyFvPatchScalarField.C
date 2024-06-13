@@ -189,18 +189,13 @@ Foam::chtRcEnthalpyFvPatchScalarField::patchNeighbourField() const
     const scalarField& CpBar = *CpBarPtr_;
     const scalarField& H0 = *H0Ptr_;
     
-    // Get neighbour T
-    const chtRcTemperatureFvPatchScalarField& pCht =
-        refCast<const chtRcTemperatureFvPatchScalarField>
-        (
-            shadowPatchField()
-        );
-
-    // Interpolate and add jump
+    // Get neighbour T, interpolate and add jump
     return
         H0
-      + regionCouplePatch().interpolate(pCht.patchInternalT())*CpBar
-      + jump();
+      + regionCouplePatch().interpolate
+        (
+            shadowPatchRcTemperatureField().patchInternalT()
+        )*CpBar;
 }
 
 
@@ -304,8 +299,6 @@ void Foam::chtRcEnthalpyFvPatchScalarField::initInterfaceMatrixUpdate
                 shadowPatchField().regionCouplePatch().interpolate
                 (
                     (patch().patchInternalField(psiInternal) - H0)/CpBar
-                    // Add jump
-                  + jump()
                 )
             );
         }
@@ -317,8 +310,6 @@ void Foam::chtRcEnthalpyFvPatchScalarField::initInterfaceMatrixUpdate
                 (
                     patch().patchInternalField(psiInternal)/CpBar
                 )
-                // Add jump
-              + jump()
             );
         }
     }

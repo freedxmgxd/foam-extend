@@ -31,7 +31,7 @@ Description
     the interface, indicating total ignorance of CFD.  Programming-wise,
     the code was wrong, illegible and uncommented.
 
-    The code uses region coupling interface jump conditions to account
+    The code uses region coupling interface conditions to account
     for radiative heat flux off the CHT interface.
     It achieves perfect energy balance on the interface with and without
     radiation
@@ -48,7 +48,7 @@ SourceFiles
 #ifndef chtRcTemperatureFvPatchScalarField_H
 #define chtRcTemperatureFvPatchScalarField_H
 
-#include "jumpRegionCouplingFvPatchFields.H"
+#include "regionCouplingFvPatchFields.H"
 #include "fvMatricesFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -62,7 +62,7 @@ namespace Foam
 
 class chtRcTemperatureFvPatchScalarField
 :
-    public jumpRegionCouplingFvPatchScalarField
+    public regionCouplingFvPatchScalarField
 {
     // Private data
 
@@ -71,9 +71,6 @@ class chtRcTemperatureFvPatchScalarField
 
         //- Take radiation into account for this patch
         Switch radiation_;
-
-        //- Radiation jump
-        scalarField jump_;
 
 
 public:
@@ -170,31 +167,13 @@ public:
                 return radiation_;
             }
 
-            //- Return the "jump" across the patch as a "half" field
-            virtual tmp<scalarField> jump() const;
-
             //- Return shadow patch field
             virtual const chtRcTemperatureFvPatchScalarField&
-                shadowPatchField() const;
+                shadowPatchRcTemperatureField() const;
 
             //- Return patch internal temperature
             virtual tmp<scalarField> patchInternalT() const;
 
-
-        // Mapping functions
-
-            //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
-
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchScalarField&,
-                const labelList&
-            );
 
         // Evaluation functions
 
@@ -203,6 +182,9 @@ public:
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
+
+            //- Manipulate matrix
+            virtual void manipulateMatrix(fvScalarMatrix& matrix);
 
 
         //- Write
