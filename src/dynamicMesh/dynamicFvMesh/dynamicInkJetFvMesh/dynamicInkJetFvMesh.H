@@ -59,22 +59,24 @@ class dynamicInkJetFvMesh
 {
     // Private data
 
-        dictionary dynamicMeshCoeffs_;
+        //- Dictionary
+        dictionary dict_;
 
         scalar amplitude_;
         scalar frequency_;
         scalar refPlaneX_;
 
-        pointIOField stationaryPoints_;
+        //- Reference points
+        pointIOField referencePoints_;
 
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        dynamicInkJetFvMesh(const dynamicInkJetFvMesh&);
+        dynamicInkJetFvMesh(const dynamicInkJetFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const dynamicInkJetFvMesh&);
+        void operator=(const dynamicInkJetFvMesh&) = delete;
 
 
 public:
@@ -89,9 +91,8 @@ public:
         dynamicInkJetFvMesh(const IOobject& io);
 
 
-    // Destructor
-
-        virtual ~dynamicInkJetFvMesh();
+    //- Destructor
+    virtual ~dynamicInkJetFvMesh() = default;
 
 
     // Member Functions

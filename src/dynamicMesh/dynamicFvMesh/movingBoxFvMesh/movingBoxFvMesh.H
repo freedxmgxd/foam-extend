@@ -77,7 +77,7 @@ class movingBoxFvMesh
         vector velocity_;
 
         //- Stationary point location
-        pointIOField stationaryPoints_;
+        pointIOField referencePoints_;
 
         //- Vertex markup field
         scalarField motionMarkup_;
@@ -86,10 +86,10 @@ class movingBoxFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        movingBoxFvMesh(const movingBoxFvMesh&);
+        movingBoxFvMesh(const movingBoxFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const movingBoxFvMesh&);
+        void operator=(const movingBoxFvMesh&) = delete;
 
 
 public:
@@ -104,9 +104,8 @@ public:
         movingBoxFvMesh(const IOobject& io);
 
 
-    // Destructor
-
-        virtual ~movingBoxFvMesh();
+    //- Destructor
+    virtual ~movingBoxFvMesh() = default;
 
 
     // Member Functions

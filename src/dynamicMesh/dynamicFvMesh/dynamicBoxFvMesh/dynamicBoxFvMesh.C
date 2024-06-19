@@ -64,7 +64,7 @@ dynamicBoxFvMesh::dynamicBoxFvMesh(const IOobject& io)
     rightEdge_(movingMeshCoeffs_.lookup("rightEdge")),
     amplitude_(movingMeshCoeffs_.lookup("amplitude")),
     frequency_(readScalar(movingMeshCoeffs_.lookup("frequency"))),
-    stationaryPoints_
+    referencePoints_
     (
         IOobject
         (
@@ -76,7 +76,7 @@ dynamicBoxFvMesh::dynamicBoxFvMesh(const IOobject& io)
             IOobject::NO_WRITE
         )
     ),
-    motionMarkup_(stationaryPoints_.size(), 0)
+    motionMarkup_(referencePoints_.size(), 0)
 {
     if (mag(splitDirection_) < SMALL)
     {
@@ -124,12 +124,6 @@ dynamicBoxFvMesh::dynamicBoxFvMesh(const IOobject& io)
     motionMarkup_ += pos(p - rightP + SMALL)*(1.0 - p)/(1.0 - rightP);
 }
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-dynamicBoxFvMesh::~dynamicBoxFvMesh()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool dynamicBoxFvMesh::update()
@@ -141,7 +135,7 @@ bool dynamicBoxFvMesh::update()
         << scalingFunction << endl;
 
     pointField newPoints =
-        stationaryPoints_ + motionMarkup_*amplitude_*scalingFunction;
+        referencePoints_ + motionMarkup_*amplitude_*scalingFunction;
 
     fvMesh::movePoints(newPoints);
 

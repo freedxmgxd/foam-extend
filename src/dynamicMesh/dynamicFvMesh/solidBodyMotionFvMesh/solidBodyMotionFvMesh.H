@@ -63,16 +63,16 @@ class solidBodyMotionFvMesh
         autoPtr<solidBodyMotionFunction> SBMFPtr_;
 
         //- Reference points which are transformed
-        pointIOField undisplacedPoints_;
+        pointIOField referencePoints_;
 
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        solidBodyMotionFvMesh(const solidBodyMotionFvMesh&);
+        solidBodyMotionFvMesh(const solidBodyMotionFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const solidBodyMotionFvMesh&);
+        void operator=(const solidBodyMotionFvMesh&) = delete;
 
 
 public:

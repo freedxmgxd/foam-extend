@@ -80,7 +80,7 @@ class dynamicBoxFvMesh
         scalar frequency_;
 
         //- Stationary point location
-        pointIOField stationaryPoints_;
+        pointIOField referencePoints_;
 
         //- Vertex markup field
         scalarField motionMarkup_;
@@ -89,10 +89,10 @@ class dynamicBoxFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        dynamicBoxFvMesh(const dynamicBoxFvMesh&);
+        dynamicBoxFvMesh(const dynamicBoxFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const dynamicBoxFvMesh&);
+        void operator=(const dynamicBoxFvMesh&) = delete;
 
 
 public:
@@ -107,9 +107,8 @@ public:
         dynamicBoxFvMesh(const IOobject& io);
 
 
-    // Destructor
-
-        virtual ~dynamicBoxFvMesh();
+    //- Destructor
+    virtual ~dynamicBoxFvMesh() = default;
 
 
     // Member Functions

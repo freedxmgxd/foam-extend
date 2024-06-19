@@ -62,7 +62,7 @@ movingBoxFvMesh::movingBoxFvMesh(const IOobject& io)
     leftEdge_(movingMeshCoeffs_.lookup("leftEdge")),
     rightEdge_(movingMeshCoeffs_.lookup("rightEdge")),
     velocity_(movingMeshCoeffs_.lookup("velocity")),
-    stationaryPoints_
+    referencePoints_
     (
         IOobject
         (
@@ -74,7 +74,7 @@ movingBoxFvMesh::movingBoxFvMesh(const IOobject& io)
             IOobject::NO_WRITE
         )
     ),
-    motionMarkup_(stationaryPoints_.size(), 0)
+    motionMarkup_(referencePoints_.size(), 0)
 {
     if (mag(splitDirection_) < SMALL)
     {
@@ -121,18 +121,12 @@ movingBoxFvMesh::movingBoxFvMesh(const IOobject& io)
     motionMarkup_ += pos(p - rightP + SMALL)*(1.0 - p)/(1.0 - rightP);
 }
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-movingBoxFvMesh::~movingBoxFvMesh()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool movingBoxFvMesh::update()
 {
     pointField newPoints =
-        stationaryPoints_ + motionMarkup_*velocity_*time().value();
+        referencePoints_ + motionMarkup_*velocity_*time().value();
 
     fvMesh::movePoints(newPoints);
 

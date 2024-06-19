@@ -42,7 +42,7 @@ namespace Foam
 Foam::dynamicInkJetFvMesh::dynamicInkJetFvMesh(const IOobject& io)
 :
     dynamicFvMesh(io),
-    dynamicMeshCoeffs_
+    dict_
     (
         IOdictionary
         (
@@ -56,10 +56,10 @@ Foam::dynamicInkJetFvMesh::dynamicInkJetFvMesh(const IOobject& io)
             )
         ).subDict(typeName + "Coeffs")
     ),
-    amplitude_(readScalar(dynamicMeshCoeffs_.lookup("amplitude"))),
-    frequency_(readScalar(dynamicMeshCoeffs_.lookup("frequency"))),
-    refPlaneX_(readScalar(dynamicMeshCoeffs_.lookup("refPlaneX"))),
-    stationaryPoints_
+    amplitude_(readScalar(dict_.lookup("amplitude"))),
+    frequency_(readScalar(dict_.lookup("frequency"))),
+    refPlaneX_(readScalar(dict_.lookup("refPlaneX"))),
+    referencePoints_
     (
         IOobject
         (
@@ -72,16 +72,12 @@ Foam::dynamicInkJetFvMesh::dynamicInkJetFvMesh(const IOobject& io)
         )
     )
 {
-    Info<< "Performing a dynamic mesh calculation: " << endl
+    InfoInFunction
+        << "Performing a dynamic mesh calculation: " << endl
         << "amplitude: " << amplitude_
         << " frequency: " << frequency_
         << " refPlaneX: " << refPlaneX_ << endl;
 }
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::dynamicInkJetFvMesh::~dynamicInkJetFvMesh()
-{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -94,17 +90,17 @@ bool Foam::dynamicInkJetFvMesh::update()
     Info<< "Mesh scaling. Time = " << time().value() << " scaling: "
         << scalingFunction << endl;
 
-    pointField newPoints = stationaryPoints_;
+    pointField newPoints = referencePoints_;
 
     newPoints.replace
     (
         vector::X,
-        stationaryPoints_.component(vector::X)*
+        referencePoints_.component(vector::X)*
         (
             1.0
           + pos
             (
-              - (stationaryPoints_.component(vector::X))
+              - (referencePoints_.component(vector::X))
               - refPlaneX_
             )*amplitude_*scalingFunction
         )

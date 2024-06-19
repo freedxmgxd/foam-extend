@@ -60,7 +60,7 @@ Foam::solidBodyMotionFvMesh::solidBodyMotionFvMesh(const IOobject& io)
         ).subDict(typeName + "Coeffs")
     ),
     SBMFPtr_(solidBodyMotionFunction::New(dynamicMeshCoeffs_, time())),
-    undisplacedPoints_
+    referencePoints_
     (
         IOobject
         (
@@ -78,19 +78,13 @@ Foam::solidBodyMotionFvMesh::solidBodyMotionFvMesh(const IOobject& io)
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::solidBodyMotionFvMesh::~solidBodyMotionFvMesh()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::solidBodyMotionFvMesh::update()
 {
     fvMesh::movePoints
     (
-        transform(SBMFPtr_().transformation(), undisplacedPoints_)
+        transform(SBMFPtr_().transformation(), referencePoints_)
     );
 
     return false;

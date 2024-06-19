@@ -72,10 +72,10 @@ class mixerGgiFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        mixerGgiFvMesh(const mixerGgiFvMesh&);
+        mixerGgiFvMesh(const mixerGgiFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const mixerGgiFvMesh&);
+        void operator=(const mixerGgiFvMesh&) = delete;
 
 
         //- Add mixer zones
@@ -86,6 +86,9 @@ class mixerGgiFvMesh
 
         //- Return moving points mask
         const scalarField& movingPointsMask() const;
+
+        //- Clear out
+        void clearOut();
 
 
 public:

@@ -48,7 +48,7 @@ void Foam::mixerGgiFvMesh::addZonesAndModifiers()
 
     if (cellZones().size() > 0)
     {
-        Info<< "void mixerGgiFvMesh::addZonesAndModifiers() : "
+        InfoInFunction
             << "Zones and modifiers already present.  Skipping."
             << endl;
 
@@ -119,14 +119,14 @@ void Foam::mixerGgiFvMesh::calcMovingMasks() const
 {
     if (debug)
     {
-        Info<< "void mixerGgiFvMesh::calcMovingMasks() const : "
+        InfoInFunction
             << "Calculating point and cell masks"
             << endl;
     }
 
     if (movingPointsMaskPtr_)
     {
-        FatalErrorIn("void mixerGgiFvMesh::calcMovingMasks() const")
+        FatalErrorInFunction
             << "point mask already calculated"
             << abort(FatalError);
     }
@@ -142,7 +142,7 @@ void Foam::mixerGgiFvMesh::calcMovingMasks() const
 
     if (movingCellsID < 0)
     {
-        FatalErrorIn("void mixerGgiFvMesh::calcMovingMasks() const")
+        FatalErrorInFunction
             << "Cannot find moving cell zone ID"
             << abort(FatalError);
     }
@@ -175,10 +175,11 @@ void Foam::mixerGgiFvMesh::calcMovingMasks() const
 
         if (movingSliderID < 0)
         {
-            FatalErrorIn("void mixerGgiFvMesh::calcMovingMasks() const")
+            FatalErrorInFunction
                 << "Moving slider named " << movingPatches[patchI]
                 << " not found.  Valid patch names: "
-                << boundaryMesh().names() << abort(FatalError);
+                << boundaryMesh().names()
+                << abort(FatalError);
         }
 
         const ggiPolyPatch& movingGgiPatch =
@@ -207,10 +208,11 @@ void Foam::mixerGgiFvMesh::calcMovingMasks() const
 
         if (staticSliderID < 0)
         {
-            FatalErrorIn("void mixerGgiFvMesh::calcMovingMasks() const")
+            FatalErrorInFunction
                 << "Static slider named " << staticPatches[patchI]
                 << " not found.  Valid patch names: "
-                << boundaryMesh().names() << abort(FatalError);
+                << boundaryMesh().names()
+                << abort(FatalError);
         }
 
         const ggiPolyPatch& staticGgiPatch =
@@ -228,6 +230,24 @@ void Foam::mixerGgiFvMesh::calcMovingMasks() const
             }
         }
     }
+}
+
+
+// Return moving points mask.  Moving points marked with 1
+const Foam::scalarField& Foam::mixerGgiFvMesh::movingPointsMask() const
+{
+    if (!movingPointsMaskPtr_)
+    {
+        calcMovingMasks();
+    }
+
+    return *movingPointsMaskPtr_;
+}
+
+
+void Foam::mixerGgiFvMesh::clearOut()
+{
+    deleteDemandDrivenData(movingPointsMaskPtr_);
 }
 
 
@@ -266,7 +286,7 @@ Foam::mixerGgiFvMesh::mixerGgiFvMesh
     // Bug fix, HJ, 3/Oct/2011
     if (!cs_.inDegrees())
     {
-        WarningIn("mixerGgiFvMesh::mixerGgiFvMesh(const IOobject& io)")
+        WarningInFunction
             << "Mixer coordinate system is set to operate in radians.  "
             << "Changing to rad for correct calculation of angular velocity."
             << nl
@@ -291,23 +311,10 @@ Foam::mixerGgiFvMesh::mixerGgiFvMesh
 
 Foam::mixerGgiFvMesh::~mixerGgiFvMesh()
 {
-    deleteDemandDrivenData(movingPointsMaskPtr_);
+    clearOut();
 }
-
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-// Return moving points mask.  Moving points marked with 1
-const Foam::scalarField& Foam::mixerGgiFvMesh::movingPointsMask() const
-{
-    if (!movingPointsMaskPtr_)
-    {
-        calcMovingMasks();
-    }
-
-    return *movingPointsMaskPtr_;
-}
-
 
 bool Foam::mixerGgiFvMesh::update()
 {
