@@ -17,4 +17,7 @@
     // Force recalculation of weights
     mesh.surfaceInterpolation::movePoints();
     solidMesh.surfaceInterpolation::movePoints();
+
+    mesh.weights();
+    solidMesh.weights();
 }
