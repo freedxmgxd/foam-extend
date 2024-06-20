@@ -60,10 +60,8 @@ void Foam::mixerFvMesh::addZonesAndModifiers()
         {
             if (topoChanger_.size() == 0)
             {
-                FatalErrorIn
-                (
-                    "void mixerFvMesh::addZonesAndModifiers()"
-                )   << "Mesh modifiers not read properly.  "
+                FatalErrorInFunction
+                    << "Mesh modifiers not read properly.  "
                     << "pointZones = " <<  pointZones().size()
                     << " faceZones = " << faceZones().size()
                     << abort(FatalError);
@@ -81,7 +79,7 @@ void Foam::mixerFvMesh::addZonesAndModifiers()
 
     if (movingSliderIndex < 0)
     {
-        FatalErrorIn("void mixerFvMesh::addZonesAndModifiers() const")
+        FatalErrorInFunction
             << "Moving slider patch not found in boundary"
             << abort(FatalError);
     }
@@ -91,7 +89,7 @@ void Foam::mixerFvMesh::addZonesAndModifiers()
 
     if (staticSliderIndex < 0)
     {
-        FatalErrorIn("void mixerFvMesh::addZonesAndModifiers() const")
+        FatalErrorInFunction
             << "Static slider patch not found in boundary"
             << abort(FatalError);
 
@@ -271,7 +269,7 @@ void Foam::mixerFvMesh::calcMovingMask() const
 
     if (movingPointsMaskPtr_)
     {
-        FatalErrorIn("void mixerFvMesh::calcMovingMask() const")
+        FatalErrorInFunction
             << "point mask already calculated"
             << abort(FatalError);
     }
@@ -396,7 +394,7 @@ Foam::mixerFvMesh::mixerFvMesh
     // Bug fix, HJ, 3/Oct/2011
     if (!cs_.inDegrees())
     {
-        WarningIn("mixerFvMesh::mixerFvMesh(const IOobject& io)")
+        WarningInFunction
             << "Mixer coordinate system is set to operate in radians.  "
             << "Changing to rad for correct calculation of angular velocity."
             << nl

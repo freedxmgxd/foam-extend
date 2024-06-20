@@ -28,8 +28,8 @@ License
 #include "regionSplit.H"
 #include "ggiPolyPatch.H"
 #include "polyPatchID.H"
-#include "addToRunTimeSelectionTable.H"
 #include "mapPolyMesh.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
