@@ -60,7 +60,6 @@ void Foam::MRFZone::setMRFFaces()
     labelList faceType(mesh_.nFaces(), 0);
 
     // Determine faces in cell zone
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // (without constructing cells)
 
     const labelList& own = mesh_.faceOwner();
@@ -259,7 +258,7 @@ void Foam::MRFZone::calcMeshVelocity() const
 
     if (debug)
     {
-        InfoIn("void MRFZone::calcMeshVelocity() const")
+        InfoInFunction
             << "Calculating mesh velocity for zone " << name_
             << endl;
     }
@@ -360,7 +359,7 @@ void Foam::MRFZone::calcMeshVelocity() const
 
     if (debug)
     {
-        InfoIn("void MRFZone::calcMeshVelocity() const")
+        InfoInFunction
             << "deltaT for zone " << name_ << " = " << deltaT
             << endl;
     }
