@@ -183,11 +183,6 @@ void Foam::chtRcTemperatureFvPatchScalarField::manipulateMatrix
                 lookupPatchField<volScalarField, scalar>("Qr")
             );
 
-        Info<< "Radiation active - updating radiative jump Qr for field "
-            << this->dimensionedInternalField().name()
-            << " on region " << this->dimensionedInternalField().mesh().name()
-            << endl;
-
         forAll(faceCells, faceI)
         {
             source[faceCells[faceI]] += Qr[faceI]*magSf[faceI];
