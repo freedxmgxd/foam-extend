@@ -85,7 +85,6 @@ class chtRcEnthalpyFvPatchScalarField
         //- Check Cp and H0
         void checkCpH0() const;
 
-    
 
 public:
 
@@ -181,6 +180,7 @@ public:
                 const fvPatchScalarField&,
                 const labelList&
             );
+
 
         // Evaluation functions
 

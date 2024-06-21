@@ -147,6 +147,36 @@ regionCouplingFvPatchField<Type>::~regionCouplingFvPatchField()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+template<class Type>
+void regionCouplingFvPatchField<Type>::autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    coupledFvPatchField<Type>::autoMap(m);
+
+    this->clearOut();
+}
+
+
+template<class Type>
+void regionCouplingFvPatchField<Type>::rmap
+(
+    const fvPatchField<Type>& ptf,
+    const labelList& addr
+)
+{
+    coupledFvPatchField<Type>::rmap(ptf, addr);
+
+    const regionCouplingFvPatchField<Type>& pf =
+        refCast<const regionCouplingFvPatchField<Type> >(ptf);
+
+    remoteFieldName_ = pf.remoteFieldName_;
+
+    this->clearOut();
+}
+
+
 // Return a named shadow patch field
 template<class Type>
 template<class LookupField, class LookupType>

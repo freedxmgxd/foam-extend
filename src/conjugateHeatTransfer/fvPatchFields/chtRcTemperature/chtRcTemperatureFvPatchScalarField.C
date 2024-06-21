@@ -87,6 +87,31 @@ Foam::chtRcTemperatureFvPatchScalarField::chtRcTemperatureFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+void Foam::chtRcTemperatureFvPatchScalarField::autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    regionCouplingFvPatchScalarField::autoMap(m);
+}
+
+
+void Foam::chtRcTemperatureFvPatchScalarField::rmap
+(
+    const fvPatchScalarField& ptf,
+    const labelList& addr
+)
+{
+    regionCouplingFvPatchScalarField::rmap(ptf, addr);
+
+    const chtRcTemperatureFvPatchScalarField& pf =
+        refCast<const chtRcTemperatureFvPatchScalarField>(ptf);
+
+    kName_ = pf.kName_;
+    radiation_ = pf.radiation_;
+}
+
+
 const Foam::chtRcTemperatureFvPatchScalarField&
 Foam::chtRcTemperatureFvPatchScalarField::shadowPatchRcTemperatureField() const
 {
@@ -111,6 +136,7 @@ Foam::chtRcTemperatureFvPatchScalarField::shadowPatchRcTemperatureField() const
         regionCouplingFvPatchScalarField::shadowPatchField()
     );
 }
+
 
 Foam::tmp<Foam::scalarField>
 Foam::chtRcTemperatureFvPatchScalarField::patchInternalT() const
