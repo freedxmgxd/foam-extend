@@ -33,7 +33,7 @@
         if (solidThermalModel.active())
         {
             fvScalarMatrix& TSEqn = *TSolidEqn;
-            TSEqn += fvm::SuSp(-solidThermalModel.source().S()/Tsolid, Tsolid);
+            TSEqn -= solidThermalModel.source().S();
         }
 
         TSolidEqn->relax();
