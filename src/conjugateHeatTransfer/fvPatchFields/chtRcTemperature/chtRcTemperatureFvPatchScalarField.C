@@ -209,9 +209,10 @@ void Foam::chtRcTemperatureFvPatchScalarField::manipulateMatrix
                 lookupPatchField<volScalarField, scalar>("Qr")
             );
 
-        forAll(faceCells, faceI)
+        forAll (faceCells, faceI)
         {
-            source[faceCells[faceI]] += Qr[faceI]*magSf[faceI];
+            // Heat source: radiation is heating the solid
+            source[faceCells[faceI]] += patchQrSource[faceI];
         }
     }
 }
