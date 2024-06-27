@@ -88,7 +88,7 @@ public:
 
 
     //- Destructor
-    virtual ~solidBodyMotionFvMesh();
+    virtual ~solidBodyMotionFvMesh() = default;
 
 
     // Member Functions
