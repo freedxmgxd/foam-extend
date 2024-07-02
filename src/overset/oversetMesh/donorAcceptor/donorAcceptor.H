@@ -386,6 +386,7 @@ public:
                 donorCell_ = -1;
                 donorProcNo_ = -1;
                 donorPoint_ = vector::zero;
+                withinBB_ = false;
             }
 
 
@@ -433,6 +434,7 @@ public:
                 >> rd.extendedDonorCells_
                 >> rd.extendedDonorPoints_
                 >> rd.withinBB_;
+
             return is;
         }
 
@@ -448,6 +450,7 @@ public:
                 << rd.extendedDonorCells_ << token::SPACE
                 << rd.extendedDonorPoints_ << token::SPACE
                 << rd.withinBB_;
+
             return os;
         }
 };
