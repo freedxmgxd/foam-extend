@@ -1022,7 +1022,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
         nAcceptorsToProcessorMap[procI].setSize(Pstream::nProcs(), 0);
     }
 
-    // Get number of acceptors I'm sending to other processors
+    // Get number of acceptors I am sending to other processors
     labelList& numberOfLocalAcceptorsToProcs =
         nAcceptorsToProcessorMap[Pstream::myProcNo()];
 
@@ -1076,7 +1076,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
                     // Acceptor may find donor on this processor, append it
                     curSendMap.append(aI);
 
-                    // Increment the number of acceptors I'm sending to this
+                    // Increment the number of acceptors I am sending to this
                     // processor
                     ++numberOfLocalAcceptorsToProcs[procI];
                 }
@@ -1164,8 +1164,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
 
     // STAGE 5: Distribute acceptor points
 
-    // Need to create a labelListList from List<dynamicLabelList> for sending
-    // map.
+    // Create a labelListList from List<dynamicLabelList> for sending
     labelListList sendAcceptorFixedMap(Pstream::nProcs());
 
     forAll (sendAcceptorFixedMap, procI)
@@ -1476,8 +1475,8 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             // choice will be based on:
             // a) If this donor is within bounding box and the original one is
             //    not, prefer the new donor
-            // b) Otherwise prefert on e with least distance from acceptor cell
-            //    centre to donor cell centre.
+            // b) Otherwise prefer the one with least distance from
+            //    acceptor cell centre to donor cell centre.
             // Run-time selectable Donor Suitability Function will be applied
             // in oversetFringe
             if

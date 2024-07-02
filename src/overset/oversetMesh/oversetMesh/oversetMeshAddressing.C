@@ -1130,7 +1130,7 @@ void Foam::oversetMesh::calcInterpolationMap() const
 
     // STAGE 4: create remoteDonorToLocalAcceptor addressing object
 
-    // Distribute local donor cell ID's using mapDistribute
+    // Distribute local donor cell IDs using mapDistribute
     mapPtr_->distribute(donorIDs);
 
     // Sanity check whether all donorIDs that have been sent to me are valid
