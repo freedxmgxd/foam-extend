@@ -4,6 +4,8 @@
     Urel = rAUrel*UrelEqn().H();
     UrelEqn.clear();
 
+#   include "limitUrel.H"
+
     // Calculate under-relaxation consistent flux
     simple.calcSteadyConsistentFlux(phi, Urel);
     adjustPhi(phi, Urel, p);
@@ -34,8 +36,13 @@
 
 #   include "continuityErrs.H"
 
+    scalar purf = mesh.solutionDict().fieldRelaxationFactor(p.name());
+
+    Info<< "purf = " << purf << endl;
     // Explicitly relax pressure for momentum corrector
     p.relax();
 
     // Reconstruct consistent velocity after pressure equation
     simple.reconstructSteadyVelocity(Urel, rAUrel, p);
+
+#   include "limitUrel.H"
