@@ -126,8 +126,14 @@ public:
         //- Return specific heat capacity
         virtual tmp<volScalarField> C() const;
 
+        //- Is thermal diffusivity directional?
+        virtual bool anisotropicK() const;
+    
         //- Return thermal conductivity
         virtual tmp<volScalarField> k() const;
+
+        //- Return directional (tensorial) thermal conductivity
+        virtual tmp<volSymmTensorField> kt() const;
 
         //- Return thermal expansion coefficient
         virtual tmp<volScalarField> alpha() const;

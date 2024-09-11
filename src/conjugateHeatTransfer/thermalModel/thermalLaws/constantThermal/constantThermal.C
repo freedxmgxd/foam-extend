@@ -109,6 +109,12 @@ Foam::tmp<Foam::volScalarField> Foam::constantThermal::C() const
 }
 
 
+bool Foam::constantThermal::anisotropicK() const
+{
+    return false;
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::constantThermal::k() const
 {
     tmp<volScalarField> tresult
@@ -132,6 +138,12 @@ Foam::tmp<Foam::volScalarField> Foam::constantThermal::k() const
     tresult.ref().correctBoundaryConditions();
 
     return tresult;
+}
+
+
+Foam::tmp<Foam::volSymmTensorField> Foam::constantThermal::kt() const
+{
+    return symmTensor::I*k();
 }
 
 

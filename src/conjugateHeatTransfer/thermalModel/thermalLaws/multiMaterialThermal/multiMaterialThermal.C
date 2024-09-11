@@ -272,8 +272,34 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterialThermal::C() const
 }
 
 
+bool Foam::multiMaterialThermal::anisotropicK() const
+{
+    bool isDirectional = false;
+
+    const PtrList<thermalLaw>& laws = *this;
+
+    forAll (laws, lawI)
+    {
+        isDirectional |= laws[lawI].anisotropicK();
+    }
+    
+    return isDirectional;
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::multiMaterialThermal::k() const
 {
+    bool isDirectional = anisotropicK();
+
+    if (isDirectional)
+    {
+        FatalErrorInFunction
+            << "Trying to return scalar thermal conductivity for a "
+            << "non-isotropic conductivity model: anisotropicK = "
+            << isDirectional
+            << abort(FatalError);
+    }
+
     tmp<volScalarField> tresult
     (
         new volScalarField
@@ -287,7 +313,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterialThermal::k() const
                 IOobject::NO_WRITE
             ),
             mesh(),
-            dimensionedScalar("zerok", dimensionSet(1, 1, -3, -1, 0), 0),
+            dimensionedScalar("zerok", dimensionSet(1, 1, -3, -1, 0, 0, 0), 0),
             calculatedFvPatchScalarField::typeName
         )
     );
@@ -302,6 +328,53 @@ Foam::tmp<Foam::volScalarField> Foam::multiMaterialThermal::k() const
     }
 
     return tresult;
+}
+
+
+Foam::tmp<Foam::volSymmTensorField> Foam::multiMaterialThermal::kt() const
+{
+    if (!anisotropicK())
+    {
+        // Expand for scalar k: it is isotropic
+        return symmTensor::I*k();
+    }
+    else
+    {
+    tmp<volSymmTensorField> tresult
+    (
+        new volSymmTensorField
+        (
+            IOobject
+            (
+                "kTmp",
+                mesh().time().timeName(),
+                mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh(),
+            dimensionedSymmTensor
+            (
+                "zerok",
+                dimensionSet(1, 1, -3, -1, 0, 0, 0),
+                symmTensor::zero
+            ),
+            calculatedFvPatchSymmTensorField::typeName
+        )
+    );
+    volSymmTensorField& result = tresult.ref();
+
+    // Accumulate data for all fields
+    const PtrList<thermalLaw>& laws = *this;
+
+    forAll (laws, lawI)
+    {
+        result += indicator(lawI)*laws[lawI].kt();
+    }
+
+    return tresult;
+
+    }
 }
 
 

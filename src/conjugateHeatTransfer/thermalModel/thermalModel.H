@@ -128,10 +128,22 @@ public:
             return lawPtr_->C();
         }
 
-        //- Return thermal conductivity
+        //- Is thermal diffusivity directional?
+        bool anisotropicK() const
+        {
+            return lawPtr_->anisotropicK();
+        }
+
+        //- Return scalar thermal conductivity
         tmp<volScalarField> k() const
         {
             return lawPtr_->k();
+        }
+
+        //- Return directional (tensorial) thermal conductivity
+        tmp<volSymmTensorField> kt() const
+        {
+            return lawPtr_->kt();
         }
 
         //- Return thermal expansion coefficient
