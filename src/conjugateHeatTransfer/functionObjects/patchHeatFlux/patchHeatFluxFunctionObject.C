@@ -196,6 +196,7 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
         // Calculate diffusive flux
         scalar diffusiveFlux = 0;
 
+        // Note: diffusive flux can be a scalar or a symmTensor
         if (mesh.foundObject<volScalarField>(gammaName_))
         {
             const volScalarField& gamma =
@@ -228,6 +229,47 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
                     gamma.boundaryField()[patchID]*
                     T.boundaryField()[patchID].snGrad()*
                     magSf.boundaryField()[patchID]
+                );
+        }
+        else if (mesh.foundObject<volSymmTensorField>(gammaName_))
+        {
+            const volSymmTensorField& gamma =
+                mesh.lookupObject<volSymmTensorField>(gammaName_);
+
+            // Dimension check and correction
+            if (debug)
+            {
+                if (gamma.dimensions() == sqr(dimLength)/dimTime)
+                {
+                    Info<< "Flux dimension = m^3/s" << endl;
+                }
+                else if
+                (
+                    gamma.dimensions() == dimDensity*sqr(dimLength)/dimTime
+                )
+                {
+                    Info<< "Flux dimension = kg/s" << endl;
+                }
+                else if
+                (
+                    gamma.dimensions() == dimDensity*sqr(dimLength)/dimTime
+                )
+                    Info<< "Flux dimension = W/K" << endl;
+            }
+
+            vectorField Sn =
+                mesh.Sf().boundaryField()[patchID]/magSf.boundaryField()[patchID];
+            
+            diffusiveFlux =
+                gSum
+                (
+                    (
+                        (
+                            mesh.Sf().boundaryField()[patchID]
+                          & gamma.boundaryField()[patchID]
+                        ) & Sn
+                    )*
+                    T.boundaryField()[patchID].snGrad()
                 );
         }
 
