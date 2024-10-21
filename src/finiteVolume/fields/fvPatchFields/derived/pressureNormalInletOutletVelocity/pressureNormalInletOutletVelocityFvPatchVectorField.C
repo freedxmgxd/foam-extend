@@ -56,21 +56,6 @@ pressureNormalInletOutletVelocityFvPatchVectorField
 pressureNormalInletOutletVelocityFvPatchVectorField::
 pressureNormalInletOutletVelocityFvPatchVectorField
 (
-    const pressureNormalInletOutletVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchVectorField(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_)
-{}
-
-
-pressureNormalInletOutletVelocityFvPatchVectorField::
-pressureNormalInletOutletVelocityFvPatchVectorField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -85,6 +70,21 @@ pressureNormalInletOutletVelocityFvPatchVectorField
     refGrad() = vector::zero;
     valueFraction() = 0.0;
 }
+
+
+pressureNormalInletOutletVelocityFvPatchVectorField::
+pressureNormalInletOutletVelocityFvPatchVectorField
+(
+    const pressureNormalInletOutletVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchVectorField(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_),
+    rhoName_(ptf.rhoName_)
+{}
 
 
 pressureNormalInletOutletVelocityFvPatchVectorField::
@@ -125,11 +125,8 @@ void pressureNormalInletOutletVelocityFvPatchVectorField::updateCoeffs()
     if (!this->db().objectRegistry::found(phiName_))
     {
         // Flux not available, do not update
-        InfoIn
-        (
-            "void pressureNormalInletOutletVelocityFvPatchVectorField::"
-            "updateCoeffs()"
-        )   << "Flux field " << phiName_ << " not found.  "
+        InfoInFunction
+            << "Flux field " << phiName_ << " not found.  "
             << "Performing mixed update" << endl;
 
         mixedFvPatchVectorField::updateCoeffs();
@@ -167,11 +164,8 @@ void pressureNormalInletOutletVelocityFvPatchVectorField::updateCoeffs()
     }
     else
     {
-        FatalErrorIn
-        (
-            "pressureNormalInletOutletVelocityFvPatchVectorField::"
-            "updateCoeffs()"
-        )   << "dimensions of phi are not correct"
+        FatalErrorInFunction
+            << "dimensions of phi are not correct"
             << "\n    on patch " << this->patch().name()
             << " of field " << this->dimensionedInternalField().name()
             << " in file " << this->dimensionedInternalField().objectPath()
