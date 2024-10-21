@@ -139,6 +139,38 @@ fluxFvPatchField<Type>::fluxFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
+void fluxFvPatchField<Type>::autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    fixedGradientFvPatchField<Type>::autoMap(m);
+    flux_.autoMap(m);
+    reactivity_.autoMap(m);
+}
+
+
+template<class Type>
+void fluxFvPatchField<Type>::rmap
+(
+    const fvPatchField<Type>& ptf,
+    const labelList& addr
+)
+{
+    fvPatchField<Type>::rmap(ptf, addr);
+
+    const fluxFvPatchField<Type>& fptf =
+        refCast<const fluxFvPatchField<Type> >(ptf);
+
+    flux_.rmap(fptf.flux_, addr);
+    reactivity_.rmap(fptf.reactivity_, addr);
+
+    gammaName_ = fptf.gammaName_;
+    fieldBound_ = fptf.fieldBound_;
+}
+
+
+template<class Type>
 void fluxFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())

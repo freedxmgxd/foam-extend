@@ -142,47 +142,75 @@ public:
 
         // Access
 
-        //- Return flux
-        inline const Field<Type>& flux() const
-        {
-            return flux_;
-        }
+            //- Return flux
+            inline const Field<Type>& flux() const
+            {
+                return flux_;
+            }
 
-        //- Return access to flux
-        inline Field<Type>& flux()
-        {
-            return flux_;
-        }
+            //- Return access to flux
+            inline Field<Type>& flux()
+            {
+                return flux_;
+            }
 
-        //- Return reactivity
-        inline const scalarField& reactivity() const
-        {
-            return reactivity_;
-        }
+            //- Return reactivity
+            inline const scalarField& reactivity() const
+            {
+                return reactivity_;
+            }
 
-        //- Return access to reactivity
-        inline scalarField& reactivity()
-        {
-            return reactivity_;
-        }
+            //- Return access to reactivity
+            inline scalarField& reactivity()
+            {
+                return reactivity_;
+            }
 
-        //- Return field bound
-        inline const Type& fieldBound() const
-        {
-            return fieldBound_;
-        }
+            //- Name of diffusion field
+            const word& gammaName() const
+            {
+                return gammaName_;
+            }
 
-        //- Return access to field bound
-        inline Type& fieldBound()
-        {
-            return fieldBound_;
-        }
+            //- Return field bound
+            inline const Type& fieldBound() const
+            {
+                return fieldBound_;
+            }
 
-        //- Update the coefficients associated with the patch field
-        virtual void updateCoeffs();
+            //- Return access to field bound
+            inline Type& fieldBound()
+            {
+                return fieldBound_;
+            }
 
-        //- Write
-        virtual void write(Ostream&) const;
+
+        // Mapping functions
+
+            //- Map (and resize as needed) from self given a mapping object
+            virtual void autoMap
+            (
+                const fvPatchFieldMapper&
+            );
+
+            //- Reverse map the given fvPatchField onto this fvPatchField
+            virtual void rmap
+            (
+                const fvPatchField<Type>&,
+                const labelList&
+            );
+
+
+        // Evaluation functions
+
+            //- Update the coefficients associated with the patch field
+            virtual void updateCoeffs();
+
+
+        // I-O
+
+            //- Write
+            virtual void write(Ostream&) const;
 };
 
 
