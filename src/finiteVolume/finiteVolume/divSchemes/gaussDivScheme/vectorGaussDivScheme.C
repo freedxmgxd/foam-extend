@@ -97,8 +97,8 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
                 bs.coupleLower()[patchI].asLinear();
 
             // Coupling  contributions
-            pcoupleLower = pw*Sf;
-            pcoupleUpper = (1 - pw)*Sf;
+            pcoupleLower += pw*Sf;
+            pcoupleUpper -= (1 - pw)*Sf;
         }
         else
         {
@@ -182,8 +182,8 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
                 bs.coupleLower()[patchI].asLinear();
 
             // Coupling  contributions
-            pcoupleLower = -pw*pFlux*Sf;
-            pcoupleUpper = (1 - pw)*pFlux*Sf;
+            pcoupleLower += pw*pFlux*Sf;
+            pcoupleUpper -= (1 - pw)*pFlux*Sf;
         }
         else
         {
