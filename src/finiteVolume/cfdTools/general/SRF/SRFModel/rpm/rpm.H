@@ -63,10 +63,10 @@ class rpm
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        rpm(const rpm&);
+        rpm(const rpm&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const rpm&);
+        void operator=(const rpm&) = delete;
 
 
 public:
@@ -78,12 +78,12 @@ public:
     // Constructors
 
         //- Construct from components
-        rpm(const volVectorField& U);
+        explicit rpm(const volVectorField& U);
 
 
-    // Destructor
+    //- Destructor
+    ~rpm() = default;
 
-        ~rpm();
 
     // Member functions
 

@@ -61,12 +61,6 @@ Foam::SRF::rpm::rpm
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::SRF::rpm::~rpm()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::SRF::rpm::read()
