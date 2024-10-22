@@ -210,7 +210,7 @@ void Foam::chtRcTemperatureFvPatchScalarField::manipulateMatrix
             );
 
         const scalarField patchQrSource = Qr*magSf;
-        
+
         forAll (faceCells, faceI)
         {
             // Heat source: radiation is heating the solid
