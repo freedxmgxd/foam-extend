@@ -475,6 +475,37 @@ void regionCouplingFvPatchField<Type>::updateInterfaceMatrix
 }
 
 
+template<class Type>
+void regionCouplingFvPatchField<Type>::patchInterpolate
+(
+    GeometricField<Type, fvsPatchField, surfaceMesh>& fField,
+    const scalarField& pL
+) const
+{
+    // Use patch value both in coupled and decoupled state
+    // HJ, 22/Oct2024
+    const label patchI = this->patch().index();
+
+    fField.boundaryField()[patchI] = *this;
+}
+
+
+template<class Type>
+void regionCouplingFvPatchField<Type>::patchInterpolate
+(
+    GeometricField<Type, fvsPatchField, surfaceMesh>& fField,
+    const scalarField& pL,
+    const scalarField& pY
+) const
+{
+    // Use patch value both in coupled and decoupled state
+    // HJ, 22/Oct2024
+    const label patchI = this->patch().index();
+
+    fField.boundaryField()[patchI] = *this;
+}
+
+
 // Write
 template<class Type>
 void regionCouplingFvPatchField<Type>::write(Ostream& os) const
