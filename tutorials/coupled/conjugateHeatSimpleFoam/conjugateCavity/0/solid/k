@@ -27,7 +27,7 @@ boundaryField
 
     left
     {
-        type            chtRcThermalDiffusivitySlave;
+        type            chtRcThermalDiffusivity;
         remoteField     kappaEff;
         value           uniform 1e-3;
     }

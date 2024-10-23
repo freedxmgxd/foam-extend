@@ -34,7 +34,7 @@ boundaryField
     right
     {
         type            chtRcTemperature;
-        radiation       on;
+        radiation       off;
         K               kappaEff;
         remoteField     T;
         value           uniform 273;
