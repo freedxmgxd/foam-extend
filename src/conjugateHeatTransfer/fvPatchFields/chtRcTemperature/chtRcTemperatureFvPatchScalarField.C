@@ -158,7 +158,7 @@ Foam::chtRcTemperatureFvPatchScalarField::patchNeighbourField() const
             << abort(FatalError);
     }
 
-    // Get neighbour T, interpolate and add jump
+    // Get neighbour T and interpolate
     return
         regionCouplePatch().interpolate
         (
