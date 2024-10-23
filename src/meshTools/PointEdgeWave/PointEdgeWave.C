@@ -165,10 +165,8 @@ void Foam::PointEdgeWave<Type>::transform
     }
     else
     {
-        FatalErrorIn
-        (
-            "PointEdgeWave<Type>::transform(const tensorField&, List<Type>&)"
-        )   << "Parallel cyclics not supported"
+        FatalErrorInFunction
+            << "Parallel cyclics not supported"
             << abort(FatalError);
 
         forAll(pointInfo, i)
@@ -467,7 +465,7 @@ void Foam::PointEdgeWave<Type>::handleProcPatches()
 
             if (debug)
             {
-                Pout<< "Processor patch " << patchI << ' ' << patch.name()
+                Pout<< "Processor patch " << patchI << " " << patch.name()
                     << " communicating with " << procPatch.neighbProcNo()
                     << "  Sending:" << patchInfo.size() << endl;
             }
@@ -513,7 +511,7 @@ void Foam::PointEdgeWave<Type>::handleProcPatches()
 
             if (debug)
             {
-                Pout<< "Processor patch " << patchI << ' ' << patch.name()
+                Pout<< "Processor patch " << patchI << " " << patch.name()
                     << " communicating with " << procPatch.neighbProcNo()
                     << "  Received:" << patchInfo.size() << endl;
             }
@@ -646,7 +644,7 @@ void Foam::PointEdgeWave<Type>::handleCyclicPatches()
 
             if (debug)
             {
-                Pout<< "Cyclic patch " << patchI << ' ' << patch.name()
+                Pout<< "Cyclic patch " << patchI << " " << patch.name()
                     << "  Changed on first half : " << halfAInfo.size()
                     << "  Changed on second half : " << halfBInfo.size()
                     << endl;
@@ -820,7 +818,8 @@ void Foam::PointEdgeWave<Type>::handleGgiPatches()
 
                     if (debug)
                     {
-                        Pout<< "Ggi patch " << master.index() << ' ' << master.name()
+                        Pout<< "Ggi patch " << master.index()
+                            << " " << master.name()
                             << "  Sending:" << masterInfo.size() << endl;
                     }
                 }
@@ -854,7 +853,8 @@ void Foam::PointEdgeWave<Type>::handleGgiPatches()
 
                     if (debug)
                     {
-                        Pout<< "Ggi patch " << slave.index() << ' ' << slave.name()
+                        Pout<< "Ggi patch " << slave.index()
+                            << " " << slave.name()
                             << "  Sending:" << slaveInfo.size() << endl;
                     }
 
@@ -874,9 +874,11 @@ void Foam::PointEdgeWave<Type>::handleGgiPatches()
 
                 if (debug)
                 {
-                    Pout<< "Ggi patch " << slave.index() << ' ' << slave.name()
+                    Pout<< "Ggi patch " << slave.index()
+                        << " " << slave.name()
                         << "  Received:" << masterInfo.size() << endl;
-                    Pout<< "Ggi patch " << master.index() << ' ' << master.name()
+                    Pout<< "Ggi patch " << master.index()
+                        << " " << master.name()
                         << "  Received:" << slaveInfo.size() << endl;
                 }
 
@@ -949,12 +951,8 @@ Foam::PointEdgeWave<Type>::PointEdgeWave
         && allPointInfo_.size() != mesh_.allPoints().size()
     )
     {
-        FatalErrorIn
-        (
-            "PointEdgeWave<Type>::PointEdgeWave"
-            "(const polyMesh&, const labelList&, const List<Type>,"
-            " List<Type>&, List<Type>&, const label maxIter)"
-        )   << "size of pointInfo work array is not equal to the number"
+        FatalErrorInFunction
+            << "size of pointInfo work array is not equal to the number"
             << " of points in the mesh" << endl
             << "    pointInfo   :" << allPointInfo_.size() << endl
             << "    mesh.nPoints:" << mesh_.nPoints()
@@ -962,12 +960,8 @@ Foam::PointEdgeWave<Type>::PointEdgeWave
     }
     if (allEdgeInfo_.size() != mesh_.nEdges())
     {
-        FatalErrorIn
-        (
-            "PointEdgeWave<Type>::PointEdgeWave"
-            "(const polyMesh&, const labelList&, const List<Type>,"
-            " List<Type>&, List<Type>&, const label maxIter)"
-        )   << "size of edgeInfo work array is not equal to the number"
+        FatalErrorInFunction
+            << "size of edgeInfo work array is not equal to the number"
             << " of edges in the mesh" << endl
             << "    edgeInfo   :" << allEdgeInfo_.size() << endl
             << "    mesh.nEdges:" << mesh_.nEdges()
@@ -995,12 +989,8 @@ Foam::PointEdgeWave<Type>::PointEdgeWave
 
     if ((maxIter > 0) && (iter >= maxIter))
     {
-        FatalErrorIn
-        (
-            "PointEdgeWave<Type>::PointEdgeWave"
-            "(const polyMesh&, const labelList&, const List<Type>,"
-            " List<Type>&, List<Type>&, const label maxIter)"
-        )   << "Maximum number of iterations reached. Increase maxIter." << nl
+        FatalErrorInFunction
+            << "Maximum number of iterations reached. Increase maxIter." << nl
             << "    maxIter:" << maxIter << endl
             << "    nChangedPoints:" << nChangedPoints_ << endl
             << "    nChangedEdges:" << nChangedEdges_ << endl
@@ -1082,7 +1072,7 @@ Foam::label Foam::PointEdgeWave<Type>::edgeToPoint()
 
         if (!changedEdge_[edgeI])
         {
-            FatalErrorIn("PointEdgeWave<Type>::edgeToPoint()")
+            FatalErrorInFunction
                 << "edge " << edgeI
                 << " not marked as having been changed" << nl
                 << "This might be caused by multiple occurences of the same"
@@ -1166,7 +1156,7 @@ Foam::label Foam::PointEdgeWave<Type>::pointToEdge()
 
         if (!changedPoint_[pointI])
         {
-            FatalErrorIn("PointEdgeWave<Type>::pointToEdge()")
+            FatalErrorInFunction
                 << "Point " << pointI
                 << " not marked as having been changed" << nl
                 << "This might be caused by multiple occurences of the same"

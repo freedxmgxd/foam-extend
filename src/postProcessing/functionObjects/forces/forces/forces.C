@@ -233,7 +233,7 @@ void Foam::forces::read(const dictionary& dict)
             )
             {
                 active_ = false;
-                WarningIn("void forces::read(const dictionary& dict)")
+                WarningInFunction
                 << "Could not find " << fDName_ << " in database." << nl
                     << "    De-activating forces."
                     << endl;
@@ -299,6 +299,7 @@ void Foam::forces::makeFile()
         if (Pstream::master())
         {
             fileName forcesDir;
+
             word startTimeName =
                 obr_.time().timeName(obr_.time().startTime().value());
 
