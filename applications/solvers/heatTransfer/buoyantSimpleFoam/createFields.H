@@ -41,6 +41,8 @@
         mesh
     );
 
+#   include "compressibleCreatePhi.H"
+
     // Read field p_rgh
     // Note: since initialisation for p_rgh is much easier than for p
     // p_rgh shall be considered as the base pressure field
@@ -65,8 +67,6 @@
     // Force p to be consistent with p_rgh
     p = p_rgh + rho*gh;
     p.correctBoundaryConditions();
-
-#   include "compressibleCreatePhi.H"
 
     Info<< "Creating turbulence model\n" << endl;
     autoPtr<compressible::RASModel> turbulence
