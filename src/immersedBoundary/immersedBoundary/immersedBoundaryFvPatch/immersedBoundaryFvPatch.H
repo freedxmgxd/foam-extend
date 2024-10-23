@@ -44,7 +44,6 @@ Contributors
 
 SourceFiles
     immersedBoundaryFvPatch.C
-    immersedBoundaryFvPatchTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
