@@ -53,7 +53,7 @@ void readNASEdges
 
     if (!is.good())
     {
-        FatalErrorIn("readNASEdges")
+        FatalErrorInFunction
             << "Cannot read file " << inFileName
             << exit(FatalError);
     }
@@ -218,7 +218,7 @@ void write
     }
     else
     {
-        FatalErrorIn("write")
+        FatalErrorInFunction
             << "Supported output formats: .eMesh, .vtk"
             << exit(FatalError);
     }
@@ -280,7 +280,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Can only handle NASTRAN data formats (.nas extension)."
             << exit(FatalError);
     }

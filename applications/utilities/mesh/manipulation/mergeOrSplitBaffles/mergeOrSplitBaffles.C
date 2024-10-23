@@ -77,7 +77,7 @@ void insertDuplicateMerge
     const labelList& faceOwner = mesh.faceOwner();
     const faceZoneMesh& faceZones = mesh.faceZones();
 
-    forAll(duplicates, bFaceI)
+    forAll (duplicates, bFaceI)
     {
         label otherFaceI = duplicates[bFaceI];
 
@@ -167,7 +167,7 @@ labelList findBaffles(const polyMesh& mesh, const labelList& boundaryFaces)
     // Check that none are on processor patches
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    forAll(duplicates, bFaceI)
+    forAll (duplicates, bFaceI)
     {
         if (duplicates[bFaceI] != -1)
         {
@@ -176,7 +176,7 @@ labelList findBaffles(const polyMesh& mesh, const labelList& boundaryFaces)
 
             if (isA<processorPolyPatch>(patches[patchI]))
             {
-                FatalErrorIn("findBaffles(const polyMesh&, const labelList&)")
+                FatalErrorInFunction
                     << "Duplicate face " << faceI
                     << " is on a processorPolyPatch."
                     << "This is not allowed." << nl
@@ -197,7 +197,7 @@ labelList findBaffles(const polyMesh& mesh, const labelList& boundaryFaces)
             (mesh.nFaces() - mesh.nInternalFaces())/256
         );
 
-        forAll(duplicates, bFaceI)
+        forAll (duplicates, bFaceI)
         {
             label otherFaceI = duplicates[bFaceI];
 
@@ -356,7 +356,7 @@ int main(int argc, char *argv[])
 
         pointSet dupPoints(mesh, "duplicatedPoints", 100);
 
-        forAll(pointMap, pointI)
+        forAll (pointMap, pointI)
         {
             label oldPointI = pointMap[pointI];
 
