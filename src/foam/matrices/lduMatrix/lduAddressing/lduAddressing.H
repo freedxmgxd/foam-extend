@@ -107,7 +107,12 @@ namespace Foam
 {
 
 // Forward declaration of classes
+class Ostream;
 class extendedLduAddressing;
+
+// Forward declaration of friend functions and operators
+class lduAddressing;
+Ostream& operator<<(Ostream&, const lduAddressing&);
 
 /*---------------------------------------------------------------------------*\
                        Class lduAddressing Declaration
@@ -158,10 +163,11 @@ class lduAddressing
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        lduAddressing(const lduAddressing&);
+        lduAddressing(const lduAddressing&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const lduAddressing&);
+        void operator=(const lduAddressing&) = delete;
+
 
         //- Calculate losort
         void calcLosort() const;

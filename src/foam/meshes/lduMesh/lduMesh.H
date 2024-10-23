@@ -42,6 +42,7 @@ Description
 namespace Foam
 {
 
+// Forward declaration of classes
 class objectRegistry;
 
 /*---------------------------------------------------------------------------*\
@@ -59,9 +60,9 @@ public:
 
     // Constructors
 
+
     //- Destructor
-    virtual ~lduMesh()
-    {}
+    virtual ~lduMesh() = default;
 
 
     // Member Functions
@@ -80,7 +81,6 @@ public:
 
             //- Return communicator used for parallel communication
             virtual int comm() const = 0;
-
 };
 
 

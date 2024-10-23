@@ -76,10 +76,10 @@ class lduPrimitiveMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        lduPrimitiveMesh(const lduPrimitiveMesh&);
+        lduPrimitiveMesh(const lduPrimitiveMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const lduPrimitiveMesh&);
+        void operator=(const lduPrimitiveMesh&) = delete;
 
 
 public:
@@ -120,10 +120,8 @@ public:
         {}
 
 
-    // Destructor
-
-        virtual ~lduPrimitiveMesh()
-        {}
+    //- Destructor
+    virtual ~lduPrimitiveMesh() = default;
 
 
     // Member Functions

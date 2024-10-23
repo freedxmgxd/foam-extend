@@ -71,7 +71,6 @@ namespace Foam
 class lduMatrix;
 Ostream& operator<<(Ostream&, const lduMatrix&);
 
-
 /*---------------------------------------------------------------------------*\
                            Class lduMatrix Declaration
 \*---------------------------------------------------------------------------*/

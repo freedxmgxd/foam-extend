@@ -34,7 +34,7 @@ void Foam::lduAddressing::calcLosort() const
 {
     if (losortPtr_)
     {
-        FatalErrorIn("lduAddressing::calcLosort() const")
+        FatalErrorInFunction
             << "losort already calculated"
             << abort(FatalError);
     }
@@ -95,7 +95,7 @@ void Foam::lduAddressing::calcOwnerStart() const
 {
     if (ownerStartPtr_)
     {
-        FatalErrorIn("lduAddressing::calcOwnerStart() const")
+        FatalErrorInFunction
             << "owner start already calculated"
             << abort(FatalError);
     }
@@ -132,7 +132,7 @@ void Foam::lduAddressing::calcLosortStart() const
 {
     if (losortStartPtr_)
     {
-        FatalErrorIn("lduAddressing::calcLosortStart() const")
+        FatalErrorInFunction
             << "losort start already calculated"
             << abort(FatalError);
     }
@@ -183,7 +183,7 @@ void Foam::lduAddressing::calcInternalBoundaryEqnCoeffs
      || boundaryEqnCoeffs_.size()
     )
     {
-        FatalErrorIn("lduAddressing::calcInternalBoundaryCoeffs() const")
+        FatalErrorInFunction
             << "Internal/boundary equation coefficients already calculated."
             << abort(FatalError);
     }
@@ -370,10 +370,8 @@ Foam::label Foam::lduAddressing::triIndex(const label a, const label b) const
 
     // If neighbour has not been found, something has gone seriously
     // wrong with the addressing mechanism
-    FatalErrorIn
-    (
-        "lduAddressing::triIndex(const label owner, const label nbr) const"
-    )   << "neighbour " << nbr << " not found for owner " << own << ". "
+    FatalErrorInFunction
+        << "neighbour " << nbr << " not found for owner " << own << ". "
         << "Problem with addressing"
         << abort(FatalError);
 
@@ -386,11 +384,8 @@ Foam::lduAddressing::extendedAddr(const label p) const
 {
     if (p == 0 || p > 4)
     {
-        FatalErrorIn
-        (
-            "const Foam::extendedLduAddressing& "
-            "Foam::lduAddressing::extendedAddr(const label p) const"
-        )   << "Currently supported extended addressing fill-in only "
+        FatalErrorInFunction
+            << "Currently supported extended addressing fill-in only "
             << "between order 1 and 4"
             << abort(FatalError);
     }
@@ -440,15 +435,8 @@ const Foam::dynamicLabelList& Foam::lduAddressing::boundaryEqnCoeffs
 {
     if (intI > lduInterfaces.size() - 1 || intI < 0)
     {
-        FatalErrorIn
-        (
-            "const Foam::PtrList<labelList>& "
-            "Foam::lduAddressing::boundaryEqnCoeffs"
-            "\n("
-            "\n    const lduInterfaceFieldPtrsList& lduInterfaces,"
-            "\n    const label p"
-            "\n) const"
-        )   << "Invalid interface index specified: " << intI << nl
+        FatalErrorInFunction
+            << "Invalid interface index specified: " << intI << nl
             << "Number of coupled interfaces: " << lduInterfaces.size()
             << abort(FatalError);
     }
@@ -459,6 +447,27 @@ const Foam::dynamicLabelList& Foam::lduAddressing::boundaryEqnCoeffs
     }
 
     return boundaryEqnCoeffs_[intI];
+}
+
+
+// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const lduAddressing& ldua)
+{
+    os  << "lowerAddr: " << nl << ldua.lowerAddr() << nl
+        << "upperAddr: " << nl << ldua.upperAddr() << nl;
+
+    for (label patchI = 0; patchI < ldua.nPatches(); patchI++)
+    {
+        os  << "patchAddr for patch " << patchI << ": " << nl
+            << ldua.patchAddr(patchI) << nl;
+    }
+
+    os  << endl << endl;
+
+    os.check("Ostream& operator<<(Ostream&, const lduAddressing&");
+
+    return os;
 }
 
 
