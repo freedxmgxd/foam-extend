@@ -66,22 +66,22 @@ solvers
         preconditioner   ILUC0;
         minIter          1;
         maxIter          100;
-        tolerance        1e-8;
-        relTol           0.01;
+        tolerance        1e-7;
+        relTol           0.0;
     }
     k
     {
         solver           BiCGStab;
         preconditioner   ILU0;
-        tolerance        1e-8;
-        relTol           0.01;
+        tolerance        1e-7;
+        relTol           0.0;
     }
     omega
     {
         solver           BiCGStab;
         preconditioner   ILU0;
-        tolerance        1e-8;
-        relTol           0.01;
+        tolerance        1e-7;
+        relTol           0.0;
     }
 }
 
@@ -106,12 +106,12 @@ blockSolver
 fieldBounds
 {
     U      100;
-    p      -1e06 1e064;
+    p      -1e06 1e06;
 }
 
 relaxationFactors
 {
-    U               0.9;
+    U               0.85;
     k               0.9;
     omega           0.9;
 }
