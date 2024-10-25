@@ -1,0 +1,222 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     conjugateHeatSimpleFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         20000;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   500;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  8;
+
+writeCompression compressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+libs
+(
+    "librwdi.so"
+);
+
+functions
+(
+    minMaxU
+    {
+        type        minMaxField;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        name U;
+    }
+    minMaxP
+    {
+        type        minMaxField;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        name p_rgh;
+    }
+    // Mass flux check
+    downLeftFlux
+    {
+        type patchFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch downLeft;
+        phi phi;
+        file "downLeftFlux.dat";
+    }
+    downRightFlux
+    {
+        type patchFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch downRight;
+        phi phi;
+        file "downRightFlux.dat";
+    }
+    upLeftFlux
+    {
+        type patchFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch upLeft;
+        phi phi;
+        file "upLeftFlux.dat";
+    }
+    upRightFlux
+    {
+        type patchFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch upRight;
+        phi phi;
+        file "upRightFlux.dat";
+    }
+    // Heat flux check: inlets and outlets
+    downLeftHeat
+    {
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch downLeft;
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "downLeftHeat.dat";
+    }
+    downRightHeat
+    {
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch downRight;
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "downRightHeat.dat";
+    }
+    upLeftHeat
+    {
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch upLeft;
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "upLeftHeat.dat";
+    }
+    upRightHeat
+    {
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch upRight;
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "upRightHeat.dat";
+    }
+    // Fluid, outer walls
+    fluid-bottomWall_heat
+    {
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch bottomWall;
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "fluid-bottomWall_heat.dat";
+    }
+    fluid-topWall_heat
+    {
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch topWall;
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "fluid-topWall_heat.dat";
+    }
+    // CHT patches
+    bottomCHT_heat
+    {
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch bottomCHT;
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "fluid-bottomCHT_heat.dat";
+    }
+    bottomWall_heat
+    {
+        type patchHeatFlux;
+        region solid;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch bottomWall;
+        T T;
+        phi none;
+        gamma k;
+        file "solid-bottomWall_heat.dat";
+    }
+    // CHT patches
+    topCHT_heat
+    {
+        type patchHeatFlux;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch topCHT;
+        T T;
+        phi rhoCpPhi;
+        gamma kappaEff;
+        file "fluid-topCHT_heat.dat";
+    }
+    topWall_heat
+    {
+        type patchHeatFlux;
+        region solid;
+        functionObjectLibs ("librwdi.so");
+        allPatches no;
+        patch topWall;
+        T T;
+        phi none;
+        gamma k;
+        file "solid-topWall_heat.dat";
+    }
+);
+
+
+// ************************************************************************* //

@@ -1,0 +1,3 @@
+faceSet bottomWallZone new patchToFace bottomWall
+faceSet topWallZone new patchToFace topWall
+quit

@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      chemistryProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+psiChemistryModel  zonalODEChemistryModel<gasThermoPhysics>;
+
+chemistry           off;
+
+chemistrySolver     zonalODEChemistrySolver;
+
+initialChemicalTimeStep 1e-07;
+
+turbulentReaction   off;
+
+zonalODEChemistrySolverCoeffs
+{
+    ODESolver       SIBS;
+    eps             0.05;
+    scale           1;
+}
+
+// Changed by JFL, 7/Dec/2016
+Cmix            Cmix [ 0 0 0 0 0 0 0 ] 0;
+
+// Chemistry time-scale. Used in steady-state
+tau              tau [0 0 1 0 0 0 0] 0.001;
+
+// ************************************************************************* //

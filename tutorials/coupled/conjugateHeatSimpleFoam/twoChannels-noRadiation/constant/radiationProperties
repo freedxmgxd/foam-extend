@@ -1,0 +1,60 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      radiationProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+radiation      off;
+// radiationModel fvDOM;
+radiationModel none;
+
+solverFreq     10;
+
+fvDOMCoeffs
+{
+    nPhi 16;
+    nTheta 1; // Not used in 2-D
+
+    convergence 1e-4;
+}
+
+viewFactorCoeffs
+{
+    // Smooth view factor matrix (use when in a close surface
+    // to force Sum(Fij = 1)
+    smoothing true;
+
+    // constant emissivity on surfaces.
+    constantEmissivity true;
+}
+
+absorptionEmissionModel constantAbsorptionEmission;
+
+constantAbsorptionEmissionCoeffs
+{
+    a              a      [ 0 -1  0  0  0  0  0] 0.0;
+    e              e      [ 0 -1  0  0  0  0  0] 0.0;
+    E              E      [ 1 -1 -3  0  0  0  0] 0.0;
+}
+
+
+scatterModel constantScatter;
+
+constantScatterCoeffs
+{
+    sigma          sigma  [ 0 -1  0  0  0  0  0] 0.1;
+    C              C      [ 0  0  0  0  0  0  0] 0.0;
+}
+
+// ************************************************************************* //

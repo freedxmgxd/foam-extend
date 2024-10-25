@@ -1,0 +1,4 @@
+faceSet bottomCHTZone new patchToFace bottomCHT
+faceSet topCHTZone new patchToFace topCHT
+cellSet topCatalyst new boxToCell (0 0.003 0) (0.2 0.0031 0.002)
+quit

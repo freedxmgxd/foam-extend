@@ -1,0 +1,93 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.1                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       polyBoundaryMesh;
+    location    "constant/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+9
+(
+    downLeft
+    {
+        type            patch;
+        nFaces          20;
+        startFace       15560;
+    }
+    downRight
+    {
+        type            patch;
+        nFaces          20;
+        startFace       15580;
+    }
+    upLeft
+    {
+        type            patch;
+        nFaces          20;
+        startFace       15600;
+    }
+    upRight
+    {
+        type            patch;
+        nFaces          20;
+        startFace       15620;
+    }
+    bottomWall
+    {
+        type            wall;
+        nFaces          200;
+        startFace       15640;
+        closedSolidBodyMotion false;
+    }
+    topWall
+    {
+        type            wall;
+        nFaces          200;
+        startFace       15840;
+        closedSolidBodyMotion false;
+    }
+    bottomCHT
+    {
+        type            regionCouple;
+        nFaces          200;
+        startFace       16040;
+        shadowRegion    solid;
+        shadowPatch     bottomWall;
+        zone            bottomCHTZone;
+        attached        off;
+        master          on;
+        isWall          on;
+        bridgeOverlap   off;
+    }
+    topCHT
+    {
+        type            regionCouple;
+        nFaces          200;
+        startFace       16240;
+        shadowRegion    solid;
+        shadowPatch     topWall;
+        zone            topCHTZone;
+        attached        off;
+        master          on;
+        isWall          on;
+        bridgeOverlap   off;
+    }
+    frontAndBack
+    {
+        type            empty;
+        nFaces          16000;
+        startFace       16440;
+    }
+)
+
+
+// ************************************************************************* //

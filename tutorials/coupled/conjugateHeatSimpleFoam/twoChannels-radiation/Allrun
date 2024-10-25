@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+application="conjugateHeatSimpleFoam"
+
+runApplication blockMesh
+\mv log.blockMesh log.blockMesh-fluid
+runApplication setSet -batch setSet-fluid.batch
+\mv log.setSet log.setSet-fluid
+runApplication setsToZones
+\mv log.setsToZones log.setsToZones-fluid
+
+runApplication blockMesh -region solid
+\mv log.blockMesh log.blockMesh-solid
+runApplication setSet -region solid -batch setSet-solid.batch
+\mv log.setSet log.setSet-solid
+runApplication setsToZones -region solid
+\mv log.setsToZones log.setsToZones-solid
+
+runApplication setFields
+runApplication $application

@@ -1,0 +1,3 @@
+For radiative balance, temperature boundary conditions need to be be fixedValue; otherwise, a zeroGradient T has a non-zero radiative heat flux which is not correctly accounted for in energy balance.
+
+HJ, 25/Oct/2024
