@@ -1,0 +1,96 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     pUCoupledFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         500;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   50;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  8;
+
+writeCompression compressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+functions
+(
+    minMaxU
+    {
+        type        minMaxField;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        name U;
+    }
+    minMaxP
+    {
+        type        minMaxField;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        name p;
+    }
+    minMaxNut
+    {
+        type        minMaxField;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        name nut;
+    }
+    minMaxK
+    {
+        type        minMaxField;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        name k;
+    }
+    minMaxOmega
+    {
+        type        minMaxField;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        name omega;
+    }
+    forces
+    {
+         type                forces;
+         functionObjectLibs  ( "libforces.so" );
+         outputControl       timeStep;
+         outputInterval      1;
+         patches             (hull deck rudderWithStrut);
+         pName               p;
+         UName               U;
+         rhoName             rhoInf;
+         log                 true;
+         rhoInf              1;
+         CofR                (0 0 1);
+    }
+);
+
+
+// ************************************************************************* //
