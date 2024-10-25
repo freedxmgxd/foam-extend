@@ -9,46 +9,42 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    object      fvSchemes;
+    class       volVectorField;
+    location    "0";
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
-{
-    default steadyState;
-}
+#include        "initialConditions"
 
-gradSchemes
-{
-    default         cellLimited leastSquares 1;
-}
+dimensions      [0 1 -1 0 0 0 0];
 
-divSchemes
-{
-    default         none;
-    div(phi,U)      Gauss linearUpwindV Gauss linear;
-    div(phi,k)      Gauss upwind;
-    div(phi,epsilon) Gauss upwind;
-    div(phi,omega)  Gauss upwind;
-    div((nuEff*dev(T(grad(U))))) Gauss linear;
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
-    div(U)          Gauss linear;
-}
+internalField   uniform $flowVelocity;
 
-laplacianSchemes
+boundaryField
 {
-    default         Gauss linear limited 0.5;
-}
+    #include "fixedInlet"
 
-interpolationSchemes
-{
-    default         linear;
-}
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform (0 0 0);
+        value           $internalField;
+    }
 
-snGradSchemes
-{
-    default         limited 0.5;
+    lowerWall
+    {
+        type            fixedValue;
+        value           uniform (20 0 0);
+    }
+
+    "motorBike_.*"
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    #include "frontBackUpperPatches"
 }
 
 // ************************************************************************* //

@@ -111,7 +111,7 @@ fieldBounds
 
 relaxationFactors
 {
-    U               0.5;
+    U               0.9;
     k               0.9;
     omega           0.9;
 }
