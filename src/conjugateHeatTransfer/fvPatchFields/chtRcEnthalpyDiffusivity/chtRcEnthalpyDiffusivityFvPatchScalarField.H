@@ -139,6 +139,24 @@ public:
             virtual void evaluate(const Pstream::commsTypes commsType);
 
 
+        // Patch interpolation and patch flux
+
+            //- Calculate patch face interpolate given weighting factors
+            virtual void patchInterpolate
+            (
+                surfaceScalarField& fField,
+                const scalarField& pL
+            ) const;
+
+            //- Calculate patch face interpolate given two weighting factors
+            virtual void patchInterpolate
+            (
+                surfaceScalarField& fField,
+                const scalarField& pL,
+                const scalarField& pY
+            ) const;
+
+
         //- Write
         virtual void write(Ostream&) const;
 };

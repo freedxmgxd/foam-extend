@@ -29,6 +29,7 @@ Author
 
 #include "chtRcEnthalpyDiffusivityFvPatchScalarField.H"
 #include "basicThermo.H"
+#include "surfaceFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -174,6 +175,31 @@ void Foam::chtRcEnthalpyDiffusivityFvPatchScalarField::evaluate
 )
 {
     fvPatchScalarField::evaluate();
+}
+
+
+void Foam::chtRcEnthalpyDiffusivityFvPatchScalarField::patchInterpolate
+(
+    surfaceScalarField& fField,
+    const scalarField& pL
+) const
+{
+    // Use patch value both in coupled and decoupled state
+    // HJ, 22/Oct2024
+    fField.boundaryField()[patch().index()] = *this;
+}
+
+
+void Foam::chtRcEnthalpyDiffusivityFvPatchScalarField::patchInterpolate
+(
+    surfaceScalarField& fField,
+    const scalarField& pL,
+    const scalarField& pY
+) const
+{
+    // Use patch value both in coupled and decoupled state
+    // HJ, 22/Oct2024
+    fField.boundaryField()[patch().index()] = *this;
 }
 
 

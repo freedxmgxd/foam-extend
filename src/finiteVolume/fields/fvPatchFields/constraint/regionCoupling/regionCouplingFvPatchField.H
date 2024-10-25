@@ -281,24 +281,6 @@ public:
             ) const;
 
 
-        // Patch interpolation and patch flux
-
-            //- Calculate patch face interpolate given weighting factors
-            virtual void patchInterpolate
-            (
-                GeometricField<Type, fvsPatchField, surfaceMesh>& fField,
-                const scalarField& pL
-            ) const;
-
-            //- Calculate patch face interpolate given two weighting factors
-            virtual void patchInterpolate
-            (
-                GeometricField<Type, fvsPatchField, surfaceMesh>& fField,
-                const scalarField& pL,
-                const scalarField& pY
-            ) const;
-
-
         // GGI coupled interface functions
 
             //- Does the patch field perform the transfromation
