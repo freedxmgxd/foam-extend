@@ -145,6 +145,31 @@ void Foam::chtRcThermalDiffusivityFvPatchScalarField::evaluate
 }
 
 
+void Foam::chtRcThermalDiffusivityFvPatchScalarField::patchInterpolate
+(
+    surfaceScalarField& fField,
+    const scalarField& pL
+) const
+{
+    // Use patch value both in coupled and decoupled state
+    // HJ, 22/Oct2024
+    fField.boundaryField()[patch().index()] = *this;
+}
+
+
+void Foam::chtRcThermalDiffusivityFvPatchScalarField::patchInterpolate
+(
+    surfaceScalarField& fField,
+    const scalarField& pL,
+    const scalarField& pY
+) const
+{
+    // Use patch value both in coupled and decoupled state
+    // HJ, 22/Oct2024
+    fField.boundaryField()[patch().index()] = *this;
+}
+
+
 void Foam::chtRcThermalDiffusivityFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
