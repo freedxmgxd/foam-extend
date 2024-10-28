@@ -23,8 +23,8 @@ boundaryField
     downLeft
     {
         type            flowRateInletVelocity;
-        rhoName rho;
-        flowRate        2e-6;        
+        rhoName         none;
+        flowRate        2e-6;
         value           uniform (0 0 0);
     }
     downRight
@@ -42,8 +42,8 @@ boundaryField
     upRight
     {
         type            flowRateInletVelocity;
-        rhoName rho;
-        flowRate        1e-6;        
+        rhoName         none;
+        flowRate        1e-6;
         value           uniform (0 0 0);
     }
     bottomWall

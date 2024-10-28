@@ -44,11 +44,6 @@ timePrecision   6;
 
 runTimeModifiable yes;
 
-libs
-(
-    "librwdi.so"
-);
-
 functions
 (
     minMaxU
@@ -67,7 +62,7 @@ functions
     downLeftFlux
     {
         type patchFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch downLeft;
         phi phi;
@@ -76,7 +71,7 @@ functions
     downRightFlux
     {
         type patchFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch downRight;
         phi phi;
@@ -85,7 +80,7 @@ functions
     upLeftFlux
     {
         type patchFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch upLeft;
         phi phi;
@@ -94,7 +89,7 @@ functions
     upRightFlux
     {
         type patchFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch upRight;
         phi phi;
@@ -104,7 +99,7 @@ functions
     downLeftHeat
     {
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch downLeft;
         T T;
@@ -115,7 +110,7 @@ functions
     downRightHeat
     {
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch downRight;
         T T;
@@ -126,7 +121,7 @@ functions
     upLeftHeat
     {
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch upLeft;
         T T;
@@ -137,7 +132,7 @@ functions
     upRightHeat
     {
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch upRight;
         T T;
@@ -149,7 +144,7 @@ functions
     fluid-bottomWall_heat
     {
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch bottomWall;
         T T;
@@ -160,7 +155,7 @@ functions
     fluid-topWall_heat
     {
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch topWall;
         T T;
@@ -172,7 +167,7 @@ functions
     bottomCHT_heat
     {
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch bottomCHT;
         T T;
@@ -184,7 +179,7 @@ functions
     {
         type patchHeatFlux;
         region solid;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch bottomWall;
         T T;
@@ -196,7 +191,7 @@ functions
     topCHT_heat
     {
         type patchHeatFlux;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch topCHT;
         T T;
@@ -208,7 +203,7 @@ functions
     {
         type patchHeatFlux;
         region solid;
-        functionObjectLibs ("librwdi.so");
+        functionObjectLibs ("libfieldFunctionObjects.so");
         allPatches no;
         patch topWall;
         T T;

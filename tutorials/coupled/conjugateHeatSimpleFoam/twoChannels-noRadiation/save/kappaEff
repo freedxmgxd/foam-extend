@@ -22,19 +22,23 @@ boundaryField
 {
     downLeft
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 0;
     }
     downRight
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 0;
     }
     upLeft
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 0;
     }
     upRight
     {
-        type            zeroGradient;
+        type            fixedValue;
+        value           uniform 0;
     }
     bottomWall
     {
