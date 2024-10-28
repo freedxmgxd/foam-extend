@@ -136,7 +136,8 @@ bool Foam::patchFluxFunctionObject::execute(const bool forceWrite)
             ofPtr_() << time_.value() << tab << patchFlux << endl;
         }
 
-        Info<< "Flux through " << patchName_ << " region " << regionName_
+        Info<< "Flux " << phiName_ << " through " << patchName_
+            << " region " << regionName_
             << ": " << patchFlux << endl;
 
         return true;
@@ -144,7 +145,7 @@ bool Foam::patchFluxFunctionObject::execute(const bool forceWrite)
     else
     {
         InfoInFunction
-            << "Flux field " << phiName_ << " for region "
+            << "Flux " << phiName_ << " for region "
             << " region " << regionName_ << " not found. Returning."
             << endl;
 
