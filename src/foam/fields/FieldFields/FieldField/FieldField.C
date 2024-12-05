@@ -129,7 +129,7 @@ FieldField<Field, Type>::FieldField
 :
     PtrList<Field<Type> >(ff.size())
 {
-    forAll(*this, i)
+    forAll (*this, i)
     {
         set(i, Field<Type>::New(type, ff[i]));
     }
@@ -186,7 +186,7 @@ tmp<FieldField<Field, Type> > FieldField<Field, Type>::NewCalculatedType
         new FieldField<Field, Type>(ff.size())
     );
 
-    forAll(*nffPtr, i)
+    forAll (*nffPtr, i)
     {
         nffPtr->set(i, Field<Type>::NewCalculatedType(ff[i]).ptr());
     }
@@ -201,7 +201,7 @@ tmp<FieldField<Field, Type> > FieldField<Field, Type>::NewCalculatedType
 template<template<class> class Field, class Type>
 void FieldField<Field, Type>::negate()
 {
-    forAll(*this, i)
+    forAll (*this, i)
     {
         this->operator[](i).negate();
     }
@@ -234,7 +234,7 @@ void FieldField<Field, Type>::replace
     const FieldField<Field, cmptType>& sf
 )
 {
-    forAll(*this, i)
+    forAll (*this, i)
     {
         this->operator[](i).replace(d, sf[i]);
     }
@@ -248,7 +248,7 @@ void FieldField<Field, Type>::replace
     const cmptType& s
 )
 {
-    forAll(*this, i)
+    forAll (*this, i)
     {
         this->operator[](i).replace(d, s);
     }
@@ -271,7 +271,7 @@ tmp<FieldField<Field, Type> > FieldField<Field, Type>::T() const
 template<template<class> class Field, class Type>
 void FieldField<Field, Type>::clearCaches() const
 {
-    forAll(*this, i)
+    forAll (*this, i)
     {
         this->operator[](i).clearCaches();
     }
@@ -290,7 +290,7 @@ void FieldField<Field, Type>::operator=(const FieldField<Field, Type>& f)
             << abort(FatalError);
     }
 
-    forAll(*this, i)
+    forAll (*this, i)
     {
         this->operator[](i) = f[i];
     }
@@ -318,7 +318,7 @@ void FieldField<Field, Type>::operator=(const tmp<FieldField>& tf)
     // Use normal assignment instead.  HJ, 3/May/2022
     const FieldField<Field, Type>& f = tf();
 
-    forAll (this, i)
+    forAll (*this, i)
     {
         this->operator[](i) = f[i];
     }
@@ -330,7 +330,7 @@ void FieldField<Field, Type>::operator=(const tmp<FieldField>& tf)
 template<template<class> class Field, class Type>
 void FieldField<Field, Type>::operator=(const Type& t)
 {
-    forAll(*this, i)
+    forAll (*this, i)
     {
         this->operator[](i) = t;
     }
@@ -342,7 +342,7 @@ void FieldField<Field, Type>::operator=(const Type& t)
 template<template<class> class Field, class Type>                             \
 void FieldField<Field, Type>::operator op(const FieldField<Field, TYPE>& f)   \
 {                                                                             \
-    forAll(*this, i)                                                          \
+    forAll (*this, i)                                                          \
     {                                                                         \
         this->operator[](i) op f[i];                                          \
     }                                                                         \
@@ -361,7 +361,7 @@ void FieldField<Field, Type>::operator op                                     \
 template<template<class> class Field, class Type>                             \
 void FieldField<Field, Type>::operator op(const TYPE& t)                      \
 {                                                                             \
-    forAll(*this, i)                                                          \
+    forAll (*this, i)                                                          \
     {                                                                         \
         this->operator[](i) op t;                                             \
     }                                                                         \
