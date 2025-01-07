@@ -80,7 +80,7 @@ inline void Foam::realGasSpecieThermo<thermo>::T
             i++;
         } while
         (
-            (i<20)
+            (i < 20)
             &&
             (
                 mag((this->*F)(rho, Tnew) - f)
@@ -91,13 +91,8 @@ inline void Foam::realGasSpecieThermo<thermo>::T
 
         if (iter++ > maxIter_())
         {
-            FatalErrorIn
-            (
-                "realGasSpecieThermo<thermo>::T(scalar f, scalar T0, scalar p, scalar rho0, "
-                "scalar (realGasSpecieThermo<thermo>::*F)(const scalar) const, "
-                "scalar (realGasSpecieThermo<thermo>::*dFdT)(const scalar) const"
-                ") const"
-            )   << "Maximum number of iterations exceeded"
+            FatalErrorInFunction
+                << "Maximum number of iterations exceeded"
                 << abort(FatalError);
         }
     } while

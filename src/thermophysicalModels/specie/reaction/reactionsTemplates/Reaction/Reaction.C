@@ -142,7 +142,7 @@ Reaction<ReactionThermo>::specieCoeffs::specieCoeffs
     }
     else
     {
-        FatalIOErrorIn("Reaction<ReactionThermo>::lrhs(Istream& is)", is)
+        FatalIOErrorInFunction(is)
             << "Expected a word but found " << t.info()
             << exit(FatalIOError);
     }
@@ -185,7 +185,7 @@ void Reaction<ReactionThermo>::setLRhs(Istream& is)
         }
     }
 
-    FatalIOErrorIn("Reaction<ReactionThermo>::lrhs(Istream& is)", is)
+    FatalIOErrorInFunction(is)
         << "Cannot continue reading reaction data from stream"
         << exit(FatalIOError);
 }
@@ -220,12 +220,8 @@ autoPtr<Reaction<ReactionThermo> > Reaction<ReactionThermo>::New
 {
     if (is.eof())
     {
-        FatalIOErrorIn
-        (
-            "Reaction<ReactionThermo>::New(const speciesTable& species,"
-            " const HashPtrTable<ReactionThermo>& thermoDatabase, Istream&)",
-            is
-        )   << "Reaction type not specified" << endl << endl
+        FatalIOErrorInFunction(is)
+            << "Reaction type not specified" << endl << endl
             << "Valid Reaction types are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);
@@ -238,12 +234,8 @@ autoPtr<Reaction<ReactionThermo> > Reaction<ReactionThermo>::New
 
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
-        FatalIOErrorIn
-        (
-            "Reaction<ReactionThermo>::New(const speciesTable& species,"
-            " const HashPtrTable<ReactionThermo>& thermoDatabase, Istream&)",
-            is
-        )   << "Unknown reaction type " << reactionTypeName << endl << endl
+        FatalIOErrorInFunction(is)
+            << "Unknown reaction type " << reactionTypeName << endl << endl
             << "Valid reaction types are :" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << exit(FatalIOError);

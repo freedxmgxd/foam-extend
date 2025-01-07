@@ -41,31 +41,22 @@ Foam::janafThermo<equationOfState>::janafThermo(Istream& is)
 {
     if (Tlow_ >= Thigh_)
     {
-        FatalIOErrorIn
-        (
-            "janafThermo<equationOfState>::janafThermo(Istream& is)",
-            is
-        )   << "Tlow(" << Tlow_ << ") >= Thigh(" << Thigh_ << ')'
+        FatalIOErrorInFunction(is)
+            << "Tlow(" << Tlow_ << ") >= Thigh(" << Thigh_ << ')'
             << exit(FatalIOError);
     }
 
     if (Tcommon_ <= Tlow_)
     {
-        FatalIOErrorIn
-        (
-            "janafThermo<equationOfState>::janafThermo(Istream& is)",
-            is
-        )   << "Tcommon(" << Tcommon_ << ") <= Tlow(" << Tlow_ << ')'
+        FatalIOErrorInFunction(is)
+            << "Tcommon(" << Tcommon_ << ") <= Tlow(" << Tlow_ << ')'
             << exit(FatalIOError);
     }
 
     if (Tcommon_ > Thigh_)
     {
-        FatalIOErrorIn
-        (
-            "janafThermo<equationOfState>::janafThermo(Istream& is)",
-            is
-        )   << "Tcommon(" << Tcommon_ << ") > Thigh(" << Thigh_ << ')'
+        FatalIOErrorInFunction(is)
+            << "Tcommon(" << Tcommon_ << ") > Thigh(" << Thigh_ << ')'
             << exit(FatalIOError);
     }
 

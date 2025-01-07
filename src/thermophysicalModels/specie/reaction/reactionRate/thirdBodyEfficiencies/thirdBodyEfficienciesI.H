@@ -37,11 +37,8 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
 {
     if (size() != species_.size())
     {
-        FatalErrorIn
-        (
-            "thirdBodyEfficiencies::thirdBodyEfficiencies"
-            "(const speciesTable& species, const scalarList& efficiencies)"
-        )   << "number of efficiencies = " << size()
+        FatalErrorInFunction
+            << "number of efficiencies = " << size()
             << " is not equat to the number of species " << species_.size()
             << exit(FatalError);
     }
@@ -76,35 +73,23 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
         }
         else
         {
-            FatalIOErrorIn
-            (
-                "thirdBodyEfficiencies::thirdBodyEfficiencies"
-                "(const speciesTable& species, Istream& is)",
-                is
-            )   << "expected <word>, found " << t.info()
+            FatalIOErrorInFunction(is)
+                << "expected <word>, found " << t.info()
                 << exit(FatalIOError);
         }
     }
 
     if (t.pToken() != token::END_LIST)
     {
-        FatalIOErrorIn
-        (
-            "thirdBodyEfficiencies::thirdBodyEfficiencies"
-            "(const speciesTable& species, Istream& is)",
-            is
-        )   << "expected ')', found " << t.info()
+        FatalIOErrorInFunction(is)
+            << "expected ')', found " << t.info()
             << exit(FatalIOError);
     }
 
     if (size() != species_.size())
     {
-        FatalIOErrorIn
-        (
-            "thirdBodyEfficiencies::thirdBodyEfficiencies"
-            "(const speciesTable& species, Istream& is)",
-            is
-        )   << "number of efficiencies = " << size()
+        FatalIOErrorInFunction(is)
+            << "number of efficiencies = " << size()
             << " is not equat to the number of species " << species_.size()
             << exit(FatalIOError);
     }

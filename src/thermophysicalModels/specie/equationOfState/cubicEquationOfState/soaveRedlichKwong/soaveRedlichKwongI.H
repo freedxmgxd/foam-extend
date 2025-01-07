@@ -459,11 +459,8 @@ inline scalar soaveRedlichKwong::rho
 
        if (iter++ > maxIter_)
        {
-           FatalErrorIn
-           (
-               "inline scalar soaveRedlichKwong::rho"
-               "(const scalar p, const scalar T, const scalar rho0) const "
-           )   << "Maximum number of iterations exceeded"
+           FatalErrorInFunction
+               << "Maximum number of iterations exceeded"
                << abort(FatalError);
        }
    }
