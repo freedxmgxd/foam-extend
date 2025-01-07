@@ -160,12 +160,6 @@ Foam::radiation::radiativeIntensityRay::radiativeIntensityRay
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::radiation::radiativeIntensityRay::~radiativeIntensityRay()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
@@ -195,14 +189,14 @@ Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
             divJiILambda()
           + fvm::Sp(k*omega_, ILambda_[lambdaI])
         ==
-            1.0/pi*omega_
-          * (
+            1.0/pi*omega_*
+            (
                 k*blackBody_.bLambda(lambdaI)
               + absorptionEmission_.ECont(lambdaI)/4
             )
         );
 
-        IiEq.relax();
+        IiEq.relax(mesh_.solutionDict().equationRelaxationFactor("Ii_h"));
 
         scalar eqnResidual = solve
         (

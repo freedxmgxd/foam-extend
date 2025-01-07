@@ -48,7 +48,7 @@ greyDiffusiveRadiationMixedFvPatchScalarField::calcSumOutgoingAngles() const
             << abort(FatalError);
     }
 
-    sumOutgoingAnglesPtr_ = new scalarField(this->size(), 0.);
+    sumOutgoingAnglesPtr_ = new scalarField(this->size(), scalar(0));
     scalarField& sumOutgoingAngles = *sumOutgoingAnglesPtr_;
 
 
@@ -58,7 +58,7 @@ greyDiffusiveRadiationMixedFvPatchScalarField::calcSumOutgoingAngles() const
 
     const fvDOM& dom = dynamic_cast<const fvDOM&>(radiation);
 
-    for(label rayI = 0; rayI < dom.nRay(); rayI++)
+    for (label rayI = 0; rayI < dom.nRay(); rayI++)
     {
         // Calculate cosine of angle between face and ray
         scalarField outgoingAngles = this->patch().nf() & dom.IRay(rayI).dAve();
@@ -66,7 +66,17 @@ greyDiffusiveRadiationMixedFvPatchScalarField::calcSumOutgoingAngles() const
         // For outgoing rays, outgoingAngles will be negative
         sumOutgoingAngles += neg(outgoingAngles)*(-outgoingAngles);
     }
+
+    if (min(sumOutgoingAngles) < SMALL)
+    {
+        FatalErrorInFunction
+            << "sumOutgoingAngles for patch " << patch().name()
+            << " and field" << dimensionedInternalField().name()
+            << " is zero.  Insufficient number of fvDOM rays selected."
+            << abort(FatalError);
+    }
 }
+
 
 const Foam::scalarField&
 greyDiffusiveRadiationMixedFvPatchScalarField::sumOutgoingAngles() const
@@ -103,29 +113,13 @@ greyDiffusiveRadiationMixedFvPatchScalarField
 greyDiffusiveRadiationMixedFvPatchScalarField::
 greyDiffusiveRadiationMixedFvPatchScalarField
 (
-    const greyDiffusiveRadiationMixedFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchScalarField(ptf, p, iF, mapper),
-    TName_(ptf.TName_),
-    emissivity_(ptf.emissivity_),
-    sumOutgoingAnglesPtr_(nullptr)
-{}
-
-
-greyDiffusiveRadiationMixedFvPatchScalarField::
-greyDiffusiveRadiationMixedFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
 )
 :
     mixedFvPatchScalarField(p, iF),
-    TName_(dict.lookup("T")),
+    TName_(dict.lookupOrDefault<word>("T", "T")),
     emissivity_(readScalar(dict.lookup("emissivity"))),
     sumOutgoingAnglesPtr_(nullptr)
 {
@@ -145,7 +139,7 @@ greyDiffusiveRadiationMixedFvPatchScalarField
     {
         // No value given. Restart as fixedValue b.c.
 
-        // Bugfix: Do not initialize from temperautre because it is unavailable
+        // Bugfix: Do not initialize from temperature because it is unavailable
         // when running, e.g. decomposePar and loading radiation as
         // shared library. Initialize to zero instead.
         // 26 Mar 2014 - DC
@@ -158,6 +152,22 @@ greyDiffusiveRadiationMixedFvPatchScalarField
         fvPatchScalarField::operator=(refValue());
     }
 }
+
+
+greyDiffusiveRadiationMixedFvPatchScalarField::
+greyDiffusiveRadiationMixedFvPatchScalarField
+(
+    const greyDiffusiveRadiationMixedFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchScalarField(ptf, p, iF, mapper),
+    TName_(ptf.TName_),
+    emissivity_(ptf.emissivity_),
+    sumOutgoingAnglesPtr_(nullptr)
+{}
 
 
 greyDiffusiveRadiationMixedFvPatchScalarField::
@@ -187,7 +197,17 @@ greyDiffusiveRadiationMixedFvPatchScalarField
 {}
 
 
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+greyDiffusiveRadiationMixedFvPatchScalarField::
+~greyDiffusiveRadiationMixedFvPatchScalarField()
+{
+    deleteDemandDrivenData(sumOutgoingAnglesPtr_);
+}
+
 
 void greyDiffusiveRadiationMixedFvPatchScalarField::updateCoeffs()
 {
@@ -263,7 +283,7 @@ void greyDiffusiveRadiationMixedFvPatchScalarField::write
 ) const
 {
     mixedFvPatchScalarField::write(os);
-    os.writeKeyword("T") << TName_ << token::END_STATEMENT << nl;
+    writeEntryIfDifferent(os, "T", word("T"), TName_);
     os.writeKeyword("emissivity") << emissivity_ << token::END_STATEMENT << nl;
 }
 

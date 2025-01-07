@@ -110,10 +110,10 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        radiativeIntensityRay(const radiativeIntensityRay&);
+        radiativeIntensityRay(const radiativeIntensityRay&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const radiativeIntensityRay&);
+        void operator=(const radiativeIntensityRay&) = delete;
 
 
 public:
@@ -130,14 +130,14 @@ public:
             const scalar deltaPhi,
             const scalar deltaTheta,
             const label lambda,
-            const absorptionEmissionModel& absEmmModel_,
+            const absorptionEmissionModel& absEmmModel,
             const blackBodyEmission& blackBody,
             const label rayId
         );
 
 
     // Destructor
-    ~radiativeIntensityRay();
+    ~radiativeIntensityRay() = default;
 
 
     // Member functions

@@ -26,8 +26,8 @@ Class
 
 Description
     Radiation boundary will diffusive reflection and black body emission.
-    See Modest "Radiative heat transfer", Capter 16.6 "The finite volume method"
-    Eq.16.63
+    See Modest "Radiative heat transfer", Chapter 16.6
+    "The finite volume method", Eq.16.63
 
 SourceFiles
     greyDiffusiveRadiationMixedFvPatchScalarField.C
@@ -62,7 +62,7 @@ class greyDiffusiveRadiationMixedFvPatchScalarField
         scalar emissivity_;
 
         //- Sum of cosine factors of all outgoing rays (lazy evaluated)
-        mutable scalarField *sumOutgoingAnglesPtr_;
+        mutable scalarField* sumOutgoingAnglesPtr_;
 
 
     // Private member functions
@@ -137,6 +137,10 @@ public:
                 new greyDiffusiveRadiationMixedFvPatchScalarField(*this, iF)
             );
         }
+
+
+    //- Destructor
+    virtual ~greyDiffusiveRadiationMixedFvPatchScalarField();
 
 
     // Member functions

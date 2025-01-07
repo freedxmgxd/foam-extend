@@ -153,7 +153,7 @@ public:
     // Constructors
 
         //- Construct from components
-        fvDOM(const volScalarField& T);
+        explicit fvDOM(const volScalarField& T);
 
         //- Construct from components
         fvDOM(const word& type, const volScalarField& T);

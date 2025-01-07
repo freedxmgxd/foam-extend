@@ -77,7 +77,7 @@ private:
         //- Constant C2
         const dimensionedScalar C2_;
 
-        // Ptr List for black body emission energy field for each wavelength
+        // PtrList for black body emission energy field for each wavelength
         PtrList<volScalarField> bLambda_;
 
         // Reference to the temperature field
