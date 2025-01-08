@@ -1,6 +1,8 @@
 /* Radiation constants */
 radiationConstants/radiationConstants.C
 
+specularReflection/specularReflectionAddressing.C
+
 /* Radiation model */
 radiationModel/radiationModel/radiationModel.C
 radiationModel/radiationModel/newRadiationModel.C
@@ -35,5 +37,6 @@ derivedFvPatchFields/greyDiffusiveRadiation/greyDiffusiveRadiationMixedFvPatchSc
 derivedFvPatchFields/wideBandDiffusiveRadiation/wideBandDiffusiveRadiationMixedFvPatchScalarField.C
 derivedFvPatchFields/wideBandSpecularRadiation/wideBandSpecularRadiationMixedFvPatchScalarField.C
 derivedFvPatchFields/greyDiffusiveViewFactor/greyDiffusiveViewFactorFixedValueFvPatchScalarField.C
+derivedFvPatchFields/fvDOMSymmetryPlane/fvDOMSymmetryPlaneFvPatchScalarField.C
 
 LIB = $(FOAM_LIBBIN)/libradiation
