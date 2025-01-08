@@ -29,6 +29,7 @@ License
 #include "volFields.H"
 #include "fvDOM.H"
 #include "specularReflectionAddressing.H"
+#include "symmetryFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -149,6 +150,12 @@ void fvDOMSymmetryPlaneFvPatchScalarField::updateCoeffs()
         return;
     }
 
+    // If patch is empty, do nothing
+    if (empty())
+    {
+        return;
+    }
+    
     const label patchI = patch().index();
 
     // Access radiation model
@@ -231,6 +238,9 @@ void fvDOMSymmetryPlaneFvPatchScalarField::write
 ) const
 {
     mixedFvPatchScalarField::write(os);
+    os.writeKeyword("patchType")
+        << symmetryFvPatch::typeName << token::END_STATEMENT << nl;
+
     writeEntryIfDifferent(os, "T", word("T"), TName_);
 }
 
