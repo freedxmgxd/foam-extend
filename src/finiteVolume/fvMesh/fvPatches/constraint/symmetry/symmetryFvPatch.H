@@ -75,10 +75,8 @@ public:
         {}
 
 
-    // Destructor
-
-        virtual ~symmetryFvPatch()
-        {}
+    //- Destructor
+    virtual ~symmetryFvPatch() = default;
 };
 
 

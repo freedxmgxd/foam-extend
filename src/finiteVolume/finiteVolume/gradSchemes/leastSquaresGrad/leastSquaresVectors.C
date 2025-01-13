@@ -69,7 +69,7 @@ void Foam::leastSquaresVectors::makeLeastSquaresVectors() const
 {
     if (debug)
     {
-        Info<< "leastSquaresVectors::makeLeastSquaresVectors() :"
+        InfoInFunction
             << "Constructing least square gradient vectors"
             << endl;
     }
@@ -417,7 +417,7 @@ void Foam::leastSquaresVectors::makeLeastSquaresVectors() const
 
     if (debug)
     {
-        Info<< "leastSquaresVectors::makeLeastSquaresVectors() :"
+        InfoInFunction
             << "Finished constructing least square gradient vectors"
             << endl;
     }
@@ -450,7 +450,7 @@ bool Foam::leastSquaresVectors::movePoints() const
 {
     if (debug)
     {
-        InfoIn("bool leastSquaresVectors::movePoints() const")
+        InfoInFunction
             << "Clearing least square data" << endl;
     }
 
@@ -465,10 +465,8 @@ bool Foam::leastSquaresVectors::updateMesh(const mapPolyMesh& mpm) const
 {
     if (debug)
     {
-        InfoIn
-        (
-            "bool leastSquaresVectors::updateMesh(const mapPolyMesh&) const"
-        )   << "Clearing least square data" << endl;
+        InfoInFunction
+            << "Clearing least square data" << endl;
     }
 
     deleteDemandDrivenData(pVectorsPtr_);

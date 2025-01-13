@@ -45,11 +45,8 @@ void Foam::fvBlockMatrix<Type>::operator=
 {
     if (this == &bxs)
     {
-        FatalErrorIn
-        (
-            "void fvBlockMatrix<Type>::operator="
-            "(const fvBlockMatrix<Type>& bs)"
-        )   << "attempted assignment to self"
+        FatalErrorInFunction
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 
