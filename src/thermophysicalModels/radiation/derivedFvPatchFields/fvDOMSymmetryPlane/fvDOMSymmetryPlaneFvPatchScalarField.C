@@ -29,7 +29,6 @@ License
 #include "volFields.H"
 #include "fvDOM.H"
 #include "specularReflectionAddressing.H"
-#include "symmetryFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,6 +69,9 @@ fvDOMSymmetryPlaneFvPatchScalarField
     mixedFvPatchScalarField(p, iF),
     TName_(dict.lookupOrDefault<word>("T", "T"))
 {
+    // Must read patch type because mixed is created without reading
+    readPatchType(dict);
+
     if (dict.found("refValue"))
     {
         refValue() = scalarField("value", dict, p.size());
@@ -155,7 +157,7 @@ void fvDOMSymmetryPlaneFvPatchScalarField::updateCoeffs()
     {
         return;
     }
-    
+
     const label patchI = patch().index();
 
     // Access radiation model
@@ -239,7 +241,7 @@ void fvDOMSymmetryPlaneFvPatchScalarField::write
 {
     mixedFvPatchScalarField::write(os);
     os.writeKeyword("patchType")
-        << symmetryFvPatch::typeName << token::END_STATEMENT << nl;
+        << patchType() << token::END_STATEMENT << nl;
 
     writeEntryIfDifferent(os, "T", word("T"), TName_);
 }

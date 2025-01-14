@@ -27,6 +27,7 @@ License
 #include "fvm.H"
 #include "fvDOM.H"
 #include "mathematicalConstants.H"
+#include "wedgeFvPatchFields.H"
 
 using namespace Foam::mathematicalConstant;
 
@@ -175,7 +176,24 @@ Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
         // Retrieve advection term from cache or create from scratch
         if (!dom_.cacheDiv())
         {
-            const surfaceScalarField Ji(dAve_ & mesh_.Sf());
+            // Note
+            // Direction vector field must be corrected by hand for wedge
+            // Cannot use evaluate() because for symmetry lane the direction
+            // flux must go out to be reflected
+            // HJ, 14/Jan/2025
+            surfaceScalarField Ji(dAve_ & mesh_.Sf());
+
+            forAll (Ji.boundaryField(), patchI)
+            {
+                if
+                (
+                    isA<wedgeFvPatchVectorField>(Ji.boundaryField()[patchI])
+                )
+                {
+                    // Correct wedge patch
+                    Ji.boundaryField()[patchI] = 0;
+                }
+            }
 
             divJiILambda = fvm::div(Ji, ILambda_[lambdaI], "div(Ji,Ii_h)");
         }

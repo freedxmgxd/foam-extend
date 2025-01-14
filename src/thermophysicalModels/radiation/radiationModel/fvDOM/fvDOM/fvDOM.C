@@ -28,6 +28,7 @@ License
 #include "fvm.H"
 #include "mathematicalConstants.H"
 #include "radiationConstants.H"
+#include "wedgeFvPatchFields.H"
 
 using namespace Foam::mathematicalConstant;
 
@@ -211,7 +212,25 @@ void Foam::radiation::fvDOM::initialise()
 
             forAll (IRay_, rayId)
             {
-                const surfaceScalarField Ji(IRay_[rayId].dAve() & mesh().Sf());
+                // Note
+                // Direction vector field must be corrected by hand for wedge
+                // Cannot use evaluate() because for symmetry lane the direction
+                // flux must go out to be reflected
+                // HJ, 14/Jan/2025
+                surfaceScalarField Ji(IRay_[rayId].dAve() & mesh().Sf());
+
+                forAll (Ji.boundaryField(), patchI)
+                {
+                    if
+                    (
+                        isA<wedgeFvPatchVectorField>(Ji.boundaryField()[patchI])
+                    )
+                    {
+                        // Correct wedge patch
+                        Ji.boundaryField()[patchI] = 0;
+                    }
+                }
+                
                 volScalarField& iRayLambdaI = IRay_[rayId].ILambda(lambdaI);
 
                 fvRayDiv_[lambdaI].set
