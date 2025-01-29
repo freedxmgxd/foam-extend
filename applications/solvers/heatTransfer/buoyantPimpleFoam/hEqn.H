@@ -13,7 +13,8 @@
 
     if (thermalModelFluid.active())
     {
-        Info<< "Adding thermal source: "
+        Info<< "Adding thermal source: sum = "
+            << gSum(thermalModelFluid.S()*mesh.V()) << " max = "
             << gMax(thermalModelFluid.S()().internalField())
             << endl;
 
