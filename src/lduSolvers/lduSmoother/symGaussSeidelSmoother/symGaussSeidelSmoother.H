@@ -62,10 +62,10 @@ class symGaussSeidelSmoother
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        symGaussSeidelSmoother(const symGaussSeidelSmoother&);
+        symGaussSeidelSmoother(const symGaussSeidelSmoother&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const symGaussSeidelSmoother&);
+        void operator=(const symGaussSeidelSmoother&) = delete;
 
 
 public:
@@ -86,10 +86,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~symGaussSeidelSmoother()
-        {}
+    //- Destructor
+    virtual ~symGaussSeidelSmoother() = default;
 
 
     // Member Functions
