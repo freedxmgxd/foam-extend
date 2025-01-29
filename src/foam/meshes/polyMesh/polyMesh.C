@@ -183,6 +183,10 @@ void Foam::polyMesh::calcDirections() const
         {
             if (wedgeDirVec[cmpt] > 1e-6)
             {
+                // Do not solve in wedge-normal direction
+                // HJ, 29/Jan/2025
+                solutionD_[cmpt] = -1;
+
                 geometricD_[cmpt] = -1;
             }
             else
