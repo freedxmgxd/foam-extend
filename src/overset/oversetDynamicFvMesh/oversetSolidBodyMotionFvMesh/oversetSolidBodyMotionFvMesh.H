@@ -74,10 +74,13 @@ class oversetSolidBodyMotionFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        oversetSolidBodyMotionFvMesh(const oversetSolidBodyMotionFvMesh&);
+        oversetSolidBodyMotionFvMesh
+        (
+            const oversetSolidBodyMotionFvMesh&
+        ) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const oversetSolidBodyMotionFvMesh&);
+        void operator=(const oversetSolidBodyMotionFvMesh&) = delete;
 
 
 public:
@@ -93,7 +96,7 @@ public:
 
 
     // Destructor
-    virtual ~oversetSolidBodyMotionFvMesh();
+    virtual ~oversetSolidBodyMotionFvMesh() = default;
 
 
     // Member Functions
