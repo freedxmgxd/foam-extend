@@ -140,6 +140,7 @@ public:
         {
             return scaledEigenVectors_;
         }
+
         //- Return n-th ortho-normal base field
         inline const GeoTypeField& orthoField(const label n) const
         {
