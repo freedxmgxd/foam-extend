@@ -69,10 +69,10 @@ class rotatingOscillation
     // Private Member Functions
 
         //- Disallow copy construct
-        rotatingOscillation(const rotatingOscillation&);
+        rotatingOscillation(const rotatingOscillation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const rotatingOscillation&);
+        void operator=(const rotatingOscillation&) = delete;
 
 
         //- Calculate tranformation
@@ -96,7 +96,7 @@ public:
 
 
     //- Destructor
-    virtual ~rotatingOscillation();
+    virtual ~rotatingOscillation() = default;
 
 
     // Member Functions

@@ -80,13 +80,6 @@ rotatingOscillation
 }
 
 
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
-
-Foam::solidBodyMotionFunctions::rotatingOscillation::
-~rotatingOscillation()
-{}
-
-
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::septernion
