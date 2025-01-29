@@ -29,6 +29,7 @@ License
 #include "mathematicalConstants.H"
 #include "radiationConstants.H"
 #include "wedgeFvPatchFields.H"
+#include "wedgeFvsPatchFields.H"
 
 using namespace Foam::mathematicalConstant;
 
@@ -48,8 +49,15 @@ namespace Foam
 
 void Foam::radiation::fvDOM::initialise()
 {
-    if (mesh().nSolutionD() == 3)    //3D
+    if
+    (
+        mesh().nSolutionD() == 3
+     && mesh().nGeometricD() == 3
+    )
     {
+        // 3D rays
+        Info<< "3-D fvDOM initialisation" << endl;
+
         nRay_ = 4*nPhi_*nTheta_;
         IRay_.setSize(nRay_);
         scalar deltaPhi = pi/(2.0*nPhi_);
@@ -82,70 +90,91 @@ void Foam::radiation::fvDOM::initialise()
             }
         }
     }
+    else if
+    (
+        mesh().nSolutionD() == 2
+     || mesh().nGeometricD() == 2
+    )    
+    {
+        // 2D (X & Y)
+        Info<< "2-D fvDOM initialisation" << endl;
+
+        scalar thetai = piByTwo;
+        scalar deltaTheta = pi;
+        nRay_ = 4*nPhi_;
+        IRay_.setSize(nRay_);
+        scalar deltaPhi = pi/(2.0*nPhi_);
+        label i = 0;
+        for (label m = 1; m <= 4*nPhi_; m++)
+        {
+            scalar phii = (2.0*m - 1.0)*deltaPhi/2.0;
+            IRay_.set
+            (
+                i,
+                new radiativeIntensityRay
+                (
+                    *this,
+                    mesh(),
+                    phii,
+                    thetai,
+                    deltaPhi,
+                    deltaTheta,
+                    nLambda_,
+                    absorptionEmission_,
+                    blackBody_,
+                    i
+                )
+            );
+            i++;
+        }
+    }
+    else if
+    (
+        mesh().nSolutionD() == 1
+     || mesh().nGeometricD() == 1
+    )
+    {
+        // 1D (X)
+        Info<< "1-D fvDOM initialisation" << endl;
+
+        scalar thetai = piByTwo;
+        scalar deltaTheta = pi;
+        nRay_ = 2;
+        IRay_.setSize(nRay_);
+        scalar deltaPhi = pi;
+        label i = 0;
+        for (label m = 1; m <= 2; m++)
+        {
+            scalar phii = (2.0*m - 1.0)*deltaPhi/2.0;
+            IRay_.set
+            (
+                i,
+                new radiativeIntensityRay
+                (
+                    *this,
+                    mesh(),
+                    phii,
+                    thetai,
+                    deltaPhi,
+                    deltaTheta,
+                    nLambda_,
+                    absorptionEmission_,
+                    blackBody_,
+                    i
+                )
+            );
+            i++;
+        }
+    }
     else
     {
-        if (mesh().nSolutionD() == 2)    //2D (X & Y)
-        {
-            scalar thetai = piByTwo;
-            scalar deltaTheta = pi;
-            nRay_ = 4*nPhi_;
-            IRay_.setSize(nRay_);
-            scalar deltaPhi = pi/(2.0*nPhi_);
-            label i = 0;
-            for (label m = 1; m <= 4*nPhi_; m++)
-            {
-                scalar phii = (2.0*m - 1.0)*deltaPhi/2.0;
-                IRay_.set
-                (
-                    i,
-                    new radiativeIntensityRay
-                    (
-                        *this,
-                        mesh(),
-                        phii,
-                        thetai,
-                        deltaPhi,
-                        deltaTheta,
-                        nLambda_,
-                        absorptionEmission_,
-                        blackBody_,
-                        i
-                    )
-                );
-                i++;
-            }
-        }
-        else    //1D (X)
-        {
-            scalar thetai = piByTwo;
-            scalar deltaTheta = pi;
-            nRay_ = 2;
-            IRay_.setSize(nRay_);
-            scalar deltaPhi = pi;
-            label i = 0;
-            for (label m = 1; m <= 2; m++)
-            {
-                scalar phii = (2.0*m - 1.0)*deltaPhi/2.0;
-                IRay_.set
-                (
-                    i,
-                    new radiativeIntensityRay
-                    (
-                        *this,
-                        mesh(),
-                        phii,
-                        thetai,
-                        deltaPhi,
-                        deltaTheta,
-                        nLambda_,
-                        absorptionEmission_,
-                        blackBody_,
-                        i
-                    )
-                );
-                i++;
-            }
-        }
+        FatalErrorInFunction
+            << "Inconsistent solution and geometric directions: " << nl
+            << "solutionD: " << mesh().solutionD()
+            << " geometricD: " << mesh().geometricD() << nl
+            << "Check yor radiation domain setup: "
+            << "2-D in x-y plane; 1-D in x-direction"
+            << abort(FatalError);
     }
 
 
@@ -223,7 +252,10 @@ void Foam::radiation::fvDOM::initialise()
                 {
                     if
                     (
-                        isA<wedgeFvPatchVectorField>(Ji.boundaryField()[patchI])
+                        isA<wedgeFvsPatchVectorField>
+                        (
+                            Ji.boundaryField()[patchI]
+                        )
                     )
                     {
                         // Correct wedge patch
@@ -546,6 +578,14 @@ void Foam::radiation::fvDOM::calculate()
 
                 forAll (Qem_[lambdaI], patchI)
                 {
+                    // Need to manually skip wedge patches
+                    // HJ, 14/Jan/2025
+                    if (isA<wedgeFvPatchScalarField>(Qem_[lambdaI][patchI]))
+                    {
+                        // Wedge patch: skip
+                        continue;
+                    }
+                    
                     // Loop over all rays
                     forAll (IRay_, rayI)
                     {
@@ -592,6 +632,14 @@ void Foam::radiation::fvDOM::calculate()
 
             forAll (Qem_[lambdaI], patchI)
             {
+                // Need to manually skip wedge patches
+                // HJ, 14/Jan/2025
+                if (isA<wedgeFvPatchScalarField>(Qem_[lambdaI][patchI]))
+                {
+                    // Wedge patch: skip
+                    continue;
+                }
+                    
                 // Loop over all rays
                 forAll (IRay_, rayI)
                 {

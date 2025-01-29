@@ -27,7 +27,7 @@ License
 #include "fvm.H"
 #include "fvDOM.H"
 #include "mathematicalConstants.H"
-#include "wedgeFvPatchFields.H"
+#include "wedgeFvsPatchFields.H"
 
 using namespace Foam::mathematicalConstant;
 
@@ -187,7 +187,7 @@ Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
             {
                 if
                 (
-                    isA<wedgeFvPatchVectorField>(Ji.boundaryField()[patchI])
+                    isA<wedgeFvsPatchScalarField>(Ji.boundaryField()[patchI])
                 )
                 {
                     // Correct wedge patch
