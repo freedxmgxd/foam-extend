@@ -2,34 +2,51 @@
     word alphaScheme("div(phi,alpha)");
     word alpharScheme("div(phirb,alpha)");
 
-    surfaceScalarField phic = mag(phi/mesh.magSf());
-    phic = min(interface.cAlpha()*phic, max(phic));
-    surfaceScalarField phir = phic*interface.nHatf();
-
-    for (int aCorr=0; aCorr<nAlphaCorr; aCorr++)
-    {
-        surfaceScalarField phiAlpha =
-            fvc::flux
+    // New formulation of phir: Co condition
+    surfaceScalarField phir
+    (
+        "phir",
+        interface.cAlpha()*interface.nHatf()*
+        min
+        (
+            scalar(0.5)/    // This is ref compression Co number for cAlpha = 1
             (
-                phi,
-                alpha1,
-                alphaScheme
-            )
-          + fvc::flux
-            (
-                -fvc::flux(-phir, scalar(1) - alpha1, alpharScheme),
-                alpha1,
-                alpharScheme
-            );
+                mesh.surfaceInterpolation::deltaCoeffs()*
+                mesh.time().deltaT()
+            ),
+            mag(phi/mesh.magSf())
+          + dimensionedScalar("small", dimVelocity, 1e-3)
+        )
+    );
 
-        MULES::explicitSolve(alpha1, phi, phiAlpha, 1, 0);
+    fvScalarMatrix alpha1Eqn
+    (
+        fvm::ddt(alpha1)
+      + fvm::div(phi, alpha1, alphaScheme)
+      + fvm::div
+        (
+            -fvc::flux(-phir, scalar(1) - alpha1, alpharScheme),
+            alpha1,
+            alpharScheme
+        )
+    );
 
-        rhoPhi = phiAlpha*(rho1 - rho2) + phi*rho2;
-    }
+    alpha1Eqn.relax();
+    alpha1Eqn.solve();
 
     Info<< "Liquid phase volume fraction = "
         << alpha1.weightedAverage(mesh.V()).value()
         << "  Min(alpha1) = " << min(alpha1).value()
         << "  Max(alpha1) = " << max(alpha1).value()
         << endl;
+
+    rhoPhi = (alpha1Eqn.flux()*(rho1 - rho2) + phi*rho2);
+
+    // Update of interface and density
+    interface.correct();
+    twoPhaseProperties.correct();
+
+    // Calculate density using limited alpha1
+    rho = twoPhaseProperties.rho();
+    rho.correctBoundaryConditions();
 }

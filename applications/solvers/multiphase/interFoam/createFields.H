@@ -105,6 +105,7 @@
     scalar pdRefValue = 0.0;
     setRefCell(pd, pimple.dict(), pdRefCell, pdRefValue);
     mesh.schemesDict().setFluxRequired(pd.name());
+    mesh.schemesDict().setFluxRequired(alpha1.name());
 
     scalar pRefValue = 0.0;
 

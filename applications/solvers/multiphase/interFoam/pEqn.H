@@ -7,14 +7,13 @@
     surfaceScalarField phiU
     (
         "phiU",
-        (fvc::interpolate(U) & mesh.Sf())
-      + fvc::ddtPhiCorr(rUA, rho, U, phi)
+        fvc::interpolate(U) & mesh.Sf()
     );
 
     adjustPhi(phiU, U, pd);
 
-    phi = phiU +
-        (
+    phi = phiU
+      + (
             fvc::interpolate(interface.sigmaK())*fvc::snGrad(alpha1)
           - ghf*fvc::snGrad(rho)
         )*rUAf*mesh.magSf();
@@ -40,6 +39,11 @@
         }
     }
 
+    // Explicitly relax pressure
+    pd.relax();
+
     U += rUA*fvc::reconstruct((phi - phiU)/rUAf);
     U.correctBoundaryConditions();
+
+#   include "limitU.H"
 }
