@@ -22,19 +22,19 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::calcTypes::div
+    Foam::calcTypes::grad
 
 Description
-    Writes scalar fields corresponding to the divergence of the supplied
+    Writes fields corresponding to the gradient of the supplied
     field (name) for each time.
 
 SourceFiles
-    div.C
+    grad.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef div_H
-#define div_H
+#ifndef grad_H
+#define grad_H
 
 #include "calcType.H"
 
@@ -47,20 +47,20 @@ namespace calcTypes
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class div Declaration
+                          Class grad Declaration
 \*---------------------------------------------------------------------------*/
 
-class div
+class grad
 :
     public calcType
 {
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        div(const div&) = delete;
+        grad(const grad&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const div&) = delete;
+        void operator=(const grad&) = delete;
 
 
 protected:
@@ -92,9 +92,9 @@ protected:
 
         // I-O
 
-            //- Write div fields
+            //- Write grad fields
             template<class Type>
-            void writeDivField
+            void writeGradField
             (
                 const IOobject& header,
                 const fvMesh& mesh,
@@ -105,17 +105,17 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("div");
+    TypeName("grad");
 
 
     // Constructors
 
         //- Construct null
-        div();
+        grad();
 
 
     //- Destructor
-    virtual ~div() = default;
+    virtual ~grad() = default;
 };
 
 
@@ -127,7 +127,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "writeDivField.C"
+#   include "writeGradField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
