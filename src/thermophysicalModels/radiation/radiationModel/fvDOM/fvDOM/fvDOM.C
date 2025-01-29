@@ -231,7 +231,6 @@ void Foam::radiation::fvDOM::initialise()
             << '\t' << IRay_[i].dAve() << nl;
     }
 
-
     if (cacheDiv_)
     {
         Info<< "Caching div fvMatrix..."<< endl;
