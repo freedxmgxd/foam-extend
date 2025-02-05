@@ -56,6 +56,22 @@ elementPatchField<Type>::elementPatchField
 template<class Type>
 elementPatchField<Type>::elementPatchField
 (
+    const elementPatchField<Type>& ptf
+)
+:
+    PointPatchField
+    <
+        Foam::elementPatchField,
+        elementMesh,
+        tetPolyPatch,
+        Foam::DummyMatrix,
+        Type
+    >(ptf, ptf.dimensionedInternalField())
+{}
+
+template<class Type>
+elementPatchField<Type>::elementPatchField
+(
     const elementPatchField<Type>& ptf,
     const DimensionedField<Type, elementMesh>& iF
 )

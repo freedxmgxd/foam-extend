@@ -79,6 +79,13 @@ public:
             const DimensionedField<Type, elementMesh>&
         );
 
+        //- Construct as copy
+        elementPatchField
+        (
+            const elementPatchField<Type>&
+
+        );
+
         //- Construct and return a clone
         virtual autoPtr<elementPatchField<Type> > clone() const
         {
