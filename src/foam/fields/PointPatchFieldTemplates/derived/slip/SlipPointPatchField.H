@@ -130,6 +130,12 @@ public:
                 <PatchField, Mesh, PointPatch, MatrixType, Type>(*this, iF)
             );
         }
+
+
+    // Member operators
+
+        using BasicSymmetryPointPatchField
+        <PatchField, Mesh, PointPatch, MatrixType, Type>::operator=;
 };
 
 

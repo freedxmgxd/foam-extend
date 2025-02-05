@@ -145,6 +145,12 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member operators
+
+        using ValuePointPatchField
+        <PatchField, Mesh, PointPatch, MatrixType, Type>::operator=;
 };
 
 

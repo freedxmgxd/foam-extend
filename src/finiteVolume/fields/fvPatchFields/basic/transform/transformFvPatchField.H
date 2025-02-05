@@ -143,7 +143,9 @@ public:
 
     // Member operators
 
-        virtual void operator=(const fvPatchField<Type>&);
+        using fvPatchField<Type>::operator=;
+
+	virtual void operator=(const fvPatchField<Type>&);
 };
 
 

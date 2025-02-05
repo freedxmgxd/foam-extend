@@ -114,17 +114,14 @@ public:
 
     // Member operators
 
-        virtual void operator=(const Type& t)
-        {
-            PointPatchField
-            <
-                Foam::elementPatchField,
-                elementMesh,
-                tetPolyPatch,
-                Foam::DummyMatrix,
-                Type
-            >::operator=(t);
-        }
+        using PointPatchField
+        <
+            elementPatchField,
+            elementMesh,
+            tetPolyPatch,
+            DummyMatrix,
+            Type
+        >::operator=;
 };
 
 

@@ -200,6 +200,8 @@ public:
 
         //- Assignment operators
 
+            using PatchField<Type>::operator=;
+
             virtual void operator=
             (
                 const ValuePointPatchField

@@ -148,6 +148,11 @@ public:
 
             //- Write
             virtual void write(Ostream& os) const;
+
+
+        // Member operators
+
+            using transformFvPatchField<Type>::operator=;
 };
 
 

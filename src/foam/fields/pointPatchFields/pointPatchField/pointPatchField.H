@@ -67,6 +67,16 @@ class pointPatchField
 
 public:
 
+    typedef PointPatchField
+    <
+        pointPatchField,
+        pointMesh,
+        pointPatch,
+        DummyMatrix,
+        Type
+    > basePointPatchTypeField;
+
+
     // Constructors
 
         //- Construct from patch and internal field
@@ -114,6 +124,8 @@ public:
 
     // Member operators
 
+        using basePointPatchTypeField::operator=;
+
         virtual void operator=(const pointPatchField& pf)
         {
             PointPatchField
@@ -124,18 +136,6 @@ public:
                 DummyMatrix,
                 Type
             >::operator=(pf);
-        }
-
-        virtual void operator=(const Type& t)
-        {
-            PointPatchField
-            <
-                Foam::pointPatchField,
-                pointMesh,
-                pointPatch,
-                DummyMatrix,
-                Type
-            >::operator=(t);
         }
 };
 
