@@ -8,6 +8,7 @@ field/mag/mag.C
 field/magSqr/magSqr.C
 field/magGrad/magGrad.C
 field/div/div.C
+field/grad/grad.C
 field/randomise/randomise.C
 field/interpolate/interpolate.C
 field/helicity/helicity.C

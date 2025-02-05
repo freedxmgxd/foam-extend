@@ -64,10 +64,10 @@ class translation
     // Private Member Functions
 
         //- Disallow copy construct
-        translation(const translation&);
+        translation(const translation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const translation&);
+        void operator=(const translation&) = delete;
 
 
         //- Velocity ramping factor resulting from rampTime_ value
@@ -91,7 +91,7 @@ public:
 
 
     //- Destructor
-    virtual ~translation();
+    virtual ~translation() = default;
 
 
     // Member Functions

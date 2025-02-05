@@ -57,10 +57,10 @@ class div
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        div(const div&);
+        div(const div&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const div&);
+        void operator=(const div&) = delete;
 
 
 protected:
@@ -114,9 +114,8 @@ public:
         div();
 
 
-    // Destructor
-
-        virtual ~div();
+    //- Destructor
+    virtual ~div() = default;
 };
 
 

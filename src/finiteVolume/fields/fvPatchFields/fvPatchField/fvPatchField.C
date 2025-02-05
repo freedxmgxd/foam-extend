@@ -231,6 +231,12 @@ void Foam::fvPatchField<Type>::rmap
 )
 {
     Field<Type>::rmap(ptf, addr);
+
+    // Set patch type
+    if (ptf.patchType().size())
+    {
+        patchType_ = ptf.patchType();
+    }
 }
 
 

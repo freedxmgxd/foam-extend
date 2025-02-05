@@ -41,9 +41,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::oversetSolidBodyMotionFvMesh::oversetSolidBodyMotionFvMesh
@@ -99,13 +96,9 @@ Foam::oversetSolidBodyMotionFvMesh::oversetSolidBodyMotionFvMesh
             )
         );
     }
+
+    Info<< "Created " << motionRegions_.size() << " motion regions" << endl;
 }
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::oversetSolidBodyMotionFvMesh::~oversetSolidBodyMotionFvMesh()
-{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

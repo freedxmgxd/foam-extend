@@ -32,7 +32,7 @@ void Foam::movingOversetRegion::calcMotionMask() const
 {
     if (motionMaskPtr_)
     {
-        FatalErrorIn("void movingOversetRegion::calcMotionMask() const")
+        FatalErrorInFunction
             << "Motion mask for movingOversetRegion " << name()
             << " already calculated"
             << abort(FatalError);
@@ -52,7 +52,7 @@ void Foam::movingOversetRegion::calcMotionMask() const
         if (zoneID < 0)
         {
             // Zone not found.  Consider if this is valid in parallel?
-            FatalErrorIn("void movingOversetRegion::calcMotionMask() const")
+            FatalErrorInFunction
                 << "Cannot find moving zone " << movingZoneNames_[mzI]
                 << " for movingOversetRegion " << name()
                 << abort(FatalError);

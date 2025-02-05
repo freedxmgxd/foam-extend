@@ -80,20 +80,11 @@ Foam::solidBodyMotionFunctions::translation::translation
 {
     if (rampTime_ < 0)
     {
-        FatalIOErrorIn
-        (
-            "solidBodyMotionFunctions::translation::translation",
-            SBMFCoeffs_
-        )   << "Negative rampTime not allowed."
+        FatalIOErrorInFunction(SBMFCoeffs_)
+            << "Negative rampTime not allowed."
             << abort(FatalIOError);
     }
 }
-
-
-// * * * * * * * * * * * * * * * * Destructors * * * * * * * * * * * * * * * //
-
-Foam::solidBodyMotionFunctions::translation::~translation()
-{}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //

@@ -697,7 +697,7 @@ bool Foam::primitiveMesh::checkFaceSkewness
     scalar maxSkew = 0;
     label nWarnSkew = 0;
 
-    forAll(nei, faceI)
+    forAll (nei, faceI)
     {
         vector Cpf = faceCtrs[faceI] - cellCtrs[own[faceI]];
         vector d = cellCtrs[nei[faceI]] - cellCtrs[own[faceI]];
@@ -712,7 +712,7 @@ bool Foam::primitiveMesh::checkFaceSkewness
         // the skewness
         scalar fd = 0.2*mag(d) + VSMALL;
         const face& f = fcs[faceI];
-        forAll(f, pi)
+        forAll (f, pi)
         {
             fd = max(fd, mag(svHat & (p[f[pi]] - faceCtrs[faceI])));
         }
@@ -760,7 +760,7 @@ bool Foam::primitiveMesh::checkFaceSkewness
         // the skewness
         scalar fd = 0.4*mag(d) + VSMALL;
         const face& f = fcs[faceI];
-        forAll(f, pi)
+        forAll (f, pi)
         {
             fd = max(fd, mag(svHat & (p[f[pi]] - faceCtrs[faceI])));
         }
@@ -907,10 +907,8 @@ bool Foam::primitiveMesh::checkFaceAngles
 
     if (faceAngleThreshold_() < -SMALL || faceAngleThreshold_() > 180 + SMALL)
     {
-        FatalErrorIn
-        (
-            "primitiveMesh::checkFaceAngles(const bool, labelHashSet*)"
-        )   << "faceAngleThreshold_ should be [0..180] but is now "
+        FatalErrorInFunction
+            << "faceAngleThreshold_ should be [0..180] but is now "
             << faceAngleThreshold_()
             << exit(FatalError);
     }
@@ -929,7 +927,7 @@ bool Foam::primitiveMesh::checkFaceAngles
 
     label errorFaceI = -1;
 
-    forAll(fcs, faceI)
+    forAll (fcs, faceI)
     {
         const face& f = fcs[faceI];
 
@@ -938,7 +936,7 @@ bool Foam::primitiveMesh::checkFaceAngles
         scalar magEPrev = mag(ePrev);
         ePrev /= magEPrev + VSMALL;
 
-        forAll(f, fp0)
+        forAll (f, fp0)
         {
             // Get vertex after fp
             label fp1 = f.fcIndex(fp0);
@@ -1035,11 +1033,8 @@ bool Foam::primitiveMesh::checkFaceFlatness
 
     if (faceFlatnessThreshold_() < 0 || faceFlatnessThreshold_() > 1)
     {
-        FatalErrorIn
-        (
-            "primitiveMesh::checkFaceFlatness"
-            "(const bool, labelHashSet*)"
-        )   << "faceFlatnessThreshold_ should be [0..1] but is now "
+        FatalErrorInFunction
+            << "faceFlatnessThreshold_ should be [0..1] but is now "
             << faceFlatnessThreshold_()
             << exit(FatalError);
     }
@@ -1059,7 +1054,7 @@ bool Foam::primitiveMesh::checkFaceFlatness
     scalar sumFlatness = 0;
     label nSummed = 0;
 
-    forAll(fcs, faceI)
+    forAll (fcs, faceI)
     {
         const face& f = fcs[faceI];
 
@@ -1072,7 +1067,7 @@ bool Foam::primitiveMesh::checkFaceFlatness
 
             scalar sumA = 0.0;
 
-            forAll(f, fp)
+            forAll (f, fp)
             {
                 const point& thisPoint = p[f[fp]];
                 const point& nextPoint = p[f.nextLabel(fp)];
@@ -1147,7 +1142,7 @@ bool Foam::primitiveMesh::checkFaceFlatness
 // Check 1D/2Dness of edges. Gets passed the non-empty directions and
 // checks all edges in the mesh whether they:
 // - have no component in a non-empty direction or
-// - are only in a singe non-empty direction.
+// - are only in a single non-empty direction.
 // Empty direction info is passed in as a vector of labels (synchronised)
 // which are 1 if the direction is non-empty, 0 if it is.
 bool Foam::primitiveMesh::checkEdgeAlignment
@@ -1159,8 +1154,7 @@ bool Foam::primitiveMesh::checkEdgeAlignment
 {
     if (debug)
     {
-        Info<< "bool primitiveMesh::checkEdgeAlignment("
-            << "const bool, const Vector<label>&, labelHashSet*) const: "
+        InfoInFunction
             << "checking edge alignment" << endl;
     }
 
@@ -1173,11 +1167,8 @@ bool Foam::primitiveMesh::checkEdgeAlignment
         }
         else if (directions[cmpt] != 0)
         {
-            FatalErrorIn
-            (
-                "primitiveMesh::checkEdgeAlignment"
-                "(const bool, const Vector<label>&, labelHashSet*)"
-            )   << "directions should contain 0 or 1 but is now " << directions
+            FatalErrorInFunction
+                << "directions should contain 0 or 1 but is now " << directions
                 << exit(FatalError);
         }
     }
@@ -1192,18 +1183,20 @@ bool Foam::primitiveMesh::checkEdgeAlignment
 
     EdgeMap<label> edgesInError;
 
-    forAll(fcs, faceI)
+    for (label faceI = 0; faceI < nInternalFaces(); faceI++)
     {
         const face& f = fcs[faceI];
 
-        forAll(f, fp)
+        forAll (f, fp)
         {
             label p0 = f[fp];
             label p1 = f.nextLabel(fp);
+
             if (p0 < p1)
             {
                 vector d(p[p1] - p[p0]);
                 scalar magD = mag(d);
+                Info<< "magD: " << magD << endl;
 
                 if (magD > ROOTVSMALL)
                 {
@@ -1334,7 +1327,7 @@ bool Foam::primitiveMesh::checkUpperTriangular
         // Neighbouring cells
         SortableList<label> nbr(curFaces.size());
 
-        forAll(curFaces, i)
+        forAll (curFaces, i)
         {
             label faceI = curFaces[i];
 
@@ -1586,7 +1579,7 @@ bool Foam::primitiveMesh::checkFaceVertices
         // Uniqueness of vertices
         labelHashSet facePoints(2*curFace.size());
 
-        forAll(curFace, fp)
+        forAll (curFace, fp)
         {
             bool inserted = facePoints.insert(curFace[fp]);
 
@@ -1693,7 +1686,7 @@ bool Foam::primitiveMesh::checkCommonOrder
          && nCommon != curFace.size()
         )
         {
-            forAll(curFace, fp)
+            forAll (curFace, fp)
             {
                 // Get the index in the neighbouring face shared with curFace
                 label nb = findIndex(nbFace, curFace[fp]);
@@ -1859,13 +1852,13 @@ bool Foam::primitiveMesh::checkFaceFaces
         // neighbouring face. Store on map.
         nCommonPoints.clear();
 
-        forAll(curFace, fp)
+        forAll (curFace, fp)
         {
             label pointI = curFace[fp];
 
             const labelList& nbs = pf[pointI];
 
-            forAll(nbs, nbI)
+            forAll (nbs, nbI)
             {
                 label nbFaceI = nbs[nbI];
 
@@ -1972,7 +1965,7 @@ bool Foam::primitiveMesh::checkCellDeterminant
 
         label nInternalFaces = 0;
 
-        forAll(curFaces, i)
+        forAll (curFaces, i)
         {
             if (isInternalFace(curFaces[i]))
             {
@@ -1997,7 +1990,7 @@ bool Foam::primitiveMesh::checkCellDeterminant
 
             symmTensor areaTensor(symmTensor::zero);
 
-            forAll(curFaces, i)
+            forAll (curFaces, i)
             {
                 if (isInternalFace(curFaces[i]))
                 {

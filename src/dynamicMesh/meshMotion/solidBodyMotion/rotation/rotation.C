@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "rotatingOscillation.H"
+#include "rotation.H"
 #include "addToRunTimeSelectionTable.H"
 #include "mathematicalConstants.H"
 
@@ -35,11 +35,11 @@ namespace Foam
 {
 namespace solidBodyMotionFunctions
 {
-    defineTypeNameAndDebug(rotatingOscillation, 0);
+    defineTypeNameAndDebug(rotation, 0);
     addToRunTimeSelectionTable
     (
         solidBodyMotionFunction,
-        rotatingOscillation,
+        rotation,
         dictionary
     );
 }
@@ -48,15 +48,13 @@ namespace solidBodyMotionFunctions
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::septernion
-Foam::solidBodyMotionFunctions::rotatingOscillation::calcTransformation
+Foam::solidBodyMotionFunctions::rotation::calcTransformation
 (
     const scalar t
 ) const
 {
-    vector eulerAngles = amplitude_*sin(2*pi*t/period_);
-
-    // Convert the rotational motion from deg to rad
-    eulerAngles *= pi/180.0;
+    // Rotational motion in rad
+    vector eulerAngles = 2*pi*axis_*rpm_/60*t;
 
     const   quaternion R(eulerAngles.x(), eulerAngles.y(), eulerAngles.z());
     const   septernion TR(septernion(origin_)*R*septernion(-origin_));
@@ -67,8 +65,8 @@ Foam::solidBodyMotionFunctions::rotatingOscillation::calcTransformation
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solidBodyMotionFunctions::rotatingOscillation::
-rotatingOscillation
+Foam::solidBodyMotionFunctions::rotation::
+rotation
 (
     const dictionary& SBMFCoeffs,
     const Time& runTime
@@ -83,14 +81,14 @@ rotatingOscillation
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::septernion
-Foam::solidBodyMotionFunctions::rotatingOscillation::
+Foam::solidBodyMotionFunctions::rotation::
 transformation() const
 {
     scalar t = time_.value();
 
     const septernion TR = calcTransformation(t);
 
-    Info<< "solidBodyMotionFunctions::rotatingOscillation::"
+    Info<< "solidBodyMotionFunctions::rotation::"
         << "transformation(): "
         << "Time = " << t << " transformation: " << TR << endl;
 
@@ -99,11 +97,12 @@ transformation() const
 
 
 Foam::septernion
-Foam::solidBodyMotionFunctions::rotatingOscillation::velocity() const
+Foam::solidBodyMotionFunctions::rotation::velocity() const
 {
     scalar t = time_.value();
     scalar dt = time_.deltaT().value();
 
+Info<< "solidBodyMotionFunctions::rotation::velocity" << endl;
     const septernion velocity
     (
         (calcTransformation(t).t() - calcTransformation(t - dt).t())/dt,
@@ -114,16 +113,26 @@ Foam::solidBodyMotionFunctions::rotatingOscillation::velocity() const
 }
 
 
-bool Foam::solidBodyMotionFunctions::rotatingOscillation::read
+bool Foam::solidBodyMotionFunctions::rotation::read
 (
     const dictionary& SBMFCoeffs
 )
 {
     solidBodyMotionFunction::read(SBMFCoeffs);
 
-    SBMFCoeffs_.lookup("origin") >> origin_;
-    SBMFCoeffs_.lookup("amplitude") >> amplitude_;
-    SBMFCoeffs_.lookup("period") >> period_;
+    SBMFCoeffs_.lookup("centreOfRotation") >> origin_;
+    SBMFCoeffs_.lookup("axisOfRotation") >> axis_;
+    SBMFCoeffs_.lookup("rpm") >> rpm_;
+
+    if (mag(axis_) < SMALL)
+    {
+        FatalErrorInFunction
+            << "Axis of rotation has zero length: " << axis_
+            << abort(FatalError);
+    }
+
+    // Normalise axis
+    axis_ /= mag(axis_);
 
     return true;
 }

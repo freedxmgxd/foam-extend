@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "div.H"
+#include "grad.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,15 +32,15 @@ namespace Foam
 {
     namespace calcTypes
     {
-        defineTypeNameAndDebug(div, 0);
-        addToRunTimeSelectionTable(calcType, div, dictionary);
+        defineTypeNameAndDebug(grad, 0);
+        addToRunTimeSelectionTable(calcType, grad, dictionary);
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::calcTypes::div::div()
+Foam::calcTypes::grad::grad()
 :
     calcType()
 {}
@@ -48,14 +48,14 @@ Foam::calcTypes::div::div()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::calcTypes::div::init()
+void Foam::calcTypes::grad::init()
 {
-    argList::validArgs.append("div");
+    argList::validArgs.append("grad");
     argList::validArgs.append("fieldName");
 }
 
 
-void Foam::calcTypes::div::preCalc
+void Foam::calcTypes::grad::preCalc
 (
     const argList& args,
     const Time& runTime,
@@ -64,7 +64,7 @@ void Foam::calcTypes::div::preCalc
 {}
 
 
-void Foam::calcTypes::div::calc
+void Foam::calcTypes::grad::calc
 (
     const argList& args,
     const Time& runTime,
@@ -86,14 +86,14 @@ void Foam::calcTypes::div::calc
     {
         bool processed = false;
 
-        writeDivField<surfaceScalarField>(fieldHeader, mesh, processed);
-        writeDivField<volVectorField>(fieldHeader, mesh, processed);
+        writeGradField<volScalarField>(fieldHeader, mesh, processed);
+        writeGradField<volVectorField>(fieldHeader, mesh, processed);
 
         if (!processed)
         {
             FatalErrorInFunction
                 << "Unable to process " << fieldName << nl
-                << "No call to div for fields of type "
+                << "No call to grad for fields of type "
                 << fieldHeader.headerClassName() << nl << nl
                 << exit(FatalError);
         }

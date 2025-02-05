@@ -393,11 +393,8 @@ void Foam::ILUCp::preconditionT
     }
     else
     {
-        WarningIn
-        (
-            "void ILUCp::preconditionT"
-            "(scalarField& x, const scalarField& b, const direction cmpt)"
-        )   << "Unnecessary use of ILUCp preconditioner for diagonal matrix. "
+        WarningInFunction
+            << "Unnecessary use of ILUCp preconditioner for diagonal matrix. "
             << nl
             << "Use diagonal preconditioner instead."
             << endl;

@@ -10,7 +10,7 @@ EXE_LIBS = \
     -lmeshTools \
     -lbasicThermophysicalModels \
     -lspecie \
-    -lcompressibleRASModels \
     -lcompressibleTurbulenceModel \
+    -lcompressibleRASModels \
     -lconjugateHeatTransfer \
     -llduSolvers

@@ -22,18 +22,21 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solidBodyMotionFunctions::rotatingOscillation
+    Foam::solidBodyMotionFunctions::rotation
 
 Description
-    Rotating oscillation motion function
+    Rotation motion function
+
+Author
+    Hrvoje Jasak, Wikki Ltd.
 
 SourceFiles
-    rotatingOscillation.C
+    rotation.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef rotatingOscillation_H
-#define rotatingOscillation_H
+#ifndef rotation_H
+#define rotation_H
 
 #include "solidBodyMotionFunction.H"
 #include "primitiveFields.H"
@@ -47,32 +50,32 @@ namespace solidBodyMotionFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class rotatingOscillation Declaration
+                           Class rotation Declaration
 \*---------------------------------------------------------------------------*/
 
-class rotatingOscillation
+class rotation
 :
     public solidBodyMotionFunction
 {
     // Private data
 
-        //- Centre of gravity
+        //- Centre of rotation
         point origin_;
 
-        //- Amplitude
-        vector amplitude_;
+        //- Axis of rotation
+        vector axis_;
 
-        //- Motion period
-        scalar period_;
+        //- Rotation rate in rpm
+        scalar rpm_;
 
 
     // Private Member Functions
 
         //- Disallow copy construct
-        rotatingOscillation(const rotatingOscillation&) = delete;
+        rotation(const rotation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const rotatingOscillation&) = delete;
+        void operator=(const rotation&) = delete;
 
 
         //- Calculate tranformation
@@ -82,13 +85,13 @@ class rotatingOscillation
 public:
 
     //- Runtime type information
-    TypeName("rotatingOscillation");
+    TypeName("rotation");
 
 
     // Constructors
 
         //- Construct from components
-        rotatingOscillation
+        rotation
         (
             const dictionary& SBMFCoeffs,
             const Time& runTime
@@ -96,7 +99,7 @@ public:
 
 
     //- Destructor
-    virtual ~rotatingOscillation() = default;
+    virtual ~rotation() = default;
 
 
     // Member Functions
@@ -104,7 +107,7 @@ public:
         //- Return the solid-body motion transformation septernion
         virtual septernion transformation() const;
 
-    //- Return the solid-body motion velocity
+        //- Return the solid-body motion velocity
         virtual septernion velocity() const;
 
         //- Update properties from given dictionary

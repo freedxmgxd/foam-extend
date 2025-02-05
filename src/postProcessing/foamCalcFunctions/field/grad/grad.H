@@ -22,100 +22,113 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solidBodyMotionFunctions::rotatingOscillation
+    Foam::calcTypes::grad
 
 Description
-    Rotating oscillation motion function
+    Writes fields corresponding to the gradient of the supplied
+    field (name) for each time.
 
 SourceFiles
-    rotatingOscillation.C
+    grad.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef rotatingOscillation_H
-#define rotatingOscillation_H
+#ifndef grad_H
+#define grad_H
 
-#include "solidBodyMotionFunction.H"
-#include "primitiveFields.H"
-#include "point.H"
+#include "calcType.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace solidBodyMotionFunctions
+
+namespace calcTypes
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class rotatingOscillation Declaration
+                          Class grad Declaration
 \*---------------------------------------------------------------------------*/
 
-class rotatingOscillation
+class grad
 :
-    public solidBodyMotionFunction
+    public calcType
 {
-    // Private data
-
-        //- Centre of gravity
-        point origin_;
-
-        //- Amplitude
-        vector amplitude_;
-
-        //- Motion period
-        scalar period_;
-
-
     // Private Member Functions
 
-        //- Disallow copy construct
-        rotatingOscillation(const rotatingOscillation&) = delete;
+        //- Disallow default bitwise copy construct
+        grad(const grad&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const rotatingOscillation&) = delete;
+        void operator=(const grad&) = delete;
 
 
-        //- Calculate tranformation
-        septernion calcTransformation(const scalar t) const;
+protected:
+
+    // Member Functions
+
+        // Calculation routines
+
+            //- Initialise - typically setting static variables,
+            //  e.g. command line arguments
+            virtual void init();
+
+            //- Pre-time loop calculations
+            virtual void preCalc
+            (
+                const argList& args,
+                const Time& runTime,
+                const fvMesh& mesh
+            );
+
+            //- Time loop calculations
+            virtual void calc
+            (
+                const argList& args,
+                const Time& runTime,
+                const fvMesh& mesh
+            );
+
+
+        // I-O
+
+            //- Write grad fields
+            template<class Type>
+            void writeGradField
+            (
+                const IOobject& header,
+                const fvMesh& mesh,
+                bool& processed
+            );
 
 
 public:
 
     //- Runtime type information
-    TypeName("rotatingOscillation");
+    TypeName("grad");
 
 
     // Constructors
 
-        //- Construct from components
-        rotatingOscillation
-        (
-            const dictionary& SBMFCoeffs,
-            const Time& runTime
-        );
+        //- Construct null
+        grad();
 
 
     //- Destructor
-    virtual ~rotatingOscillation() = default;
-
-
-    // Member Functions
-
-        //- Return the solid-body motion transformation septernion
-        virtual septernion transformation() const;
-
-    //- Return the solid-body motion velocity
-        virtual septernion velocity() const;
-
-        //- Update properties from given dictionary
-        virtual bool read(const dictionary& SBMFCoeffs);
+    virtual ~grad() = default;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace solidBodyMotionFunctions
+} // End namespace calcTypes
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+#   include "writeGradField.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
