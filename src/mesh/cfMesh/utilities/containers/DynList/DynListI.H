@@ -77,11 +77,12 @@ inline void Foam::DynList<T, staticSize>::allocateSize(const label s)
     {
         if( nAllocated_ > staticSize )
         {
-            //- delete dynamically allocated data
-            for(label i=0;i<s;++i)
+            // Delete dynamically allocated data
+            for(label i = 0;i < s;++i)
                 staticData_[i] = dataPtr_[i];
 
-            delete [] dataPtr_;
+            if (dataPtr_)
+                delete [] dataPtr_;
         }
 
         dataPtr_ = staticData_;
@@ -94,11 +95,8 @@ inline void Foam::DynList<T, staticSize>::checkIndex(const label i) const
 {
     if( (i < 0) || (i >= nextFree_) )
     {
-        FatalErrorIn
-        (
-            "void Foam::DynList<T, label, Offset>::"
-            "checkIndex(const label i) const"
-        ) << "Index " << i << " is not in range " << 0
+        FatalErrorInFunction
+            << "Index " << i << " is not in range " << 0
             << " and " << nextFree_ << abort(FatalError);
     }
 }
@@ -107,13 +105,9 @@ template<class T, Foam::label staticSize>
 inline void Foam::DynList<T, staticSize>::checkAllocation() const
 {
     if( nextFree_ > nAllocated_ )
-        FatalErrorIn
-        (
-            "template<class T, Foam::label staticSize> "
-            "inline void Foam::DynList<T, staticSize>::"
-            "checkAllocation() const"
-        ) << "nextFree_ is out of scope 0 " << " and " << nAllocated_
-          << abort(FatalError);
+        FatalErrorInFunction
+            << "nextFree_ is out of scope 0 " << " and " << nAllocated_
+            << abort(FatalError);
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -272,7 +266,7 @@ inline Foam::label Foam::DynList<T, staticSize>::byteSize() const
 
     if( !contiguous<T>() )
     {
-        FatalErrorIn("DynList<T>::byteSize()")
+        FatalErrorInFunction
             << "Cannot return the binary size of a list of "
                "non-primitive elements"
             << abort(FatalError);
@@ -411,10 +405,8 @@ inline T Foam::DynList<T, staticSize>::removeLastElement()
 
     if( nextFree_ == 0 )
     {
-        FatalErrorIn
-        (
-            "void Foam::DynList<T, staticSize>::remove()"
-        )   << "List is empty" << abort(FatalError);
+        FatalErrorInFunction
+            << "List is empty" << abort(FatalError);
     }
 
     T el = this->operator[](nextFree_-1);
@@ -431,10 +423,8 @@ inline T Foam::DynList<T, staticSize>::removeElement(const label i)
 
     if( nextFree_ == 0 )
     {
-        FatalErrorIn
-        (
-            "void Foam::DynList<T, staticSize>::remove()"
-        )   << "List is empty" << abort(FatalError);
+        FatalErrorInFunction
+            << "List is empty" << abort(FatalError);
     }
 
     T el = this->operator[](i);
