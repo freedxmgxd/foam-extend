@@ -76,10 +76,8 @@ public:
         }
 
 
-    // Destructor
-
-        virtual ~centredCECCellToFaceStencilObject()
-        {}
+    //- Destructor
+    virtual ~centredCECCellToFaceStencilObject() = default;
 
 
     // Member functions

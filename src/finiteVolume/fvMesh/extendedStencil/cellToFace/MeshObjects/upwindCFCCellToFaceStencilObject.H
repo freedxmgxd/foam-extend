@@ -95,10 +95,8 @@ public:
         }
 
 
-    // Destructor
-
-        virtual ~upwindCFCCellToFaceStencilObject()
-        {}
+    //- Destructor
+    virtual ~upwindCFCCellToFaceStencilObject() = default;
 
 
     // Member functions

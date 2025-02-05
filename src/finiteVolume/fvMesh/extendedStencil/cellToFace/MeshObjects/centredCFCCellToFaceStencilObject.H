@@ -89,9 +89,7 @@ public:
 
 
     //- Destructor
-    virtual ~centredCFCCellToFaceStencilObject()
-    {}
-
+    virtual ~centredCFCCellToFaceStencilObject() = default;
 
 
     // Member functions
