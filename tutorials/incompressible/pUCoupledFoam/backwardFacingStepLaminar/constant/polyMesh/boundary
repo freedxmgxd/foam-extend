@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | foam-extend: Open Source CFD                    |
-|  \\    /   O peration     | Version:     5.0                                |
+|  \\    /   O peration     | Version:     5.1                                |
 |   \\  /    A nd           | Web:         http://www.foam-extend.org         |
-|    \\/     M anipulation  | For copyright notice see file Copyright         |
+|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -34,12 +34,14 @@ FoamFile
         type            wall;
         nFaces          140;
         startFace       9480;
+        closedSolidBodyMotion false;
     }
     lowerWall
     {
         type            wall;
         nFaces          160;
         startFace       9620;
+        closedSolidBodyMotion false;
     }
     frontAndBack
     {
@@ -48,5 +50,6 @@ FoamFile
         startFace       9780;
     }
 )
+
 
 // ************************************************************************* //

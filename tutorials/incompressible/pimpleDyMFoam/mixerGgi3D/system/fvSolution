@@ -46,7 +46,6 @@ solvers
         tolerance        1e-07;
         relTol           0;
     }
-
     U
     {
         solver            BiCGStab;
@@ -57,7 +56,6 @@ solvers
         tolerance        1e-07;
         relTol           0;
     }
-
     UFinal
     {
         solver            BiCGStab;

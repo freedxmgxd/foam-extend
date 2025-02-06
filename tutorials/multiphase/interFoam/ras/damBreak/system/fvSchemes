@@ -22,12 +22,12 @@ ddtSchemes
 
 gradSchemes
 {
-    default         Gauss linear;
+    default         cellLimited Gauss linear 1;
 }
 
 divSchemes
 {
-    div(rho*phi,U)  Gauss linear;
+    div(rho*phi,U)  Gauss limitedLinearV 1;
     div(phi,alpha)  Gauss vanLeer01;
     div(phirb,alpha) Gauss interfaceCompression;
     div(phi,k)      Gauss upwind;
@@ -35,7 +35,7 @@ divSchemes
     div(phi,R)      Gauss upwind;
     div(R)          Gauss linear;
     div(phi,nuTilda) Gauss upwind;
-    div((nuEff*dev(T(grad(U))))) Gauss linear;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
@@ -46,7 +46,6 @@ laplacianSchemes
 interpolationSchemes
 {
     default         linear;
-    interpolate(HbyA) linear;
 }
 
 snGradSchemes

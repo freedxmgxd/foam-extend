@@ -10,41 +10,92 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      alpha1;
+    object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 0 0 0 0 0 0];
+dimensions      [0 2 -2 0 0 0 0];
 
 internalField   uniform 0;
 
 boundaryField
 {
-    leftWall
+    GVINLET
     {
         type            zeroGradient;
     }
-
-    rightWall
+    GVOUTLET
+    {
+        type            ggi;
+    }
+    GVCYCLIC
+    {
+        type            cyclic;
+    }
+    GVBLADE
     {
         type            zeroGradient;
     }
-
-    lowerWall
+    GVHUB
     {
         type            zeroGradient;
     }
-
-    atmosphere
+    GVSHROUD
     {
-        type            inletOutlet;
-        inletValue      uniform 0;
+        type            zeroGradient;
+    }
+    RUINLET
+    {
+        type            ggi;
+    }
+    RUOUTLET
+    {
+        type            ggi;
+    }
+    RUCYCLIC1
+    {
+        type            cyclicGgi;
+    }
+    RUCYCLIC2
+    {
+        type            cyclicGgi;
+    }
+    RUBLADE
+    {
+        type            zeroGradient;
+    }
+    RUHUB
+    {
+        type            zeroGradient;
+    }
+    RUSHROUD
+    {
+        type            zeroGradient;
+    }
+    DTINLET
+    {
+        type            ggi;
+    }
+    DTOUTLET
+    {
+        type            fixedValue;
         value           uniform 0;
     }
-
-    defaultFaces
+    DTCYCLIC1
     {
-        type            empty;
+        type            cyclicGgi;
+    }
+    DTCYCLIC2
+    {
+        type            cyclicGgi;
+    }
+    DTHUB
+    {
+        type            zeroGradient;
+    }
+    DTSHROUD
+    {
+        type            zeroGradient;
     }
 }
 

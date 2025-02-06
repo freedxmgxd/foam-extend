@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-numberOfSubdomains 8;
+numberOfSubdomains 4;
 
 //method               metis;
 method    patchConstrained;
@@ -34,7 +34,7 @@ globalFaceZones
 patchConstrainedCoeffs
 {
     method            metis;
-    numberOfSubdomains    8;
+    numberOfSubdomains    4;
     patchConstraints
     (
         (RUINLET 1)

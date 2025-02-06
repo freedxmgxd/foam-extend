@@ -12,7 +12,7 @@ transformPoints -scale "(1 20 1)"
 transformPoints -cylToCart "((0 0 0) (0 0 1) (1 0 0))"
 
 # Set 0-directory and create GGI set:
-cp -r 0_orig 0
+cp -r save 0
 runApplication setSet -batch setBatchGgi
 runApplication setsToZones -noFlipMap
 
