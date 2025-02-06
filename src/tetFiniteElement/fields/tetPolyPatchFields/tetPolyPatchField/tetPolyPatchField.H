@@ -124,6 +124,18 @@ public:
             tetFemMatrix,
             Type
         >::operator=;
+
+        virtual void operator=(const tetPolyPatchField& pf)
+        {
+            PointPatchField
+            <
+                Foam::tetPolyPatchField,
+                tetPointMesh,
+                tetPolyPatch,
+                Foam::tetFemMatrix,
+                Type
+            >::operator=(pf);
+        }
 };
 
 
