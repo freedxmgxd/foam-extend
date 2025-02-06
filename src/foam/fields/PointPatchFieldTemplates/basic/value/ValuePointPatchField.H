@@ -234,6 +234,23 @@ public:
 
             virtual void operator==(const Field<Type>&);
             virtual void operator==(const Type&);
+
+            // Prevent automatic comparison rewriting (c++20)
+            virtual void operator!=
+            (
+                const ValuePointPatchField
+                    <PatchField, Mesh, PointPatch, MatrixType, Type>&
+            ) const = delete;
+
+            virtual void operator!=
+            (
+                const PointPatchField
+                    <PatchField, Mesh, PointPatch, MatrixType, Type>&
+            ) const = delete;
+
+            virtual void operator!=(const Field<Type>&) const = delete;
+            virtual void operator!=(const Type&) const = delete;
+
 };
 
 
