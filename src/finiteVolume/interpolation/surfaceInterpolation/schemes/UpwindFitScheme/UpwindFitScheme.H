@@ -67,10 +67,10 @@ class UpwindFitScheme
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        UpwindFitScheme(const UpwindFitScheme&);
+        UpwindFitScheme(const UpwindFitScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const UpwindFitScheme&);
+        void operator=(const UpwindFitScheme&) = delete;
 
 
 public:
@@ -108,6 +108,10 @@ public:
         {}
 
 
+    //- Destructor
+    virtual ~UpwindFitScheme() = default;
+
+
     // Member Functions
 
         //- Return true if this scheme uses an explicit correction
@@ -125,22 +129,23 @@ public:
         {
             const fvMesh& mesh = this->mesh();
 
-            const extendedUpwindCellToFaceStencil& stencil = Stencil::New
-            (
-                mesh,
-                false,          //pureUpwind
-                scalar(0.5)
-            );
+            const extendedUpwindCellToFaceStencil& stencil =
+                Stencil::New
+                (
+                    mesh,
+                    false,          //pureUpwind
+                    scalar(0.5)
+                );
 
             const UpwindFitData<Polynomial>& ufd =
-            UpwindFitData<Polynomial>::New
-            (
-                mesh,
-                stencil,
-                true,           //calculate as offset to linear
-                linearLimitFactor_,
-                centralWeight_
-            );
+                UpwindFitData<Polynomial>::New
+                (
+                    mesh,
+                    stencil,
+                    true,           //calculate as offset to linear
+                    linearLimitFactor_,
+                    centralWeight_
+                );
 
             const List<scalarList>& fo = ufd.owncoeffs();
             const List<scalarList>& fn = ufd.neicoeffs();
