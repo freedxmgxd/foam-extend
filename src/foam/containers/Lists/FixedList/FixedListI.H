@@ -37,7 +37,7 @@ inline Foam::FixedList<T, Size>::FixedList()
 template<class T, unsigned Size>
 inline Foam::FixedList<T, Size>::FixedList(const T v[Size])
 {
-    for (unsigned i=0; i<Size; i++)
+    for (unsigned i = 0; i < Size; i++)
     {
         v_[i] = v[i];
     }
@@ -47,7 +47,7 @@ inline Foam::FixedList<T, Size>::FixedList(const T v[Size])
 template<class T, unsigned Size>
 inline Foam::FixedList<T, Size>::FixedList(const T& t)
 {
-    for (unsigned i=0; i<Size; i++)
+    for (unsigned i = 0; i < Size; i++)
     {
         v_[i] = t;
     }
@@ -59,7 +59,7 @@ inline Foam::FixedList<T, Size>::FixedList(const UList<T>& lst)
 {
     checkSize(lst.size());
 
-    for (unsigned i=0; i<Size; i++)
+    for (unsigned i = 0; i < Size; i++)
     {
         v_[i] = lst[i];
     }
@@ -158,7 +158,7 @@ inline void Foam::FixedList<T, Size>::checkIndex(const label i) const
 {
     if (i < 0 || unsigned(i) >= Size)
     {
-        FatalErrorIn("FixedList<T, Size>::checkIndex(const label)")
+        FatalErrorInFunction
             << "index " << i << " out of range 0 ... " << (Size-1)
             << abort(FatalError);
     }
@@ -184,7 +184,7 @@ inline void Foam::FixedList<T, Size>::setSize(const label s)
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::transfer(const FixedList<T, Size>& lst)
 {
-    for (unsigned i=0; i<Size; i++)
+    for (unsigned i = 0; i < Size; i++)
     {
         v_[i] = lst[i];
     }
@@ -234,7 +234,7 @@ inline const T& Foam::FixedList<T, Size>::operator[](const label i) const
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::operator=(const FixedList<T, Size>& lst)
 {
-    for (unsigned i=0; i<Size; i++)
+    for (unsigned i = 0; i < Size; i++)
     {
         v_[i] = lst[i];
     }
@@ -243,7 +243,7 @@ inline void Foam::FixedList<T, Size>::operator=(const FixedList<T, Size>& lst)
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::operator=(const T lst[Size])
 {
-    for (unsigned i=0; i<Size; i++)
+    for (unsigned i = 0; i < Size; i++)
     {
         v_[i] = lst[i];
     }
@@ -254,7 +254,7 @@ inline void Foam::FixedList<T, Size>::operator=(const UList<T>& lst)
 {
     checkSize(lst.size());
 
-    for (unsigned i=0; i<Size; i++)
+    for (unsigned i = 0; i < Size; i++)
     {
         v_[i] = lst[i];
     }
