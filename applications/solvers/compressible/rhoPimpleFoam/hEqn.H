@@ -8,11 +8,8 @@
         DpDt
     );
 
-    hEqn.relax
-    (
-        mesh.solutionDict().equationRelaxationFactor(h.select(pimple.finalIter()))
-    );
-    hEqn.solve(mesh.solutionDict().solver((h.select(pimple.finalIter()))));
+    hEqn.relax();
+    hEqn.solve();
 
     thermo.correct();
 }

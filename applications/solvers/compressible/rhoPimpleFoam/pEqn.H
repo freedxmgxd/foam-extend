@@ -24,10 +24,7 @@ if (pimple.transonic())
           - fvm::laplacian(rho*rUA, p)
         );
 
-        pEqn.solve
-        (
-            mesh.solutionDict().solver(p.select(pimple.finalInnerIter()))
-        );
+        pEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())
         {
@@ -54,10 +51,7 @@ else
           - fvm::laplacian(rho*rUA, p)
         );
 
-        pEqn.solve
-        (
-            mesh.solutionDict().solver(p.select(pimple.finalInnerIter()))
-        );
+        pEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())
         {

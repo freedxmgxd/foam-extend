@@ -32,10 +32,7 @@
         );
 
         pEqn.setReference(pRefCell, pRefValue);
-        pEqn.solve
-        (
-            mesh.solutionDict().solver(p.select(pimple.finalInnerIter()))
-        );
+        pEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())
         {
