@@ -417,7 +417,7 @@ void topoPatchMapper::calcInverseDistanceWeights() const
 
     // Obtain face-centre information from old/new meshes
     const vectorField& oldCentres = tMapper_.patchCentres(patch_.index());
-    const vectorField& newCentres = patch_.patch().faceCentres();
+    const vectorField::subField newCentres = patch_.patch().faceCentres();
 
     forAll(addr, faceI)
     {

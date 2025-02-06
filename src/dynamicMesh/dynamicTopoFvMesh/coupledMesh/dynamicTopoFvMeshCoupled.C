@@ -5640,7 +5640,7 @@ bool dynamicTopoFvMesh::checkCoupledBoundaries(bool report) const
 
                 const faceList& lF = boundary[pI].localFaces();
                 const pointField& lP = boundary[pI].localPoints();
-                const vectorField& lC = boundary[pI].faceCentres();
+                const vectorField::subField lC = boundary[pI].faceCentres();
 
                 // Prepare anchor points
                 mAnchors[pI].setSize(boundary[pI].size());
@@ -5847,8 +5847,8 @@ bool dynamicTopoFvMesh::checkCoupledBoundaries(bool report) const
             continue;
         }
 
-        const vectorField& myAreas = boundary[pI].faceAreas();
-        const vectorField& myCentres = boundary[pI].faceCentres();
+        const vectorField::subField myAreas = boundary[pI].faceAreas();
+        const vectorField::subField myCentres = boundary[pI].faceCentres();
 
         // Fetch local connectivity
         const faceList& myFaces = boundary[pI].localFaces();
