@@ -152,7 +152,7 @@ void Foam::chtRcThermalDiffusivityFvPatchScalarField::patchInterpolate
 ) const
 {
     // Use patch value both in coupled and decoupled state
-    // HJ, 22/Oct2024
+    // HJ, 22/Oct/2024
     fField.boundaryField()[patch().index()] = *this;
 }
 
@@ -165,7 +165,7 @@ void Foam::chtRcThermalDiffusivityFvPatchScalarField::patchInterpolate
 ) const
 {
     // Use patch value both in coupled and decoupled state
-    // HJ, 22/Oct2024
+    // HJ, 22/Oct/2024
     fField.boundaryField()[patch().index()] = *this;
 }
 
