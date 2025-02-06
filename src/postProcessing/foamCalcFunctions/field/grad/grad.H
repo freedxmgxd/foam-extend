@@ -93,7 +93,7 @@ protected:
         // I-O
 
             //- Write grad fields
-            template<class Type>
+            template<class GeoType>
             void writeGradField
             (
                 const IOobject& header,

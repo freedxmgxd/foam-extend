@@ -39,7 +39,8 @@ void Foam::calcTypes::grad::writeGradField
         Info<< "    Calculating grad" << header.name() << endl;
 
         // Define type of outer product
-        typedef typename outerProduct<vector, typename GeoType::PrimitiveType>::type GradType;
+        typedef typename
+        outerProduct<vector, typename GeoType::PrimitiveType>::type GradType;
 
         GeometricField<GradType, fvPatchField, volMesh> gradField
         (

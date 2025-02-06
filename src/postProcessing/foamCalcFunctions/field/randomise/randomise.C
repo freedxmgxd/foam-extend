@@ -78,7 +78,7 @@ void Foam::calcTypes::randomise::calc
     const fvMesh& mesh
 )
 {
-    const stringList& params = args.additionalArgs();
+    const stringList::subList params = args.additionalArgs();
     const scalar pertMag = readScalar(IStringStream(params[1])());
     const word& fieldName = params[2];
 

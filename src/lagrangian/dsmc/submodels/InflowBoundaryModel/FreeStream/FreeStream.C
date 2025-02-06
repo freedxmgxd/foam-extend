@@ -211,7 +211,7 @@ void Foam::FreeStream<CloudType>::inflow()
 
             label cell = mesh.faceOwner()[globalFaceIndex];
 
-            const vector& fC = patch.faceCentres()[f];
+            const vector fC = patch.faceCentres()[f];
 
             scalar fA = mag(patch.faceAreas()[f]);
 
