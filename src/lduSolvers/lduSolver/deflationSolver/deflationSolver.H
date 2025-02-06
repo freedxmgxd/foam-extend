@@ -89,10 +89,10 @@ class deflationSolver
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        deflationSolver(const deflationSolver&);
+        deflationSolver(const deflationSolver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const deflationSolver&);
+        void operator=(const deflationSolver&) = delete;
 
 
         //- Gauss elimination solution on matrix subset
@@ -133,10 +133,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~deflationSolver()
-        {}
+    //- Destructor
+    virtual ~deflationSolver() = default;
 
 
     // Member Functions
