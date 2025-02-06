@@ -269,7 +269,7 @@ label twoDNess(const polyMesh& mesh)
 
         if (!isA<wedgePolyPatch>(patch))
         {
-            const vectorField& n = patch.faceAreas();
+            const vectorField::subField n = patch.faceAreas();
 
             scalarField cosAngle = mag(n/mag(n) & cellPlane.normal());
 
