@@ -679,15 +679,12 @@ Foam::dictionary Foam::dictionary::subOrEmptyDict
         if (mustRead)
         {
             FatalIOErrorInFunction(*this)
-	      << "keyword " << keyword << " is undefined in dictionary "
+                << "keyword " << keyword << " is undefined in dictionary "
                 << name()
                 << exit(FatalIOError);
-            return entryPtr->dict();
         }
-        else
-        {
-            return dictionary(*this, dictionary(name() + "::" + keyword));
-        }
+
+        return dictionary(*this, dictionary(name() + "::" + keyword));
     }
     else
     {
