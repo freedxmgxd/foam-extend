@@ -572,8 +572,10 @@ Foam::ImmersedCell<Distance>::ImmersedCell
     // Added collinearity check.  HJ, 8/Apr/2022
 
     // Collect first intersection point as reference for colinearity check
-    point refPoint;
-    vector refVec;
+    // Initialise refPoint and refVec to avoid compiler warning
+    // HJ, 5/Feb/2025
+    point refPoint = vector::zero;
+    vector refVec = vector::zero;
     scalar minDot = GREAT;
 
     forAll (depth_, pointI)
@@ -602,6 +604,8 @@ Foam::ImmersedCell<Distance>::ImmersedCell
                 otherVec /= mag(otherVec) + SMALL;
 
                 // Collect minimum dot-product
+                // Note: refVec cannot be zero because for more than 1
+                // intersection we must have had 0 and 1 intersections first
                 minDot = Foam::min(minDot, (refVec & otherVec));
             }
 

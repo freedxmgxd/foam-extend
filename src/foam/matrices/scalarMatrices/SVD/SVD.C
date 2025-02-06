@@ -239,23 +239,26 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
         {
             bool flag = true;
 
-            label nm;
+            // Added initialisation of nm to avoid warning
+            label nm = 0;
+
             for (l = k; l >= 0; l--)
             {
-                nm = l-1;
+                nm = l - 1;
                 if (mag(rv1[l]) + anorm == anorm)
                 {
                     flag = false;
                     break;
                 }
+
                 if (mag(S_[nm]) + anorm == anorm) break;
             }
 
             if (flag)
             {
-                scalar c = 0.0;
-                s = 1.0;
-                for (label i = l-1; i < k+1; i++)
+                scalar c = 0;
+                s = 1;
+                for (label i = l - 1; i < k+1; i++)
                 {
                     scalar f = s*rv1[i];
                     rv1[i] = c*rv1[i];
@@ -293,16 +296,13 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
             }
             if (its == 34)
             {
-                WarningIn
-                (
-                    "SVD::SVD"
-                    "(scalarRectangularMatrix& A, const scalar minCondition)"
-                )   << "no convergence in 35 SVD iterations"
+                WarningInFunction
+                    << "no convergence in 35 SVD iterations"
                     << endl;
             }
 
             scalar x = S_[l];
-            nm = k-1;
+            nm = k - 1;
             scalar y = S_[nm];
             g = rv1[nm];
             scalar h = rv1[k];
