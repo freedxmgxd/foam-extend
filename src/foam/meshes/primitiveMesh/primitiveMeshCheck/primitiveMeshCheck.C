@@ -1196,7 +1196,6 @@ bool Foam::primitiveMesh::checkEdgeAlignment
             {
                 vector d(p[p1] - p[p0]);
                 scalar magD = mag(d);
-                Info<< "magD: " << magD << endl;
 
                 if (magD > ROOTVSMALL)
                 {
