@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "radiativeIntensityRay.H"
+#include "fvc.H"
 #include "fvm.H"
 #include "fvDOM.H"
 #include "mathematicalConstants.H"
@@ -195,7 +196,12 @@ Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
                 }
             }
 
-            divJiILambda = fvm::div(Ji, ILambda_[lambdaI], "div(Ji,Ii_h)");
+            // Note: flux divergence is not zero for a wedge due to correction
+            // HJ, 26/Feb/2025
+            
+            divJiILambda =
+                fvm::div(Ji, ILambda_[lambdaI], "div(Ji,Ii_h)")
+              + fvm::SuSp(-fvc::div(Ji), ILambda_[lambdaI]);
         }
         else
         {

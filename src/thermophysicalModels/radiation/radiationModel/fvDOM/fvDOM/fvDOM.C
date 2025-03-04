@@ -25,6 +25,7 @@ License
 
 #include "fvDOM.H"
 #include "addToRunTimeSelectionTable.H"
+#include "fvc.H"
 #include "fvm.H"
 #include "mathematicalConstants.H"
 #include "radiationConstants.H"
@@ -270,6 +271,7 @@ void Foam::radiation::fvDOM::initialise()
                     new fvScalarMatrix
                     (
                         fvm::div(Ji, iRayLambdaI, "div(Ji,Ii_h)")
+                      + fvm::SuSp(-fvc::div(Ji), iRayLambdaI)
                     )
                 );
             }
