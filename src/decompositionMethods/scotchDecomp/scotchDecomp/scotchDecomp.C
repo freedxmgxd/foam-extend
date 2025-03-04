@@ -126,15 +126,7 @@ extern "C"
 #    define LINUX_GNUC
 #endif
 
-#ifdef LINUX_GNUC
-#   ifndef __USE_GNU
-#       define __USE_GNU
-#   endif
-#   include <fenv.h>
-#endif
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {

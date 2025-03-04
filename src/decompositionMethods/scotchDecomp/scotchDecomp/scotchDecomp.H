@@ -57,10 +57,10 @@ class scotchDecomp
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        scotchDecomp(const scotchDecomp&);
+        scotchDecomp(const scotchDecomp&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const scotchDecomp&);
+        void operator=(const scotchDecomp&) = delete;
 
 
         //- Check and print error message
@@ -91,10 +91,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~scotchDecomp()
-        {}
+    //- Destructor
+    virtual ~scotchDecomp() = default;
 
 
     // Member Functions
