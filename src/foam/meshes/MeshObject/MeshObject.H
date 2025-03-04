@@ -69,6 +69,13 @@ public:
 
         static const Type& New(const Mesh& mesh);
 
+
+    //- Destructor
+    virtual ~MeshObject();
+
+
+    // Factory Methods
+
         template<class Data1>
         static const Type& New
         (
@@ -104,9 +111,6 @@ public:
         );
 
 
-    // Destructors
-
-        virtual ~MeshObject();
 
         static bool Delete(const Mesh& mesh);
 

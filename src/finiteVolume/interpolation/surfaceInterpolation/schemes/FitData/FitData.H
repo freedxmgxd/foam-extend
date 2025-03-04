@@ -93,9 +93,6 @@ class FitData
 
 public:
 
-    //TypeName("FitData");
-
-
     // Constructors
 
         //- Construct from components
@@ -110,8 +107,7 @@ public:
 
 
     //- Destructor
-    virtual ~FitData()
-    {}
+    virtual ~FitData() = default;
 
 
     // Member functions

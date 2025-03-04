@@ -72,7 +72,7 @@ class UpwindFitData
         List<scalarList> neicoeffs_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Calculate the fit for the all the mesh faces
         //  and set the coefficients
@@ -98,8 +98,7 @@ public:
 
 
     //- Destructor
-    virtual ~UpwindFitData()
-    {}
+    virtual ~UpwindFitData() = default;
 
 
     // Member functions
