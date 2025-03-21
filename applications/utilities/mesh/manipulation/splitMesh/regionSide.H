@@ -116,6 +116,7 @@ class regionSide
             const labelHashSet& fenceEdges
         );
 
+
 public:
 
     //- Runtime type information
@@ -144,6 +145,10 @@ public:
             const label startCell,
             const label startFace
         );
+
+
+    //- Destructor
+    ~regionSide() = default;
 
 
     // Member Functions

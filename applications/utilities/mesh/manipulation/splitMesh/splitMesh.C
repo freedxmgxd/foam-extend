@@ -46,6 +46,7 @@ Description
 #include "polyTopoChange.H"
 #include "mapPolyMesh.H"
 #include "faceSet.H"
+#include "cellSet.H"
 #include "attachDetach.H"
 #include "polyTopoChanger.H"
 #include "regionSide.H"
@@ -72,10 +73,8 @@ label findEdge(const primitiveMesh& mesh, const label v0, const label v1)
         }
     }
 
-    FatalErrorIn
-    (
-        "findEdge(const primitiveMesh&, const label, const label)"
-    )   << "Cannot find edge between mesh points " << v0 << " and " << v1
+    FatalErrorInFunction
+        << "Cannot find edge between mesh points " << v0 << " and " << v1
         << abort(FatalError);
 
     return -1;
@@ -89,7 +88,7 @@ void checkPatch(const polyBoundaryMesh& bMesh, const word& name)
 
     if (patchI == -1)
     {
-        FatalErrorIn("checkPatch(const polyBoundaryMesh&, const word&)")
+        FatalErrorInFunction
             << "Cannot find patch " << name << endl
             << "It should be present but of zero size" << endl
             << "Valid patches are " << bMesh.names()
@@ -98,7 +97,7 @@ void checkPatch(const polyBoundaryMesh& bMesh, const word& name)
 
     if (bMesh[patchI].size())
     {
-        FatalErrorIn("checkPatch(const polyBoundaryMesh&, const word&)")
+        FatalErrorInFunction
             << "Patch " << name << " is present but non-zero size"
             << exit(FatalError);
     }
@@ -112,6 +111,7 @@ int main(int argc, char *argv[])
     Foam::argList::noParallel();
 
     Foam::argList::validArgs.append("faceSet");
+    Foam::argList::validArgs.append("masterCellSet");
     Foam::argList::validArgs.append("masterPatch");
     Foam::argList::validArgs.append("slavePatch");
     Foam::argList::validOptions.insert("overwrite", "");
@@ -122,27 +122,30 @@ int main(int argc, char *argv[])
 #   include "createPolyMesh.H"
     const word oldInstance = mesh.pointsInstance();
 
-    word setName(args.additionalArgs()[0]);
-    word masterPatch(args.additionalArgs()[1]);
-    word slavePatch(args.additionalArgs()[2]);
+    word faceSetName(args.additionalArgs()[0]);
+    word masterCellSetName(args.additionalArgs()[1]);
+    word masterPatch(args.additionalArgs()[2]);
+    word slavePatch(args.additionalArgs()[3]);
     bool overwrite = args.optionFound("overwrite");
 
     // List of faces to split
-    faceSet facesSet(mesh, setName);
+    faceSet facesSet(mesh, faceSetName);
 
+    // List of cells touching master side of faces
+    cellSet masterCellSet(mesh, masterCellSetName);
+    
     Info<< "Read " << facesSet.size() << " faces to split" << endl << endl;
-
 
     // Convert into labelList and check
 
-    labelList faces(facesSet.toc());
+    labelList facesToSplit(facesSet.toc());
 
-    forAll(faces, i)
+    forAll(facesToSplit, i)
     {
-        if (!mesh.isInternalFace(faces[i]))
+        if (!mesh.isInternalFace(facesToSplit[i]))
         {
-            FatalErrorIn(args.executable())
-            << "Face " << faces[i] << " in faceSet " << setName
+            FatalErrorInFunction
+            << "Face " << facesToSplit[i] << " in faceSet " << faceSetName
             << " is not an internal face."
             << exit(FatalError);
         }
@@ -159,7 +162,7 @@ int main(int argc, char *argv[])
     // set of edges on side of this region. Use PrimitivePatch to find these.
     //
 
-    IndirectList<face> zoneFaces(mesh.faces(), faces);
+    const IndirectList<face> zoneFaces(mesh.faces(), facesToSplit);
 
     // Calculation engine for set of faces in a mesh
     typedef PrimitivePatch<face, List, const pointField&> facePatch;
@@ -195,7 +198,7 @@ int main(int argc, char *argv[])
     }
 
     // Find sides reachable from 0th face of faceSet
-    label startFaceI = faces[0];
+    label startFaceI = facesToSplit[0];
 
     regionSide regionInfo
     (
@@ -207,13 +210,32 @@ int main(int argc, char *argv[])
     );
 
     // Determine flip state for all faces in faceSet
-    boolList zoneFlip(faces.size());
+    boolList zoneFlip(facesToSplit.size());
 
-    forAll(faces, i)
+    const auto& own = mesh.faceOwner();
+    const auto& nei = mesh.faceNeighbour();
+    
+    forAll(facesToSplit, i)
     {
-        zoneFlip[i] = !regionInfo.sideOwner().found(faces[i]);
+        if (masterCellSet.found(own[facesToSplit[i]]))
+        {
+            zoneFlip[i] = false;
+        }
+        else if (masterCellSet.found(nei[facesToSplit[i]]))
+        {
+            zoneFlip[i] = true;
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "For face " << facesToSplit[i]
+                << " owner nor neighbour cell is found in masterCellSet "
+                << masterCellSetName << nl
+                << " owner: " << own[facesToSplit[i]] << " neighbour "
+                << nei[facesToSplit[i]]
+                << abort(FatalError);
+        }
     }
-
 
     // Create and add face zones and mesh modifiers
     List<pointZone*> pz(0);
@@ -224,7 +246,7 @@ int main(int argc, char *argv[])
         new faceZone
         (
             "membraneFaces",
-            faces,
+            facesToSplit,
             zoneFlip,
             0,
             mesh.faceZones()
@@ -269,7 +291,7 @@ int main(int argc, char *argv[])
     Info<< "Writing mesh to " << runTime.timeName() << endl;
     if (!mesh.write())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Failed writing polyMesh."
             << exit(FatalError);
     }

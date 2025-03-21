@@ -102,11 +102,8 @@ Foam::label Foam::regionSide::otherEdge
         }
     }
 
-    FatalErrorIn
-    (
-        "regionSide::otherEdge(const primitiveMesh&, const label, const label"
-        ", const label)"
-    )   << "Cannot find other edge on face " << faceI << " that uses point "
+    FatalErrorInFunction
+        << "Cannot find other edge on face " << faceI << " that uses point "
         << pointI << " but not point " << freePointI << endl
         << "Edges on face:" << fEdges
         << " verts:" << UIndirectList<edge>(mesh.edges(), fEdges)()
@@ -193,13 +190,13 @@ void Foam::regionSide::visitConnectedFaces
                             );
 
                         otherFaceI =
-                                otherFace
-                                (
-                                    mesh,
-                                    otherCellI,
-                                    otherFaceI,
-                                    edgeI
-                                );
+                            otherFace
+                            (
+                                mesh,
+                                otherCellI,
+                                otherFaceI,
+                                edgeI
+                            );
                     }
 
                     visitConnectedFaces
