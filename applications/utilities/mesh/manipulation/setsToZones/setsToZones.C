@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
                         }
                         else
                         {
-                            FatalErrorIn(args.executable())
+                            FatalErrorInFunction
                                 << "Owner or neighbour of internal face "
                                 << faceI << " should be in cellSet "
                                 << cells.name()
@@ -301,7 +301,6 @@ int main(int argc, char *argv[])
     }
 
 
-
     IOobjectList cellObjects(objects.lookupClass(cellSet::typeName));
 
     for
@@ -355,7 +354,7 @@ int main(int argc, char *argv[])
 
     if (!mesh.write())
     {
-        FatalErrorIn(args.executable())
+        FatalErrorInFunction
             << "Failed writing polyMesh."
             << exit(FatalError);
     }
