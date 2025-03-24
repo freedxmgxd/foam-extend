@@ -217,19 +217,41 @@ int main(int argc, char *argv[])
     
     forAll(facesToSplit, i)
     {
-        if (masterCellSet.found(own[facesToSplit[i]]))
+        if
+        (
+            masterCellSet.found(own[facesToSplit[i]])
+         && !masterCellSet.found(nei[facesToSplit[i]])
+        )
         {
             zoneFlip[i] = false;
         }
-        else if (masterCellSet.found(nei[facesToSplit[i]]))
+        else if
+        (
+            masterCellSet.found(nei[facesToSplit[i]])
+         && !masterCellSet.found(own[facesToSplit[i]])
+        )
         {
             zoneFlip[i] = true;
+        }        
+        else if
+        (
+            masterCellSet.found(own[facesToSplit[i]])
+         && masterCellSet.found(nei[facesToSplit[i]])
+        )
+        {
+            FatalErrorInFunction
+                << "For face " << facesToSplit[i]
+                << " both owner and neighbour cell is found in masterCellSet "
+                << masterCellSetName << nl
+                << " owner: " << own[facesToSplit[i]] << " neighbour "
+                << nei[facesToSplit[i]]
+                << abort(FatalError);
         }
         else
         {
             FatalErrorInFunction
                 << "For face " << facesToSplit[i]
-                << " owner nor neighbour cell is found in masterCellSet "
+                << " neither owner nor neighbour cell is found in masterCellSet "
                 << masterCellSetName << nl
                 << " owner: " << own[facesToSplit[i]] << " neighbour "
                 << nei[facesToSplit[i]]
