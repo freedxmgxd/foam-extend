@@ -4,6 +4,9 @@ forces/forcesFunctionObject.C
 forceCoeffs/forceCoeffs.C
 forceCoeffs/forceCoeffsFunctionObject.C
 
+centreOfPressure/centreOfPressure.C
+centreOfPressure/centreOfPressureFunctionObject.C
+
 sDoFRBM = pointPatchFields/derived/sixDoFRigidBodyMotion
 
 $(sDoFRBM)/sixDoFRigidBodyMotion.C
