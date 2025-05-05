@@ -63,10 +63,10 @@ class cgSolver
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        cgSolver(const cgSolver&);
+        cgSolver(const cgSolver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const cgSolver&);
+        void operator=(const cgSolver&) = delete;
 
 
 public:
@@ -89,10 +89,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~cgSolver()
-        {}
+    //- Destructor
+    virtual ~cgSolver() = default;
 
 
     // Member Functions
