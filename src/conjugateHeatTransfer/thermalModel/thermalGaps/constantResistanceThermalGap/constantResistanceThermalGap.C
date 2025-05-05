@@ -70,10 +70,8 @@ void Foam::constantResistanceThermalGap::modifyResistance
 
         if ( zoneID < 0 )
         {
-            FatalErrorIn
-            (
-                "constantResistanceThermalGap::modifyResistance()\n"
-            )   << "Zone " << zones_[zoneI]
+            FatalErrorInFunction
+                << "Zone " << zones_[zoneI]
                 << " specified in gap " << name()
                 << " does not exist"
                 << abort(FatalError);

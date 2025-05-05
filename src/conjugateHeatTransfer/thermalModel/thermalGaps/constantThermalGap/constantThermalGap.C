@@ -67,10 +67,8 @@ void Foam::constantThermalGap::modifyResistance(surfaceScalarField& DT) const
 
         if ( zoneID < 0 )
         {
-            FatalErrorIn
-            (
-                "constantThermalGap::modifyResistance()\n"
-            )   << "Zone " << zones_[zoneI]
+            FatalErrorInFunction
+                << "Zone " << zones_[zoneI]
                 << " specified in gap " << name()
                 << " does not exist"
                 << abort(FatalError);
