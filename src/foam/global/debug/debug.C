@@ -58,27 +58,10 @@ Foam::NamedEnum
     "DimensionedConstants"
 };
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace debug
-{
-// enum for selecting which part of the globalControlDict to dump to the console
-enum globalControlDictSubDict
-{
-    allDict,
-    debugDict,
-    infoDict,
-    optimisationDict,
-    tolerancesDict,
-    constantsDict
-};
-
 // Accepted parameters for the command-line option -dumpControlSwitches
 template<>
 const char*
-Foam::NamedEnum<globalControlDictSubDict, 6>::names[] =
+Foam::NamedEnum<Foam::debug::globalControlDictSubDict, 6>::names[] =
 {
     "all",
     "debug",
@@ -87,6 +70,14 @@ Foam::NamedEnum<globalControlDictSubDict, 6>::names[] =
     "tolerances",
     "constants"
 };
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace debug
+{
 
 //! @cond ignoreDocumentation - local scope
 dictionary* controlDictPtr_(nullptr);

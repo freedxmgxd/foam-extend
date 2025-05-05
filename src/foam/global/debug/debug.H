@@ -58,6 +58,17 @@ namespace debug
         DIMENSIONED_CONSTANTS
     };
 
+    // enum for selecting which part of the globalControlDict to dump to the console
+    enum globalControlDictSubDict
+    {
+        allDict,
+        debugDict,
+        infoDict,
+        optimisationDict,
+        tolerancesDict,
+        constantsDict
+    };
+
     // Number of global controlDict switches sets
     // Currently, we have:
     //     DebugSwitches
