@@ -142,7 +142,7 @@ Foam::tmp<Foam::volScalarField> Foam::errorEstimate<Type>::normFactor() const
         )
     );
 
-    volScalarField& normFactor = tnormFactor();
+    volScalarField& normFactor = tnormFactor.ref();
 
     normFactor.internalField() = normFactor_;
     normFactor.boundaryField() == pTraits<Type>::zero;
