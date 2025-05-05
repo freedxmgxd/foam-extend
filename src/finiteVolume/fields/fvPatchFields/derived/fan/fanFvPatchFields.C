@@ -58,8 +58,8 @@ void Foam::fanFvPatchField<Foam::scalar>::updateCoeffs()
 
         scalarField Un = max
         (
-            scalarField::subField(phip, size()/2)
-           /scalarField::subField(patch().magSf(), size()/2),
+            scalarField::subField(phip, size()/2)/
+            scalarField::subField(patch().magSf(), size()/2),
             scalar(0)
         );
 
