@@ -146,6 +146,13 @@ inline Foam::scalar Foam::pointEdgePoint::distSqr() const
 }
 
 
+inline void Foam::pointEdgePoint::reset()
+{
+    origin_ = greatPoint;
+    distSqr_ = GREAT;
+}
+
+
 inline bool Foam::pointEdgePoint::valid() const
 {
     return origin_ != greatPoint;

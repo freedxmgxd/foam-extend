@@ -75,6 +75,7 @@ class pointEdgePoint
         //- normal distance (squared) from point to origin
         scalar distSqr_;
 
+
     // Private Member Functions
 
         //- Evaluate distance to point. Update distSqr, origin from whomever
@@ -94,6 +95,7 @@ class pointEdgePoint
             const pointEdgePoint& w2,
             const scalar tol
         );
+
 
 public:
 
@@ -115,10 +117,15 @@ public:
 
         // Access
 
+            //- Return origin
             inline const point& origin() const;
 
+            //- Return distance squared
             inline scalar distSqr() const;
 
+            //- Reset to invalid
+            inline void reset();
+    
 
         // Needed by meshWave
 
@@ -191,7 +198,7 @@ public:
 
     // Member Operators
 
-        //Note: Used to determine whether to call update.
+        // Note: Used to determine whether to call update.
         inline bool operator==(const pointEdgePoint&) const;
 
         inline bool operator!=(const pointEdgePoint&) const;

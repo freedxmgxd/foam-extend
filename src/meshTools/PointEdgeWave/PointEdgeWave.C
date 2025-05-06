@@ -44,7 +44,7 @@ Foam::scalar Foam::PointEdgeWave<Type>::propagationTol_ = 0.01;
 template <class Type>
 void Foam::PointEdgeWave<Type>::offset(const label val, labelList& elems)
 {
-    forAll(elems, i)
+    forAll (elems, i)
     {
         elems[i] += val;
     }
@@ -62,7 +62,7 @@ void Foam::PointEdgeWave<Type>::calcCyclicAddressing()
 {
     label cycHalf = 0;
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll (mesh_.boundaryMesh(), patchI)
     {
         const polyPatch& patch = mesh_.boundaryMesh()[patchI];
 
@@ -112,7 +112,7 @@ void Foam::PointEdgeWave<Type>::leaveDomain
 {
     const labelList& meshPoints = patch.meshPoints();
 
-    forAll(patchPointLabels, i)
+    forAll (patchPointLabels, i)
     {
         label patchPointI = patchPointLabels[i];
 
@@ -135,7 +135,7 @@ void Foam::PointEdgeWave<Type>::enterDomain
 {
     const labelList& meshPoints = patch.meshPoints();
 
-    forAll(patchPointLabels, i)
+    forAll (patchPointLabels, i)
     {
         label patchPointI = patchPointLabels[i];
 
@@ -158,7 +158,7 @@ void Foam::PointEdgeWave<Type>::transform
     {
         const tensor& T = rotTensor[0];
 
-        forAll(pointInfo, i)
+        forAll (pointInfo, i)
         {
             pointInfo[i].transform(T);
         }
@@ -169,7 +169,7 @@ void Foam::PointEdgeWave<Type>::transform
             << "Parallel cyclics not supported"
             << abort(FatalError);
 
-        forAll(pointInfo, i)
+        forAll (pointInfo, i)
         {
             pointInfo[i].transform(rotTensor[i]);
         }
@@ -323,7 +323,7 @@ Foam::label Foam::PointEdgeWave<Type>::countPatchType() const
 {
     label nPatches = 0;
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll (mesh_.boundaryMesh(), patchI)
     {
         if (isA<PatchType>(mesh_.boundaryMesh()[patchI]))
         {
@@ -350,7 +350,7 @@ void Foam::PointEdgeWave<Type>::getChangedPatchPoints
     const faceList& localFaces = patch.localFaces();
     const labelListList& pointFaces = patch.pointFaces();
 
-    forAll(meshPoints, patchPointI)
+    forAll (meshPoints, patchPointI)
     {
         label meshPointI = meshPoints[patchPointI];
 
@@ -398,7 +398,7 @@ void Foam::PointEdgeWave<Type>::updateFromPatchInfo
     labelList changedPatchPoints(patchInfo.size());
     labelList changedMeshPoints(patchInfo.size());
 
-    forAll(owner, i)
+    forAll (owner, i)
     {
         label faceI = owner[i];
 
@@ -414,7 +414,7 @@ void Foam::PointEdgeWave<Type>::updateFromPatchInfo
     enterDomain(meshPatch, patch, changedPatchPoints, patchInfo);
 
     // Merge received info
-    forAll(patchInfo, i)
+    forAll (patchInfo, i)
     {
         updatePoint
         (
@@ -435,7 +435,7 @@ void Foam::PointEdgeWave<Type>::handleProcPatches()
     // 1. Send all point info on processor patches. Send as
     // face label + offset in face.
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll (mesh_.boundaryMesh(), patchI)
     {
         const polyPatch& patch = mesh_.boundaryMesh()[patchI];
 
@@ -487,7 +487,7 @@ void Foam::PointEdgeWave<Type>::handleProcPatches()
     // 2. Receive all point info on processor patches.
     //
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll (mesh_.boundaryMesh(), patchI)
     {
         const polyPatch& patch = mesh_.boundaryMesh()[patchI];
 
@@ -544,7 +544,7 @@ void Foam::PointEdgeWave<Type>::handleProcPatches()
 
     List<Type> sharedData(pd.nGlobalPoints());
 
-    forAll(pd.sharedPointLabels(), i)
+    forAll (pd.sharedPointLabels(), i)
     {
         label meshPointI = pd.sharedPointLabels()[i];
 
@@ -556,7 +556,7 @@ void Foam::PointEdgeWave<Type>::handleProcPatches()
     // Type.updatePoint for all elements
     combineReduce(sharedData, listUpdateOp<Type>());
 
-    forAll(pd.sharedPointLabels(), i)
+    forAll (pd.sharedPointLabels(), i)
     {
         label meshPointI = pd.sharedPointLabels()[i];
 
@@ -580,7 +580,7 @@ void Foam::PointEdgeWave<Type>::handleCyclicPatches()
 
     label cycHalf = 0;
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll (mesh_.boundaryMesh(), patchI)
     {
         const polyPatch& patch = mesh_.boundaryMesh()[patchI];
 
@@ -694,7 +694,7 @@ void Foam::PointEdgeWave<Type>::updateFromPatchInfo
     const pointField& points = to.points();
     const List<face>& allFaces = mesh_.allFaces();
 
-    forAll(patchInfo, i)
+    forAll (patchInfo, i)
     {
         label fID = to.shadow().zone()[owner[i]];
         label pID = allFaces[fID][ownerIndex[i]];
@@ -720,12 +720,12 @@ void Foam::PointEdgeWave<Type>::updateFromPatchInfo
             label nearestFace = -1;
             scalar dist = GREAT;
 
-            forAll(addr, saI)
+            forAll (addr, saI)
             {
                 label fID2 = to.zone()[addr[saI]];
 
                 const face& f = allFaces[fID2];
-                forAll(f, pI)
+                forAll (f, pI)
                 {
                     label pID2 = f[pI];
 
@@ -778,7 +778,7 @@ void Foam::PointEdgeWave<Type>::updateFromPatchInfo
 template <class Type>
 void Foam::PointEdgeWave<Type>::handleGgiPatches()
 {
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll (mesh_.boundaryMesh(), patchI)
     {
         const polyPatch& patch = mesh_.boundaryMesh()[patchI];
 
@@ -787,7 +787,8 @@ void Foam::PointEdgeWave<Type>::handleGgiPatches()
             const ggiPolyPatch& master = refCast<const ggiPolyPatch>(patch);
             const ggiPolyPatch& slave = master.shadow();
 
-            if(master.master() && (master.localParallel() || master.size()))
+            // if (master.master() && (master.localParallel() || master.size()))
+            if (master.master())
             {
                 // 1. Collect all point info on master side
                 DynamicList<Type> masterInfo(master.nPoints());
@@ -807,7 +808,7 @@ void Foam::PointEdgeWave<Type>::handleGgiPatches()
                         masterOwnerIndex
                     );
 
-                    forAll(masterOwner, i)
+                    forAll (masterOwner, i)
                     {
                         masterOwner[i] =
                             master.zoneAddressing()[masterOwner[i]];
@@ -842,7 +843,7 @@ void Foam::PointEdgeWave<Type>::handleGgiPatches()
                         slaveOwnerIndex
                     );
 
-                    forAll(slaveOwner, i)
+                    forAll (slaveOwner, i)
                     {
                         slaveOwner[i] =
                             slave.zoneAddressing()[slaveOwner[i]];
@@ -860,7 +861,7 @@ void Foam::PointEdgeWave<Type>::handleGgiPatches()
 
                 }
 
-                if(!master.localParallel())
+                // if (!master.localParallel())
                 {
                     combineReduce(masterInfo, listAppendOp<Type>());
                     combineReduce(slaveInfo, listAppendOp<Type>());
@@ -947,15 +948,14 @@ Foam::PointEdgeWave<Type>::PointEdgeWave
 {
     if
     (
-        allPointInfo_.size() != mesh_.nPoints()
-        && allPointInfo_.size() != mesh_.allPoints().size()
+        allPointInfo_.size() != mesh_.allPoints().size()
     )
     {
         FatalErrorInFunction
             << "size of pointInfo work array is not equal to the number"
             << " of points in the mesh" << endl
             << "    pointInfo   :" << allPointInfo_.size() << endl
-            << "    mesh.nPoints:" << mesh_.nPoints()
+            << "    mesh.nPoints:" << mesh_.allPoints().size()
             << exit(FatalError);
     }
     if (allEdgeInfo_.size() != mesh_.nEdges())
@@ -1031,7 +1031,7 @@ void Foam::PointEdgeWave<Type>::setPointInfo
     const List<Type>& changedPointsInfo
 )
 {
-    forAll(changedPoints, changedPointI)
+    forAll (changedPoints, changedPointI)
     {
         label pointI = changedPoints[changedPointI];
 
@@ -1085,7 +1085,7 @@ Foam::label Foam::PointEdgeWave<Type>::edgeToPoint()
         // Evaluate all connected points (= edge endpoints)
         const edge& e = mesh_.edges()[edgeI];
 
-        forAll(e, eI)
+        forAll (e, eI)
         {
             Type& currentWallInfo = allPointInfo_[e[eI]];
 
@@ -1114,11 +1114,13 @@ Foam::label Foam::PointEdgeWave<Type>::edgeToPoint()
         // Transfer changed points across cyclic halves
         handleCyclicPatches();
     }
+
     if (nGgiPatches_ > 0)
     {
         // Transfer changed points across cyclic halves
         handleGgiPatches();
     }
+
     if (Pstream::parRun())
     {
         // Transfer changed points from neighbouring processors.
@@ -1168,7 +1170,7 @@ Foam::label Foam::PointEdgeWave<Type>::pointToEdge()
         // Evaluate all connected edges
 
         const labelList& edgeLabels = pointEdges[pointI];
-        forAll(edgeLabels, edgeLabelI)
+        forAll (edgeLabels, edgeLabelI)
         {
             label edgeI = edgeLabels[edgeLabelI];
 
@@ -1217,11 +1219,13 @@ Foam::label Foam::PointEdgeWave<Type>::iterate(const label maxIter)
         // Transfer changed points across cyclic halves
         handleCyclicPatches();
     }
+
     if (nGgiPatches_ > 0)
     {
         // Transfer changed points across ggi patches
         handleGgiPatches();
     }
+
     if (Pstream::parRun())
     {
         // Transfer changed points from neighbouring processors.

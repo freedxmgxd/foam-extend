@@ -32,7 +32,6 @@ Description
 Foam::point Foam::pointEdgePoint::greatPoint(GREAT, GREAT, GREAT);
 
 
-
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
 Foam::Ostream& Foam::operator<<
