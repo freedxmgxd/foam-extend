@@ -27,7 +27,9 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "compressible/turbulenceModel/turbulenceModel.H"
+#include "compressible/RAS/RASModel/RASModel.H"
 #include "incompressible/turbulenceModel/turbulenceModel.H"
+#include "incompressible/RAS/RASModel/RASModel.H"
 #include "wallPolyPatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -110,16 +112,9 @@ Foam::wallShearStress::wallShearStress
     if (!isA<fvMesh>(obr_))
     {
         active_ = false;
-        WarningIn
-        (
-            "wallShearStress::wallShearStress"
-            "("
-                "const word&, "
-                "const objectRegistry&, "
-                "const dictionary&, "
-                "const bool"
-            ")"
-        )   << "No fvMesh available, deactivating " << name_ << nl
+
+        WarningInFunction
+            << "No fvMesh available, deactivating " << name_ << nl
             << endl;
     }
 
@@ -154,12 +149,6 @@ Foam::wallShearStress::wallShearStress
 
     read(dict);
 }
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::wallShearStress::~wallShearStress()
-{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -207,7 +196,7 @@ void Foam::wallShearStress::read(const dictionary& dict)
                 }
                 else
                 {
-                    WarningIn("void wallShearStress::read(const dictionary&)")
+                    WarningInFunction
                         << "Requested wall shear stress on non-wall boundary "
                         << "type patch: " << pbm[patchI].name() << endl;
                 }
@@ -225,6 +214,9 @@ void Foam::wallShearStress::execute()
 {
     typedef compressible::turbulenceModel cmpModel;
     typedef incompressible::turbulenceModel icoModel;
+
+    typedef compressible::RASModel cmpRASModel;
+    typedef incompressible::RASModel icoRASModel;
 
     if (active_)
     {
@@ -249,6 +241,13 @@ void Foam::wallShearStress::execute()
 
             Reff = model.devRhoReff();
         }
+        else if (mesh.foundObject<cmpRASModel>("RASProperties"))
+        {
+            const cmpRASModel& model =
+                mesh.lookupObject<cmpRASModel>("RASProperties");
+
+            Reff = model.devRhoReff();
+        }
         else if (mesh.foundObject<icoModel>("turbulenceProperties"))
         {
             const icoModel& model =
@@ -256,9 +255,16 @@ void Foam::wallShearStress::execute()
 
             Reff = model.devReff();
         }
+        else if (mesh.foundObject<icoRASModel>("RASProperties"))
+        {
+            const icoModel& model =
+                mesh.lookupObject<icoRASModel>("RASProperties");
+
+            Reff = model.devReff();
+        }
         else
         {
-            FatalErrorIn("void Foam::wallShearStress::execute()")
+            FatalErrorInFunction
                 << "Unable to find turbulence model in the "
                 << "database" << exit(FatalError);
         }

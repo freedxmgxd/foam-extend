@@ -132,10 +132,10 @@ protected:
         );
 
         //- Disallow default bitwise copy construct
-        wallShearStress(const wallShearStress&);
+        wallShearStress(const wallShearStress&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const wallShearStress&);
+        void operator=(const wallShearStress&) = delete;
 
 
 public:
@@ -158,7 +158,7 @@ public:
 
 
     //- Destructor
-    virtual ~wallShearStress();
+    virtual ~wallShearStress() = default;
 
 
     // Member Functions
