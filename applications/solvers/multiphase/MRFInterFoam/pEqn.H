@@ -13,7 +13,7 @@
         (fvc::interpolate(U) & mesh.Sf())
     //+ fvc::ddtPhiCorr(rUA, rho, U, phi)
     );
-    mrfZones.relativeFlux(phiU);
+    mrfZones.relativeFlux(phiU, rho, U);
 
     phi = phiU +
         (

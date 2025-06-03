@@ -13,7 +13,7 @@
 
     UEqn.clear();
     phi = (fvc::interpolate(U) & mesh.Sf());
-    mrfZones.relativeFlux(phi);
+    mrfZones.relativeFlux(phi, U);
 
     // Adjust overset fluxes
     oversetAdjustPhi(phi, U); // Fringe flux adjustment
