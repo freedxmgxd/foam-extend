@@ -51,17 +51,8 @@ void Foam::setRefCell
 
                 if (refCelli < 0 || refCelli >= field.mesh().nCells())
                 {
-                    FatalIOErrorIn
-                    (
-                        "void Foam::setRefCell\n"
-                         "(\n"
-                         "    const volScalarField&,\n"
-                         "    const dictionary&,\n"
-                         "    label& scalar&,\n"
-                         "    bool\n"
-                         ")",
-                        dict
-                    )   << "Illegal master cellID " << refCelli
+                    FatalIOErrorInFunction(dict)
+                        << "Illegal master cellID " << refCelli
                         << ". Should be 0." << field.mesh().nCells()
                         << exit(FatalIOError);
                 }
@@ -77,19 +68,11 @@ void Foam::setRefCell
             refCelli = field.mesh().findCell(refPointi);
             label hasRef = (refCelli >= 0 ? 1 : 0);
             label sumHasRef = returnReduce<label>(hasRef, sumOp<label>());
+
             if (sumHasRef != 1)
             {
-                FatalIOErrorIn
-                (
-                    "void Foam::setRefCell\n"
-                     "(\n"
-                     "    const volScalarField&,\n"
-                     "    const dictionary&,\n"
-                     "    label& scalar&,\n"
-                     "    bool\n"
-                     ")",
-                    dict
-                )   << "Unable to set reference cell for field "
+                FatalIOErrorInFunction(dict)
+                    << "Unable to set reference cell for field "
                     << field.name() << nl
                     << "    Reference point " << refPointName
                     << " " << refPointi
@@ -99,17 +82,8 @@ void Foam::setRefCell
         }
         else
         {
-            FatalIOErrorIn
-            (
-                "void Foam::setRefCell\n"
-                 "(\n"
-                 "    const volScalarField&,\n"
-                 "    const dictionary&,\n"
-                 "    label& scalar&,\n"
-                 "    bool\n"
-                 ")",
-                dict
-            )   << "Unable to set reference cell for field " << field.name()
+            FatalIOErrorInFunction(dict)
+                << "Unable to set reference cell for field " << field.name()
                 << nl
                 << "    Please supply either " << refCellName
                 << " or " << refPointName << nl << exit(FatalIOError);

@@ -188,7 +188,7 @@ public:
         virtual bool readData(Istream&);
 
         //- Write data
-        bool writeData(Ostream&, bool subDict = true) const;
+        virtual bool writeData(Ostream&, bool subDict = true) const;
 };
 
 

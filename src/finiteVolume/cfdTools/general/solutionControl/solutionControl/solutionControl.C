@@ -899,7 +899,7 @@ void Foam::solutionControl::calcSteadyMRFConsistentFlux
     phi = (fvc::interpolate(U) & mesh_.Sf());
 
     surfaceScalarField meshPhi("meshPhi", phi);
-    mrfZones.relativeFlux(phi);
+    mrfZones.relativeFlux(phi, U);
 
     meshPhi -= phi;
 
