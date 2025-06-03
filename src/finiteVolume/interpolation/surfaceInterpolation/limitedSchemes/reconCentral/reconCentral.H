@@ -60,16 +60,20 @@ class reconCentral
 {
     // Private Data
 
+        //- Name of gradient scheme
+        word gradSchemeName_;
+
+        //- Gradient scheme
         tmp<fv::gradScheme<Type> > gradScheme_;
 
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        reconCentral(const reconCentral&);
+        reconCentral(const reconCentral&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const reconCentral&);
+        void operator=(const reconCentral&) = delete;
 
 
 public:
@@ -88,6 +92,7 @@ public:
         )
         :
             upwind<Type>(mesh, faceFlux),
+            gradSchemeName_("grad"),
             gradScheme_
             (
                 new fv::gaussGrad<Type>(mesh)
@@ -104,6 +109,7 @@ public:
         )
         :
             upwind<Type>(mesh, schemeData),
+            gradSchemeName_(schemeData),
             gradScheme_
             (
                 fv::gradScheme<Type>::New
@@ -123,15 +129,20 @@ public:
         )
         :
             upwind<Type>(mesh, faceFlux, schemeData),
+            gradSchemeName_(schemeData),
             gradScheme_
             (
                 fv::gradScheme<Type>::New
                 (
                     mesh,
-                    schemeData
+                    mesh.schemesDict().gradScheme(gradSchemeName_)
                 )
             )
         {}
+
+
+    //- Destructor
+    virtual ~reconCentral() = default;
 
 
     // Member Functions

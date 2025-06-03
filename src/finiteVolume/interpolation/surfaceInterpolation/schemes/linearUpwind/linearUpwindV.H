@@ -65,10 +65,10 @@ class linearUpwindV
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        linearUpwindV(const linearUpwindV&);
+        linearUpwindV(const linearUpwindV&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const linearUpwindV&);
+        void operator=(const linearUpwindV&) = delete;
 
 
 public:
@@ -134,6 +134,10 @@ public:
                 )
             )
         {}
+
+
+    //- Destructor
+    virtual ~linearUpwindV() = default;
 
 
     // Member Functions
