@@ -73,20 +73,20 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
     bs.negSumDiag();
 
     // Boundary contributions
-    forAll(vf.boundaryField(), patchI)
+    forAll (vf.boundaryField(), patchI)
     {
         const fvPatchVectorField& pf = vf.boundaryField()[patchI];
         const fvPatch& patch = pf.patch();
-        const vectorField& Sf = patch.Sf();
+        const vectorField& pSf = patch.Sf();
         const fvsPatchScalarField& pw = weights.boundaryField()[patchI];
         const labelUList& fc = patch.faceCells();
 
         const vectorField internalCoeffs(pf.valueInternalCoeffs(pw));
 
         // Diag contribution
-        forAll(pf, faceI)
+        forAll (pf, faceI)
         {
-            d[fc[faceI]] += cmptMultiply(internalCoeffs[faceI], Sf[faceI]);
+            d[fc[faceI]] += cmptMultiply(internalCoeffs[faceI], pSf[faceI]);
         }
 
         if (patch.coupled())
@@ -96,18 +96,29 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
             CoeffField<vector>::linearTypeField& pcoupleLower =
                 bs.coupleLower()[patchI].asLinear();
 
+            const vectorField pcl = -pw*pSf;
+            const vectorField pcu = (1 - pw)*pSf;
+
             // Coupling  contributions
-            pcoupleLower = pw*Sf;
-            pcoupleUpper = -(1 - pw)*Sf;
+
+            // Note: pcoupleLower is only needed for Tmul.
+            // Diagonal part of coefficient is handled by valueInternalCoeffs
+            // which is added to diag above
+            // HJ, 4/Nov/2024
+
+            // Coupling  contributions.  Note change of sign because of
+            // boundary coeffients are on the other side.  HJ, 3/Dec/2024
+            pcoupleLower = -pcl;
+            pcoupleUpper = -pcu;
         }
         else
         {
             const vectorField boundaryCoeffs(pf.valueBoundaryCoeffs(pw));
 
             // Boundary contribution
-            forAll(pf, faceI)
+            forAll (pf, faceI)
             {
-                source[fc[faceI]] -= boundaryCoeffs[faceI] & Sf[faceI];
+                source[fc[faceI]] -= boundaryCoeffs[faceI] & pSf[faceI];
             }
         }
     }
@@ -152,11 +163,11 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
     bs.negSumDiag();
 
     // Boundary contributions
-    forAll(vf.boundaryField(), patchI)
+    forAll (vf.boundaryField(), patchI)
     {
         const fvPatchVectorField& pf = vf.boundaryField()[patchI];
         const fvPatch& patch = pf.patch();
-        const vectorField& Sf = patch.Sf();
+        const vectorField& pSf = patch.Sf();
         const fvsPatchScalarField& pw = weights.boundaryField()[patchI];
         const labelUList& fc = patch.faceCells();
 
@@ -165,12 +176,12 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
         const vectorField internalCoeffs(pf.valueInternalCoeffs(pw));
 
         // Diag contribution
-        forAll(pf, faceI)
+        forAll (pf, faceI)
         {
             d[fc[faceI]] += cmptMultiply
             (
                 internalCoeffs[faceI],
-                pFlux[faceI]*Sf[faceI]
+                pFlux[faceI]*pSf[faceI]
             );
         }
 
@@ -182,19 +193,26 @@ tmp<BlockLduSystem<vector, scalar> > gaussDivScheme<vector>::fvmUDiv
                 bs.coupleLower()[patchI].asLinear();
 
             // Coupling  contributions
-            pcoupleLower = pw*pFlux*Sf;
-            pcoupleUpper = -(1 - pw)*pFlux*Sf;
+            const vectorField pcl = -pw*pFlux*pSf;
+            const vectorField pcu = (1 - pw)*pFlux*pSf;
+
+            // Note: pcoupleLower is only needed for Tmul.
+            // Diagonal part of coefficient is handled by valueInternalCoeffs
+            // which is added to diag above
+            // HJ, 4/Nov/2024
+            pcoupleLower = -pcl;
+            pcoupleUpper = -pcu;
         }
         else
         {
             const vectorField boundaryCoeffs(pf.valueBoundaryCoeffs(pw));
 
             // Boundary contribution
-            forAll(pf, faceI)
+            forAll (pf, faceI)
             {
                 source[fc[faceI]] -=
                 (
-                    boundaryCoeffs[faceI] & (pFlux[faceI]*Sf[faceI])
+                    boundaryCoeffs[faceI] & (pFlux[faceI]*pSf[faceI])
                 );
             }
         }

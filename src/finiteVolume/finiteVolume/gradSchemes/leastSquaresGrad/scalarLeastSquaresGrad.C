@@ -136,11 +136,16 @@ tmp<BlockLduSystem<vector, vector> > leastSquaresGrad<scalar>::fvmGrad
             CoeffField<vector>::linearTypeField& pcoupleLower =
                 bs.coupleLower()[patchI].asLinear();
 
-            // Coupling  and diagonal contributions
+            // Coupling  contributions
+            // Diagonal is handled above both for coupled and decoupled patches
+            // HJ, 4/Nov/2024
+
+            // Coupling  contributions.  Note change of sign because of
+            // boundary coeffients are on the other side.  HJ, 3/Dec/2024
             forAll (pf, faceI)
             {
-                pcoupleUpper[faceI] -= cellVIn[fc[faceI]]*pownLs[faceI];
-                pcoupleLower[faceI] -= cellVInNei[faceI]*pneiLs[faceI];
+                pcoupleUpper[faceI] = -cellVIn[fc[faceI]]*pownLs[faceI];
+                pcoupleLower[faceI] = -cellVInNei[faceI]*pneiLs[faceI];
             }
         }
         else

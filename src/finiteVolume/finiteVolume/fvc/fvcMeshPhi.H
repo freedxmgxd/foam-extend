@@ -69,6 +69,12 @@ namespace fvc
         const volVectorField& U
     );
 
+    tmp<surfaceScalarField> meshPhi
+    (
+        const surfaceScalarField& rho,
+        const volVectorField& U
+    );
+
 
     //- Make the given flux relative
     void makeRelative
@@ -93,6 +99,14 @@ namespace fvc
         const volVectorField& U
     );
 
+    //- Make the given flux relative
+    void makeRelative
+    (
+        surfaceScalarField& phi,
+        const surfaceScalarField& rho,
+        const volVectorField& U
+    );
+
 
     //- Make the given flux absolute
     void makeAbsolute
@@ -114,6 +128,14 @@ namespace fvc
     (
         surfaceScalarField& phi,
         const volScalarField& rho,
+        const volVectorField& U
+    );
+
+    //- Make the given flux absolute
+    void makeAbsolute
+    (
+        surfaceScalarField& phi,
+        const surfaceScalarField& rho,
         const volVectorField& U
     );
 }

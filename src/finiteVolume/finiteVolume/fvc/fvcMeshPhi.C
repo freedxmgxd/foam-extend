@@ -76,6 +76,23 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::meshPhi
 }
 
 
+Foam::tmp<Foam::surfaceScalarField> Foam::fvc::meshPhi
+(
+    const surfaceScalarField& rho,
+    const volVectorField& vf
+)
+{
+    return fv::ddtScheme<vector>::New
+    (
+        vf.mesh(),
+        vf.mesh().schemesDict().ddtScheme
+        (
+            "ddt(" + rho.name() + ',' + vf.name() + ')'
+        )
+    )().meshPhi(vf);
+}
+
+
 void Foam::fvc::makeRelative
 (
     surfaceScalarField& phi,
@@ -117,6 +134,20 @@ void Foam::fvc::makeRelative
 }
 
 
+void Foam::fvc::makeRelative
+(
+    surfaceScalarField& phi,
+    const surfaceScalarField& rho,
+    const volVectorField& U
+)
+{
+    if (phi.mesh().moving())
+    {
+        phi -= rho*fvc::meshPhi(rho, U);
+    }
+}
+
+
 void Foam::fvc::makeAbsolute
 (
     surfaceScalarField& phi,
@@ -154,6 +185,20 @@ void Foam::fvc::makeAbsolute
     if (phi.mesh().moving())
     {
         phi += fvc::interpolate(rho)*fvc::meshPhi(rho, U);
+    }
+}
+
+
+void Foam::fvc::makeAbsolute
+(
+    surfaceScalarField& phi,
+    const surfaceScalarField& rho,
+    const volVectorField& U
+)
+{
+    if (phi.mesh().moving())
+    {
+        phi += rho*fvc::meshPhi(rho, U);
     }
 }
 

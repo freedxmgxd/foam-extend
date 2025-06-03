@@ -94,9 +94,13 @@ tmp<BlockLduSystem<vector, vector> > gaussGrad<scalar>::fvmGrad
             CoeffField<vector>::linearTypeField& pcoupleLower =
                 bs.coupleLower()[patchI].asLinear();
 
-            // Coupling  contributions
-            pcoupleLower = -pw*pSf;
-            pcoupleUpper = (1 - pw)*pSf;
+            const vectorField pcl = -pw*pSf;
+            const vectorField pcu = (1 - pw)*pSf;
+
+            // Coupling  contributions.  Note change of sign because of
+            // boundary coeffients are on the other side.  HJ, 3/Dec/2024
+            pcoupleLower = -pcl;
+            pcoupleUpper = -pcu;
         }
         else
         {
