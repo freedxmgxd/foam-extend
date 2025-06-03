@@ -396,14 +396,6 @@ bool coupledKOmegaSST::read()
 
 void coupledKOmegaSST::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(omega_, omega0_);
-    }
-
     RASModel::correct();
 
     if (!turbulence_)
@@ -419,8 +411,13 @@ void coupledKOmegaSST::correct()
     const volScalarField S2(2*magSqr(symm(fvc::grad(U_))));
     volScalarField G(GName(), nut_*S2);
 
-    // Make coupled matrix
-    fvBlockMatrix<vector2> kOmegaEqn(kOmega_);
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(omega_, omega0_);
+    }
 
     // Update omega and G at the wall
     omega_.boundaryField().updateCoeffs();
@@ -431,6 +428,9 @@ void coupledKOmegaSST::correct()
     );
 
     const volScalarField F1(this->F1(CDkOmega));
+
+    // Make coupled matrix
+    fvBlockMatrix<vector2> kOmegaEqn(kOmega_);
 
     // Record coupling equations when omega is set.  Same equations
     // will be eliminated from k coupling as well due to wall functions

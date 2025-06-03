@@ -409,14 +409,6 @@ bool kOmegaSST::read()
 
 void kOmegaSST::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(omega_, omega0_);
-    }
-
     if (!turbulence_)
     {
         // Re-calculate viscosity
@@ -454,6 +446,14 @@ void kOmegaSST::correct()
     volScalarField GbyMu((gradU && dev(twoSymm(gradU))));
     volScalarField G(GName(), mut_*GbyMu);
     tgradU.clear();
+
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(omega_, omega0_);
+    }
 
     // Update omega and G at the wall
     omega_.boundaryField().updateCoeffs();

@@ -383,14 +383,6 @@ bool kOmegaSST::read()
 
 void kOmegaSST::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(omega_, omega0_);
-    }
-
     RASModel::correct();
 
     if (!turbulence_)
@@ -405,6 +397,14 @@ void kOmegaSST::correct()
 
     const volScalarField S2(2*magSqr(symm(fvc::grad(U_))));
     volScalarField G(GName(), nut_*S2);
+
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(omega_, omega0_);
+    }
 
     // Update omega and G at the wall
     omega_.boundaryField().updateCoeffs();

@@ -226,16 +226,6 @@ bool coupledKEpsilon::read()
 
 void coupledKEpsilon::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(epsilon_, epsilon0_);
-    }
-
-    RASModel::correct();
-
     if (!turbulence_)
     {
         return;
@@ -245,6 +235,16 @@ void coupledKEpsilon::correct()
     fvBlockMatrix<vector2> keEqn(kEpsilon_);
 
     volScalarField G(GName(), nut_*2*magSqr(symm(fvc::grad(U_))));
+
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(epsilon_, epsilon0_);
+    }
+
+    RASModel::correct();
 
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();

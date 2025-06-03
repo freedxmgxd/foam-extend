@@ -224,14 +224,6 @@ bool LamBremhorstKE::read()
 
 void LamBremhorstKE::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(epsilon_, epsilon0_);
-    }
-
     RASModel::correct();
 
     if (!turbulence_)
@@ -246,6 +238,13 @@ void LamBremhorstKE::correct()
 
     volScalarField G(GName(), nut_*2*magSqr(symm(fvc::grad(U_))));
 
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(epsilon_, epsilon0_);
+    }
 
     // Calculate parameters and coefficients for low-Reynolds number model
 

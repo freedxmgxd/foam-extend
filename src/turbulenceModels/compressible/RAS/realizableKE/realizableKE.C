@@ -292,14 +292,6 @@ bool realizableKE::read()
 
 void realizableKE::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(epsilon_, epsilon0_);
-    }
-
     if (!turbulence_)
     {
         // Re-calculate viscosity
@@ -333,6 +325,14 @@ void realizableKE::correct()
     volScalarField C1 = max(eta/(scalar(5) + eta), scalar(0.43));
 
     volScalarField G(GName(), mut_*(gradU && dev(twoSymm(gradU))));
+
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(epsilon_, epsilon0_);
+    }
 
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();

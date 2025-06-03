@@ -305,14 +305,6 @@ bool NonlinearKEShih::read()
 
 void NonlinearKEShih::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(epsilon_, epsilon0_);
-    }
-
     RASModel::correct();
 
     if (!turbulence_)
@@ -333,6 +325,14 @@ void NonlinearKEShih::correct()
         Cmu_*sqr(k_)/epsilon_*S2
       - (nonlinearStress_ && gradU)
     );
+
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(epsilon_, epsilon0_);
+    }
 
 #   include "nonLinearWallFunctionsI.H"
 

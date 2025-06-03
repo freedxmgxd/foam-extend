@@ -243,14 +243,6 @@ bool RNGkEpsilon::read()
 
 void RNGkEpsilon::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(epsilon_, epsilon0_);
-    }
-
     RASModel::correct();
 
     if (!turbulence_)
@@ -261,6 +253,14 @@ void RNGkEpsilon::correct()
     volScalarField S2 = 2*magSqr(symm(fvc::grad(U_)));
 
     volScalarField G(GName(), nut_*S2);
+
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(epsilon_, epsilon0_);
+    }
 
     volScalarField eta = sqrt(S2)*k_/epsilon_;
     volScalarField R =

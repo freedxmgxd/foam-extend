@@ -389,14 +389,6 @@ bool LienCubicKELowRe::read()
 
 void LienCubicKELowRe::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(epsilon_, epsilon0_);
-    }
-
     RASModel::correct();
 
     if (!turbulence_)
@@ -425,8 +417,19 @@ void LienCubicKELowRe::correct()
 
     volScalarField f2 = scalar(1) - 0.3*exp(-sqr(Rt));
 
-    volScalarField G =
-        Cmu_*fMu*sqr(k_)/epsilon_*S2 - (nonlinearStress_ && gradU);
+    volScalarField G
+    (
+        GName(),
+        Cmu_*fMu*sqr(k_)/epsilon_*S2 - (nonlinearStress_ && gradU)
+    );
+
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(epsilon_, epsilon0_);
+    }
 
     // Dissipation equation
     fvScalarMatrix epsEqn

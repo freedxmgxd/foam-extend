@@ -322,14 +322,6 @@ bool LRR::read()
 
 void LRR::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(epsilon_, epsilon0_);
-    }
-
     if (!turbulence_)
     {
         // Re-calculate viscosity
@@ -348,6 +340,14 @@ void LRR::correct()
 
     volSymmTensorField P = -twoSymm(R_ & fvc::grad(U_));
     volScalarField G(GName(), 0.5*mag(tr(P)));
+
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(epsilon_, epsilon0_);
+    }
 
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();

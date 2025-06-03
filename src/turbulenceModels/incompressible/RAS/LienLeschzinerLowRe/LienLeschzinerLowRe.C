@@ -270,14 +270,6 @@ bool LienLeschzinerLowRe::read()
 
 void LienLeschzinerLowRe::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(epsilon_, epsilon0_);
-    }
-
     RASModel::correct();
 
     if (!turbulence_)
@@ -309,6 +301,13 @@ void LienLeschzinerLowRe::correct()
 
     volScalarField G(GName(), Cmu_*fMu*sqr(k_)/epsilon_*S2);
 
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(epsilon_, epsilon0_);
+    }
 
     // Dissipation equation
     fvScalarMatrix epsEqn

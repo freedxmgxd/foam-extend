@@ -315,14 +315,6 @@ bool LienCubicKE::read()
 
 void LienCubicKE::correct()
 {
-    // Bound in case of topological change
-    // HJ, 22/Aug/2007
-    if (mesh_.changing())
-    {
-        bound(k_, k0_);
-        bound(epsilon_, epsilon0_);
-    }
-
     RASModel::correct();
 
     if (!turbulence_)
@@ -342,6 +334,14 @@ void LienCubicKE::correct()
         GName(),
         Cmu_*sqr(k_)/epsilon_*S2 - (nonlinearStress_ && gradU)
     );
+
+    // Bound in case of topological change
+    // HJ, 22/Aug/2007
+    if (mesh_.changing())
+    {
+        bound(k_, k0_);
+        bound(epsilon_, epsilon0_);
+    }
 
     // Update epsilon and G at the wall
     epsilon_.boundaryField().updateCoeffs();
