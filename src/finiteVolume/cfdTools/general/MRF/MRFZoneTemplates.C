@@ -27,6 +27,7 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
+#include "fvc.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -37,11 +38,17 @@ void Foam::MRFZone::relativeRhoFlux
     surfaceScalarField& phi
 ) const
 {
+    // If the mesh is changing, additional mesh motion flux needs to be added
+    // HJ, 14/May/2025
+    if (mesh_.changing())
+    {
+        Info<< "Adjust for relative mesh motion flux" << endl;
+        fvc::makeRelative(rho, phi);
+    }
+    
     // Get mesh velocity calculated from virtual mesh motion
     // HJ, 6/Jun/2017
-    const surfaceScalarField& meshVel = meshVelocity();
-
-    label faceI, patchFaceI;
+    const surfaceScalarField& meshVel = MRFMeshVelocity();
 
     // Internal faces
     scalarField& phiIn = phi.internalField();
@@ -49,34 +56,38 @@ void Foam::MRFZone::relativeRhoFlux
 
     forAll (internalFaces_, i)
     {
-        faceI = internalFaces_[i];
+        const label faceI = internalFaces_[i];
 
         phiIn[faceI] -= rho[faceI]*meshVelIn[faceI];
     }
 
-    // Included patches: reset the flux to exactly zero to avoid
-    // round-off issues
-    forAll (includedFaces_, patchI)
+    forAll (mesh_.boundary(), patchI)
     {
+        // Get patch rho
+        const scalarField& patchRho = rho.boundaryField()[patchI];
+        
+        // Get patch MRF flux
+        const scalarField& patchU = meshVel.boundaryField()[patchI];
+        
+        scalarField& patchPhi = phi.boundaryField()[patchI];
+        
+        // Included faces
         forAll (includedFaces_[patchI], i)
         {
-            patchFaceI = includedFaces_[patchI][i];
+            const label patchFaceI = includedFaces_[patchI][i];
 
             // Bugfix, HJ and HN, 3/Jul/2020
-            phi.boundaryField()[patchI][patchFaceI] = 0;
+            // Note: this should be zero if velocity is correctly adjusted
+            // Reconsider
+            patchPhi[patchFaceI] -= patchRho[patchFaceI]*patchU[patchFaceI];
         }
-    }
 
-    // Excluded patches
-    forAll (excludedFaces_, patchI)
-    {
+        // Excluded faces
         forAll (excludedFaces_[patchI], i)
         {
-            patchFaceI = excludedFaces_[patchI][i];
+            const label patchFaceI = excludedFaces_[patchI][i];
 
-            phi.boundaryField()[patchI][patchFaceI] -=
-                rho.boundaryField()[patchI][patchFaceI]*
-                meshVel.boundaryField()[patchI][patchFaceI];
+            patchPhi[patchFaceI] -= patchRho[patchFaceI]*patchU[patchFaceI];
         }
     }
 }
@@ -89,9 +100,15 @@ void Foam::MRFZone::absoluteRhoFlux
     surfaceScalarField& phi
 ) const
 {
+    if (mesh_.changing())
+    {
+        Info<< "Adjust for absolute mesh motion flux" << endl;
+        fvc::makeAbsolute(rho, phi);
+    }
+    
     // Get mesh velocity calculated from virtual mesh motion
     // HJ, 6/Jun/2017
-    const surfaceScalarField& meshVel = meshVelocity();
+    const surfaceScalarField& meshVel = MRFMeshVelocity();
 
     label faceI, patchFaceI;
 
@@ -106,29 +123,30 @@ void Foam::MRFZone::absoluteRhoFlux
         phiIn[faceI] += rho[faceI]*meshVelIn[faceI];
     }
 
-    // Included patches
-    forAll (includedFaces_, patchI)
+    forAll (mesh_.boundary(), patchI)
     {
+        // Get patch rho
+        const scalarField& patchRho = rho.boundaryField()[patchI];
+        
+        // Get patch MRF flux
+        const scalarField& patchU = meshVel.boundaryField()[patchI];
+        
+        scalarField& patchPhi = phi.boundaryField()[patchI];
+        
+        // Included faces
         forAll (includedFaces_[patchI], i)
         {
             patchFaceI = includedFaces_[patchI][i];
 
-            phi.boundaryField()[patchI][patchFaceI] +=
-                rho.boundaryField()[patchI][patchFaceI]*
-                meshVel.boundaryField()[patchI][patchFaceI];
+            patchPhi[patchFaceI] += patchRho[patchFaceI]*patchU[patchFaceI];
         }
-    }
 
-    // Excluded patches
-    forAll (excludedFaces_, patchI)
-    {
+        // Excluded patches
         forAll (excludedFaces_[patchI], i)
         {
             patchFaceI = excludedFaces_[patchI][i];
 
-            phi.boundaryField()[patchI][patchFaceI] +=
-                rho.boundaryField()[patchI][patchFaceI]*
-                meshVel.boundaryField()[patchI][patchFaceI];
+            patchPhi[patchFaceI] += patchRho[patchFaceI]*patchU[patchFaceI];
         }
     }
 }

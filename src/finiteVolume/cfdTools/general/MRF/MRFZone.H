@@ -93,7 +93,7 @@ class MRFZone
         labelListList excludedFaces_;
 
         //- Origin of rotation
-        const dimensionedVector origin_;
+        dimensionedVector origin_;
 
         //- Axis of rotation
         dimensionedVector axis_;
@@ -107,7 +107,9 @@ class MRFZone
         //- Mesh velocity
         //  Note: for precise calculation of the mesh velocity on bad meshes
         //  the velocity is calculated from the swept volume
-        mutable surfaceScalarField* meshVelocityPtr_;
+        //  This velocity carries only the rotation; if additional mesh motion
+        //  is present, it is treated in addition
+        mutable surfaceScalarField* MRFMeshVelocityPtr_;
 
         //- Time for which mesh velocity is calculated
         mutable scalar meshVelTime_;
@@ -122,34 +124,17 @@ class MRFZone
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MRFZone(const MRFZone&);
+        MRFZone(const MRFZone&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MRFZone&);
+        void operator=(const MRFZone&) = delete;
 
 
         //- Divide faces in frame according to patch
         void setMRFFaces();
 
-        //- Calculate mesh velocity
-        void calcMeshVelocity() const;
-
-
-        //- Make the given absolute mass/vol flux relative within MRF region
-        template<class RhoFieldType>
-        void relativeRhoFlux
-        (
-            const RhoFieldType& rho,
-            surfaceScalarField& phi
-        ) const;
-
-        //- Make the given relative mass/vol flux absolute within MRF region
-        template<class RhoFieldType>
-        void absoluteRhoFlux
-        (
-            const RhoFieldType& rho,
-            surfaceScalarField& phi
-        ) const;
+        //- Calculate MRF mesh velocity
+        void calcMRFMeshVelocity() const;
 
 
 public:
@@ -198,46 +183,70 @@ public:
         // Access Functions
 
             //- Return the MRFZone name
-            const word& name() const
+            inline const word& name() const
             {
                 return name_;
             }
 
             //- Return cellZone number
-            label zoneId() const
+            inline label zoneId() const
             {
                 return cellZoneID_;
             }
 
             //- Return cellZone
-            const cellZone& zone() const
+            inline const cellZone& zone() const
             {
                 return mesh_.cellZones()[cellZoneID_];
             }
 
             //- Return the MRFZone dictionary
-            const dictionary& dict() const
+            inline const dictionary& dict() const
             {
                 return dict_;
             }
 
-            //- Return the MRFZone axis of rotation
-            const dimensionedVector& axis() const
+            //- Return MRFZone origin
+            inline const dimensionedVector& origin() const
+            {
+                return origin_;
+            }
+
+            //- Return access to MRFZone axis of rotation
+            inline dimensionedVector& origin()
+            {
+                return origin_;
+            }
+
+            //- Return MRFZone axis of rotation
+            inline const dimensionedVector& axis() const
             {
                 return axis_;
+            }
+
+            //- Return access to MRFZone axis of rotation
+            inline dimensionedVector& axis()
+            {
+                return axis_;
+            }
+
+            //- Return MRFZone omega
+            inline const dimensionedScalar& omega() const
+            {
+                return omega_;
+            }
+
+            //- Return access to MRFZone omega
+            inline dimensionedScalar& omega()
+            {
+                return omega_;
             }
 
             //- Return rotational vector
             vector Omega() const;
 
-            //- Return the MRFZone omega
-            const dimensionedScalar& omega() const
-            {
-                return omega_;
-            }
-
             //- Return mesh velocity for all faces
-            const surfaceScalarField& meshVelocity() const;
+            const surfaceScalarField& MRFMeshVelocity() const;
 
 
     // Member functions used in a top level solver
@@ -246,7 +255,7 @@ public:
         void updateMesh(const mapPolyMesh& mpm)
         {
             // Clear mesh velocity
-            deleteDemandDrivenData(meshVelocityPtr_);
+            deleteDemandDrivenData(MRFMeshVelocityPtr_);
 
             // Only updates face addressing
             setMRFFaces();
@@ -272,23 +281,49 @@ public:
         void absoluteVelocity(volVectorField& U) const;
 
         //- Make the given absolute flux relative within the MRF region
-        void relativeFlux(surfaceScalarField& phi) const;
+        void relativeFlux
+        (
+            surfaceScalarField& phi,
+            const volVectorField& U
+        ) const;
 
         //- Make the given absolute mass-flux relative within the MRF region
         void relativeFlux
         (
+            surfaceScalarField& phi,
+            const volScalarField& rho,
+            const volVectorField& U
+        ) const;
+
+        //- Make the given absolute mass-flux relative within the MRF region
+        void relativeFlux
+        (
+            surfaceScalarField& phi,
             const surfaceScalarField& rho,
-            surfaceScalarField& phi
+            const volVectorField& U
         ) const;
 
         //- Make the given relative flux absolute within the MRF region
-        void absoluteFlux(surfaceScalarField& phi) const;
+        void absoluteFlux
+        (
+            surfaceScalarField& phi,
+            const volVectorField& U
+        ) const;
 
         //- Make the given relative mass-flux absolute within the MRF region
         void absoluteFlux
         (
+            surfaceScalarField& phi,
+            const volScalarField& rho,
+            const volVectorField& U
+        ) const;
+
+        //- Make the given relative mass-flux absolute within the MRF region
+        void absoluteFlux
+        (
+            surfaceScalarField& phi,
             const surfaceScalarField& rho,
-            surfaceScalarField& phi
+            const volVectorField& U
         ) const;
 
         //- Compute pseudo mesh phi for the MRF region
@@ -334,12 +369,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-#   include "MRFZoneTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -29,6 +29,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "fvMatrices.H"
+#include "fvc.H"
 #include "syncTools.H"
 #include "faceSet.H"
 #include "geometricOneField.H"
@@ -88,7 +89,6 @@ void Foam::MRFZone::setMRFFaces()
             nZoneFaces++;
         }
     }
-
 
     labelHashSet excludedPatches(excludedPatchLabels_);
 
@@ -175,15 +175,22 @@ void Foam::MRFZone::setMRFFaces()
                 nExcludedFaces[patchI]++;
             }
         }
+        Info<< "Patch " << patchI << " name " << pp.name()
+            << " included = " << nIncludedFaces[patchI]
+            << " excluded = " << nExcludedFaces[patchI]
+            << endl;
     }
 
     includedFaces_.setSize(patches.size());
     excludedFaces_.setSize(patches.size());
+
     forAll (nIncludedFaces, patchI)
     {
         includedFaces_[patchI].setSize(nIncludedFaces[patchI]);
         excludedFaces_[patchI].setSize(nExcludedFaces[patchI]);
     }
+
+    // Reset counters
     nIncludedFaces = 0;
     nExcludedFaces = 0;
 
@@ -251,7 +258,7 @@ void Foam::MRFZone::setMRFFaces()
 }
 
 
-void Foam::MRFZone::calcMeshVelocity() const
+void Foam::MRFZone::calcMRFMeshVelocity() const
 {
     // Calculate mesh velocity from deformed mesh without executing mesh motion
     // HJ, 6/Jun/2017
@@ -263,7 +270,7 @@ void Foam::MRFZone::calcMeshVelocity() const
             << endl;
     }
 
-    if (meshVelocityPtr_)
+    if (MRFMeshVelocityPtr_)
     {
         FatalErrorInFunction
             << "Mesh velocity for zone " << name_
@@ -272,7 +279,7 @@ void Foam::MRFZone::calcMeshVelocity() const
     }
 
     // Create the mesh velocity
-    meshVelocityPtr_ =
+    MRFMeshVelocityPtr_ =
         new surfaceScalarField
         (
             IOobject
@@ -286,7 +293,7 @@ void Foam::MRFZone::calcMeshVelocity() const
             mesh_,
             dimensionedScalar("zero", dimVelocity*dimArea, 0)
         );
-    surfaceScalarField& meshVel = *meshVelocityPtr_;
+    surfaceScalarField& meshVel = *MRFMeshVelocityPtr_;
 
     // Record the time of creation of mesh velocity
     meshVelTime_ = mesh_.time().value();
@@ -387,30 +394,28 @@ void Foam::MRFZone::calcMeshVelocity() const
         meshVelIn[faceI] = f[faceI].sweptVol(p, newP)/deltaT;
     }
 
-    // Included faces
-    forAll (includedFaces_, patchI)
+    forAll (mesh_.boundary(), patchI)
     {
         const label patchStart = mesh_.boundaryMesh()[patchI].start();
 
+        // Get reference to patch velocity
+        scalarField& patchMeshVel = meshVel.boundaryField()[patchI];
+
+        // Included faces
         forAll (includedFaces_[patchI], i)
         {
             patchFaceI = includedFaces_[patchI][i];
 
-            meshVel.boundaryField()[patchI][patchFaceI] =
+            patchMeshVel[patchFaceI] =
                 f[patchStart + patchFaceI].sweptVol(p, newP)/deltaT;
         }
-    }
 
-    // Excluded faces - same as included patches
-    forAll (excludedFaces_, patchI)
-    {
-        const label patchStart = mesh_.boundaryMesh()[patchI].start();
-
+        // Excluded faces - same as included faces
         forAll (excludedFaces_[patchI], i)
         {
             patchFaceI = excludedFaces_[patchI][i];
 
-            meshVel.boundaryField()[patchI][patchFaceI] =
+            patchMeshVel[patchFaceI] =
                 f[patchStart + patchFaceI].sweptVol(p, newP)/deltaT;
         }
     }
@@ -433,7 +438,7 @@ Foam::MRFZone::MRFZone(const fvMesh& mesh, Istream& is)
     axis_(dict_.lookup("axis")),
     omega_(dict_.lookup("omega")),
     rampTime_(dict_.lookupOrDefault<scalar>("rampTime", 0)),
-    meshVelocityPtr_(nullptr),
+    MRFMeshVelocityPtr_(nullptr),
     meshVelTime_(-1)
 {
     if (dict_.found("patches"))
@@ -482,7 +487,6 @@ Foam::MRFZone::MRFZone(const fvMesh& mesh, Istream& is)
             << exit(FatalError);
     }
 
-
     Info<< "Creating MRF for cell zone " << name_ << ". rpm = "
         << 30*omega_.value()/mathematicalConstant::pi
         << endl;
@@ -491,7 +495,7 @@ Foam::MRFZone::MRFZone(const fvMesh& mesh, Istream& is)
 }
 
 
-const Foam::surfaceScalarField& Foam::MRFZone::meshVelocity() const
+const Foam::surfaceScalarField& Foam::MRFZone::MRFMeshVelocity() const
 {
     // Check time
     if
@@ -502,17 +506,16 @@ const Foam::surfaceScalarField& Foam::MRFZone::meshVelocity() const
     )
     {
         // MRF is ramping.  Recalculate mesh velocity
-        Info<< "Clearing mesh velocity" << endl;
-        deleteDemandDrivenData(meshVelocityPtr_);
+        deleteDemandDrivenData(MRFMeshVelocityPtr_);
     }
 
     // Calculate mesh velocity
-    if (!meshVelocityPtr_)
+    if (!MRFMeshVelocityPtr_)
     {
-        calcMeshVelocity();
+        calcMRFMeshVelocity();
     }
 
-    return *meshVelocityPtr_;
+    return *MRFMeshVelocityPtr_;
 }
 
 
@@ -520,7 +523,7 @@ const Foam::surfaceScalarField& Foam::MRFZone::meshVelocity() const
 
 Foam::MRFZone::~MRFZone()
 {
-    deleteDemandDrivenData(meshVelocityPtr_);
+    deleteDemandDrivenData(MRFMeshVelocityPtr_);
 }
 
 
@@ -537,7 +540,9 @@ Foam::vector Foam::MRFZone::Omega() const
         // Ramping
         const scalar t = mesh_.time().value();
         const scalar ramp = sin(2*pi/(4*rampTime_)*Foam::min(rampTime_, t));
-        Info<< "ramp: " << ramp << " Omega: " << ramp*omega_.value() << endl;
+        Info<< "MRF ramp: " << ramp << " Omega: " << ramp*omega_.value()
+            << endl;
+
         return ramp*omega_.value()*axis_.value();
     }
 }
@@ -550,15 +555,16 @@ void Foam::MRFZone::addCoriolis(fvVectorMatrix& UEqn) const
         return;
     }
 
-    const labelList& cells = mesh_.cellZones()[cellZoneID_];
+    const labelList& MRFCells = mesh_.cellZones()[cellZoneID_];
     const scalarField& V = mesh_.V();
     vectorField& Usource = UEqn.source();
     const vectorField& U = UEqn.psi();
     const vector rotVel = Omega();
 
-    forAll (cells, i)
+    // Set Coriolis force
+    forAll (MRFCells, i)
     {
-        label cellI = cells[i];
+        const label cellI = MRFCells[i];
         Usource[cellI] -= V[cellI]*(rotVel ^ U[cellI]);
     }
 }
@@ -575,16 +581,19 @@ void Foam::MRFZone::addCoriolis
         return;
     }
 
-    const labelList& cells = mesh_.cellZones()[cellZoneID_];
-    const scalarField& V = mesh_.V();
+    const labelList& MRFCells = mesh_.cellZones()[cellZoneID_];
+    const scalarField& V = mesh_.V().field();
+
     vectorField& Usource = UEqn.source();
     const vectorField& U = UEqn.psi();
     const vector rotVel = Omega();
 
-    forAll (cells, i)
+    const scalarField& rhoIn = rho.internalField();
+
+    forAll (MRFCells, i)
     {
-        label cellI = cells[i];
-        Usource[cellI] -= V[cellI]*rho[cellI]*(rotVel ^ U[cellI]);
+        label cellI = MRFCells[i];
+        Usource[cellI] -= V[cellI]*rhoIn[cellI]*(rotVel ^ U[cellI]);
     }
 }
 
@@ -594,62 +603,98 @@ void Foam::MRFZone::addOmega(volVectorField& omg) const
     const vector rotVel = Omega();
 
     // Set omega in all cells of the rotating cell zone
-    const labelList& cells = mesh_.cellZones()[cellZoneID_];
+    const labelList& MRFCells = mesh_.cellZones()[cellZoneID_];
 
-    forAll (cells, i)
+    forAll (MRFCells, i)
     {
-        omg[cells[i]] = rotVel;
+        omg[MRFCells[i]] = rotVel;
     }
 }
 
 
 void Foam::MRFZone::relativeVelocity(volVectorField& U) const
 {
+    // Get mesh data
     const volVectorField& C = mesh_.C();
 
     const vector& origin = origin_.value();
     const vector rotVel = Omega();
 
-    const labelList& cells = mesh_.cellZones()[cellZoneID_];
+    const labelList& MRFCells = mesh_.cellZones()[cellZoneID_];
 
-    forAll (cells, i)
+    forAll (MRFCells, i)
     {
-        label cellI = cells[i];
+        label cellI = MRFCells[i];
         U[cellI] -= (rotVel ^ (C[cellI] - origin));
     }
 
-    // Included faces
-    forAll (includedFaces_, patchI)
+    // Get the MRF mesh velocity
+    const surfaceScalarField& meshVel = MRFMeshVelocity();
+
+    // If the mesh is changing, additional mesh motion flux needs to be added
+    // HJ, 14/May/2025
+    autoPtr<surfaceScalarField> meshPhi;
+
+    if (mesh_.changing())
     {
-        if (mesh_.boundaryMesh()[patchI].coupled())
-        {
-            // Coupled patch.  Subtract rotation
-            forAll (includedFaces_[patchI], i)
-            {
-                label patchFaceI = includedFaces_[patchI][i];
-                U.boundaryField()[patchI][patchFaceI] -=
-                    (rotVel ^ (C.boundaryField()[patchI][patchFaceI] - origin));
-            }
-        }
-        else
-        {
-            // Regular patch.  Set relative velocity to zero
-            forAll (includedFaces_[patchI], i)
-            {
-                label patchFaceI = includedFaces_[patchI][i];
-                U.boundaryField()[patchI][patchFaceI] = vector::zero;
-            }
-        }
+        meshPhi.set(fvc::meshPhi(U).ptr());
     }
 
-    // Excluded faces
-    forAll (excludedFaces_, patchI)
+    forAll (mesh_.boundary(), patchI)
     {
+        if (includedFaces_[patchI].empty() && excludedFaces_[patchI].empty())
+        {
+            // Nothing to do
+            continue;
+        }
+        
+        // Get patch data
+        const vectorField& patchC = C.boundaryField()[patchI];
+
+        // Get patch normal
+        vectorField n = mesh_.boundary()[patchI].nf();
+
+        // Get patch mesh flux and adjust for mesh motion flux if present
+        scalarField patchUn = meshVel.boundaryField()[patchI];
+
+        // Add mesh motion flux if present
+        if (meshPhi.valid())
+        {
+            patchUn += meshPhi().boundaryField()[patchI];
+        }
+
+        // Normalise by magSf to get normal velocity
+        patchUn /= mesh_.magSf().boundaryField()[patchI];
+
+        // Get patch velocity for adjustment
+        vectorField& patchU = U.boundaryField()[patchI];
+
+        // Included faces
+        forAll (includedFaces_[patchI], i)
+        {
+            const label patchFaceI = includedFaces_[patchI][i];
+
+            // Set rotation
+             vector Up = (rotVel ^ (patchC[patchFaceI] - origin));
+
+             // Adjust normal component for mesh motion
+             Up +=
+                n[patchFaceI]*
+                (
+                    patchUn[patchFaceI]
+                  - (n[patchFaceI] & patchU[patchFaceI])
+                );
+
+             // Subtract rotational velocity
+             patchU[patchFaceI] -= Up;
+        }
+
+        // Excluded faces: no normal flux adjustment
         forAll (excludedFaces_[patchI], i)
         {
-            label patchFaceI = excludedFaces_[patchI][i];
-            U.boundaryField()[patchI][patchFaceI] -=
-                (rotVel ^ (C.boundaryField()[patchI][patchFaceI] - origin));
+            const label patchFaceI = excludedFaces_[patchI][i];
+
+            patchU[patchFaceI] -= (rotVel ^ (patchC[patchFaceI] - origin));
         }
     }
 }
@@ -662,11 +707,11 @@ void Foam::MRFZone::absoluteVelocity(volVectorField& U) const
     const vector& origin = origin_.value();
     const vector rotVel = Omega();
 
-    const labelList& cells = mesh_.cellZones()[cellZoneID_];
+    const labelList& MRFCells = mesh_.cellZones()[cellZoneID_];
 
-    forAll (cells, i)
+    forAll (MRFCells, i)
     {
-        label cellI = cells[i];
+        label cellI = MRFCells[i];
         U[cellI] += (rotVel ^ (C[cellI] - origin));
     }
 
@@ -674,85 +719,356 @@ void Foam::MRFZone::absoluteVelocity(volVectorField& U) const
     // absolute velocity must match the mesh flux exactly
     // HJ, 3/Jul/2020
 
-    const surfaceScalarField& meshVel = meshVelocity();
-    const surfaceScalarField& magSf = mesh_.magSf();
+    const surfaceScalarField& meshVel = MRFMeshVelocity();
 
-    // Included faces
-    forAll (includedFaces_, patchI)
+    // If the mesh is changing, additional mesh motion flux needs to be added
+    // HJ, 14/May/2025
+    autoPtr<surfaceScalarField> meshPhi;
+
+    if (mesh_.changing())
     {
-        if (mesh_.boundaryMesh()[patchI].coupled())
-        {
-            // Correct velocity for coupled patches
-            forAll (excludedFaces_[patchI], i)
-            {
-                label patchFaceI = excludedFaces_[patchI][i];
-                U.boundaryField()[patchI][patchFaceI] +=
-                    (rotVel ^ (C.boundaryField()[patchI][patchFaceI] - origin));
-            }
-        }
-        else
-        {
-            // Correct velocity for non-coupled patches
-            vectorField n = mesh_.boundary()[patchI].nf();
-
-            forAll (includedFaces_[patchI], i)
-            {
-                label patchFaceI = includedFaces_[patchI][i];
-
-                vector Up =
-                    rotVel ^ (C.boundaryField()[patchI][patchFaceI] - origin);
-
-                scalar Un = meshVel.boundaryField()[patchI][patchFaceI]/
-                    magSf.boundaryField()[patchI][patchFaceI];
-
-                U.boundaryField()[patchI][patchFaceI] =
-                    (Up + n[patchFaceI]*(Un - (n[patchFaceI] & Up)));
-            }
-        }
+        meshPhi.set(fvc::meshPhi(U).ptr());
     }
 
-    // Excluded faces
-    forAll (excludedFaces_, patchI)
+    // Included faces
+    forAll (mesh_.boundary(), patchI)
     {
+        if (includedFaces_[patchI].empty() && excludedFaces_[patchI].empty())
+        {
+            // Nothing to do
+            continue;
+        }
+
+        // Get patch data
+        const vectorField& patchC = C.boundaryField()[patchI];
+
+        // Get patch normal
+        vectorField n = mesh_.boundary()[patchI].nf();
+
+        // Get patch mesh flux and adjust for mesh motion flux if present
+        scalarField patchUn = meshVel.boundaryField()[patchI];
+
+        // Add mesh motion flux if present
+        if (meshPhi.valid())
+        {
+            patchUn += meshPhi().boundaryField()[patchI];
+        }
+
+        // Normalise by magSf to get normal velocity
+        patchUn /= mesh_.magSf().boundaryField()[patchI];
+
+        // Get patch velocity
+        vectorField& patchU = U.boundaryField()[patchI];
+
+        // Included faces
+        forAll (includedFaces_[patchI], i)
+        {
+            label patchFaceI = includedFaces_[patchI][i];
+
+             // Add rotational velocity
+            patchU[patchFaceI] +=
+                (rotVel ^ (patchC[patchFaceI] - origin));
+
+             // Adjust normal component for mesh motion
+             patchU[patchFaceI] -=
+                 n[patchFaceI]*
+                 (
+                     patchUn[patchFaceI]
+                   - (n[patchFaceI] & patchU[patchFaceI])
+                 );
+        }
+
+        // Excluded faces
         forAll (excludedFaces_[patchI], i)
         {
             label patchFaceI = excludedFaces_[patchI][i];
-            U.boundaryField()[patchI][patchFaceI] +=
-                (rotVel ^ (C.boundaryField()[patchI][patchFaceI] - origin));
+
+            patchU[patchFaceI] +=
+                (rotVel ^ (patchC[patchFaceI] - origin));
         }
     }
-}
-
-
-void Foam::MRFZone::relativeFlux(surfaceScalarField& phi) const
-{
-    relativeRhoFlux(geometricOneField(), phi);
 }
 
 
 void Foam::MRFZone::relativeFlux
 (
-    const surfaceScalarField& rho,
-    surfaceScalarField& phi
+    surfaceScalarField& phi,
+    const volVectorField& U
 ) const
 {
-    relativeRhoFlux(rho, phi);
+    // If the mesh is changing, additional mesh motion flux needs to be added
+    // HJ, 14/May/2025
+    if (mesh_.changing())
+    {
+        fvc::makeRelative(phi, U);
+    }
+
+    // Get mesh velocity calculated from virtual mesh motion
+    // HJ, 6/Jun/2017
+    const surfaceScalarField& meshVel = MRFMeshVelocity();
+
+    // Internal faces
+    scalarField& phiIn = phi.internalField();
+    const scalarField& meshVelIn = meshVel.internalField();
+
+    forAll (internalFaces_, i)
+    {
+        const label faceI = internalFaces_[i];
+
+        phiIn[faceI] -= meshVelIn[faceI];
+    }
+
+    forAll (mesh_.boundary(), patchI)
+    {
+        if (includedFaces_[patchI].empty() && excludedFaces_[patchI].empty())
+        {
+            // Nothing to do
+            continue;
+        }
+
+        // Get patch MRF flux
+        const scalarField& patchU = meshVel.boundaryField()[patchI];
+
+        scalarField& patchPhi = phi.boundaryField()[patchI];
+
+        // Included faces
+        forAll (includedFaces_[patchI], i)
+        {
+            const label patchFaceI = includedFaces_[patchI][i];
+
+            // Bugfix, HJ and HN, 3/Jul/2020
+            // Note: this should be zero if velocity is correctly adjusted
+            // Reconsider
+            patchPhi[patchFaceI] -= patchU[patchFaceI];
+        }
+
+        // Excluded faces
+        forAll (excludedFaces_[patchI], i)
+        {
+            const label patchFaceI = excludedFaces_[patchI][i];
+
+            patchPhi[patchFaceI] -= patchU[patchFaceI];
+        }
+    }
 }
 
 
-void Foam::MRFZone::absoluteFlux(surfaceScalarField& phi) const
+void Foam::MRFZone::relativeFlux
+(
+    surfaceScalarField& phi,
+    const volScalarField& rho,
+    const volVectorField& U
+) const
 {
-    absoluteRhoFlux(geometricOneField(), phi);
+    surfaceScalarField faceRho = fvc::interpolate(rho);
+    
+    relativeFlux(phi, faceRho, U);
+}
+
+
+void Foam::MRFZone::relativeFlux
+(
+    surfaceScalarField& phi,
+    const surfaceScalarField& rho,
+    const volVectorField& U
+) const
+{
+    // If the mesh is changing, additional mesh motion flux needs to be added
+    // HJ, 14/May/2025
+    if (mesh_.changing())
+    {
+        fvc::makeRelative(phi, rho, U);
+    }
+
+    // Get mesh velocity calculated from virtual mesh motion
+    // HJ, 6/Jun/2017
+    const surfaceScalarField& meshVel = MRFMeshVelocity();
+
+    // Internal faces
+    scalarField& phiIn = phi.internalField();
+    const scalarField& meshVelIn = meshVel.internalField();
+
+    forAll (internalFaces_, i)
+    {
+        const label faceI = internalFaces_[i];
+
+        phiIn[faceI] -= rho[faceI]*meshVelIn[faceI];
+    }
+
+    forAll (mesh_.boundary(), patchI)
+    {
+        if (includedFaces_[patchI].empty() && excludedFaces_[patchI].empty())
+        {
+            // Nothing to do
+            continue;
+        }
+
+        // Get patch rho
+        const scalarField& patchRho = rho.boundaryField()[patchI];
+
+        // Get patch MRF flux
+        const scalarField& patchU = meshVel.boundaryField()[patchI];
+
+        scalarField& patchPhi = phi.boundaryField()[patchI];
+
+        // Included faces
+        forAll (includedFaces_[patchI], i)
+        {
+            const label patchFaceI = includedFaces_[patchI][i];
+
+            // Bugfix, HJ and HN, 3/Jul/2020
+            // Note: this should be zero if velocity is correctly adjusted
+            // Reconsider
+            patchPhi[patchFaceI] -= patchRho[patchFaceI]*patchU[patchFaceI];
+        }
+
+        // Excluded faces
+        forAll (excludedFaces_[patchI], i)
+        {
+            const label patchFaceI = excludedFaces_[patchI][i];
+
+            patchPhi[patchFaceI] -= patchRho[patchFaceI]*patchU[patchFaceI];
+        }
+    }
 }
 
 
 void Foam::MRFZone::absoluteFlux
 (
-    const surfaceScalarField& rho,
-    surfaceScalarField& phi
+    surfaceScalarField& phi,
+    const volVectorField& U
 ) const
 {
-    absoluteRhoFlux(rho, phi);
+    if (mesh_.changing())
+    {
+        Info<< "Adjust for absolute mesh motion flux" << endl;
+        fvc::makeAbsolute(phi, U);
+    }
+
+    // Get mesh velocity calculated from virtual mesh motion
+    // HJ, 6/Jun/2017
+    const surfaceScalarField& meshVel = MRFMeshVelocity();
+
+    label faceI, patchFaceI;
+
+    // Internal faces
+    scalarField& phiIn = phi.internalField();
+    const scalarField& meshVelIn = meshVel.internalField();
+
+    forAll (internalFaces_, i)
+    {
+        faceI = internalFaces_[i];
+
+        phiIn[faceI] += meshVelIn[faceI];
+    }
+
+    forAll (mesh_.boundary(), patchI)
+    {
+        if (includedFaces_[patchI].empty() && excludedFaces_[patchI].empty())
+        {
+            // Nothing to do
+            continue;
+        }
+
+        // Get patch MRF flux
+        const scalarField& patchU = meshVel.boundaryField()[patchI];
+
+        scalarField& patchPhi = phi.boundaryField()[patchI];
+
+        // Included faces
+        forAll (includedFaces_[patchI], i)
+        {
+            patchFaceI = includedFaces_[patchI][i];
+
+            patchPhi[patchFaceI] += patchU[patchFaceI];
+        }
+
+        // Excluded patches
+        forAll (excludedFaces_[patchI], i)
+        {
+            patchFaceI = excludedFaces_[patchI][i];
+
+            patchPhi[patchFaceI] += patchU[patchFaceI];
+        }
+    }
+}
+
+
+void Foam::MRFZone::absoluteFlux
+(
+    surfaceScalarField& phi,
+    const volScalarField& rho,
+    const volVectorField& U
+) const
+{
+    surfaceScalarField faceRho = fvc::interpolate(rho);
+    
+    absoluteFlux(phi, faceRho, U);
+}
+
+
+void Foam::MRFZone::absoluteFlux
+(
+    surfaceScalarField& phi,
+    const surfaceScalarField& rho,
+    const volVectorField& U
+) const
+{
+    if (mesh_.changing())
+    {
+        Info<< "Adjust for absolute mesh motion flux" << endl;
+        fvc::makeAbsolute(phi, rho, U);
+    }
+
+    // Get mesh velocity calculated from virtual mesh motion
+    // HJ, 6/Jun/2017
+    const surfaceScalarField& meshVel = MRFMeshVelocity();
+
+    label faceI, patchFaceI;
+
+    // Internal faces
+    scalarField& phiIn = phi.internalField();
+    const scalarField& meshVelIn = meshVel.internalField();
+
+    forAll (internalFaces_, i)
+    {
+        faceI = internalFaces_[i];
+
+        phiIn[faceI] += rho[faceI]*meshVelIn[faceI];
+    }
+
+    forAll (mesh_.boundary(), patchI)
+    {
+        if (includedFaces_[patchI].empty() && excludedFaces_[patchI].empty())
+        {
+            // Nothing to do
+            continue;
+        }
+
+        // Get patch rho
+        const scalarField& patchRho = rho.boundaryField()[patchI];
+
+        // Get patch MRF flux
+        const scalarField& patchU = meshVel.boundaryField()[patchI];
+
+        scalarField& patchPhi = phi.boundaryField()[patchI];
+
+        // Included faces
+        forAll (includedFaces_[patchI], i)
+        {
+            patchFaceI = includedFaces_[patchI][i];
+
+            patchPhi[patchFaceI] += patchRho[patchFaceI]*patchU[patchFaceI];
+        }
+
+        // Excluded patches
+        forAll (excludedFaces_[patchI], i)
+        {
+            patchFaceI = excludedFaces_[patchI][i];
+
+            patchPhi[patchFaceI] += patchRho[patchFaceI]*patchU[patchFaceI];
+        }
+    }
 }
 
 
@@ -761,40 +1077,58 @@ void Foam::MRFZone::meshPhi
     surfaceScalarField& phi
 ) const
 {
-    const surfaceScalarField& meshVel = meshVelocity();
+    // Account for background mesh motion
+    if (mesh_.changing())
+    {
+        Info<< "Get mesh motion flux" << endl;
+        phi = mesh_.phi();
+    }
+    else
+    {
+        phi == dimensionedScalar("zero", phi.dimensions(), scalar(0));
+    }
 
-    label faceI, patchFaceI;
+    // Get mesh motion velocity
+    const surfaceScalarField& meshVel = MRFMeshVelocity();
 
     scalarField& phiIn = phi.internalField();
     const scalarField& meshVelIn = meshVel.internalField();
 
     forAll (internalFaces_, i)
     {
-        faceI = internalFaces_[i];
-        phiIn[faceI] = meshVelIn[faceI];
+        const label faceI = internalFaces_[i];
+
+        phiIn[faceI] += meshVelIn[faceI];
     }
 
-    // Included faces
-    forAll (includedFaces_, patchI)
+    forAll (mesh_.boundary(), patchI)
     {
+        if (includedFaces_[patchI].empty() && excludedFaces_[patchI].empty())
+        {
+            // Nothing to do
+            continue;
+        }
+
+        // Get patch MRF flux
+        const scalarField& patchU = meshVel.boundaryField()[patchI];
+
+        // Get patch flux
+        scalarField& patchPhi = phi.boundaryField()[patchI];
+
+        // Included faces
         forAll (includedFaces_[patchI], i)
         {
-            patchFaceI = includedFaces_[patchI][i];
+            const label patchFaceI = includedFaces_[patchI][i];
 
-            phi.boundaryField()[patchI][patchFaceI] =
-                meshVel.boundaryField()[patchI][patchFaceI];
+            patchPhi[patchFaceI] += patchU[patchFaceI];
         }
-    }
 
-    // Excluded faces - same as included patches
-    forAll (excludedFaces_, patchI)
-    {
+        // Excluded faces
         forAll (excludedFaces_[patchI], i)
         {
-            patchFaceI = excludedFaces_[patchI][i];
+            const label patchFaceI = excludedFaces_[patchI][i];
 
-            phi.boundaryField()[patchI][patchFaceI] =
-                meshVel.boundaryField()[patchI][patchFaceI];
+            patchPhi[patchFaceI] += patchU[patchFaceI];
         }
     }
 }
@@ -802,29 +1136,106 @@ void Foam::MRFZone::meshPhi
 
 void Foam::MRFZone::correctBoundaryVelocity(volVectorField& U) const
 {
+    const volVectorField& C = mesh_.C();
+
     const vector& origin = origin_.value();
     const vector rotVel = Omega();
 
-    label patchFaceI;
+    // Get mesh motion velocity
+    const surfaceScalarField& meshVel = MRFMeshVelocity();
 
-    // Included patches
-    forAll (includedFaces_, patchI)
+    // If the mesh is changing, additional mesh motion flux needs to be added
+    // HJ, 14/May/2025
+    autoPtr<surfaceScalarField> meshPhi;
+
+    if (mesh_.changing())
     {
-        // Correct velocity for non-coupled patches
-        if (!mesh_.boundaryMesh()[patchI].coupled())
+        meshPhi.set(fvc::meshPhi(U).ptr());
+    }
+
+    // Included faces
+    forAll (mesh_.boundary(), patchI)
+    {
+        if (includedFaces_[patchI].empty() && excludedFaces_[patchI].empty())
         {
-            const vectorField& patchC = mesh_.Cf().boundaryField()[patchI];
+            // Nothing to do
+            continue;
+        }
 
-            vectorField pfld(U.boundaryField()[patchI]);
+        // Correct velocity for non-coupled patches
+        if (!mesh_.boundary()[patchI].coupled())
+        {
+            // Get patch data
+            const vectorField& patchC = C.boundaryField()[patchI];
 
-            forAll (includedFaces_[patchI], i)
+            // Get patch normal
+            vectorField n = mesh_.boundary()[patchI].nf();
+
+            // Get patch MRF flux and adjust for mesh motion flux if present
+            scalarField patchUn = meshVel.boundaryField()[patchI];
+
+            // Add mesh motion flux if present
+            if (meshPhi.valid())
             {
-                patchFaceI = includedFaces_[patchI][i];
-
-                pfld[patchFaceI] = (rotVel ^ (patchC[patchFaceI] - origin));
+                patchUn += meshPhi().boundaryField()[patchI];
             }
 
-            U.boundaryField()[patchI] == pfld;
+            // Normalise by magSf to get normal velocity
+            patchUn /= mesh_.magSf().boundaryField()[patchI];
+
+            // Copy original patch velocity
+            vectorField patchU(U.boundaryField()[patchI]);
+
+            // Get parallel velocity for moving meshes
+            vectorField patchUp(patchU.size(), vector::zero);
+
+            // If the mesh is moving, calculate patch-parallel velocity
+            // from mesh motion for included faces.
+            // For excluded faces, velocity will be as before
+            if (mesh_.changing())
+            {
+                const polyPatch& pp = mesh_.boundaryMesh()[patchI];
+                const pointField& oldPoints = mesh_.oldPoints();
+
+                const vectorField& patchC = C.boundaryField()[patchI];
+
+                // For included faces, calculate tangential velocity from
+                // mesh motion.  See movingWallVelocityFvPatchVectorField
+                forAll (includedFaces_[patchI], i)
+                {
+                    const label patchFaceI = includedFaces_[patchI][i];
+
+                    // Calculate old face centre from old point positions
+                    vector oldFc = pp[patchFaceI].centre(oldPoints);
+
+                    // Get wall-parallel mesh motion velocity from geometry
+                    patchUp[patchFaceI] =
+                        (patchC[patchFaceI] - oldFc)/
+                        mesh_.time().deltaT().value();
+                }
+            }
+
+            // Adjust patch U from rotation
+            forAll (includedFaces_[patchI], i)
+            {
+                const label patchFaceI = includedFaces_[patchI][i];
+
+                // Set rotation
+                patchU[patchFaceI] =
+                    patchUp[patchFaceI]
+                  + (rotVel ^ (patchC[patchFaceI] - origin));
+
+                // Adjust normal component for mesh motion
+                patchU[patchFaceI] +=
+                    n[patchFaceI]*
+                    (
+                        patchUn[patchFaceI]
+                      - (n[patchFaceI] & patchU[patchFaceI])
+                    );
+            }
+
+            // Set final U onto patch
+            U.boundaryField()[patchI] == patchU;
         }
     }
 }
@@ -837,16 +1248,16 @@ void Foam::MRFZone::Su
     volScalarField& source
 ) const
 {
-    const labelList& cells = mesh_.cellZones()[cellZoneID_];
+    const labelList& MRFCells = mesh_.cellZones()[cellZoneID_];
     const volVectorField& C = mesh_.C();
 
     const vector& origin = origin_.value();
     const vector rotVel = Omega();
 
-    forAll (cells, i)
+    forAll (MRFCells, i)
     {
-        source[cells[i]] =
-            (rotVel ^ (C[cells[i]] - origin)) & gradPhi[cells[i]];
+        source[MRFCells[i]] =
+            (rotVel ^ (C[MRFCells[i]] - origin)) & gradPhi[MRFCells[i]];
     }
 }
 
@@ -858,17 +1269,17 @@ void Foam::MRFZone::Su
     volVectorField& source
 ) const
 {
-    const labelList& cells = mesh_.cellZones()[cellZoneID_];
+    const labelList& MRFCells = mesh_.cellZones()[cellZoneID_];
     const volVectorField& C = mesh_.C();
 
     const vector& origin = origin_.value();
     const vector rotVel = Omega();
 
-    forAll (cells, i)
+    forAll (MRFCells, i)
     {
-        source[cells[i]] =
-            ((rotVel ^ (C[cells[i]] - origin)) & gradPhi[cells[i]])
-          - (rotVel ^ phi[cells[i]]);
+        source[MRFCells[i]] =
+            ((rotVel ^ (C[MRFCells[i]] - origin)) & gradPhi[MRFCells[i]])
+          - (rotVel ^ phi[MRFCells[i]]);
     }
 }
 
@@ -894,31 +1305,28 @@ void Foam::MRFZone::calcMagUTheta
     );
 
     // Mark internal cells
-    const labelList& cells = mesh_.cellZones()[cellZoneID_];
+    const labelList& MRFCells = mesh_.cellZones()[cellZoneID_];
 
-    forAll (cells, i)
+    forAll (MRFCells, i)
     {
-        const label cellI = cells[i];
+        const label cellI = MRFCells[i];
         includedExcludedMask[cellI] = 1.0;
     }
 
-    // Included faces
-    forAll (includedFaces_, patchI)
+    forAll (mesh_.boundary(), patchI)
     {
+        // Included faces
         forAll (includedFaces_[patchI], i)
         {
-            label patchFaceI = includedFaces_[patchI][i];
+            const label patchFaceI = includedFaces_[patchI][i];
 
             includedExcludedMask.boundaryField()[patchI][patchFaceI] = 1.0;
         }
-    }
 
-    // Excluded faces - same as included faces
-    forAll (excludedFaces_, patchI)
-    {
+        // Excluded faces - same as included faces
         forAll (excludedFaces_[patchI], i)
         {
-            label patchFaceI = excludedFaces_[patchI][i];
+            const label patchFaceI = excludedFaces_[patchI][i];
 
             includedExcludedMask.boundaryField()[patchI][patchFaceI] = 1.0;
         }
@@ -933,6 +1341,13 @@ void Foam::MRFZone::calcMagUTheta
     else if (mag(axis_.value().z()) > SMALL)
     {
         dir = vector(axis_.value().x(), axis_.value().z(), axis_.value().y());
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Cannot transpose axis: " << axis_.value()
+            << " for MRF zone " << name_
+            << abort(FatalError);
     }
 
     cylindricalCS cs
@@ -969,5 +1384,6 @@ void Foam::MRFZone::calcMagUTheta
     cumulativeUTheta ==
         cumulativeUTheta + ULocalCS.component(vector::Y)*includedExcludedMask;
 }
+
 
 // ************************************************************************* //

@@ -61,10 +61,10 @@ class MRFZones
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        MRFZones(const MRFZones&);
+        MRFZones(const MRFZones&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const MRFZones&);
+        void operator=(const MRFZones&) = delete;
 
 
 public:
@@ -75,13 +75,20 @@ public:
         MRFZones(const fvMesh& mesh);
 
 
+    //- Destructor
+    ~MRFZones() = default;
+
+
     // Member Functions
 
+        //- Return zone names
+        wordList names() const;
+    
         //- Return cell centre omega over all zones
         tmp<volVectorField> omega() const;
 
-        //- Return raw correction flux
-        tmp<surfaceScalarField> fluxCorrection() const;
+        // //- Return raw correction flux
+        // tmp<surfaceScalarField> fluxCorrection() const;
 
         //- Return pseudo mesh flux
         tmp<surfaceScalarField> meshPhi() const;
@@ -93,10 +100,18 @@ public:
             void addCoriolis(fvVectorMatrix& UEqn) const;
 
             //- Make the given absolute flux relative within the MRF region
-            void relativeFlux(surfaceScalarField& phiAbs) const;
+            void relativeFlux
+            (
+                surfaceScalarField& phiAbs,
+                const volVectorField& U
+            ) const;
 
             //- Make the given relative flux absolute within the MRF region
-            void absoluteFlux(surfaceScalarField& phiRel) const;
+            void absoluteFlux
+            (
+                surfaceScalarField& phiRel,
+                const volVectorField& U
+            ) const;
 
 
         // Compressible MRF
@@ -119,15 +134,34 @@ public:
             //  MRF region
             void absoluteFlux
             (
+                surfaceScalarField& phiAbs,
+                const volScalarField& rho,
+                const volVectorField& U
+            ) const;
+
+            //- Make the given relative mass-flux absolute within the
+            //  MRF region
+            void absoluteFlux
+            (
+                surfaceScalarField& phiAbs,
                 const surfaceScalarField& rho,
-                surfaceScalarField& phi
+                const volVectorField& U
             ) const;
 
             //- Make the given absolute flux relative within the MRF region
             void relativeFlux
             (
-                const surfaceScalarField& rhof,
-                surfaceScalarField& phiRel
+                surfaceScalarField& phiRel,
+                const volScalarField& rho,
+                const volVectorField& U
+            ) const;
+
+            //- Make the given absolute flux relative within the MRF region
+            void relativeFlux
+            (
+                surfaceScalarField& phiRel,
+                const surfaceScalarField& rho,
+                const volVectorField& U
             ) const;
 
 
