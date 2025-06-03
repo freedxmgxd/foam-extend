@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
         }
 
         // Make flux relative in rotating zones
-        mrfZones.relativeFlux(phi);
+        mrfZones.relativeFlux(phi, U);
 
 #       include "continuityErrs.H"
 

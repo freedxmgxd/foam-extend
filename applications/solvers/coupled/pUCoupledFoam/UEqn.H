@@ -1,4 +1,6 @@
 {
+    U.storePrevIter();
+
     // Momentum equation
     fvVectorMatrix UEqn
     (
