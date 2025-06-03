@@ -179,6 +179,12 @@ class adaptiveOverlapFringe
             const iterationData& rhsObject
         );
 
+        static bool sortBySuitabilityValueIt
+        (
+            FIFOStack<iterationData>::iterator& lhsObject,
+            FIFOStack<iterationData>::iterator& rhsObject
+        );
+
 
 public:
 

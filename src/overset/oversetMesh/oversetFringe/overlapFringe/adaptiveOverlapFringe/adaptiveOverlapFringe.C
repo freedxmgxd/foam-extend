@@ -59,6 +59,15 @@ bool Foam::adaptiveOverlapFringe::sortBySuitabilityValue
     return lhs.suitability() < rhs.suitability();
 }
 
+bool Foam::adaptiveOverlapFringe::sortBySuitabilityValueIt
+(
+    FIFOStack<iterationData>::iterator& lhs,
+    FIFOStack<iterationData>::iterator& rhs
+)
+{
+    return lhs().suitability() < rhs().suitability();
+}
+
 
 void Foam::adaptiveOverlapFringe::suitabilityFractionSlope
 (
