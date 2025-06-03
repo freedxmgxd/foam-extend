@@ -57,7 +57,6 @@
 
 #   include "continuityErrs.H"
 
-
     rho = thermo.rho();
     rho.relax();
 
