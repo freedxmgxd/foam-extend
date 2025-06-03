@@ -131,6 +131,9 @@ public:
         }
 
 
+    //- Destructor
+    virtual ~surfaceNormalFixedValueFvPatchVectorField() = default;
+
 
     // Member functions
 

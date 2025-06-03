@@ -50,6 +50,19 @@ surfaceNormalFixedValueFvPatchVectorField
 surfaceNormalFixedValueFvPatchVectorField::
 surfaceNormalFixedValueFvPatchVectorField
 (
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchVectorField(p, iF, dict),
+    refValue_("refValue", dict, p.size())
+{}
+
+
+surfaceNormalFixedValueFvPatchVectorField::
+surfaceNormalFixedValueFvPatchVectorField
+(
     const surfaceNormalFixedValueFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -58,19 +71,6 @@ surfaceNormalFixedValueFvPatchVectorField
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
     refValue_(ptf.refValue_, mapper)
-{}
-
-
-surfaceNormalFixedValueFvPatchVectorField::
-surfaceNormalFixedValueFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchVectorField(p, iF, dict),
-    refValue_("refValue", dict, p.size())
 {}
 
 

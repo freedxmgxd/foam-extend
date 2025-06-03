@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class movingWallVelocityFvPatch Declaration
+                   Class movingWallVelocityFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class movingWallVelocityFvPatchVectorField
