@@ -28,7 +28,6 @@
 
 #   include "createPhi.H"
 
-
     label pRefCell = 0;
     scalar pRefValue = 0.0;
     setRefCell(p, simple.dict(), pRefCell, pRefValue);
@@ -41,7 +40,7 @@
         incompressible::RASModel::New(U, phi, laminarTransport)
     );
 
-
+    // Create MRF zones and correct boundary U on MRF cells
     MRFZones mrfZones(mesh);
     mrfZones.correctBoundaryVelocity(U);
 

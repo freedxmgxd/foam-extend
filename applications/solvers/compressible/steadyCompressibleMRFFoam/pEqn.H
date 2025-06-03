@@ -23,9 +23,9 @@
         surfaceScalarField phid("phid", psisf/rhof*phi);
 
         // Make fluxes relative within the MRF zone
-        mrfZones.relativeFlux(rhoReff, phi);
-        mrfZones.relativeFlux(psisf, phid);
-        mrfZones.relativeFlux(rhoReff, phid2);
+        mrfZones.relativeFlux(phi, rhoReff, U);
+        mrfZones.relativeFlux(phid, psisf, U);
+        mrfZones.relativeFlux(phid2, rhoReff, U);
 
         p.storePrevIter();
 

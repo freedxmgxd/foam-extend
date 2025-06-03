@@ -21,7 +21,7 @@
     HUEqn.clear();
 
     phi = fvc::interpolate(U) & mesh.Sf();
-    mrfZones.relativeFlux(phi);
+    mrfZones.relativeFlux(phi, U);
     adjustPhi(phi, U, p);
 
     // Non-orthogonal pressure corrector loop

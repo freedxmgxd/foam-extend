@@ -22,7 +22,7 @@ if (pimple.transonic())
           + fvc::ddtPhiCorr(rUA, rho, U, phi)
         )
     );
-    mrfZones.relativeFlux(fvc::interpolate(psi), phid);
+    mrfZones.relativeFlux(phid, fvc::interpolate(psi), U);
 
     while (pimple.correctNonOrthogonal())
     {
@@ -52,7 +52,8 @@ else
             (fvc::interpolate(U) & mesh.Sf())
         //+ fvc::ddtPhiCorr(rUA, rho, U, phi)
         );
-    mrfZones.relativeFlux(fvc::interpolate(rho), phi);
+
+    mrfZones.relativeFlux(phi, fvc::interpolate(rho), U);
 
     while (pimple.correctNonOrthogonal())
     {
