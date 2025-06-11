@@ -60,6 +60,8 @@ derivedFvPatchFields/turbulentMixingLengthFrequencyInlet/turbulentMixingLengthFr
 derivedFvPatchFields/nuRatioEpsilon/nuRatioEpsilonFvPatchScalarField.C
 derivedFvPatchFields/nuRatioOmega/nuRatioOmegaFvPatchScalarField.C
 
+derivedFvPatchFields/incompressiblePorousBafflePressure/incompressiblePorousBafflePressureFvPatchScalarField.C
+
 backwardsCompatibility/wallFunctions/backwardsCompatibilityWallFunctions.C
 
 LIB = $(FOAM_LIBBIN)/libincompressibleRASModels
