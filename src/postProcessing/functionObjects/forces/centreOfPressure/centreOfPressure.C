@@ -189,7 +189,7 @@ void Foam::centreOfPressure::write()
 
             if (log_)
             {
-                Info<< "centreOfPressure = " << cop.first() << tab 
+                Info<< name_ << " centreOfPressure = " << cop.first() << tab 
                     << "pressure = " << cop.second()
                     << endl;
             }

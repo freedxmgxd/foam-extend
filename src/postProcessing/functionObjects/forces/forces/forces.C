@@ -366,7 +366,7 @@ void Foam::forces::write()
 
             if (log_)
             {
-                Info<< "forces output:" << nl
+                Info<< name_ << " forces output:" << nl
                     << "    forces(pressure, viscous)" << fm.first() << nl
                     << "    moment(pressure, viscous)" << fm.second() << nl
                     << endl;
