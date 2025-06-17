@@ -7,7 +7,7 @@
         caseDirMaster,
         "system",
         "constant",
-        !args.optionFound("noFunctionObjects")
+        false  // Disable function objects
     );
 
     Time runTimeToAdd
@@ -17,5 +17,5 @@
         caseDirToAdd,
         "system",
         "constant",
-        !args.optionFound("noFunctionObjects")
+        false  // Disable function objects
     );
