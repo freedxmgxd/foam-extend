@@ -23,12 +23,14 @@ License
     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 Author
-    Vuko Vukcevic, Wikki Ltd.  All rights reserved
+    Vuko Vukcevic, Wikki Ltd.  All rights reserved.
+    Hrvoje Jasak, Wikki Ltd.
 
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceFields.H"
 #include "patchFluxFunctionObject.H"
+#include "cyclicPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -128,8 +130,20 @@ bool Foam::patchFluxFunctionObject::execute(const bool forceWrite)
         const surfaceScalarField& phi =
             mesh.lookupObject<surfaceScalarField>(phiName_);
 
+        const scalarField& patchPhi = phi.boundaryField()[patchID];
+
         // Calculate the flux through the patch
-        const scalar patchFlux = gSum(phi.boundaryField()[patchID]);
+        scalar patchFlux = 0;
+
+        if (isA<cyclicPolyPatch>(mesh.boundaryMesh()[patchID]))
+        {
+            // For a cyclic patch only sum up the first part
+            patchFlux = gSum(SubField<scalar>(patchPhi, patchPhi.size()/2));
+        }
+        else
+        {
+            patchFlux = gSum(patchPhi);
+        }
 
         if (ofPtr_.valid())
         {

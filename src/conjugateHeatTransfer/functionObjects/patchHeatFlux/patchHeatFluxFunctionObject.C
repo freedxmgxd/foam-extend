@@ -31,6 +31,7 @@ Author
 #include "surfaceFields.H"
 #include "chtRcTemperatureFvPatchScalarField.H"
 #include "patchHeatFluxFunctionObject.H"
+#include "cyclicPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -161,6 +162,8 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
         const volScalarField& T =
             mesh.lookupObject<volScalarField>(TName_);
 
+        const fvPatchScalarField& patchT = T.boundaryField()[patchID];
+
         // Calculate the flux through the patch
         scalar convectiveFlux = 0;
 
@@ -168,6 +171,8 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
         {
             const surfaceScalarField& phi =
                 mesh.lookupObject<surfaceScalarField>(phiName_);
+
+            const scalarField& patchPhi = phi.boundaryField()[patchID];
 
             // Dimension check and correction
             if (debug)
@@ -189,8 +194,19 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
                 }
             }
 
-            convectiveFlux =
-                gSum(phi.boundaryField()[patchID]*T.boundaryField()[patchID]);
+            if (isA<cyclicPolyPatch>(mesh.boundaryMesh()[patchID]))
+            {
+                convectiveFlux =
+                    gSum
+                    (
+                        SubField<scalar>(patchPhi, patchPhi.size()/2)*
+                        SubField<scalar>(patchT, patchT.size()/2)
+                    );
+            }
+            else
+            {
+                convectiveFlux = gSum(patchPhi*patchT);
+            }
         }
 
         // Calculate diffusive flux
@@ -201,6 +217,8 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
         {
             const volScalarField& gamma =
                 mesh.lookupObject<volScalarField>(gammaName_);
+
+            const scalarField& patchGamma = gamma.boundaryField()[patchID];
 
             // Dimension check and correction
             if (debug)
@@ -223,18 +241,35 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
                     Info<< "Flux dimension = W/K" << endl;
             }
 
-            diffusiveFlux =
-                gSum
-                (
-                    gamma.boundaryField()[patchID]*
-                    T.boundaryField()[patchID].snGrad()*
-                    magSf.boundaryField()[patchID]
-                );
+            if (isA<cyclicPolyPatch>(mesh.boundaryMesh()[patchID]))
+            {
+                diffusiveFlux =
+                    gSum
+                    (
+                        SubField<scalar>(patchGamma, patchGamma.size()/2)*
+                        SubField<scalar>(patchT.snGrad(), patchT.size()/2)*
+                        SubField<scalar>
+                        (
+                            magSf.boundaryField()[patchID], patchT.size()/2
+                        )
+                    );
+            }
+            else
+            {
+                diffusiveFlux =
+                    gSum
+                    (
+                        patchGamma*patchT.snGrad()*
+                        magSf.boundaryField()[patchID]
+                    );
+            }
         }
         else if (mesh.foundObject<volSymmTensorField>(gammaName_))
         {
             const volSymmTensorField& gamma =
                 mesh.lookupObject<volSymmTensorField>(gammaName_);
+
+            const symmTensorField& patchGamma = gamma.boundaryField()[patchID];
 
             // Dimension check and correction
             if (debug)
@@ -258,19 +293,42 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
             }
 
             vectorField Sn =
-                mesh.Sf().boundaryField()[patchID]/magSf.boundaryField()[patchID];
-            
-            diffusiveFlux =
-                gSum
-                (
+                mesh.Sf().boundaryField()[patchID]/
+                magSf.boundaryField()[patchID];
+
+            if (isA<cyclicPolyPatch>(mesh.boundaryMesh()[patchID]))
+            {
+                diffusiveFlux =
+                    gSum
                     (
                         (
-                            mesh.Sf().boundaryField()[patchID]
-                          & gamma.boundaryField()[patchID]
-                        ) & Sn
-                    )*
-                    T.boundaryField()[patchID].snGrad()
-                );
+                            (
+                                SubField<vector>
+                                (
+                                    mesh.Sf().boundaryField()[patchID],
+                                    patchT.size()/2
+                                )
+                              & SubField<symmTensor>
+                                (
+                                    patchGamma,
+                                    patchT.size()/2
+                                )
+                            ) & SubField<vector>(Sn, Sn.size()/2)
+                        )*SubField<scalar>(patchT.snGrad(), patchT.size()/2)
+                    );
+            }
+            else
+            {
+                diffusiveFlux =
+                    gSum
+                    (
+                        (
+                            (
+                                mesh.Sf().boundaryField()[patchID] & patchGamma
+                            ) & Sn
+                        )*patchT.snGrad()
+                    );
+            }
         }
 
         // Calculate radiative flux
@@ -282,11 +340,29 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
             const volScalarField& Qr =
                 mesh.lookupObject<volScalarField>("Qr");
 
-            radiativeFlux = gSum
-            (
-                 Qr.boundaryField()[patchID]*
-                 mesh.magSf().boundaryField()[patchID]
-            );
+            const scalarField& patchQr = Qr.boundaryField()[patchID];
+
+            const scalarField& patchMagSf =
+                mesh.magSf().boundaryField()[patchID];
+
+            if (isA<cyclicPolyPatch>(mesh.boundaryMesh()[patchID]))
+            {
+                radiativeFlux =
+                    gSum
+                    (
+                        SubField<scalar>(patchQr, patchQr.size()/2)*
+                        patchMagSf
+                    );
+            }
+            else
+            {
+                radiativeFlux =
+                    gSum
+                    (
+                        SubField<scalar>(patchQr, patchQr.size()/2)*
+                        SubField<scalar>(patchMagSf, patchMagSf.size()/2)
+                    );
+            }
         }
 
         if (ofPtr_.valid())
