@@ -42,10 +42,8 @@ void Foam::faceCellsFringe::calcAddressing() const
 {
     if (acceptorsPtr_)
     {
-        FatalErrorIn
-        (
-            "void Foam::faceCellsFringe::calcAddressing() const"
-        )   << "Addressing already calculated"
+        FatalErrorInFunction
+            << "Addressing already calculated"
             << abort(FatalError);
     }
 
@@ -68,10 +66,8 @@ void Foam::faceCellsFringe::calcAddressing() const
 
         if (!curFringePatch.active())
         {
-            FatalErrorIn
-            (
-                "void faceCellsFringe::calcAddressing() const"
-            )   << "Fringe patch " << patchNames_[nameI]
+            FatalErrorInFunction
+                << "Fringe patch " << patchNames_[nameI]
                 << " cannot be found."
                 << abort(FatalError);
         }
@@ -148,7 +144,7 @@ bool Foam::faceCellsFringe::updateIteration
     // more than once, which should not happen for faceCellsFringe
     if (finalDonorAcceptorsPtr_)
     {
-        FatalErrorIn("faceCellsFringe::updateIteration(donorAcceptorList&")
+        FatalErrorInFunction
             << "finalDonorAcceptorPtr_ already allocated. Something went "
             << "wrong with the iteration procedure (flag was not updated)."
             << nl << "This should not happen for faceCellsFringe."
@@ -195,7 +191,7 @@ Foam::donorAcceptorList& Foam::faceCellsFringe::finalDonorAcceptors() const
 {
     if (!finalDonorAcceptorsPtr_)
     {
-        FatalErrorIn("faceCellsFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "finalDonorAcceptorPtr_ not allocated. Make sure you have "
             << "called faceCellsFringe::updateIteration() before asking for "
             << "final set of donor/acceptor pairs."
@@ -204,7 +200,7 @@ Foam::donorAcceptorList& Foam::faceCellsFringe::finalDonorAcceptors() const
 
     if (!foundSuitableOverlap())
     {
-        FatalErrorIn("faceCellsFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "Attemted to access finalDonorAcceptors but suitable overlap "
             << "has not been found. This is not allowed. "
             << abort(FatalError);

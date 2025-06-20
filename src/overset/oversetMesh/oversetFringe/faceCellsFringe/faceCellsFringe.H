@@ -78,10 +78,10 @@ class faceCellsFringe
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        faceCellsFringe(const faceCellsFringe&);
+        faceCellsFringe(const faceCellsFringe&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const faceCellsFringe&);
+        void operator=(const faceCellsFringe&) = delete;
 
 
         // Calculate hole and acceptor addressing
@@ -108,9 +108,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~faceCellsFringe();
+    //- Destructor
+    virtual ~faceCellsFringe();
 
 
     // Member Functions

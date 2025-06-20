@@ -43,10 +43,8 @@ void Foam::manualFringe::calcAddressing() const
 {
     if (fringeHolesPtr_ || acceptorsPtr_)
     {
-        FatalErrorIn
-        (
-            "void Foam::manualFringe::calcAddressing() const"
-        )   << "Fringe addressing already calculated"
+        FatalErrorInFunction
+            << "Fringe addressing already calculated"
             << abort(FatalError);
     }
 
@@ -84,10 +82,8 @@ void Foam::manualFringe::calcAddressing() const
     {
         if (rcz.whichCell(h[holeI]) < 0)
         {
-            FatalErrorIn
-            (
-                "void Foam::manualFringe::calcAddressing() const"
-            )   << "Invalid hole cell for region " << region().name()
+            FatalErrorInFunction
+                << "Invalid hole cell for region " << region().name()
                 << ": cell " << h[holeI] << " does not belong to this region"
                 << abort(FatalError);
         }
@@ -100,10 +96,8 @@ void Foam::manualFringe::calcAddressing() const
     {
         if (rcz.whichCell(a[accI]) < 0)
         {
-            FatalErrorIn
-            (
-                "void Foam::manualFringe::calcAddressing() const"
-            )   << "Invalid acceptor cell for region " << region().name()
+            FatalErrorInFunction
+                << "Invalid acceptor cell for region " << region().name()
                 << ": cell " << a[accI] << " does not belong to this region"
                 << abort(FatalError);
         }
@@ -162,7 +156,7 @@ bool Foam::manualFringe::updateIteration
     // more than once, which should not happen for manualFringe
     if (finalDonorAcceptorsPtr_)
     {
-        FatalErrorIn("manualFringe::updateIteration(donorAcceptorList&)")
+        FatalErrorInFunction
             << "finalDonorAcceptorPtr_ already allocated. Something went "
             << "wrong with the iteration procedure (flag was not updated)."
             << nl << "This should not happen for manualFringe."
@@ -209,7 +203,7 @@ Foam::donorAcceptorList& Foam::manualFringe::finalDonorAcceptors() const
 {
     if (!finalDonorAcceptorsPtr_)
     {
-        FatalErrorIn("manualFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "finalDonorAcceptorPtr_ not allocated. Make sure you have "
             << "called manualFringe::updateIteration() before asking for "
             << "final set of donor/acceptor pairs."
@@ -218,7 +212,7 @@ Foam::donorAcceptorList& Foam::manualFringe::finalDonorAcceptors() const
 
     if (!foundSuitableOverlap())
     {
-        FatalErrorIn("manualFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "Attemted to access finalDonorAcceptors but suitable overlap "
             << "has not been found. This is not allowed. "
             << abort(FatalError);

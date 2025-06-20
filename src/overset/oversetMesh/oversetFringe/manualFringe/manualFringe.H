@@ -81,10 +81,10 @@ class manualFringe
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        manualFringe(const manualFringe&);
+        manualFringe(const manualFringe&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const manualFringe&);
+        void operator=(const manualFringe&) = delete;
 
 
         // Calculate hole and acceptor addressing
@@ -111,9 +111,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~manualFringe();
+    //- Destructor
+    virtual ~manualFringe();
 
 
     // Member Functions
