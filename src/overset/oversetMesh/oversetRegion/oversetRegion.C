@@ -788,7 +788,7 @@ void Foam::oversetRegion::calcCellSearch() const
     // Bounding box containing only local region cells
     treeBoundBox overallBb(localBounds());
     Random rndGen(123456);
-    overallBb = overallBb.extend(rndGen, 1E-4);
+    overallBb = overallBb.extend(rndGen, 1e-4);
     overallBb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
     overallBb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
 
@@ -989,12 +989,14 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
     // STAGE 1: Start iteration for this region
 
     // Get current and local acceptor cells from oversetFringe
-    const labelList& a = fringePtr_->candidateAcceptors();
+    const labelList& candidateAcceptors = fringePtr_->candidateAcceptors();
 
     // Create a list of local acceptors (holding acceptors on this processor and
     // donors on possibly remote processor)
-    donorAcceptorList localAcceptorDonorList(a.size());
+    donorAcceptorList localAcceptorDonorList(candidateAcceptors.size());
 
+    Info<< "Number of candidate acceptors = " << candidateAcceptors.size()
+        << endl;
     // Insert local acceptor into the list
     forAll (localAcceptorDonorList, aI)
     {
@@ -1004,7 +1006,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
                 // cell index!). Done this way for easier filtering of
                 // multiple donors in STAGE 11
             Pstream::myProcNo(),
-            cc[a[aI]]
+            cc[candidateAcceptors[aI]]
         );
     }
 
@@ -1041,18 +1043,19 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
     // HJ, 10/Jan/2023
     forAll (sendAcceptorMap, procI)
     {
-        sendAcceptorMap[procI].setCapacity(Foam::max(50, a.size()/10));
+        sendAcceptorMap[procI].setCapacity
+        (
+            Foam::max(50, candidateAcceptors.size()/10)
+        );
     }
 
-    // Loop through all processors
-    forAll (sendAcceptorMap, procI)
-    {
-        // Get bounding boxes on this processor
-        const List<boundBox>& curProcBoundBoxes =
-            procRegionBB[procI];
+    // Rewrite: mixed-up boundBox indices.  HJ, 20/Jun/2025
 
-        // Get current processor send map
-        dynamicLabelList& curSendMap = sendAcceptorMap[procI];
+    // Loop through all local acceptors
+    forAll (candidateAcceptors, aI)
+    {
+        // Check how many bounding boxes it falls inside
+        label foundHits = 0;
 
         // Loop through all donor regions
         forAll (dr, drI)
@@ -1060,31 +1063,44 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             // Get region index of this donor region
             const label& curDonorRegion = dr[drI];
 
-            // Loop through all local acceptors
-            forAll (a, aI)
+            // Loop through all processors
+            forAll (sendAcceptorMap, procI)
             {
                 // Check whether the acceptor is within the bounding box of
                 // this donor region on this particular processor.
                 if
                 (
-                    curProcBoundBoxes[curDonorRegion].containsInside
+                    procRegionBB[procI][curDonorRegion].containsInside
                     (
                         localAcceptorDonorList[aI].acceptorPoint()
                     )
                 )
                 {
+                    foundHits++;
+
                     // Acceptor may find donor on this processor, append it
-                    curSendMap.append(aI);
+                    sendAcceptorMap[procI].append(aI);
 
                     // Increment the number of acceptors I am sending to this
                     // processor
                     ++numberOfLocalAcceptorsToProcs[procI];
                 }
-            } // End for all local acceptors
-        } // End for all donor regions
-    } // End for all processors
+            }
+        }
 
-    // STAGE 3: Count number of points I'm receiving from all other
+        if (foundHits == 0)
+        {
+            FatalErrorInFunction
+                << "Cannot find any donor bounding box for acceptor "
+                << localAcceptorDonorList[aI]
+                << " on oversetRegion " << name()
+                << ".  Please check oversetFringe definition"
+                << abort(FatalError);
+        }
+    }
+
+
+    // STAGE 3: Count number of points I am receiving from all other
     // processors
 
     // Gather/scatter number of acceptor points going to each processor from
@@ -1179,7 +1195,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
     // This is non-contiguous information and I had to change the
     // Pstream comms type to blocking in mapDistributeTemplates.C
     // to make it work.  Not resolved.  HJ, 22/May/2024
-    
+
     // Create mapDistribute object for distributing acceptor points. Note:
     // reusing maps, meaning that arguments are invalid from now onward.
     mapDistribute acceptorDistribution
@@ -1407,7 +1423,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             {
                 FatalErrorInFunction
                     << "Received donor/acceptor pair where acceptor belongs to "
-                        << "a different processor for region " << name() << nl
+                    << "a different processor for region " << name() << nl
                     << "My processor number: " << Pstream::myProcNo()
                     << "Acceptor processor number: "
                     << completeDonorAcceptorList[daI].acceptorProcNo()
@@ -1421,24 +1437,25 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
     // Sanity check before moving on. For each initial acceptor, we must
     // receive at least 1 corresponding donor (even if it is not found,
     // indicating an orphan cell) from different processors.
-    if (a.size() > completeDonorAcceptorList.size())
+    if (candidateAcceptors.size() > completeDonorAcceptorList.size())
     {
         FatalErrorInFunction
-            << "Size of initial acceptor set: " << a.size()
+            << "Size of initial acceptor set: " << candidateAcceptors.size()
             << " is larger than the size of the distributed "
             << " donor/acceptor list: " << completeDonorAcceptorList.size()
             << nl
-            << "This should not have happened..."
+            << "Acceptor does not fall into the bounding box of any "
+            << "donor regions.  Check acceptor selection or overset setup"
             << abort(FatalError);
     }
 
     // Create a masking field indicating that a certain acceptor has been
     // visited
-    boolList isVisited(a.size(), false);
+    boolList isVisited(candidateAcceptors.size(), false);
 
     // Create a combined donor acceptor list, only containing best donors for
     // current acceptors.
-    donorAcceptorList combinedDonorAcceptorList(a.size());
+    donorAcceptorList combinedDonorAcceptorList(candidateAcceptors.size());
 
     // Loop through donor/acceptor list
     forAll (completeDonorAcceptorList, daI)
@@ -1463,7 +1480,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             curDACombined = curDA;
 
             // Set the correct cell index in the combined list
-            curDACombined.acceptorCell() = a[aI];
+            curDACombined.acceptorCell() = candidateAcceptors[aI];
 
             // Mark as visited
             acceptorVisited = true;
