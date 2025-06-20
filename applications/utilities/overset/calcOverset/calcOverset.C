@@ -33,18 +33,14 @@ Author
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "calc.H"
 #include "oversetMesh.H"
 #include "oversetFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-int main(int argc, char *argv[])
+void Foam::calc(const argList& args, const Time& runTime, const fvMesh& mesh)
 {
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createMesh.H"
-
     volVectorField cellCentres
     (
         IOobject
@@ -77,9 +73,7 @@ int main(int argc, char *argv[])
 
 #   include "writeOversetMasks.H"
 
-    Info<< "End\n" << endl;
-
-    return 0;
+    Info << "done" << endl;
 }
 
 

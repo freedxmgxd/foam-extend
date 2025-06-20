@@ -32,17 +32,14 @@ Author
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "calc.H"
+#include "fvc.H"
 #include "regionSplit.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-int main(int argc, char *argv[])
+void Foam::calc(const argList& args, const Time& runTime, const fvMesh& mesh)
 {
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createMesh.H"
-
     volScalarField regionIndex
     (
         IOobject
@@ -73,8 +70,6 @@ int main(int argc, char *argv[])
     regionIndex.write();
 
     Info << "done" << endl;
-
-    return 0;
 }
 
 
