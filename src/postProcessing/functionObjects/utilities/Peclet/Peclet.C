@@ -170,7 +170,7 @@ void Foam::Peclet::execute()
         }
         else
         {
-            FatalErrorIn("void Foam::Peclet::write()")
+            FatalErrorInFunction
                 << "Unable to determine the viscosity"
                 << exit(FatalError);
         }
