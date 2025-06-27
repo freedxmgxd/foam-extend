@@ -193,18 +193,22 @@ void Foam::overlapFringe::calcAddressing() const
     // We will silently proceed if the zone is not found since this option is
     // not mandatory but is useful in certain cases
 
-    // Get zone index
-    const label zoneID = mesh.cellZones().findZoneID(holesZoneName_);
-
     // Create a hash set for allHoles
     labelHashSet allHoles;
 
-    if (zoneID > -1)
+    // Collect holes that are specified as a cell zone
+    // Scoping
     {
-        // Get the zone for holes and append them to set
-        const labelList& specifiedHoles = mesh.cellZones()[zoneID];
+        // Get zone index
+        const label holeZoneID = mesh.cellZones().findZoneID(holesZoneName_);
 
-        allHoles.insert(specifiedHoles);
+        if (holeZoneID > -1)
+        {
+            // Get the zone for holes and append them to set
+            const labelList& specifiedHoles = mesh.cellZones()[holeZoneID];
+
+            allHoles.insert(specifiedHoles);
+        }
     }
     // else silently proceed without user-specified holes
 
@@ -215,7 +219,7 @@ void Foam::overlapFringe::calcAddressing() const
         allHoles.insert(cutHoles[chI]);
     }
 
-    // Mark all holes
+    // Mark all holes as ineligible acceptors
     forAllConstIter (labelHashSet, allHoles, iter)
     {
         const label& holeCellI = iter.key();
@@ -229,11 +233,9 @@ void Foam::overlapFringe::calcAddressing() const
 
 
     // Dynamic list for storing acceptors.
-    // Note 1: capacity set to number of cells (trading off memory for
-    // efficiency)
-    // Note 2: inserting duplicates is avoided by updating eligibleAcceptors
+    // Note: inserting duplicates is avoided by updating eligibleAcceptors
     // mask
-    dynamicLabelList candidateAcceptors(mesh.nCells());
+    dynamicLabelList candidateAcceptors(Foam::max(50, mesh.nCells()/5));
 
     // Loop through all holes and find acceptor candidates
     forAllConstIter (labelHashSet, allHoles, iter)
@@ -376,8 +378,8 @@ void Foam::overlapFringe::calcAddressing() const
     // process.
     // Transfer the acceptor list and allocate empty fringeHoles list, which
     // may be populated in updateIteration member function
-    acceptorsPtr_ = new labelList(candidateAcceptors.xfer());
-    fringeHolesPtr_ = new labelList(allHoles.toc().xfer());
+    acceptorsPtr_ = new labelList(candidateAcceptors.shrink());
+    fringeHolesPtr_ = new labelList(allHoles.toc());
 }
 
 
@@ -433,6 +435,8 @@ Foam::overlapFringe::overlapFringe
             << "Please specify value between 0 and 1."
             << exit(FatalIOError);
     }
+
+    Info<< "initPatchNames = " << initPatchNames_ << endl;
 }
 
 
@@ -562,7 +566,7 @@ bool Foam::overlapFringe::updateIteration
 
         // Transfer fringeHolesPtr into the dynamic list for efficiency. Note:
         // will be transfered back at the end of the scope.
-        dynamicLabelList allFringeHoles(fringeHolesPtr_->xfer());
+        dynamicLabelList allFringeHoles(*fringeHolesPtr_);
 
         // Loop through all fringe holes and mark them
         forAll (allFringeHoles, hcI)
@@ -699,10 +703,7 @@ bool Foam::overlapFringe::updateIteration
 
         // Transfer ownership of the final donor/acceptor list to the
         // finalDonorAcceptorsPtr_
-        finalDonorAcceptorsPtr_ = new donorAcceptorList
-        (
-            finalDAPairs.xfer()
-        );
+        finalDonorAcceptorsPtr_ = new donorAcceptorList(finalDAPairs);
 
         // Tranfer back the allFringeHoles dynamic list into member data
         fringeHolesPtr_->transfer(allFringeHoles);
@@ -745,7 +746,7 @@ bool Foam::overlapFringe::updateIteration
 
         // Transfer fringeHolesPtr into the dynamic list for efficiency. Note:
         // will be transfered back at the end of the scope.
-        dynamicLabelList cumFringeHoles(fringeHolesPtr_->xfer());
+        dynamicLabelList cumFringeHoles(*fringeHolesPtr_);
 
         // Create mask to prevent wrong and duplicate entries (i.e. we cannot
         // search backwards through existing acceptors and holes)
