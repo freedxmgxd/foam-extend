@@ -72,10 +72,10 @@ class extendedLduMatrix
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        extendedLduMatrix(const extendedLduMatrix&);
+        extendedLduMatrix(const extendedLduMatrix&) = delete;
 
         //- Disallow default bitwise assignement
-        void operator=(const extendedLduMatrix&);
+        void operator=(const extendedLduMatrix&) = delete;
 
 
         // Helper functions

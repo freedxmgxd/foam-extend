@@ -58,14 +58,14 @@ Foam::extendedLduMatrix::extendedLduMatrix
 {
     if (debug)
     {
-        InfoIn("extendedLduMatrix(lduMatrix&, label, polyMesh&)")
+        InfoInFunction
             << "Constructing extendedLduMatrix."
             << endl;
     }
 
     if (ldum.diagonal())
     {
-        WarningIn("extendedLduMatrix(lduMatrix&, label, polyMesh&)")
+        WarningInFunction
             << "Attempted to create extended lower/upper coeffs for matrix "
             << "that is diagonal."
             << nl << endl;
@@ -80,7 +80,7 @@ Foam::extendedLduMatrix::extendedLduMatrix
         extendedUpperPtr_ = new scalarField
         (
             extLduAddr_.extendedUpperAddr().size(),
-            0.0
+            scalar(0)
         );
         scalarField& extUpper = *extendedUpperPtr_;
 
@@ -182,10 +182,8 @@ const Foam::scalarField& Foam::extendedLduMatrix::extendedLower() const
 {
     if (!extendedLowerPtr_ && !extendedUpperPtr_)
     {
-        FatalErrorIn
-        (
-            "const scalarfield& extendedLduMatrix::extendedLower() const"
-        )   << "extendedLowerPtr_ or extendedUpperPtr_ unallocated"
+        FatalErrorInFunction
+            << "extendedLowerPtr_ or extendedUpperPtr_ unallocated"
             << abort(FatalError);
     }
 
@@ -204,10 +202,8 @@ const Foam::scalarField& Foam::extendedLduMatrix::extendedUpper() const
 {
     if (!extendedLowerPtr_ && !extendedUpperPtr_)
     {
-        FatalErrorIn
-        (
-            "const scalarfield& extendedLduMatrix::extendedUpper() const"
-        )   << "extendedLowerPtr_ or extendedUpperPtr_ unallocated"
+        FatalErrorInFunction
+            << "extendedLowerPtr_ or extendedUpperPtr_ unallocated"
             << abort(FatalError);
     }
 

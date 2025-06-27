@@ -31,6 +31,10 @@ namespace Foam
 {
     defineTypeNameAndDebug(PBiCG, 0);
 
+    // Add as symmetric solver as well: eg overset
+    lduSolver::addsymMatrixConstructorToTable<PBiCG>
+        addPBiCGSymMatrixConstructorToTable_;
+
     lduSolver::addasymMatrixConstructorToTable<PBiCG>
         addPBiCGAsymMatrixConstructorToTable_;
 }

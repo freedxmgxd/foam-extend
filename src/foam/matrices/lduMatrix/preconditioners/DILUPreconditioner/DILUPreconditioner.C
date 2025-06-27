@@ -184,7 +184,6 @@ void Foam::DILUPreconditioner::preconditionT
             rDPtr[uPtr[face]]*upperPtr[face]*wTPtr[lPtr[face]];
     }
 
-
     label sface;
 
     for (label face=nFacesM1; face>=0; face--)

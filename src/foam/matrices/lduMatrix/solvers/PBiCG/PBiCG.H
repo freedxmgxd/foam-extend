@@ -54,10 +54,10 @@ class PBiCG
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        PBiCG(const PBiCG&);
+        PBiCG(const PBiCG&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const PBiCG&);
+        void operator=(const PBiCG&) = delete;
 
 
 public:
@@ -80,10 +80,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~PBiCG()
-        {}
+    //- Destructor
+    virtual ~PBiCG() = default;
 
 
     // Member Functions
