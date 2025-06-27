@@ -144,8 +144,9 @@ Foam::BlockBiCGStabSolver<Type>::solve
             }
 
             // Bug fix, Alexander Monakov, 11/Jul/2012
-            preconPtr_->precondition(sh, s);
-            matrix.Amul(t, sh);
+            // This is wrong: reverting to T product.  HJ, 27/Jun/2025
+            preconPtr_->preconditionT(sh, s);
+            matrix.Tmul(t, sh);
             omega = gSumProd(t, s)/gSumProd(t, t);
 
             forAll (x, i)
