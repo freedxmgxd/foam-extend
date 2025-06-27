@@ -1094,7 +1094,9 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
                 << "Cannot find any donor bounding box for acceptor "
                 << localAcceptorDonorList[aI]
                 << " on oversetRegion " << name()
-                << ".  Please check oversetFringe definition"
+                << ".  Please check oversetFringe definition" << nl
+                << "Donor regions: " << dr << nl
+                << "Processor bounding boxes: " << procRegionBB
                 << abort(FatalError);
         }
     }
