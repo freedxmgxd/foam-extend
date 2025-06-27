@@ -221,17 +221,8 @@ void Foam::BlockILUC0Precon<Type>::calcActiveTypeFactorization
     }
     else
     {
-        FatalErrorIn
-        (
-            "template <class Type>\n"
-            "template <class LDUType>\n"
-            "void BlockILUC0Precon<Type>::calcActiveTypeFactorization\n"
-            "(\n"
-            "    Field<LDUType>& preconD,\n"
-            "    Field<LDUType>& preconUpper,\n"
-            "    Field<LDUType>& preconLower,\n"
-            ") const"
-        )   << "Unnecessary use of BlockILUC0 preconditioner for diagonal "
+        FatalErrorInFunction
+            << "Unnecessary use of BlockILUC0 preconditioner for diagonal "
             << "matrix."
             << nl
             << "Use BlockDiagonal preconditioner instead."
@@ -644,27 +635,15 @@ void Foam::BlockILUC0Precon<Type>::precondition
         }
         else
         {
-            FatalErrorIn
-            (
-                "void BlockILUC0Precon<Type>::precondition\n"
-                "(\n"
-                "    Field<Type>& x,\n"
-                "    const Field<Type>& T\n"
-                ") const"
-            )   << "Problem with coefficient type morphing."
+            FatalErrorInFunction
+                << "Problem with coefficient type morphing."
                 << abort(FatalError);
         }
     }
     else
     {
-        FatalErrorIn
-        (
-            "void BlockILUC0Precon<Type>::precondition\n"
-            "(\n"
-            "    Field<Type>& x,\n"
-            "    const Field<Type>& b\n"
-            ") const"
-        )   << "Unnecessary use of BlockILUC0 preconditioner for diagonal "
+        FatalErrorInFunction
+            << "Unnecessary use of BlockILUC0 preconditioner for diagonal "
             << "matrix. "
             << nl
             << "Use BlockDiagonal preconditioner instead."
@@ -799,27 +778,15 @@ void Foam::BlockILUC0Precon<Type>::preconditionT
         }
         else
         {
-            FatalErrorIn
-            (
-                "void BlockILUC0Precon<Type>::preconditionT\n"
-                "(\n"
-                "    Field<Type>& x,\n"
-                "    const Field<Type>& T\n"
-                ") const"
-            )   << "Problem with coefficient type morphing."
+            FatalErrorInFunction
+                << "Problem with coefficient type morphing."
                 << abort(FatalError);
         }
     }
     else
     {
-        FatalErrorIn
-        (
-            "void BlockILUC0Precon<Type>::preconditionT\n"
-            "(\n"
-            "    Field<Type>& x,\n"
-            "    const Field<Type>& b\n"
-            ") const"
-        )   << "Unnecessary use of BlockILUC0 preconditioner for diagonal "
+        FatalErrorInFunction
+            << "Unnecessary use of BlockILUC0 preconditioner for diagonal "
             << "matrix."
             << nl
             << "Use BlockDiagonal preconditioner instead."
