@@ -69,29 +69,19 @@ void Foam::ILUCp::calcFactorization()
         const extendedLduAddressing& addr = extMatrix_.extendedLduAddr();
 
         // Get upper/lower extended addressing
-        const label* const __restrict__ uPtr =
-            addr.extendedUpperAddr().begin();
-        const label* const __restrict__ lPtr =
-            addr.extendedLowerAddr().begin();
+        const labelUList& u = addr.extendedUpperAddr();
+        const labelUList& l = addr.extendedLowerAddr();
 
         // Get extended owner start addressing
-        const label* const __restrict__ ownStartPtr =
-            addr.extendedOwnerStartAddr().begin();
+        const labelUList& ownStart = addr.extendedOwnerStartAddr();
 
         // Get extended losort and losort start addressing
-        const label* const __restrict__ lsrPtr =
-            addr.extendedLosortAddr().begin();
-        const label* const __restrict__ lsrStartPtr =
-            addr.extendedLosortStartAddr().begin();
+        const labelUList& lsr = addr.extendedLosortAddr();
+        const labelUList& lsrStart = addr.extendedLosortStartAddr();
 
         // Get access to factored matrix entries
-        scalar* __restrict__ diagPtr = preconDiag_.begin();
-        scalar* __restrict__ upperPtr = extMatrix_.extendedUpper().begin();
-        scalar* __restrict__ lowerPtr = extMatrix_.extendedLower().begin();
-
-        // Get access to working fields
-        scalar* __restrict__ zPtr = z_.begin();
-        scalar* __restrict__ wPtr = w_.begin();
+        scalarField& upper = extMatrix_.extendedUpper();
+        scalarField& lower = extMatrix_.extendedLower();
 
         // Get number of rows
         const label nRows = preconDiag_.size();
@@ -106,11 +96,11 @@ void Foam::ILUCp::calcFactorization()
         for (label rowI = 0; rowI < nRows; ++rowI)
         {
             // Start and end of k-th row (upper) and k-th column (lower)
-            fStart = ownStartPtr[rowI];
-            fEnd = ownStartPtr[rowI + 1];
+            fStart = ownStart[rowI];
+            fEnd = ownStart[rowI + 1];
 
             // Initialize temporary working diagonal
-            zDiag_ = diagPtr[rowI];
+            zDiag_ = preconDiag_[rowI];
 
             // Initialize temporary working row field
             for (label faceI = fStart; faceI < fEnd; ++faceI)
@@ -118,13 +108,13 @@ void Foam::ILUCp::calcFactorization()
                 // Note: z addressed by neighbour of face (column index for
                 // upper), w addressed by neighbour of face (row index for
                 // lower)
-                zPtr[uPtr[faceI]] = upperPtr[faceI];
-                wPtr[uPtr[faceI]] = lowerPtr[faceI];
+                z_[u[faceI]] = upper[faceI];
+                w_[u[faceI]] = lower[faceI];
             }
 
             // Start and end of k-th row (lower) and k-th column (upper)
-            fLsrStart = lsrStartPtr[rowI];
-            fLsrEnd = lsrStartPtr[rowI + 1];
+            fLsrStart = lsrStart[rowI];
+            fLsrEnd = lsrStart[rowI + 1];
 
             // Lower/upper coeff loop (i - loop)
             for
@@ -135,16 +125,16 @@ void Foam::ILUCp::calcFactorization()
             )
             {
                 // Get losort coefficient for this face
-                const label losortCoeff = lsrPtr[faceLsrI];
+                const label losortCoeff = lsr[faceLsrI];
 
                 // Get corresponding row index for upper (i label)
-                const label i = lPtr[losortCoeff];
+                const label i = l[losortCoeff];
 
                 // Update diagonal
-                zDiag_ -= lowerPtr[losortCoeff]*upperPtr[losortCoeff];
+                zDiag_ -= lower[losortCoeff]*upper[losortCoeff];
 
                 // Get end of row for cell i
-                const label fEndRowi = ownStartPtr[i + 1];
+                const label fEndRowi = ownStart[i + 1];
 
                 // Upper coeff loop (additional loop to avoid checking the
                 // existence of certain upper coeffs)
@@ -156,13 +146,13 @@ void Foam::ILUCp::calcFactorization()
                     ++faceI
                 )
                 {
-                    zPtr[uPtr[faceI]] -= lowerPtr[losortCoeff]*upperPtr[faceI];
-                    wPtr[uPtr[faceI]] -= upperPtr[losortCoeff]*lowerPtr[faceI];
+                    z_[u[faceI]] -= lower[losortCoeff]*upper[faceI];
+                    w_[u[faceI]] -= upper[losortCoeff]*lower[faceI];
                 }
             }
 
             // Update diagonal entry, inverting it for future use
-            scalar& diagRowI = diagPtr[rowI];
+            scalar& diagRowI = preconDiag_[rowI];
             diagRowI = 1.0/zDiag_;
 
             // Index for updating L and U
@@ -172,11 +162,11 @@ void Foam::ILUCp::calcFactorization()
             for (label faceI = fStart; faceI < fEnd; ++faceI)
             {
                 // Get index for current face
-                zwIndex = uPtr[faceI];
+                zwIndex = u[faceI];
 
                 // Update L and U decomposition for this row (column)
-                upperPtr[faceI] = zPtr[zwIndex];
-                lowerPtr[faceI] = wPtr[zwIndex]*diagRowI;
+                upper[faceI] = z_[zwIndex];
+                lower[faceI] = w_[zwIndex]*diagRowI;
             }
 
             // Reset temporary working fields
@@ -192,13 +182,13 @@ void Foam::ILUCp::calcFactorization()
             )
             {
                 // Get losort coefficient for this face
-                const label losortCoeff = lsrPtr[faceLsrI];
+                const label losortCoeff = lsr[faceLsrI];
 
                 // Get corresponding row index for upper (i label)
-                const label i = lPtr[losortCoeff];
+                const label i = l[losortCoeff];
 
                 // Get end of row for cell i
-                const label fEndRowi = ownStartPtr[i + 1];
+                const label fEndRowi = ownStart[i + 1];
 
                 for
                 (
@@ -207,8 +197,8 @@ void Foam::ILUCp::calcFactorization()
                     ++faceI
                 )
                 {
-                    zPtr[uPtr[faceI]] = 0.0;
-                    wPtr[uPtr[faceI]] = 0.0;
+                    z_[u[faceI]] = 0;
+                    w_[u[faceI]] = 0;
                 }
             }
         }
@@ -317,11 +307,8 @@ void Foam::ILUCp::precondition
     }
     else
     {
-        WarningIn
-        (
-            "void ILUCp::precondition"
-            "(scalarField& x, const scalarField& b, const direction cmpt)"
-        )   << "Unnecessary use of ILUCp preconditioner for diagonal matrix. "
+        WarningInFunction
+            << "Unnecessary use of ILUCp preconditioner for diagonal matrix. "
             << nl
             << "Use diagonal preconditioner instead."
             << endl;

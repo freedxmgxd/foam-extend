@@ -27,6 +27,7 @@ Class
 Description
     ILU preconditioning without fill in based on Crout algorithm. L and U are
     calculated and stored.
+    This is the correct algorithm for arbitrary polyhedral meshes.
 
     Reference: Saad, Y.: Iterative Methods for Sparse Linear Systems (2nd
     Edition), SIAM, 2003.
@@ -67,15 +68,6 @@ class ILUC0
 
         //- Strictly upper part
         scalarField preconUpper_;
-
-        //- Temporary working diagonal
-        scalar zDiag_;
-
-        //- Temporary working row field
-        scalarField z_;
-
-        //- Temporary Working column field
-        scalarField w_;
 
 
     // Private Member Functions

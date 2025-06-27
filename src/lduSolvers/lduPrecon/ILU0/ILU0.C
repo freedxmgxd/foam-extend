@@ -42,8 +42,12 @@ namespace Foam
     defineTypeNameAndDebug(ILU0, 0);
 
     lduPreconditioner::
+        addsymMatrixConstructorToTable<ILU0>
+        addILU0PreconditionerSymMatrixConstructorToTable_;
+
+    lduPreconditioner::
         addasymMatrixConstructorToTable<ILU0>
-        addILU0ditionerAsymMatrixConstructorToTable_;
+        addILU0PreconditionerAsymMatrixConstructorToTable_;
 }
 
 
@@ -166,94 +170,74 @@ void Foam::ILU0::precondition
     const direction cmpt
 ) const
 {
-    if (matrix_.symmetric())
-    {
-        FatalErrorInFunction
-            << "Calling ILU0 on a symetric matrix.  "
-            << "Please use CholeskyPrecon instead"
-            << abort(FatalError);
-    }
+    // Allowed for symmetric matrices: overset
 
     // Note: coupled boundary updated is not needed because x is zero
     // HJ and VV, 19/Jun/2017
 
     // Diagonal block
+    // Note: multiplication over-write x: no need to initialise
+    // HJ, and VV, 19/Jun/2017
+    x = b*preconDiag_;
+
+    // Addressing
+    const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
+    const labelUList& losortAddr = matrix_.lduAddr().losortAddr();
+
+    // Get off-diagonal matrix coefficients
+    const scalarField& upper = matrix_.upper();
+    const scalarField& lower = matrix_.lower();
+
+    label losortIndex;
+
+    // Forward loop
+    forAll (lower, coeffI)
     {
-        scalar* __restrict__ xPtr = x.begin();
+        losortIndex = losortAddr[coeffI];
 
-        const scalar* __restrict__ preconDiagPtr = preconDiag_.begin();
-
-        const scalar* __restrict__ bPtr = b.begin();
-
-        const label nRows = x.size();
-
-        // Note: multiplication over-write x: no need to initialise
-        // HJ, and VV, 19/Jun/2017
-        for (label rowI = 0; rowI < nRows; rowI++)
-        {
-            xPtr[rowI] = bPtr[rowI]*preconDiagPtr[rowI];
-        }
+        x[upperAddr[losortIndex]] -=
+            preconDiag_[upperAddr[losortIndex]]*
+            lower[losortIndex]*x[lowerAddr[losortIndex]];
     }
 
-    if (matrix_.asymmetric())
+    // Reverse loop
+    forAllReverse (upper, coeffI)
     {
-        const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
-        const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
-        const labelUList& losortAddr = matrix_.lduAddr().losortAddr();
+        x[lowerAddr[coeffI]] -=
+            preconDiag_[lowerAddr[coeffI]]*
+            upper[coeffI]*x[upperAddr[coeffI]];
+    }
 
-        // Get off-diagonal matrix coefficients
-        const scalarField& upper = matrix_.upper();
-        const scalarField& lower = matrix_.lower();
+    // Parallel preconditioning
+    // HJ, 19/Jun/2017
 
-        label losortIndex;
-
-        forAll (lower, coeffI)
-        {
-            losortIndex = losortAddr[coeffI];
-
-            x[upperAddr[losortIndex]] -=
-                preconDiag_[upperAddr[losortIndex]]*
-                lower[losortIndex]*x[lowerAddr[losortIndex]];
-        }
-
-        forAllReverse (upper, coeffI)
-        {
-            x[lowerAddr[coeffI]] -=
-                preconDiag_[lowerAddr[coeffI]]*
-                upper[coeffI]*x[upperAddr[coeffI]];
-        }
-/*
-        // Parallel preconditioning
-        // HJ, 19/Jun/2017
-
+    // Coupled boundary update
+    {
         scalarField xCorr(x.size(), 0);
 
-        // Coupled boundary update
-        {
-            matrix_.initMatrixInterfaces
-            (
-                coupleBouCoeffs_,
-                interfaces_,
-                x,
-                xCorr,               // put result into xCorr
-                cmpt,
-                false
-            );
+        matrix_.initMatrixInterfaces
+        (
+            coupleBouCoeffs_,
+            interfaces_,
+            x,
+            xCorr,               // put result into xCorr
+            cmpt,
+            false
+        );
 
-            matrix_.updateMatrixInterfaces
-            (
-                coupleBouCoeffs_,
-                interfaces_,
-                x,
-                xCorr,               // put result into xCorr
-                cmpt,
-                false
-            );
+        matrix_.updateMatrixInterfaces
+        (
+            coupleBouCoeffs_,
+            interfaces_,
+            x,
+            xCorr,               // put result into xCorr
+            cmpt,
+            false
+        );
 
-            // Multiply with inverse diag to precondition
-            x += xCorr*preconDiag_;
-        }
-*/
+        // Multiply with inverse diag to precondition
+        x += xCorr*preconDiag_;
     }
 }
 
@@ -265,13 +249,7 @@ void Foam::ILU0::preconditionT
     const direction cmpt
 ) const
 {
-    if (matrix_.symmetric())
-    {
-        FatalErrorInFunction
-            << "Calling ILU0 on a symetric matrix.  "
-            << "Please use CholeskyPrecon instead"
-            << abort(FatalError);
-    }
+    // Allowed for symmetric matrices: overset
 
     // Note: coupled boundary updated is not needed because x is zero
     // HJ and VV, 19/Jun/2017
@@ -294,35 +272,63 @@ void Foam::ILU0::preconditionT
         }
     }
 
-    if (matrix_.asymmetric())
+    const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
+    const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
+    const labelUList& losortAddr = matrix_.lduAddr().losortAddr();
+
+    // Get off-diagonal matrix coefficients
+    const scalarField& upper = matrix_.upper();
+    const scalarField& lower = matrix_.lower();
+
+    label losortIndex;
+
+    forAll (lower, coeffI)
     {
-        const labelUList& upperAddr = matrix_.lduAddr().upperAddr();
-        const labelUList& lowerAddr = matrix_.lduAddr().lowerAddr();
-        const labelUList& losortAddr = matrix_.lduAddr().losortAddr();
+        // Transpose multiplication.  HJ, 19/Jan/2009
+        x[upperAddr[coeffI]] -=
+            preconDiag_[upperAddr[coeffI]]*
+            upper[coeffI]*x[lowerAddr[coeffI]];
+    }
 
-        // Get off-diagonal matrix coefficients
-        const scalarField& upper = matrix_.upper();
-        const scalarField& lower = matrix_.lower();
+    forAllReverse (upper, coeffI)
+    {
+        losortIndex = losortAddr[coeffI];
 
-        label losortIndex;
+        // Transpose multiplication.  HJ, 19/Jan/2009
+        x[lowerAddr[losortIndex]] -=
+            preconDiag_[lowerAddr[losortIndex]]*
+            lower[losortIndex]*x[upperAddr[losortIndex]];
+    }
 
-        forAll (lower, coeffI)
-        {
-            // Transpose multiplication.  HJ, 19/Jan/2009
-            x[upperAddr[coeffI]] -=
-                preconDiag_[upperAddr[coeffI]]*
-                upper[coeffI]*x[lowerAddr[coeffI]];
-        }
+    // Parallel preconditioning
+    // HJ, 19/Jun/2017
 
-        forAllReverse (upper, coeffI)
-        {
-            losortIndex = losortAddr[coeffI];
+    // Coupled boundary update: transpose form
+    {
+        scalarField xCorr(x.size(), 0);
 
-            // Transpose multiplication.  HJ, 19/Jan/2009
-            x[lowerAddr[losortIndex]] -=
-                preconDiag_[lowerAddr[losortIndex]]*
-                lower[losortIndex]*x[upperAddr[losortIndex]];
-        }
+        matrix_.initMatrixInterfaces
+        (
+            coupleIntCoeffs_,    // Transpose coupled patch coefficients
+            interfaces_,
+            x,
+            xCorr,               // put result into xCorr
+            cmpt,
+            false
+        );
+
+        matrix_.updateMatrixInterfaces
+        (
+            coupleIntCoeffs_,    // Transpose coupled patch coefficients
+            interfaces_,
+            x,
+            xCorr,               // put result into xCorr
+            cmpt,
+            false
+        );
+
+        // Multiply with inverse diag to precondition
+        x += xCorr*preconDiag_;
     }
 }
 

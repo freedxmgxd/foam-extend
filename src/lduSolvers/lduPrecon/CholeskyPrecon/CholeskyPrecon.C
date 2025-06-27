@@ -24,9 +24,6 @@ License
 Class
     CholeskyPrecon
 
-Description
-    Incmplete Cholesky preconditioning with no fill-in
-
 Author
     Hrvoje Jasak, Wikki Ltd.  All rights reserved
 
@@ -141,55 +138,32 @@ void Foam::CholeskyPrecon::precondition
     // HJ and VV, 19/Jun/2017
 
     // Diagonal block
-    {
-        scalar* __restrict__ xPtr = x.begin();
-
-        const scalar* __restrict__ preconDiagPtr = preconDiag_.begin();
-
-        const scalar* __restrict__ bPtr = b.begin();
-
-        const label nRows = x.size();
-
-        // Note: multiplication over-write x: no need to initialise
-        // HJ, and VV, 19/Jun/2017
-        for (label rowI = 0; rowI < nRows; rowI++)
-        {
-            xPtr[rowI] = bPtr[rowI]*preconDiagPtr[rowI];
-        }
-    }
+    // Note: multiplication over-write x: no need to initialise
+    // HJ, and VV, 19/Jun/2017
+    x = b*preconDiag_;
 
     if (matrix_.symmetric())
     {
-        scalar* __restrict__ xPtr = x.begin();
-
         // Addressing
-        const label* const __restrict__ uPtr =
-            matrix_.lduAddr().upperAddr().begin();
+        const labelUList& u = matrix_.lduAddr().upperAddr();
 
-        const label* const __restrict__ lPtr =
-            matrix_.lduAddr().lowerAddr().begin();
+        const labelUList& l = matrix_.lduAddr().lowerAddr();
 
         // Coeffs
-        const scalar* __restrict__ preconDiagPtr = preconDiag_.begin();
+        const scalarField& upper = matrix_.upper();
 
-        const scalar* const __restrict__ upperPtr = matrix_.upper().begin();
-
-        const label nCoeffs = matrix_.upper().size();
+        const label nCoeffs = upper.size();
 
         // Forward sweep
         for (label coeffI = 0; coeffI < nCoeffs; coeffI++)
         {
-            xPtr[uPtr[coeffI]] -=
-                preconDiagPtr[uPtr[coeffI]]*
-                upperPtr[coeffI]*xPtr[lPtr[coeffI]];
+            x[u[coeffI]] -= preconDiag_[u[coeffI]]*upper[coeffI]*x[l[coeffI]];
         }
 
         // Reverse sweep
         for (label coeffI = nCoeffs - 1; coeffI >= 0; coeffI--)
         {
-            xPtr[lPtr[coeffI]] -=
-                preconDiagPtr[lPtr[coeffI]]*
-                upperPtr[coeffI]*xPtr[uPtr[coeffI]];
+            x[l[coeffI]] -= preconDiag_[l[coeffI]]*upper[coeffI]*x[u[coeffI]];
         }
     }
 }

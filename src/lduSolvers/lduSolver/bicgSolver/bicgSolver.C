@@ -38,6 +38,9 @@ namespace Foam
 {
     defineTypeNameAndDebug(bicgSolver, 0);
 
+    lduSolver::addsymMatrixConstructorToTable<bicgSolver>
+        addbicgSolverSymMatrixConstructorToTable_;
+
     lduSolver::addasymMatrixConstructorToTable<bicgSolver>
         addbicgSolverAsymMatrixConstructorToTable_;
 }

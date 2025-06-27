@@ -26,6 +26,8 @@ Class
 
 Description
     ILU preconditioning with no fill-in
+    Diagonal form: assuming no north-to-west (or similar) shared connectivity
+    Note: this is strictly correct only for hex-only meshes
 
 Author
     Hrvoje Jasak, Wikki Ltd.  All rights reserved
@@ -46,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class ILU0 Declaration
+                          Class ILU0 Declaration
 \*---------------------------------------------------------------------------*/
 
 class ILU0
@@ -108,16 +110,16 @@ public:
         //- Execute preconditioning
         virtual void precondition
         (
-            scalarField& wA,
-            const scalarField& rA,
+            scalarField& x,
+            const scalarField& b,
             const direction cmpt = 0
         ) const;
 
         //- Execute preconditioning with matrix transpose
         virtual void preconditionT
         (
-            scalarField& wT,
-            const scalarField& rT,
+            scalarField& x,
+            const scalarField& b,
             const direction cmpt = 0
         ) const;
 };

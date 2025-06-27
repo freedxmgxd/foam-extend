@@ -66,10 +66,10 @@ class gmresSolver
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        gmresSolver(const gmresSolver&);
+        gmresSolver(const gmresSolver&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const gmresSolver&);
+        void operator=(const gmresSolver&) = delete;
 
 
         //- Givens rotation
@@ -102,10 +102,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~gmresSolver()
-        {}
+    //- Destructor
+    virtual ~gmresSolver() = default;
 
 
     // Member Functions

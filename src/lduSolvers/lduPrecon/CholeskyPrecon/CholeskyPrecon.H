@@ -25,7 +25,9 @@ Class
     CholeskyPrecon
 
 Description
-    Incmplete Cholesky preconditioning with no fill-in for symmeytric matrices
+    Incomplete Cholesky preconditioning with no fill-in for symmetric matrices
+    Diagonal form: assuming no north-to-west (or similar) shared connectivity
+    Note: this is strictly correct only for hex-only meshes
 
 Author
     Hrvoje Jasak, Wikki Ltd.  All rights reserved
