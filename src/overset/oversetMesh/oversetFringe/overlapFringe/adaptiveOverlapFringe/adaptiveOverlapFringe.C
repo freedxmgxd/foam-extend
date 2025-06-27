@@ -123,7 +123,7 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
 {
     if (fringeHolesPtr_ || acceptorsPtr_)
     {
-        FatalErrorIn("void adaptiveOverlapFringe::calcAddressing() const")
+        FatalErrorInFunction
             << "Fringe addressing already calculated"
             << abort(FatalError);
     }
@@ -269,10 +269,8 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
 
         if (!curPatch.active())
         {
-            FatalErrorIn
-            (
-                "void adaptiveOverlapFringe::calcAddressing() const"
-            )   << "Patch specified for fringe initialisation "
+            FatalErrorInFunction
+                << "Patch specified for fringe initialisation "
                 << initPatchNames_[nameI] << " cannot be found"
                 << abort(FatalError);
         }
@@ -351,10 +349,8 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
     // Issue an error if no acceptors have been found for initial guess
     if (returnReduce(candidateAcceptors.size(), sumOp<label>()) == 0)
     {
-        FatalErrorIn
-        (
-            "void adaptiveOverlapFringe::calcAddressing() const"
-        )   << "Did not find any acceptors to begin with."
+        FatalErrorInFunction
+            << "Did not find any acceptors to begin with."
             << "Check definition of adaptiveOverlap in oversetMeshDict"
             << " for region: " << this->region().name() << nl
             << "More specifically, check definition of:" << nl
@@ -456,7 +452,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
 {
     if (!fringeHolesPtr_ || !acceptorsPtr_)
     {
-        FatalErrorIn("adaptiveOverlapFringe::updateIteration()")
+        FatalErrorInFunction
             << "fringeHolesPtr_ or acceptorsPtr_ is not allocated. "
             << "Make sure you have called acceptors() or fringeHoles() to "
             << "calculate the initial set of donor/acceptors before "
@@ -466,7 +462,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
 
     if (finalDonorAcceptorsPtr_)
     {
-        FatalErrorIn("adaptiveOverlapFringe::updateIteration()")
+        FatalErrorInFunction
             << "Called iteration update with finalDonorAcceptorsPtr_ "
             << "allocated. This means that the final overlap has been "
             << "achieved, prohibiting calls to updateIteration."
@@ -884,7 +880,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
 
         if (returnReduce(newAcceptors.empty(), andOp<bool>()))
         {
-            FatalErrorIn("adaptiveOverlapFringe::updateIteration()")
+            FatalErrorInFunction
                 << "Did not find any new candidate acceptors."
                 << nl
                 << "Please review your overlap fringe assembly settings."
@@ -1192,20 +1188,21 @@ const Foam::labelList& Foam::adaptiveOverlapFringe::candidateAcceptors() const
 }
 
 
-Foam::donorAcceptorList& Foam::adaptiveOverlapFringe::finalDonorAcceptors() const
+Foam::donorAcceptorList&
+Foam::adaptiveOverlapFringe::finalDonorAcceptors() const
 {
     if (!finalDonorAcceptorsPtr_)
     {
-        FatalErrorIn("adaptiveOverlapFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "finalDonorAcceptorPtr_ not allocated. Make sure you have "
-            << "called adaptiveOverlapFringe::updateIteration() before asking for "
-            << "final set of donor/acceptor pairs."
+            << "called adaptiveOverlapFringe::updateIteration() before asking "
+            << "for final set of donor/acceptor pairs."
             << abort(FatalError);
     }
 
     if (!foundSuitableOverlap())
     {
-        FatalErrorIn("adaptiveOverlapFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "Attemted to access finalDonorAcceptors but suitable overlap "
             << "has not been found. This is not allowed. "
             << abort(FatalError);

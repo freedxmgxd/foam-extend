@@ -155,10 +155,10 @@ class adaptiveOverlapFringe
         // Copy control
 
             //- Disallow default bitwise copy construct
-            adaptiveOverlapFringe(const adaptiveOverlapFringe&);
+            adaptiveOverlapFringe(const adaptiveOverlapFringe&) = delete;
 
             //- Disallow default bitwise assignment
-            void operator=(const adaptiveOverlapFringe&);
+            void operator=(const adaptiveOverlapFringe&) = delete;
 
 
         // Addressing manipulation functions

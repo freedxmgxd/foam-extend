@@ -129,10 +129,10 @@ class overlapFringe
         // Copy control
 
             //- Disallow default bitwise copy construct
-            overlapFringe(const overlapFringe&);
+            overlapFringe(const overlapFringe&) = delete;
 
             //- Disallow default bitwise assignment
-            void operator=(const overlapFringe&);
+            void operator=(const overlapFringe&) = delete;
 
 
         // Addressing calculation functions
