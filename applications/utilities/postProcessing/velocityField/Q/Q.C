@@ -65,7 +65,7 @@ void Foam::calc(const argList& args, const Time& runTime, const fvMesh& mesh)
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            0.5*(sqr(tr(gradU)) - tr(((gradU)&(gradU))))
+            0.5*(sqr(tr(gradU)) - tr(((gradU & gradU))))
         );
 
         /*
@@ -75,8 +75,8 @@ void Foam::calc(const argList& args, const Time& runTime, const fvMesh& mesh)
         volSymmTensorField S = symm(gradU);  // symmetric part of tensor
         volTensorField W = skew(gradU);  // anti-symmetric part
 
-        volScalarField SS =  S&&S;
-        volScalarField WW =  W&&W;
+        volScalarField SS(S && S);
+        volScalarField WW(W && W);
 
         volScalarField Q
         (

@@ -72,9 +72,6 @@
         incompressible::RASModel::New(U, phi, laminarTransport)
     );
 
-    Info<< "Calculating field beta*(g.h)\n" << endl;
-    surfaceScalarField betaghf("betagh", beta*(g & mesh.Cf()));
-
     // Kinematic density for buoyancy force
     volScalarField rhok
     (

@@ -4,7 +4,6 @@
     (
         fvm::div(phi, U)
       + turbulence->divDevReff()
-      + fvm::SuSp(-fvc::div(phi), U)
     );
 
     pZones.addResistance(UEqn.ref());
