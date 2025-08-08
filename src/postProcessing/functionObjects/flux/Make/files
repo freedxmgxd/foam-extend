@@ -1,0 +1,4 @@
+patchFlux/patchFluxFunctionObject.C
+faceZoneFlux/faceZoneFluxFunctionObject.C
+
+LIB = $(FOAM_LIBBIN)/libfluxFunctionObjects

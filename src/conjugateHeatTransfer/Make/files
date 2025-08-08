@@ -42,9 +42,6 @@ $(BCs)/externalRadiation/ersPointSource/ersPointSource.C
 $(BCs)/solidWallHeatFluxTemperature/solidWallHeatFluxTemperatureFvPatchScalarField.C
 $(BCs)/adiabatic/adiabaticFvPatchScalarField.C
 
-functionObjects/patchFlux/patchFluxFunctionObject.C
-functionObjects/faceZoneFlux/faceZoneFluxFunctionObject.C
-
 functionObjects/patchHeatFlux/patchHeatFluxFunctionObject.C
 functionObjects/faceZoneHeatFlux/faceZoneHeatFluxFunctionObject.C
 

@@ -8,6 +8,7 @@ set -x
 
 wmake $targetType check
 wmake $targetType field
+wmake $targetType flux
 wmake $targetType forces
 wmake $targetType fvTools
 wmake $targetType IO
