@@ -151,6 +151,9 @@ protected:
         //- Database this class is registered to
         const objectRegistry& obr_;
 
+        //- Time to start field averaging
+        scalar beginTime_;
+
         //- On/off switch
         bool active_;
 

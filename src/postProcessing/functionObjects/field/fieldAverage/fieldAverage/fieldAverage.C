@@ -252,6 +252,7 @@ Foam::fieldAverage::fieldAverage
 :
     name_(name),
     obr_(obr),
+    beginTime_(0),
     active_(true),
     prevTimeIndex_(-1),
     resetOnRestart_(false),
@@ -283,6 +284,9 @@ void Foam::fieldAverage::read(const dictionary& dict)
 {
     if (active_)
     {
+        beginTime_ = dict.lookupOrDefault<scalar>("beginTime", obr_.time().startTime().value());
+        active_ = isA<fvMesh>(obr_) && (obr_.time().value() >= beginTime_);
+
         initialised_ = false;
 
         Info<< type() << " " << name_ << ":" << nl;
@@ -300,6 +304,8 @@ void Foam::fieldAverage::read(const dictionary& dict)
 
 void Foam::fieldAverage::execute()
 {
+    active_ = isA<fvMesh>(obr_) && (obr_.time().value() >= beginTime_);
+
     if (active_)
     {
         calcAverages();
