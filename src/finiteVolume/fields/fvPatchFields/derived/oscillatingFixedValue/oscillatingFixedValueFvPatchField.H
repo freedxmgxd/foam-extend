@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class oscillatingFixedValueFvPatch Declaration
+                 Class oscillatingFixedValueFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
