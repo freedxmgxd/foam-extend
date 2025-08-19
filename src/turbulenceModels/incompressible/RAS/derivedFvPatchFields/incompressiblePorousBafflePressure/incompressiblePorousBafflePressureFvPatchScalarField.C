@@ -75,11 +75,16 @@ Foam::incompressiblePorousBafflePressureFvPatchScalarField::calcJump() const
              );
 
          // Calculate incompressible pressure jump
-         jump_ = -sign(Un)*magUn*
-             (
-                 inertialCoeff_*nuEffw
-               + DarcyCoeff_*0.5*magUn
-             );
+         // jump_ = -sign(Un)*magUn*
+         //     (
+         //         inertialCoeff_*nuEffw
+         //       + DarcyCoeff_*0.5*magUn
+         //     );
+
+	 // MH - following the equation delta_p = a*u + b*u^2
+	 // a and b have to take into accound the thickness of the baffle
+	 // and viscosity
+         jump_ = -sign(Un)*magUn*(A_+ B_*magUn);
     }
     else
     {
@@ -111,8 +116,8 @@ incompressiblePorousBafflePressureFvPatchScalarField
 :
     jumpCyclicFvPatchScalarField(p, iF),
     phiName_("undefined"),
-    DarcyCoeff_(0),
-    inertialCoeff_(0),
+    A_(0),
+    B_(0),
     Umax_(0),
     jump_(p.size()/2, 0),
     curTimeIndex_(-1)
@@ -129,8 +134,8 @@ incompressiblePorousBafflePressureFvPatchScalarField
 :
     jumpCyclicFvPatchScalarField(p, iF, dict),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    DarcyCoeff_(readScalar(dict.lookup("DarcyCoeff"))),
-    inertialCoeff_(readScalar(dict.lookup("inertialCoeff"))),
+    A_(readScalar(dict.lookup("A"))),
+    B_(readScalar(dict.lookup("B"))),
     Umax_(readScalar(dict.lookup("Umax"))),
     jump_(p.size()/2, 0),
     curTimeIndex_(-1)
@@ -148,8 +153,8 @@ incompressiblePorousBafflePressureFvPatchScalarField
 :
     jumpCyclicFvPatchScalarField(ptf, p, iF, mapper),
     phiName_(ptf.phiName_),
-    DarcyCoeff_(ptf.DarcyCoeff_),
-    inertialCoeff_(ptf.inertialCoeff_),
+    A_(ptf.A_),
+    B_(ptf.B_),
     Umax_(ptf.Umax_),
     jump_(p.size()/2, 0),
     curTimeIndex_(-1)
@@ -165,8 +170,8 @@ incompressiblePorousBafflePressureFvPatchScalarField
     cyclicLduInterfaceField(ptf),
     jumpCyclicFvPatchScalarField(ptf),
     phiName_(ptf.phiName_),
-    DarcyCoeff_(ptf.DarcyCoeff_),
-    inertialCoeff_(ptf.inertialCoeff_),
+    A_(ptf.A_),
+    B_(ptf.B_),
     Umax_(ptf.Umax_),
     jump_(ptf.size()/2, 0),
     curTimeIndex_(-1)
@@ -182,8 +187,8 @@ incompressiblePorousBafflePressureFvPatchScalarField
 :
     jumpCyclicFvPatchScalarField(ptf, iF),
     phiName_(ptf.phiName_),
-    DarcyCoeff_(ptf.DarcyCoeff_),
-    inertialCoeff_(ptf.inertialCoeff_),
+    A_(ptf.A_),
+    B_(ptf.B_),
     Umax_(ptf.Umax_),
     jump_(ptf.size()/2, 0),
     curTimeIndex_(-1)
@@ -212,8 +217,8 @@ void Foam::incompressiblePorousBafflePressureFvPatchScalarField::write
 {
     fvPatchScalarField::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
-    os.writeKeyword("DarcyCoeff") << DarcyCoeff_ << token::END_STATEMENT << nl;
-    os.writeKeyword("inertialCoeff") << inertialCoeff_
+    os.writeKeyword("A") << A_ << token::END_STATEMENT << nl;
+    os.writeKeyword("B") << B_
         << token::END_STATEMENT << nl;
     os.writeKeyword("Umax") << Umax_ << token::END_STATEMENT << nl;
 

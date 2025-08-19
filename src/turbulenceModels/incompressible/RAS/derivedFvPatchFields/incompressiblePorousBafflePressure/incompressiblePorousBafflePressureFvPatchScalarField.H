@@ -30,24 +30,22 @@ Description
     condition as a base.
     The porous baffle introduces a pressure jump defined by:
         \f[
-            \Delta p = -(I \mu U + 0.5 D \rho |U|^2)L
+            \Delta p = -(A*|U| + B*|U|^2)
         \f]
     where
     \vartable
         p      | pressure [Pa]
-        \rho   | density [kg/m3]
-        \mu    | viscosity [Pa s]
         D      | Darcy coefficient
         I      | inertial coefficient
         Umax   | max normal velocity. Used in stabilisation
     \endvartable
     \heading Patch usage
     \table
-        Property      | Description             | Required    | Default value
-        patchType     | underlying patch type should be \c cyclic| yes |
-        DarcyCoeff    | Darcy coefficient       | yes         |
-        InertialCoeff | inertial coefficient    | yes         |
-        Umax          | max normal velocity    | yes          |
+        Property      | Description              | Required    | Default value
+        patchType     | underlying patch type should be cyclic | yes |
+        A             | Linear coefficient       | yes         |
+        B             | inertial coefficient     | yes         |
+        Umax          | max normal velocity      | yes         |
     \endtable
     Example of the boundary condition specification:
     \verbatim
@@ -56,8 +54,8 @@ Description
         type            incompressiblePorousBafflePressure;
         patchType       cyclic;
         jump            uniform 0;
-        DarcyCoeff      1000000;
-        inertialCoeff   0.001;
+        A               1000000;
+        B               0.001;
         Umax            30;
         value           uniform 0;
     }
@@ -103,10 +101,10 @@ class incompressiblePorousBafflePressureFvPatchScalarField
         word phiName_;
 
         //- Darcy pressure loss coefficient
-        scalar DarcyCoeff_;
+        scalar A_;
 
         //- Inertia pressure lost coefficient
-        scalar inertialCoeff_;
+        scalar B_;
 
         //- Max normal velocity
         scalar Umax_;
@@ -206,15 +204,15 @@ public:
         // Access
 
             //- Return Darcy pressure loss coefficient
-            const scalar& DarcyCoeff() const
+            const scalar& A() const
             {
-                return DarcyCoeff_;
+                return A_;
             }
 
-            //- Inertia pressure lost coefficient
-            const scalar& inertialCoeff() const
+            //- Return inertial pressure lost coefficient
+            const scalar& B() const
             {
-                return  inertialCoeff_;
+                return  B_;
             }
 
 
