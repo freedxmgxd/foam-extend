@@ -17,11 +17,11 @@ while (simple.correctNonOrthogonal())
 
     if (pressureImplicitPorosity)
     {
-        tpEqn.ref() = (fvm::laplacian(trTU(), p) == fvc::div(phi));
+        tpEqn = (fvm::laplacian(trTU(), p) == fvc::div(phi));
     }
     else
     {
-        tpEqn.ref() = (fvm::laplacian(trAU(), p) == fvc::div(phi));
+        tpEqn = (fvm::laplacian(trAU(), p) == fvc::div(phi));
     }
 
     tpEqn.ref().setReference(pRefCell, pRefValue);
