@@ -150,10 +150,8 @@ Foam::label Foam::meshSearch::findNearestCellWalk
 {
     if (seedCellI < 0)
     {
-        FatalErrorIn
-        (
-            "meshSearch::findNearestCellWalk(const point&, const label)"
-        )   << "illegal seedCell:" << seedCellI << exit(FatalError);
+        FatalErrorInFunction
+            << "illegal seedCell:" << seedCellI << exit(FatalError);
     }
 
     // Walk in direction of face that decreases distance
