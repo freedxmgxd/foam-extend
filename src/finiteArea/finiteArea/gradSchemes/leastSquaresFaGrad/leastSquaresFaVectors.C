@@ -27,6 +27,7 @@ License
 #include "edgeFields.H"
 #include "areaFields.H"
 #include "mapPolyMesh.H"
+#include "zeroGradientFaPatchFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -162,7 +163,30 @@ void Foam::leastSquaresFaVectors::makeLeastSquaresVectors() const
 
 
     // Invert the dd tensor
-    symmTensorField invDd = inv(dd);
+    areaSymmTensorField areaInvDd
+    (
+        IOobject
+        (
+            "areaInvDd",
+            mesh().pointsInstance(),
+            mesh().thisDb(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        mesh(),
+        dimensionedSymmTensor("zero", dimless, symmTensor::zero),
+        zeroGradientFaPatchScalarField::typeName
+    );
+    symmTensorField& invDd = areaInvDd.internalField();
+
+    // Invert least squares matrix using Householder transformations to avoid
+    // badly posed cells
+    // invDd = inv(dd);
+    invDd = hinv(dd);
+
+    // Evaluate coupled to exchange coupled neighbour field data
+    // across coupled boundaries.  HJ, 18/Mar/2015
+    areaInvDd.boundaryField().updateCoupledPatchFields();
 
 
     // Revisit all faces and calculate the lsP and lsN vectors
