@@ -191,12 +191,13 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
     const volScalarField& k = tk();
 
     const scalarField& rhow =
-        rasModel.thermo().rho()().boundaryField()[patch().index()];
+        rasModel.rho().boundaryField()[patch().index()];
 
     const scalarField& muw =
         rasModel.mu().boundaryField()[patch().index()];
 
-    const scalarField& mutw =
+    // Take a copy: tmp is deleted.  HJ, 23/Oct/2025
+    const scalarField mutw =
         rasModel.mut()().boundaryField()[patch().index()];
 
     const fvPatchVectorField& Uw =
