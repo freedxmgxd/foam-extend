@@ -200,14 +200,14 @@ greyDiffusiveRadiationMixedFvPatchScalarField
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
 greyDiffusiveRadiationMixedFvPatchScalarField::
 ~greyDiffusiveRadiationMixedFvPatchScalarField()
 {
     deleteDemandDrivenData(sumOutgoingAnglesPtr_);
 }
 
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void greyDiffusiveRadiationMixedFvPatchScalarField::updateCoeffs()
 {
