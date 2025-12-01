@@ -43,6 +43,7 @@ Description
 #include "sutherlandTransport.H"
 #include "janafThermo.H"
 #include "perfectGas.H"
+#include "linearLiquid.H"
 
 #include "polynomialTransport.H"
 #include "hPolynomialThermo.H"

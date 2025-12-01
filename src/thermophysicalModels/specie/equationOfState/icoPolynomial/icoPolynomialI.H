@@ -167,7 +167,7 @@ Foam::icoPolynomial<PolySize> Foam::operator-
     const icoPolynomial<PolySize>& ip2
 )
 {
-    scalar nMoles = ip1.nMoles() + ip2.nMoles();
+    scalar nMoles = ip1.nMoles() - ip2.nMoles();
     scalar molr1 = ip1.nMoles()/nMoles;
     scalar molr2 = ip2.nMoles()/nMoles;
 

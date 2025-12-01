@@ -50,6 +50,9 @@ namespace Foam
 defineTemplateTypeNameAndDebug(icoPoly8Reaction, 0);
 defineTemplateRunTimeSelectionTable(icoPoly8Reaction, Istream);
 
+defineTemplateTypeNameAndDebug(linearLiquidReaction, 0);
+defineTemplateRunTimeSelectionTable(linearLiquidReaction, Istream);
+
 
 // * * * * * * * * * * * * * Make CHEMKIN reactions  * * * * * * * * * * * * //
 

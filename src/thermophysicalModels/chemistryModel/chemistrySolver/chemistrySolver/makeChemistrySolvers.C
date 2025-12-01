@@ -43,6 +43,11 @@ namespace Foam
     makeChemistrySolverType(ode, psiChemistryModel, gasThermoPhysics)
     makeChemistrySolverType(sequential, psiChemistryModel, gasThermoPhysics)
 
+    makeChemistrySolver(psiChemistryModel, linearLiquidThermoPhysics)
+    makeChemistrySolverType(EulerImplicit, psiChemistryModel, linearLiquidThermoPhysics)
+    makeChemistrySolverType(ode, psiChemistryModel, linearLiquidThermoPhysics)
+    makeChemistrySolverType(sequential, psiChemistryModel, linearLiquidThermoPhysics)
+
     makeChemistrySolver(psiChemistryModel, icoPoly8ThermoPhysics)
     makeChemistrySolverType
     (
@@ -63,6 +68,11 @@ namespace Foam
     makeChemistrySolverType(ode, rhoChemistryModel, gasThermoPhysics)
     makeChemistrySolverType(sequential, rhoChemistryModel, gasThermoPhysics)
 
+    makeChemistrySolver(rhoChemistryModel, linearLiquidThermoPhysics)
+    makeChemistrySolverType(EulerImplicit, rhoChemistryModel, linearLiquidThermoPhysics)
+    makeChemistrySolverType(ode, rhoChemistryModel, linearLiquidThermoPhysics)
+    makeChemistrySolverType(sequential, rhoChemistryModel, linearLiquidThermoPhysics)
+
     makeChemistrySolver(rhoChemistryModel, icoPoly8ThermoPhysics)
     makeChemistrySolverType
     (
@@ -77,6 +87,7 @@ namespace Foam
         rhoChemistryModel,
         icoPoly8ThermoPhysics
     )
+
 }
 
 

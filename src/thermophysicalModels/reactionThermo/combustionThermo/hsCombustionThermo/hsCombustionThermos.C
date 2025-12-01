@@ -29,6 +29,7 @@ License
 #include "hsPsiMixtureThermo.H"
 
 #include "perfectGas.H"
+#include "linearLiquid.H"
 
 #include "hConstThermo.H"
 #include "janafThermo.H"
@@ -124,6 +125,19 @@ makeHsCombustionThermo
     perfectGas
 );
 
+// Linear liquid thermo
+
+makeHsCombustionThermo
+(
+    hsCombustionThermo,
+    hsPsiMixtureThermo,
+    homogeneousMixture,
+    constTransport,
+    hConstThermo,
+    linearLiquid
+);
+
+
 // Multi-component thermo
 
 makeHsCombustionMixtureThermo
@@ -134,6 +148,13 @@ makeHsCombustionMixtureThermo
     gasThermoPhysics
 );
 
+makeHsCombustionMixtureThermo
+(
+    hsCombustionThermo,
+    hsPsiMixtureThermo,
+    multiComponentMixture,
+    linearLiquidThermoPhysics
+);
 
 // Multi-component reaction thermo
 
@@ -151,6 +172,14 @@ makeHsCombustionMixtureThermo
     hsPsiMixtureThermo,
     reactingMixture,
     gasThermoPhysics
+);
+
+makeHsCombustionMixtureThermo
+(
+    hsCombustionThermo,
+    hsPsiMixtureThermo,
+    reactingMixture,
+    linearLiquidThermoPhysics
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

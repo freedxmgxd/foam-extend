@@ -83,10 +83,11 @@ Foam::autoPtr<Foam::psiChemistryModel> Foam::psiChemistryModel::New
     {
         if (debug)
         {
-            FatalErrorIn("psiChemistryModelBase::New(const mesh&, const obejctRegistry&)")
+            FatalErrorInFunction
                 << "Unknown psiChemistryModel type " << psiChemistryModelType
                 << nl << nl << "Valid psiChemistryModel types are:" << nl
-                << fvMeshConstructorTablePtr_->sortedToc() << nl << exit(FatalError);
+                << fvMeshConstructorTablePtr_->sortedToc() << nl
+                << exit(FatalError);
         }
         else
         {
@@ -96,7 +97,7 @@ Foam::autoPtr<Foam::psiChemistryModel> Foam::psiChemistryModel::New
                 models[i] = models[i].replace(typeName + ',', "");
             }
 
-            FatalErrorIn("psiChemistryModelBase::New(const mesh&, const obejctRegistry&)")
+            FatalErrorInFunction
                 << "Unknown psiChemistryModel type " << userModel
                 << nl << nl << "Valid psiChemistryModel types are:" << nl
                 << models << nl << exit(FatalError);

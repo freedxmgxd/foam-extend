@@ -49,6 +49,12 @@ namespace Foam
     (
         ODEChemistryModel,
         rhoChemistryModel,
+        linearLiquidThermoPhysics
+    );
+    makeChemistryModel
+    (
+        ODEChemistryModel,
+        rhoChemistryModel,
         icoPoly8ThermoPhysics
     );
 }

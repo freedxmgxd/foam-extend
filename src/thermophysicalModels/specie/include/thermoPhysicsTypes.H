@@ -33,6 +33,8 @@ Description
 #define thermoPhysicsTypes_H
 
 #include "perfectGas.H"
+#include "linearLiquid.H"
+
 #include "hConstThermo.H"
 #include "janafThermo.H"
 #include "specieThermo.H"
@@ -43,6 +45,8 @@ Description
 #include "hPolynomialThermo.H"
 #include "polynomialTransport.H"
 
+#include "linearLiquid.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -52,6 +56,9 @@ namespace Foam
 
     typedef constTransport<specieThermo<hConstThermo<perfectGas> > >
         constGasThermoPhysics;
+
+    typedef constTransport<specieThermo<hConstThermo<linearLiquid> > >
+        linearLiquidThermoPhysics;
 
     typedef polynomialTransport
         <

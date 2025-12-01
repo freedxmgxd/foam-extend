@@ -71,10 +71,10 @@ class foamChemistryReader
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        foamChemistryReader(const foamChemistryReader&);
+        foamChemistryReader(const foamChemistryReader&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const foamChemistryReader&);
+        void operator=(const foamChemistryReader&) = delete;
 
 
 public:
@@ -98,8 +98,7 @@ public:
 
 
     //- Destructor
-    virtual ~foamChemistryReader()
-    {}
+    virtual ~foamChemistryReader() = default;
 
 
     // Member functions

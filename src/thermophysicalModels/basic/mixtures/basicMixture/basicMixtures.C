@@ -32,6 +32,8 @@ Description
 #include "makeBasicMixture.H"
 
 #include "perfectGas.H"
+#include "linearLiquid.H"
+
 #include "redlichKwong.H"
 #include "pengRobinson.H"
 #include "aungierRedlichKwong.H"
@@ -101,6 +103,17 @@ makeBasicMixture
     janafThermo,
     perfectGas
 );
+
+// Linear liquid
+
+makeBasicMixture
+(
+    pureMixture,
+    constTransport,
+    hConstThermo,
+    linearLiquid
+);
+
 
 makeBasicMixturePhys
 (

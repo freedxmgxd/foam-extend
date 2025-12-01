@@ -123,6 +123,18 @@ makeCombustionThermo
     perfectGas
 );
 
+// Linear liquid
+    
+makeCombustionThermo
+(
+    hCombustionThermo,
+    hPsiMixtureThermo,
+    homogeneousMixture,
+    constTransport,
+    hConstThermo,
+    linearLiquid
+);
+
 // Multi-component thermo
 
 makeCombustionMixtureThermo

@@ -21,67 +21,49 @@ License
     You should have received a copy of the GNU General Public License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
+Description
+    Compressible liquid with constant compressibility equation of state.
+
 \*---------------------------------------------------------------------------*/
 
-#include "makeBasicRhoThermo.H"
-
-#include "perfectGas.H"
 #include "linearLiquid.H"
-
-#include "hConstThermo.H"
-#include "janafThermo.H"
-#include "specieThermo.H"
-
-#include "constTransport.H"
-#include "sutherlandTransport.H"
-
-#include "hsRhoThermo.H"
-#include "pureMixture.H"
+#include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-/* * * * * * * * * * * * * * * Private Static Data * * * * * * * * * * * * * */
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-makeBasicRhoThermo
-(
-    hsRhoThermo,
-    pureMixture,
-    constTransport,
-    hConstThermo,
-    perfectGas
-);
+linearLiquid::linearLiquid(Istream& is)
+:
+    specie(is),
+    rho0_(readScalar(is)),
+    p0_(readScalar(is)),
+    psiP_(readScalar(is)),
+    T0_(readScalar(is)),
+    psiT_(readScalar(is))
+{
+    is.check("linearLiquid::linearLiquid(Istream& is)");
+}
 
-makeBasicRhoThermo
-(
-    hsRhoThermo,
-    pureMixture,
-    sutherlandTransport,
-    hConstThermo,
-    perfectGas
-);
 
-makeBasicRhoThermo
-(
-    hsRhoThermo,
-    pureMixture,
-    sutherlandTransport,
-    janafThermo,
-    perfectGas
-);
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
-// Linear liquid
+Ostream& operator<<(Ostream& os, const linearLiquid& ll)
+{
+    os  << static_cast<const specie&>(ll)
+        << ll.rho0_ << token::SPACE
+        << ll.p0_ << token::SPACE
+        << ll.psiP_
+        << ll.T0_ << token::SPACE
+        << ll.psiT_;
 
-makeBasicRhoThermo
-(
-    hsRhoThermo,
-    pureMixture,
-    constTransport,
-    hConstThermo,
-    linearLiquid
-);
+    os.check("Ostream& operator<<(Ostream& os, const linearLiquid& st)");
+    return os;
+}
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

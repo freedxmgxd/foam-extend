@@ -8,6 +8,7 @@ $(atomicWeights)/atomicWeights.C
 $(specie)/specie.C
 $(speciesTable)/speciesTable.C
 $(equationOfState)/perfectGas/perfectGas.C
+$(equationOfState)/linearLiquid/linearLiquid.C
 $(equationOfState)/cubicEquationOfState/redlichKwong/redlichKwong.C
 $(equationOfState)/cubicEquationOfState/aungierRedlichKwong/aungierRedlichKwong.C
 $(equationOfState)/cubicEquationOfState/pengRobinson/pengRobinson.C

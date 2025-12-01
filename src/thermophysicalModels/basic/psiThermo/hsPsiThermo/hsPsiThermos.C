@@ -26,6 +26,7 @@ License
 #include "makeBasicPsiThermo.H"
 
 #include "perfectGas.H"
+#include "linearLiquid.H"
 
 #include "hConstThermo.H"
 #include "janafThermo.H"
@@ -71,6 +72,18 @@ makeBasicPsiThermo
     perfectGas
 );
 
+// Linear liquid
+
+makeBasicPsiThermo
+(
+    hsPsiThermo,
+    pureMixture,
+    constTransport,
+    hConstThermo,
+    linearLiquid
+);
+
+    
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
