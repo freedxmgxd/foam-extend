@@ -77,7 +77,6 @@
         mesh
     );
 
-
     Info<< "Reading field B\n" << endl;
     volVectorField B
     (
