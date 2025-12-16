@@ -351,17 +351,12 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
                     gSum
                     (
                         SubField<scalar>(patchQr, patchQr.size()/2)*
-                        patchMagSf
+                        SubField<scalar>(patchMagSf, patchMagSf.size()/2)
                     );
             }
             else
             {
-                radiativeFlux =
-                    gSum
-                    (
-                        SubField<scalar>(patchQr, patchQr.size()/2)*
-                        SubField<scalar>(patchMagSf, patchMagSf.size()/2)
-                    );
+                radiativeFlux = gSum(patchQr*patchMagSf);
             }
         }
 
