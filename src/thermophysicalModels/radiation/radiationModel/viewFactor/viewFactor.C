@@ -894,6 +894,12 @@ void Foam::radiation::viewFactor::calculate()
 }
 
 
+const Foam::volScalarField& Foam::radiation::viewFactor::Qr() const
+{
+    return Qr_;
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::radiation::viewFactor::Rp() const
 {
     return tmp<volScalarField>

@@ -86,12 +86,6 @@ inline const Foam::volScalarField& Foam::radiation::fvDOM::G() const
 }
 
 
-inline const Foam::volScalarField& Foam::radiation::fvDOM::Qr() const
-{
-    return Qr_;
-}
-
-
 inline const Foam::volScalarField::GeometricBoundaryField&
 Foam::radiation::fvDOM::Qin(const label lambdaI) const
 {

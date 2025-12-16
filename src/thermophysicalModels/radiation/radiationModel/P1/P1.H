@@ -108,6 +108,9 @@ public:
 
         // Access
 
+            //- Return total radiative heat flux [W/m2]
+            virtual const volScalarField& Qr() const;
+
             //- Source term component (for power of T^4)
             virtual tmp<volScalarField> Rp() const;
 

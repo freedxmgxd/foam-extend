@@ -45,7 +45,20 @@ namespace Foam
 
 Foam::radiation::noRadiation::noRadiation(const volScalarField& T)
 :
-    radiationModel(T)
+    radiationModel(T),
+    Qr_
+    (
+        IOobject
+        (
+            "Qr",
+            mesh_.time().timeName(),
+            mesh_,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh_,
+        dimensionedScalar("Qr", dimMass/pow3(dimTime), 0.0)
+    )
 {}
 
 
@@ -55,7 +68,20 @@ Foam::radiation::noRadiation::noRadiation
     const volScalarField& T
 )
 :
-    radiationModel(T)
+    radiationModel(T),
+    Qr_
+    (
+        IOobject
+        (
+            "Qr",
+            mesh_.time().timeName(),
+            mesh_,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh_,
+        dimensionedScalar("Qr", dimMass/pow3(dimTime), 0.0)
+    )
 {}
 
 
@@ -70,6 +96,12 @@ bool Foam::radiation::noRadiation::read()
 void Foam::radiation::noRadiation::calculate()
 {
     // Do nothing
+}
+
+
+const Foam::volScalarField& Foam::radiation::noRadiation::Qr() const
+{
+    return Qr_;
 }
 
 

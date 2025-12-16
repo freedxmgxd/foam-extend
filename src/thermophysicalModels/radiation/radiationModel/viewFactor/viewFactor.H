@@ -123,10 +123,10 @@ class viewFactor
         );
 
         //- Disallow default bitwise copy construct
-        viewFactor(const viewFactor&);
+        viewFactor(const viewFactor&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const viewFactor&);
+        void operator=(const viewFactor&) = delete;
 
 
 public:
@@ -168,13 +168,9 @@ public:
     // Access
 
         //- Const access to total radiative heat flux field
-        inline const volScalarField& Qr() const;
+        virtual const volScalarField& Qr() const;
 };
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "viewFactorI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

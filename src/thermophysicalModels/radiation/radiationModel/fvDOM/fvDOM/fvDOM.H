@@ -229,7 +229,7 @@ public:
             inline const volScalarField& G() const;
 
             //- Const access to total radiative heat flux field
-            inline const volScalarField& Qr() const;
+            virtual const volScalarField& Qr() const;
 
             //- Const access to band wise emitted radiative heat flux field
             inline const volScalarField::GeometricBoundaryField& Qem

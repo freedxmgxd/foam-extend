@@ -53,13 +53,19 @@ class noRadiation
 :
     public radiationModel
 {
+    // Private data
+
+        //- Total radiative heat flux [W/m2].  Dummy: no radiation
+        volScalarField Qr_;
+
+
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        noRadiation(const noRadiation&);
+        noRadiation(const noRadiation&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const noRadiation&);
+        void operator=(const noRadiation&) = delete;
 
 
 public:
@@ -90,6 +96,9 @@ public:
 
             //- Read radiationProperties dictionary
             bool read();
+
+            //- Return total radiative heat flux [W/m2]
+            virtual const volScalarField& Qr() const;
 
             //- Source term component (for power of T^4)
             tmp<volScalarField> Rp() const;
