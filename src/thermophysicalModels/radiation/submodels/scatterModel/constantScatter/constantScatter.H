@@ -45,7 +45,7 @@ namespace radiation
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class constantScatter Declaration
+                        Class constantScatter Declaration
 \*---------------------------------------------------------------------------*/
 
 class constantScatter
@@ -86,17 +86,15 @@ public:
 
 
     //- Destructor
-    ~constantScatter() = default;
+    virtual ~constantScatter() = default;
 
 
     // Member Operators
 
-        // Edit
-
         // Access
 
             //- Return scatter coefficient
-            tmp<volScalarField> sigmaEff() const;
+            virtual tmp<volScalarField> sigmaEff() const;
 };
 
 

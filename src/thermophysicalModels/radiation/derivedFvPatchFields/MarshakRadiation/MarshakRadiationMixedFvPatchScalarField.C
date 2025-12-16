@@ -91,7 +91,7 @@ Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
     {
         // No value given. Restart as fixedValue b.c.
 
-        // Bugfix: Do not initialize from temperautre because it is unavailable
+        // Bugfix: Do not initialize from temperature because it is unavailable
         // when running, e.g. decomposePar and loading radiation as
         // shared library. Initialize to zero instead.
         // 26 Mar 2014 - DC

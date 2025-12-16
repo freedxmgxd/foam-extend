@@ -95,7 +95,7 @@ void Foam::radiation::fvDOM::initialise()
     (
         mesh().nSolutionD() == 2
      || mesh().nGeometricD() == 2
-    )    
+    )
     {
         // 2D (X & Y)
         Info<< "2-D fvDOM initialisation" << endl;
@@ -262,7 +262,7 @@ void Foam::radiation::fvDOM::initialise()
                         Ji.boundaryField()[patchI] = 0;
                     }
                 }
-                
+
                 volScalarField& iRayLambdaI = IRay_[rayId].ILambda(lambdaI);
 
                 fvRayDiv_[lambdaI].set
@@ -586,7 +586,7 @@ void Foam::radiation::fvDOM::calculate()
                         // Wedge patch: skip
                         continue;
                     }
-                    
+
                     // Loop over all rays
                     forAll (IRay_, rayI)
                     {
@@ -640,7 +640,7 @@ void Foam::radiation::fvDOM::calculate()
                     // Wedge patch: skip
                     continue;
                 }
-                    
+
                 // Loop over all rays
                 forAll (IRay_, rayI)
                 {
@@ -716,8 +716,8 @@ void Foam::radiation::fvDOM::updateBlackBodyEmission()
 
 void Foam::radiation::fvDOM::updateG()
 {
-    G_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0.0);
-    Qr_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0.0);
+    G_ = dimensionedScalar("zero", dimMass/pow3(dimTime), scalar(0));
+    Qr_ = dimensionedScalar("zero", dimMass/pow3(dimTime), scalar(0));
 
     forAll (IRay_, rayI)
     {
@@ -747,8 +747,8 @@ void Foam::radiation::fvDOM::setRayIdLambdaId
     size_type i1 = name.find_first_of("_");
     size_type i2 = name.find_last_of("_");
 
-    rayId = readLabel(IStringStream(name.substr(i1+1, i2-1))());
-    lambdaId = readLabel(IStringStream(name.substr(i2+1, name.size()-1))());
+    rayId = readLabel(IStringStream(name.substr(i1 + 1, i2 - 1))());
+    lambdaId = readLabel(IStringStream(name.substr(i2 + 1, name.size() - 1))());
 }
 
 
