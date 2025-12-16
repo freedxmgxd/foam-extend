@@ -738,18 +738,39 @@ Foam::Time::~Time()
 
 Foam::label Foam::Time::addWatch(const fileName& fName) const
 {
-    return monitorPtr_().addWatch(fName);
+    if (monitorPtr_.valid())
+    {
+        return monitorPtr_().addWatch(fName);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
 bool Foam::Time::removeWatch(const label watchIndex) const
 {
-    return monitorPtr_().removeWatch(watchIndex);
+    if (monitorPtr_.valid())
+    {
+        return monitorPtr_().removeWatch(watchIndex);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 const Foam::fileName& Foam::Time::getFile(const label watchIndex) const
 {
-    return monitorPtr_().getFile(watchIndex);
+    if (monitorPtr_.valid())
+    {
+        return monitorPtr_().getFile(watchIndex);
+    }
+    else
+    {
+        return fileName::null;
+    }
 }
 
 
@@ -758,13 +779,23 @@ Foam::fileMonitor::fileState Foam::Time::getState
     const label watchFd
 ) const
 {
-    return monitorPtr_().getState(watchFd);
+    if (monitorPtr_.valid())
+    {
+        return monitorPtr_().getState(watchFd);
+    }
+    else
+    {
+        return fileMonitor::fileState::UNMODIFIED;
+    }
 }
 
 
 void Foam::Time::setUnmodified(const label watchFd) const
 {
-    monitorPtr_().setUnmodified(watchFd);
+    if (monitorPtr_.valid())
+    {
+        monitorPtr_().setUnmodified(watchFd);
+    }
 }
 
 

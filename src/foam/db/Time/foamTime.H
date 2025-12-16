@@ -342,6 +342,12 @@ public:
                 return runTimeModifiable_;
             }
 
+            //- Reset runTimeModifiable
+            void setRunTimeModifiable(const bool rtm)
+            {
+                runTimeModifiable_ = rtm;
+            }
+
             //- Read control dictionary, update controls and time
             virtual bool read();
 
