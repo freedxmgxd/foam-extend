@@ -668,6 +668,12 @@ void Foam::radiation::fvDOM::calculate()
 }
 
 
+const Foam::volScalarField& Foam::radiation::fvDOM::Qr() const
+{
+    return Qr_;
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::radiation::fvDOM::Rp() const
 {
     return tmp<volScalarField>
