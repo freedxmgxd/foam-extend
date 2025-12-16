@@ -65,10 +65,10 @@ class coupledGaussSeidelPrecon
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        coupledGaussSeidelPrecon(const coupledGaussSeidelPrecon&);
+        coupledGaussSeidelPrecon(const coupledGaussSeidelPrecon&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const coupledGaussSeidelPrecon&);
+        void operator=(const coupledGaussSeidelPrecon&) = delete;
 
 
         //- Forward sweep on a single matrix
@@ -133,10 +133,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~coupledGaussSeidelPrecon()
-        {}
+    //- Destructor
+    virtual ~coupledGaussSeidelPrecon() = default;
 
 
     // Member Functions

@@ -211,6 +211,11 @@ Foam::coupledSolverPerformance Foam::coupledBicgStabSolver::solve
             // Bug fix, Alexander Monakov, 11/Jul/2012
             preconPtr_->precondition(sh, s, cmpt);
             matrix_.Amul(t, sh, bouCoeffs_, interfaces_, cmpt);
+            // This is wrong: reverting to T product.  HJ, 27/Jun/2025
+            // preconPtr_->preconditionT(sh, s, cmpt);
+            // matrix_.Tmul(t, sh, bouCoeffs_, interfaces_, cmpt);
+
+
             omega = gSumProd(t, s)/gSumProd(t, t);
 
             // Update solution and residual

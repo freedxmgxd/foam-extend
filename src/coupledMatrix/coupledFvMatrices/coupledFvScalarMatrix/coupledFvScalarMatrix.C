@@ -45,8 +45,8 @@ coupledSolverPerformance coupledFvMatrix<scalar>::solve
 {
     if (debug)
     {
-        InfoIn("coupledFvMatrix<Type>::solve(const dictionary)")
-            << "solving coupledFvMatrix<Type>" << endl;
+        InfoInFunction
+            << "solving coupledFvMatrix<scalar>" << endl;
     }
 
     typedef FieldField<Field, scalar> scalarFieldField;
@@ -130,11 +130,17 @@ coupledSolverPerformance coupledFvMatrix<scalar>::solve
         psiRef.correctBoundaryConditions();
     }
 
-    // Clear references to internal field without deleting the objects
-    // HR 17.2.2013
     forAll (matrices, rowI)
     {
+        // Clear references to internal field without deleting the objects
+        // HR 17.2.2013
         psi.set(rowI, nullptr).ptr();
+
+        fvScalarMatrix& curMatrix =
+            static_cast<fvScalarMatrix&>(matrices[rowI]);
+
+        // Reset matrix diagonal
+        curMatrix.diag() = saveDiag[rowI];
     }
 
     return solverPerf;
