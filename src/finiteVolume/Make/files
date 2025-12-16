@@ -106,6 +106,7 @@ $(basicFvPatchFields)/transform/transformFvPatchScalarField.C
 $(basicFvPatchFields)/transform/transformFvPatchVectorNFields.C
 $(basicFvPatchFields)/zeroGradient/zeroGradientFvPatchFields.C
 $(basicFvPatchFields)/zeroGradient/zeroGradientFvPatchVectorNFields.C
+$(basicFvPatchFields)/noFlux/noFluxFvPatchFields.C
 
 constraintFvPatchFields = $(fvPatchFields)/constraint
 $(constraintFvPatchFields)/cyclic/cyclicFvPatchFields.C
