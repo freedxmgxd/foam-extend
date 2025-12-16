@@ -165,7 +165,7 @@ void faMatrix<Type>::addBoundarySource
         }
         else if (couples)
         {
-            const Field<Type>& pnf = ptf.patchNeighbourField();
+            const Field<Type> pnf = ptf.patchNeighbourField();
 
             const labelUList& addr = lduAddr().patchAddr(patchI);
 
