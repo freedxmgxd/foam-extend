@@ -1,0 +1,3 @@
+cellZoneAverage.C
+
+EXE = $(FOAM_APPBIN)/cellZoneAverage
