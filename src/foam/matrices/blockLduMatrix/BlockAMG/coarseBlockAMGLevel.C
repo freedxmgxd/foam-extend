@@ -254,7 +254,8 @@ void Foam::coarseBlockAMGLevel<Type>::solve
     else
     {
         coarseSolverPerf =
-        BlockBiCGStabSolver<Type>
+        // BlockBiCGStabSolver<Type>
+        BlockGMRESSolver<Type>
         (
             "topLevelCorr",
             matrixPtr_,
