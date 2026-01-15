@@ -173,9 +173,8 @@ Foam::lduSolverPerformance Foam::bicgStabSolver::solve
 
             // Execute preconditioning
             // Bug fix, Alexander Monakov, 11/Jul/2012
-            // This is wrong: reverting to T product.  HJ, 27/Jun/2025
-            preconPtr_->preconditionT(sh, s, cmpt);
-            matrix_.Tmul(t, sh, coupleBouCoeffs_, interfaces_, cmpt);
+            preconPtr_->precondition(sh, s, cmpt);
+            matrix_.Amul(t, sh, coupleBouCoeffs_, interfaces_, cmpt);
 
             scalar tt = gSumProd(t, t);
 
