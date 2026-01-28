@@ -22,28 +22,37 @@ internalField   uniform $turbulentOmega;
 
 boundaryField
 {
-    #include "fixedInlet"
-
+    inlet
+    {
+        type            nuRatioOmega;
+        nuRatio         10;
+        value           $internalField;
+    }
     outlet
     {
         type            inletOutlet;
         inletValue      $internalField;
         value           $internalField;
     }
-
     lowerWall
     {
         type            omegaWallFunction;
         value           $internalField;
     }
-
     "motorBike_.*"
     {
         type            omegaWallFunction;
         value           $internalField;
     }
-
-    #include "frontBackUpperPatches"
+    upperWall
+    {
+        type            zeroGradient;
+    }
+    frontAndBack
+    {
+        type            zeroGradient;
+    }
 }
+
 
 // ************************************************************************* //

@@ -26,7 +26,7 @@ solvers
         norm            componentNorm;
         normComponent   3;
 
-        smoother ILUC0;
+        smoother        ILUC0;
         nPreSweeps      1;
         nPostSweeps     3;
 
@@ -47,7 +47,7 @@ solvers
     {
         solver amgSolver;
         cycle V-cycle;
-        policy cluster;
+        policy selectionAMG;
         nPreSweeps 1;
         nPostSweeps 3;
         groupSize 4;
@@ -87,7 +87,7 @@ solvers
 
 potentialFlow
 {
-    nNonOrthogonalCorrectors 2;
+    nNonOrthogonalCorrectors 1;
 }
 
 SIMPLE
@@ -105,23 +105,16 @@ blockSolver
 
 fieldBounds
 {
-    U      100;
+    U      50;
     p      -1e06 1e06;
 }
 
 relaxationFactors
 {
-    U               0.85;
-    k               0.9;
-    omega           0.9;
+    U               0.95;
+    k               0.7;
+    omega           0.7;
 }
 
-cache
-{
-    grad(U);
-    grad(p);
-    grad(k);
-    grad(omega);
-}
 
 // ************************************************************************* //

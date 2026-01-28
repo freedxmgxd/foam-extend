@@ -23,28 +23,37 @@ internalField   uniform $flowVelocity;
 
 boundaryField
 {
-    #include "fixedInlet"
-
+    inlet
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
     outlet
     {
         type            inletOutlet;
-        inletValue      uniform (0 0 0);
+        inletValue      $internalField;
         value           $internalField;
     }
-
     lowerWall
     {
         type            fixedValue;
-        value           uniform (20 0 0);
+        value           uniform $flowVelocity;
     }
-
     "motorBike_.*"
     {
         type            fixedValue;
         value           uniform (0 0 0);
     }
-
-    #include "frontBackUpperPatches"
+    upperWall
+    {
+        type            blockSymmPlane;
+        value           uniform (0 0 0);
+    }
+    frontAndBack
+    {
+        type            blockSymmPlane;
+        value           uniform (0 0 0);
+    }
 }
 
 // ************************************************************************* //

@@ -24,28 +24,31 @@ boundaryField
 {
     inlet
     {
-        type            outletInlet;
-        outletValue     uniform $pressure;
-        value           $internalField;
+        type            zeroGradient;
     }
-
     outlet
     {
-        type            fixedValue;
+        type            outletInlet;
+        outletValue     $internalField;
         value           $internalField;
     }
-
     lowerWall
     {
         type            zeroGradient;
     }
-
     "motorBike_.*"
     {
         type            zeroGradient;
     }
-
-    #include "frontBackUpperPatches"
+    upperWall
+    {
+        type            zeroGradient;
+    }
+    frontAndBack
+    {
+        type            zeroGradient;
+    }
 }
+
 
 // ************************************************************************* //

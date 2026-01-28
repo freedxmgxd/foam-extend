@@ -5,4 +5,7 @@
 
 cleanCase
 \rm -rf constant/polyMesh
+\rm -rf *.dat
+
 \rm -rf 0
+\cp -r save 0

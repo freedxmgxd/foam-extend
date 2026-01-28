@@ -17,44 +17,39 @@ FoamFile
 
 dimensions      [0 2 -1 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform 1e-5;
 
 boundaryField
 {
-    frontAndBack
-    {
-        type            zeroGradient;
-        value           uniform 0;
-    }
-
     inlet
     {
         type            zeroGradient;
-        value           uniform 0;
+        value           uniform 1e-5;
     }
-
     outlet
     {
         type            zeroGradient;
-        value           uniform 0;
+        value           uniform 1e-5;
     }
-
     lowerWall
     {
         type            nutkWallFunction;
-        value           uniform 0;
+        value           uniform 1e-5;
     }
-
     upperWall
     {
         type            zeroGradient;
-        value           uniform 0;
+        value           uniform 1e-5;
     }
-
     "motorBike_.*"
     {
         type            nutkWallFunction;
-        value           uniform 0;
+        value           uniform 1e-5;
+    }
+    frontAndBack
+    {
+        type            zeroGradient;
+        value           uniform 1e-5;
     }
 }
 

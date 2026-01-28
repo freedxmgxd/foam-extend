@@ -22,28 +22,37 @@ internalField   uniform $turbulentKE;
 
 boundaryField
 {
-    #include "fixedInlet"
-
+    inlet
+    {
+        type            turbulentIntensityKineticEnergyInlet;
+        intensity       0.03;
+        value           $internalField;
+    }
     outlet
     {
         type            inletOutlet;
         inletValue      $internalField;
         value           $internalField;
     }
-
     lowerWall
     {
         type            kqRWallFunction;
         value           $internalField;
     }
-
     "motorBike_.*"
     {
         type            kqRWallFunction;
         value           $internalField;
     }
-
-    #include "frontBackUpperPatches"
+    upperWall
+    {
+        type            zeroGradient;
+    }
+    frontAndBack
+    {
+        type            zeroGradient;
+    }
 }
+
 
 // ************************************************************************* //

@@ -22,28 +22,35 @@ internalField   uniform 0.005;
 
 boundaryField
 {
-    #include "fixedInlet"
-
+    inlet
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
     outlet
     {
         type            inletOutlet;
         inletValue      $internalField;
         value           $internalField;
     }
-
     lowerWall
     {
         type            omegaWallFunction;
         value           $internalField;
     }
-
     "motorBike_.*"
     {
         type            omegaWallFunction;
         value           $internalField;
     }
-
-    #include "frontBackUpperPatches"
+    upperWall
+    {
+        type            zeroGradient;
+    }
+    frontAndBack
+    {
+        type            zeroGradient;
+    }
 }
 
 // ************************************************************************* //
