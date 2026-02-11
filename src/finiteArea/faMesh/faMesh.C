@@ -1057,13 +1057,13 @@ void Foam::faMesh::addFaPatches(const List<faPatch*>& p)
 }
 
 
-int Foam::faMesh::comm() const
+Foam::label Foam::faMesh::comm() const
 {
     return comm_;
 }
 
 
-int& Foam::faMesh::comm()
+Foam::label& Foam::faMesh::comm()
 {
     return comm_;
 }

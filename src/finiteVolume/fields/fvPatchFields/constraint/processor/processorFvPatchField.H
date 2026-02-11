@@ -321,7 +321,7 @@ public:
                 virtual bool ready() const;
 
                 //- Return communicator used for parallel communication
-                virtual int comm() const
+                virtual label comm() const
                 {
                     return procPatch_.comm();
                 }

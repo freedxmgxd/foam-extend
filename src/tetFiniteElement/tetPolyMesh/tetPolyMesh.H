@@ -139,7 +139,7 @@ class tetPolyMesh
         label cellOffset_;
 
         //- Communicator used for parallel communication
-        int comm_;
+        label comm_;
 
 
     // Demand-driven data
@@ -376,10 +376,10 @@ public:
             // Communication support
 
                 //- Return communicator used for parallel communication
-                int comm() const;
+                label comm() const;
 
                 //- Return communicator used for parallel communication
-                int& comm();
+                label& comm();
 
 
         // Edit

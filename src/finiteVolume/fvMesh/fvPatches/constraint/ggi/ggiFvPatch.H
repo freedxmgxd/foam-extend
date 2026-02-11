@@ -104,7 +104,7 @@ public:
         // Communication support
 
             //- Return communicator used for parallel communication
-            virtual int comm() const
+            virtual label comm() const
             {
                 return ggiPolyPatch_.comm();
             }

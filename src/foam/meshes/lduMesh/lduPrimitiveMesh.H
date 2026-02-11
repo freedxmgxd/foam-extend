@@ -70,7 +70,7 @@ class lduPrimitiveMesh
         lduSchedule patchSchedule_;
 
         //- Communicator to use for parallel communication
-        const int comm_;
+        const label comm_;
 
 
     // Private Member Functions
@@ -93,7 +93,7 @@ public:
             const label nCells,
             const labelUList& l,
             const labelUList& u,
-            const int comm
+            const label comm
         )
         :
             lduAddressing(nCells),
@@ -109,7 +109,7 @@ public:
             const label nCells,
             labelList& l,
             labelList& u,
-            const int comm,
+            const label comm,
             bool reUse
         )
         :
@@ -201,7 +201,7 @@ public:
             }
 
             //- Return communicator used for parallel communication
-            virtual int comm() const
+            virtual label comm() const
             {
                 return comm_;
             }

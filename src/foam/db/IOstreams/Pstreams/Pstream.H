@@ -463,7 +463,7 @@ public:
         }
 
         //- Process IDs
-        static const List<int>& procIDs(const int communicator)
+        static const List<int>& procIDs(const label communicator)
         {
             return procIDs_[communicator];
         }

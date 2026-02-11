@@ -113,7 +113,7 @@ public:
         // Communications support
 
             //- Return communicator used for parallel communication
-            virtual int comm() const = 0;
+            virtual label comm() const = 0;
 
             //- Return message tag used for sending
             virtual int tag() const = 0;
