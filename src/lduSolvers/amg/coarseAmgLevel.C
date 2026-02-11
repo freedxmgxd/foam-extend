@@ -36,6 +36,7 @@ Author
 #include "SubField.H"
 #include "cgSolver.H"
 #include "bicgStabSolver.H"
+#include "gmresSolver.H"
 #include "vector2D.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -188,6 +189,7 @@ void Foam::coarseAmgLevel::solve
     lduSolverPerformance coarseSolverPerf;
 
     dictionary topLevelDict;
+    topLevelDict.add("nDirections", "5");
     topLevelDict.add("preconditioner", "ILUC0");
     topLevelDict.add("minIter", 0);
     topLevelDict.add("maxIter", 500);
@@ -215,27 +217,30 @@ void Foam::coarseAmgLevel::solve
 
     if (matrixPtr_->matrix().symmetric())
     {
-        coarseSolverPerf = cgSolver
-        (
-            "topLevelCorr",
-            matrixPtr_->matrix(),
-            matrixPtr_->coupleBouCoeffs(),
-            matrixPtr_->coupleIntCoeffs(),
-            matrixPtr_->interfaceFields(),
-            topLevelDict
-        ).solve(x, b, cmpt);
+        coarseSolverPerf =
+            cgSolver
+            (
+                "topLevelCorr",
+                matrixPtr_->matrix(),
+                matrixPtr_->coupleBouCoeffs(),
+                matrixPtr_->coupleIntCoeffs(),
+                matrixPtr_->interfaceFields(),
+                topLevelDict
+            ).solve(x, b, cmpt);
     }
     else
     {
-        coarseSolverPerf = bicgStabSolver
-        (
-            "topLevelCorr",
-            matrixPtr_->matrix(),
-            matrixPtr_->coupleBouCoeffs(),
-            matrixPtr_->coupleIntCoeffs(),
-            matrixPtr_->interfaceFields(),
-            topLevelDict
-        ).solve(x, b, cmpt);
+        coarseSolverPerf =
+            // bicgStabSolver
+            gmresSolver
+            (
+                "topLevelCorr",
+                matrixPtr_->matrix(),
+                matrixPtr_->coupleBouCoeffs(),
+                matrixPtr_->coupleIntCoeffs(),
+                matrixPtr_->interfaceFields(),
+                topLevelDict
+            ).solve(x, b, cmpt);
     }
 
     // Check for convergence
