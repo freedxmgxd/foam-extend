@@ -144,9 +144,8 @@ public:
         translationODE(const IOobject& io);
 
 
-    // Destructor
-
-        virtual ~translationODE();
+    //- Destructor
+    virtual ~translationODE() = default;
 
 
     // Member Functions

@@ -107,12 +107,6 @@ Foam::translationODE::translationODE
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::translationODE::~translationODE()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::translationODE::derivatives
@@ -130,7 +124,7 @@ void Foam::translationODE::derivatives
     dimensionedVector curX("curX", dimLength, vector(y[0], y[1], y[2]));
     dimensionedVector curU("curU", dimLength/dimTime, vector(y[3], y[4], y[5]));
 
-    const vector& accel = A(curX, curU).value();
+    const vector accel = A(curX, curU).value();
 
     dydx[3] = accel.x();
     dydx[4] = accel.y();
