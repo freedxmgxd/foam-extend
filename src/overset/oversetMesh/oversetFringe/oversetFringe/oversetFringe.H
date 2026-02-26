@@ -84,10 +84,10 @@ class oversetFringe
     // Private Member Functions
 
         //- Disallow copy construct
-        oversetFringe(const oversetFringe&);
+        oversetFringe(const oversetFringe&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const oversetFringe&);
+        void operator=(const oversetFringe&) = delete;
 
 
 protected:
@@ -146,10 +146,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~oversetFringe()
-        {}
+    //- Destructor
+    virtual ~oversetFringe() = default;
 
 
     // Member Functions
