@@ -318,7 +318,7 @@ void Foam::oversetRegion::calcCutHoleCells() const
     if (oversetMesh::debug)
     {
         Pout<< "Region " << name()
-            << " number of local holes = " << cutHoleCellsPtr_->size()
+            << ": number of local holes = " << cutHoleCellsPtr_->size()
             << endl;
     }
 }
@@ -797,7 +797,7 @@ void Foam::oversetRegion::calcCellSearch() const
     (
         treeDataCell
         (
-            false,  //  Cache bb.  Reconsider for moving mesh cases
+            false,  // Cache bb.  Reconsider for moving mesh cases
             mesh_,
             eligibleDonors()
         ),
@@ -995,8 +995,10 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
     // donors on possibly remote processor)
     donorAcceptorList localAcceptorDonorList(candidateAcceptors.size());
 
-    Info<< "Number of candidate acceptors = " << candidateAcceptors.size()
+    Info<< "OversetRegion " << name()
+        << ": number of candidate acceptors = " << candidateAcceptors.size()
         << endl;
+
     // Insert local acceptor into the list
     forAll (localAcceptorDonorList, aI)
     {
@@ -1049,7 +1051,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
         );
     }
 
-    // Rewrite: mixed-up boundBox indices.  HJ, 20/Jun/2025
+    // Bug-fix rewrite: mixed-up boundBox indices.  HJ, 20/Jun/2025
 
     // Loop through all local acceptors
     forAll (candidateAcceptors, aI)
@@ -1076,6 +1078,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
                     )
                 )
                 {
+                    // Found a bounding box
                     foundHits++;
 
                     // Acceptor may find donor on this processor, append it
@@ -1091,9 +1094,9 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
         if (foundHits == 0)
         {
             FatalErrorInFunction
-                << "Cannot find any donor bounding box for acceptor "
+                << "OversetRegion " << name()
+                << ": cannot find any donor bounding box for acceptor "
                 << localAcceptorDonorList[aI]
-                << " on oversetRegion " << name()
                 << ".  Please check oversetFringe definition" << nl
                 << "Donor regions: " << dr << nl
                 << "Processor bounding boxes: " << procRegionBB
@@ -1225,6 +1228,9 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
     // multiple donor regions.
     // Note 2: We will prefer donors that are closer to the acceptor and
     // send back only those.
+    // Note 3: acceptor cell index is index in the acceptor list, possibly
+    // from different processor.  Access to acceptor cell is not possible:
+    // all we have is the acceptor point
 
     // Loop through donor regions
     forAll (dr, drI)
@@ -1271,41 +1277,29 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             // contains eligible cells.  HJ, 10/Jan/2015.
             const pointIndexHit pih = tree.findNearest(curP, span);
 
+            // Get index obtained by octree
+            label donorCandidateIndex = pih.index();
+
             if (pih.hit())
             {
-                // Found a hit, check whether this donor is set or not. If
-                // it is not set, set it no questions asked; if it is set,
-                // check whether this is a better candidate by either
-                // looking whether acceptor point is within donor cell or
-                // taking a closer hit
-
-                // Get index obtained by octree
-                const label donorCandidateIndex = pih.index();
-
-                // Whether acceptor is within donor's bounding box
-                const bool withinBB =  mesh_.pointInCellBB
+                // Check whether acceptor is within donor cell
+                bool withinCell = mesh_.pointInCell
                 (
                     curP,
                     curDonors[donorCandidateIndex]
                 );
 
-                if
-                (
-                   !daPair.donorFound()
-                 || withinBB
-                 || (
-                        mag(cc[curDonors[donorCandidateIndex]] - curP)
-                      < mag(daPair.donorPoint() - curP)
-                    )
-                )
+                if (withinCell)
                 {
+                    // Hit within cell: record data
+
                     // Set donor
                     daPair.setDonor
                     (
                         curDonors[donorCandidateIndex],
                         Pstream::myProcNo(),
                         cc[curDonors[donorCandidateIndex]],
-                        withinBB
+                        withinCell
                     );
 
                     // Set extended donors
@@ -1316,22 +1310,90 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
                         cc
                     );
                 }
+                else
+                {
+                    // Extended neighbour cell search
+                    bool withinNbrCell = false;
 
-                // Note: consider removing pointInCellBB since it now has
-                // precedence over distance criterion.  VV, 31/Jan/2017.
-            }
-            else if (oversetMesh::debug && !daPair.donorFound())
-            {
-                // This is not right: a donor could be found on a different
-                // processor with an overlapping bounding box.
-                // HJ, 10/Jan/2023
+                    scalar minDist =
+                        mag(curP - cc[curDonors[donorCandidateIndex]]);
 
-                // This donor is not valid and I did not find a hit in
-                // octree, issue a warning
-                WarningInFunction
-                    << "Could not find a hit for acceptor,"
-                    << "donor may remain invalid.  Region " << name()
-                    << endl;
+                    // Collect all point-cell neighbours
+                    labelHashSet neiCellsSet;
+
+                    const labelList& curCellPoints =
+                        mesh_.cellPoints()[curDonors[donorCandidateIndex]];
+
+                    forAll (curCellPoints, cpI)
+                    {
+                        const labelList& curPointCells =
+                            mesh_.pointCells()[curCellPoints[cpI]];
+
+                        forAll (curPointCells, pcI)
+                        {
+                            // Add neighbour only if it is eligible
+                            if (eligibleDonorMask[curPointCells[pcI]])
+                            {
+                                neiCellsSet.insert(curPointCells[pcI]);
+                            }
+                        }
+                    }
+
+                    // Search point-cell neighbourhood
+                    const labelList neighbourCells =
+                        neiCellsSet.sortedToc();
+
+                    forAll (neighbourCells, ncI)
+                    {
+                        // Check neighbour bounding box.
+                        const bool neighbourBB =
+                            mesh_.pointInCell
+                            (
+                                curP,
+                                neighbourCells[ncI]
+                            );
+
+                        if (neighbourBB)
+                        {
+                            withinNbrCell = true;
+
+                            // Check distance
+                            const scalar newDist =
+                                mag(curP - cc[neighbourCells[ncI]]);
+
+                            // Already checked for eligible donor
+                            if (newDist < minDist)
+                            {
+                                donorCandidateIndex = neighbourCells[ncI];
+
+                                minDist = newDist;
+                            }
+                        }
+                    }
+
+                    // If point does not fall within a bounding box of any
+                    // local cell, it must be detected on some other
+                    // processor
+                    if (withinNbrCell)
+                    {
+                        // Set donor
+                        daPair.setDonor
+                        (
+                            curDonors[donorCandidateIndex],
+                            Pstream::myProcNo(),
+                            cc[curDonors[donorCandidateIndex]],
+                            withinNbrCell
+                        );
+
+                        // Set extended donors
+                        daPair.setExtendedDonors
+                        (
+                            eligibleDonorMask,
+                            cCells,
+                            cc
+                        );
+                    }
+                }
             }
         } // End for all acceptor cell centres
     } // End for all donor regions
@@ -1500,7 +1562,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             // in oversetFringe
             if
             (
-                (curDA.withinBB() && !curDACombined.withinBB())
+                (curDA.withinCell() && !curDACombined.withinCell())
              || (curDA.distance() < curDACombined.distance())
             )
             {
@@ -1511,7 +1573,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
                     curDA.donorCell(),
                     curDA.donorProcNo(),
                     curDA.donorPoint(),
-                    curDA.withinBB()
+                    curDA.withinCell()
                 );
 
                 // Bugfix: also need to reset extended donors since a better
@@ -1540,7 +1602,7 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
         }
     }
 
-    // Update withinBB flag if the donor is within bounding box of acceptor
+    // Update withinCell flag if the donor is within acceptor cell
     // (previously we checked whether the acceptor is within bounding box of
     // donor)
     forAll (combinedDonorAcceptorList, daI)
@@ -1549,9 +1611,9 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
 
         // If the acceptor is not within bounding box of donor, set the flag
         // other way around
-        if (!curDA.withinBB())
+        if (!curDA.withinCell())
         {
-            curDA.setWithinBB
+            curDA.setWithinCell
             (
                 mesh_.pointInCellBB
                 (
@@ -1614,11 +1676,10 @@ void Foam::oversetRegion::finaliseDonorAcceptors() const
 
     // STAGE 1: Get acceptor cells
 
-    // Reuse the list from fringe handler (thus invalidating it)
+    // Get acceptors from fringe handler
     acceptorCellsPtr_ = new donorAcceptorList
     (
-        fringePtr_->finalDonorAcceptors(),
-        true // reuse
+        fringePtr_->finalDonorAcceptors()
     );
     const donorAcceptorList& acceptorCells = *acceptorCellsPtr_;
 
@@ -1632,8 +1693,12 @@ void Foam::oversetRegion::finaliseDonorAcceptors() const
         if (!acceptorCells[accI].donorFound())
         {
             FatalErrorInFunction
-                << "Did not find a donor for acceptor at: "
-                << acceptorCells[accI].acceptorPoint()
+                << "OversetRegion " << name()
+                << ": did not find a donor for acceptor for cell " << accI
+                << " cell Index: " << acceptorCells[accI].acceptorCell()
+                << " at: " << acceptorCells[accI].acceptorPoint()
+                << nl
+                << "DonorAcceptor: " << acceptorCells[accI]
                 << nl
                 << "This means that all donor regions do not contain acceptor "
                 << "point, implying invalid overset mesh."
