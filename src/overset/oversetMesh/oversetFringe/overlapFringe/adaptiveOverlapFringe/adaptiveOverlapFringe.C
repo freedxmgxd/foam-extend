@@ -476,7 +476,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
     Info<< "Region: " << region().name() << ", iteration: "
         << fringeIter_ << endl;
 
-    // Store donor/acceptor pairs whose donors are not within bounding box or
+    // Store donor/acceptor pairs whose donors are not within cell or
     // their suitability is lower than threshold into unsuitableDAPairs
     // donorAcceptorDynamicList. Neighbours of those acceptors will be
     // candidates for new acceptors.
@@ -488,7 +488,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
 
     // Suitability fraction variables
 
-    // Not within bounding box pairs counter
+    // Not within cell pairs counter
     label notWithinBBCounter = 0;
 
     // Unsuitable pairs cumulative suitability
@@ -504,9 +504,9 @@ bool Foam::adaptiveOverlapFringe::updateIteration
         // Get current donor/acceptor pair
         const donorAcceptor& curDA = donorAcceptorRegionData[daPairI];
 
-        if (!curDA.withinBB())
+        if (!curDA.withinCell())
         {
-            // Donor of this acceptor is not within bounding box.
+            // Donor of this acceptor is not within cell.
             // Append this pair to unsuitableDAPairs list.
             unsuitableDAPairs.append(curDA);
 
@@ -519,7 +519,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
         else
         {
             // Those donor/acceptor pairs are valid, i.e. donor is within
-            // bounding box
+            // cell
 
             // Calculate donor acceptor suitability
             const scalar donorAcceptorSuit =
@@ -595,7 +595,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
     {
         // Print information
         Info<< "Found " << notWithinBBCounter << " pairs that are not within "
-            << "bounding box and "
+            << "cell and "
             << nGlobalUnsuitablePairs - notWithinBBCounter
             << " pairs whose suitability " << nl
             << "is lower than minLocalSuit. "
