@@ -16,8 +16,7 @@ FoamFile
 
 application     simpleOversetFoam;
 
-// startFrom       startTime;
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
@@ -27,11 +26,8 @@ endTime         1000;
 
 deltaT          1;
 
-// writeControl    runTime;
-// writeInterval   2;
-
 writeControl    timeStep;
-writeInterval   5;
+writeInterval   50;
 
 purgeWrite      0;
 
@@ -60,6 +56,42 @@ libs
 
 functions
 (
+    minMaxU
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name U;
+    }
+    minMaxPd
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name p;
+    }
+    minMaxNut
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name nut;
+    }
+    minMaxK
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name k;
+    }
     forces
     {
         type                forces;

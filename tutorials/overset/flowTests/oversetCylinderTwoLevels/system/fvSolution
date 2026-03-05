@@ -46,7 +46,7 @@ solvers
     }
 }
 
-SIMPLE
+potentialFlow
 {
     pRefCell 0;
     pRefValue 0;

@@ -9,63 +9,63 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    location    "0";
-    object      U;
+    class       volScalarField;
+    object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions [0 2 -2 0 0 0 0];
 
-internalField   uniform (10 0 0);
+internalField uniform 0.015;
 
 boundaryField
 {
     oversetFaces
     {
-        type overset;
-        value uniform (0 0 0);
+        type    overset;
+        value   uniform 0.015;
+
         coupledFringe yes;
 
         setHoleCellValue  yes;
-        holeCellValue     (0 0 0);
+        holeCellValue     0.015;
     }
     in
     {
-        type            fixedValue;
-        value           uniform (10 0 0);
+        type turbulentIntensityKineticEnergyInlet;
+        intensity 0.01;
+        value   uniform 0.015;
     }
     out
     {
-        type            inletOutlet;
-        inletValue      uniform (0 0 0);
-        value           uniform (10 0 0);
-        phi             phi;
+        type        inletOutlet;
+        inletValue  uniform 0.015;
+        value       uniform 0.015;
     }
     top
     {
-        type            slip;
+        type    zeroGradient;
     }
     bottom
     {
-        type            slip;
+        type    zeroGradient;
     }
     cylinder
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type    kqRWallFunction;
+        value   uniform 0.015;
     }
     outerCylinder
     {
-        type            zeroGradient;
+        type    zeroGradient;
     }
     refine
     {
-        type            zeroGradient;
+        type    zeroGradient;
     }
     frontAndBack
     {
-        type            empty;
+        type    empty;
     }
 }
 

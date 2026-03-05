@@ -37,7 +37,7 @@ writeFormat     ascii;
 
 writePrecision  6;
 
-writeCompression compressed;
+writeCompression yes;
 
 timeFormat      general;
 
@@ -52,6 +52,24 @@ libs
 
 functions
 (
+    minMaxU
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name U;
+    }
+    minMaxP
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name p;
+    }
     forces
     {
         type                forces;

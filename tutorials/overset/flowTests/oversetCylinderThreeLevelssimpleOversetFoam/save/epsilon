@@ -9,63 +9,72 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    location    "0";
-    object      U;
+    class       volScalarField;
+    object      omega;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions [0 2 -3 0 0 0 0];
 
-internalField   uniform (10 0 0);
+internalField uniform 220.454;
 
 boundaryField
 {
     oversetFaces
     {
-        type overset;
-        value uniform (0 0 0);
+        type    overset;
+        value   uniform 220.454;
+
         coupledFringe yes;
 
         setHoleCellValue  yes;
-        holeCellValue     (0 0 0);
+        holeCellValue     220.454;
     }
     in
     {
-        type            fixedValue;
-        value           uniform (10 0 0);
+        type nuRatioEpsilon;
+        nuRatio 1;
+        value   uniform 220.454;
     }
     out
     {
-        type            inletOutlet;
-        inletValue      uniform (0 0 0);
-        value           uniform (10 0 0);
-        phi             phi;
+        type        inletOutlet;
+        inletValue  uniform 220.454;
+        value       uniform 220.454;
     }
     top
     {
-        type            slip;
+        type    fixedValue;
+        value   uniform 220.454;
     }
     bottom
     {
-        type            slip;
+        type        inletOutlet;
+        inletValue  uniform 220.454;
+        value       uniform 220.454;
     }
     cylinder
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type        epsilonWallFunction;
+        refValue    uniform 0;
+        value       uniform 220.454;
+
+        Cmu         0.09;
+        kappa       0.41;
+        E           9.8;
+        beta1       0.075;
     }
     outerCylinder
     {
-        type            zeroGradient;
+        type    zeroGradient;
     }
     refine
     {
-        type            zeroGradient;
+        type    zeroGradient;
     }
     frontAndBack
     {
-        type            empty;
+        type    empty;
     }
 }
 

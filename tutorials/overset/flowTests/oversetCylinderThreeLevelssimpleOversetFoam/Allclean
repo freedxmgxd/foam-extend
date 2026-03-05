@@ -11,3 +11,4 @@ mkdir constant/polyMesh
 \cp -r save 0
 \rm -f *.dat
 \rm -f *vtk
+\rm -rf postProcessing

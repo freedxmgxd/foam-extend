@@ -19,10 +19,7 @@ solvers
     "p|pFinal"
     {
         solver           BiCGStab;
-        preconditioner   DILU;
-
-//         solver           CG;
-//         preconditioner   DIC;
+        preconditioner   ILUC0;
 
         maxIter          1000;
         tolerance        1e-7;
@@ -32,14 +29,20 @@ solvers
     U
     {
         solver           BiCGStab;
-        preconditioner   DILU;
+        preconditioner   ILUC0;
 
-        tolerance        1e-06;
+        maxIter          1000;
+        tolerance        1e-7;
         relTol           0;
-        maxIter          200;
     }
 }
 
+potentialFlow
+{
+    nNonOrthogonalCorrectors 1;
+    pRefCell 0;
+    pRefValue 0;
+}
 PISO
 {
     nCorrectors     4;
@@ -48,12 +51,5 @@ PISO
     pRefValue       0;
 }
 
-// Potential flow solution
-SIMPLE
-{
-    nNonOrthogonalCorrectors 1;
-    pRefCell 0;
-    pRefValue 0;
-}
 
 // ************************************************************************* //

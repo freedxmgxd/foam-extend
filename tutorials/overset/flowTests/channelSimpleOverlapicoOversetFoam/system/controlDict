@@ -14,10 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     icoOversetFoam;
+application icoOversetFoam;
 
 startFrom       startTime;
-// startFrom       latestTime;
 
 startTime       0;
 
@@ -37,7 +36,7 @@ writeFormat     ascii;
 
 writePrecision  6;
 
-writeCompression uncompressed;
+writeCompression yes;
 
 timeFormat      general;
 

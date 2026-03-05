@@ -45,14 +45,9 @@ solvers
     }
     U
     {
-        solver           smoothSolver;
-        smoother         GaussSeidel;
-        nSweeps          1;
+        solver           BiCGStab;
+        preconditioner   ILUC0;
 
-//         solver           BiCGStab;
-//         preconditioner   DILU;
-
-        minIter          1;
         maxIter          1000;
         tolerance        1e-7;
         relTol           0;
@@ -64,13 +59,6 @@ potentialFlow
     pRefCell 0;
     pRefValue 0;
 }
-
-SIMPLE
-{
-    pRefCell 0;
-    pRefValue 0;
-}
-
 PISO
 {
     pRefCell 0;

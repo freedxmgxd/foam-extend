@@ -5,8 +5,6 @@
 # Get application name
 application="icoOversetFoam"
 
-mkdir constant/polyMesh
-\cp -f blockMeshDict system/blockMeshDict
 runApplication blockMesh
 \cp -f boundary constant/polyMesh/boundary
 runApplication setSet -batch setBatch.batch

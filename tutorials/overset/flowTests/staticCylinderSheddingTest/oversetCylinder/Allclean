@@ -9,3 +9,5 @@ rm -rf constant/polyMesh/
 \rm -rf 0
 \cp -r save 0
 \rm -f *.dat holeTri*
+\rm -rf postProcessing
+
