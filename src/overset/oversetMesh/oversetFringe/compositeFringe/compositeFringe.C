@@ -67,10 +67,8 @@ void Foam::compositeFringe::calcAddressing() const
 {
     if (fringeHolesPtr_ || acceptorsPtr_)
     {
-        FatalErrorIn
-        (
-            "void Foam::compositeFringe::calcAddressing() const"
-        )   << "Fringe addressing already calculated"
+        FatalErrorInFunction
+            << "Fringe addressing already calculated"
             << abort(FatalError);
     }
 
@@ -94,7 +92,7 @@ void Foam::compositeFringe::calcAddressing() const
             if (rcz.whichCell(ch[chI]) > -1)
             {
                 // Found acceptor
-                acceptorSet.insert(ch[chI]);
+                fringeHoleSet.insert(ch[chI]);
             }
         }
 
@@ -162,23 +160,24 @@ bool Foam::compositeFringe::updateIteration
     donorAcceptorList& donorAcceptorRegionData
 ) const
 {
+    Info<< "donorAcceptorRegionData: " << donorAcceptorRegionData.size() << endl;
+    
     // If the donorAcceptor list has been allocated, something went wrong with
     // the iteration procedure (not-updated flag): this function has been called
     // more than once, which should not happen for compositeFringe
     if (finalDonorAcceptorsPtr_)
     {
-        FatalErrorIn("compositeFringe::updateIteration(donorAcceptorList&")
+        FatalErrorInFunction
             << "finalDonorAcceptorPtr_ already allocated. Something went "
             << "wrong with the iteration procedure (flag was not updated)."
             << nl << "This should not happen for compositeFringe."
             << abort(FatalError);
     }
 
-    // Allocate the list by reusing the argument list
+    // Allocate the list
     finalDonorAcceptorsPtr_ = new donorAcceptorList
     (
-        donorAcceptorRegionData,
-        true
+        donorAcceptorRegionData
     );
 
     // Set the flag to true and return
@@ -214,7 +213,7 @@ Foam::donorAcceptorList& Foam::compositeFringe::finalDonorAcceptors() const
 {
     if (!finalDonorAcceptorsPtr_)
     {
-        FatalErrorIn("compositeFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "finalDonorAcceptorPtr_ not allocated. Make sure you have "
             << "called compositeFringe::updateIteration() before asking for "
             << "final set of donor/acceptor pairs."
@@ -223,7 +222,7 @@ Foam::donorAcceptorList& Foam::compositeFringe::finalDonorAcceptors() const
 
     if (!foundSuitableOverlap())
     {
-        FatalErrorIn("compositeFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "Attemted to access finalDonorAcceptors but suitable overlap "
             << "has not been found. This is not allowed. "
             << abort(FatalError);

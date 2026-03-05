@@ -75,10 +75,10 @@ class compositeFringe
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        compositeFringe(const compositeFringe&);
+        compositeFringe(const compositeFringe&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const compositeFringe&);
+        void operator=(const compositeFringe&) = delete;
 
 
         //- Read base fringes
@@ -108,9 +108,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~compositeFringe();
+    //- Destructor
+    virtual ~compositeFringe();
 
 
     // Member Functions
