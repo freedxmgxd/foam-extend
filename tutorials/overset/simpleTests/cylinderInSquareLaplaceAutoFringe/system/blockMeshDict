@@ -54,7 +54,7 @@ vertices
 blocks
 (
     // Background
-    hex (0 1 2 3 4 5 6 7) background (50 50 1) simpleGrading (1 1 1)
+    hex (0 1 2 3 4 5 6 7) background (30 30 1) simpleGrading (1 1 1)
 
     // Front
     hex (8 12 13 9 16 20 21 17) front (10 10 1) simpleGrading (1 1 1)

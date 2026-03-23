@@ -5,7 +5,6 @@
 # Get application name
 application="laplacianFoam"
 
-\cp -f blockMeshDict system/blockMeshDict
 runApplication blockMesh
 \cp -f boundary constant/polyMesh/boundary
 

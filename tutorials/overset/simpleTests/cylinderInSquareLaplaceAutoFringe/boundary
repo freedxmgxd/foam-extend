@@ -1,9 +1,9 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | foam-extend: Open Source CFD                    |
-|  \\    /   O peration     | Version:     5.0                                |
+|  \\    /   O peration     | Version:     5.1                                |
 |   \\  /    A nd           | Web:         http://www.foam-extend.org         |
-|    \\/     M anipulation  | For copyright notice see file Copyright         |
+|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -21,50 +21,54 @@ FoamFile
     {
         type            overset;
         nFaces          0;
-        startFace       5660;
+        startFace       2500;
     }
     in
     {
         type            patch;
-        nFaces          50;
-        startFace       5660;
+        nFaces          30;
+        startFace       2500;
     }
     out
     {
         type            patch;
-        nFaces          50;
-        startFace       5710;
+        nFaces          30;
+        startFace       2530;
     }
     top
     {
         type            wall;
-        nFaces          50;
-        startFace       5760;
+        nFaces          30;
+        startFace       2560;
+        closedSolidBodyMotion false;
     }
     bottom
     {
         type            wall;
-        nFaces          50;
-        startFace       5810;
+        nFaces          30;
+        startFace       2590;
+        closedSolidBodyMotion false;
     }
     cylinder
     {
         type            wall;
         nFaces          40;
-        startFace       5860;
+        startFace       2620;
+        closedSolidBodyMotion false;
     }
     outerCylinder
     {
         type            patch;
         nFaces          40;
-        startFace       5900;
+        startFace       2660;
     }
     frontAndBack
     {
         type            empty;
-        nFaces          5800;
-        startFace       5940;
+        nFaces          2600;
+        startFace       2700;
     }
 )
+
 
 // ************************************************************************* //

@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application icoDyMFoam;
+application laplacianOversetFoam;
 
 startFrom       startTime;
 
@@ -33,11 +33,10 @@ writeInterval   1;
 purgeWrite      0;
 
 writeFormat     ascii;
-// writeFormat     binary;
 
 writePrecision  10;
 
-writeCompression uncompressed;
+writeCompression no;
 
 timeFormat      general;
 
