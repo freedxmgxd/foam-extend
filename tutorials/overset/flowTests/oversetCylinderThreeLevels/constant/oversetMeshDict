@@ -33,8 +33,8 @@ regions
         fringe
         {
             type manual;
-            holes       "backHole";
-            acceptors   "backFringe";
+            holes "backHole";
+            acceptors "backFringe";
         }
     }
 
@@ -52,8 +52,8 @@ regions
                 inner
                 {
                     type manual;
-                    holes       "refineHole";
-                    acceptors   "refineFringe";
+                    holes "refineHole";
+                    acceptors "refineFringe";
                 }
                 outer
                 {
