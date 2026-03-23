@@ -6,7 +6,6 @@
 application1="potentialOversetFoam"
 application2="scalarTransportOversetFoam"
 
-\cp -f blockMeshDict system/blockMeshDict
 runApplication blockMesh
 \cp -f boundary constant/polyMesh/boundary
 
