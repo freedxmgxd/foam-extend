@@ -1,6 +1,10 @@
 cellSet backgroundMesh new cellToCell cellRegion0
 cellSet middleMesh new cellToCell cellRegion1
 cellSet frontMesh new cellToCell cellRegion2
+cellSet backHoles new cellToCell backgroundMesh
+cellSet backHoles subset boxToCell (-1.33 -1 -1.26) (2.82 1 1.33)
+cellSet middleHoles new cellToCell middleMesh
+cellSet middleHoles subset boxToCell (-0.1 -1 -0.34) (1.3 1 0.33)
 
 cellSet cellRegion0 delete
 cellSet cellRegion1 delete

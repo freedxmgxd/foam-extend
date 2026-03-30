@@ -31,7 +31,8 @@ regions
 
         fringe
         {
-            type overlap;
+            // type overlap;
+            type adaptiveOverlap;
 
             suitablePairFraction 0.5;
             cacheFringe          no;

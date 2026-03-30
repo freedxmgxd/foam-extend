@@ -16,27 +16,27 @@ FoamFile
 
 application     simpleOversetFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         10000;
+endTime         1000;
 
 deltaT          1;
 
 writeControl    runTime;
 
-writeInterval   200;
+writeInterval   50;
 
 purgeWrite      0;
 
 writeFormat     ascii;
 
-writePrecision  10;
+writePrecision  8;
 
-writeCompression uncompressed;
+writeCompression yes;
 
 timeFormat      general;
 
@@ -51,7 +51,42 @@ libs
 
 functions
 (
+    minMaxU
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name U;
+    }
+    minMaxP
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name p;
+    }
     forces
+    {
+        type forces;
+        functionObjectLibs ("libforces.so");
+        patches (airfoil);
+
+        pName p;
+        UName U;
+        rhoName rhoInf;
+        rhoInf 1;
+
+        outputControl timeStep;
+        outputInterval 1;
+        log    true;
+
+        CofR (0.25 0 0);
+    }
+    forceCoeffs
     {
         type forceCoeffs;
         functionObjectLibs ("libforces.so");

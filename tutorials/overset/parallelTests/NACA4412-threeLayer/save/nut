@@ -10,77 +10,65 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      omega;
+    object      nut;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions [0 0 -1 0 0 0 0];
+dimensions [0 2 -1 0 0 0 0];
 
-internalField uniform 0.42797;
+internalField uniform 1e-5;
 
 boundaryField
 {
     OversetFaces
     {
         type    overset;
-        value   uniform 0.42797;
+        value   uniform 1e-5;
 
         coupledFringe yes;
 
         setHoleCellValue  yes;
-        holeCellValue     0.42797;
+        holeCellValue     1e-5;
     }
-
     Inflow
     {
-        type    fixedValue;
-        value   uniform 0.42797;
+        type    zeroGradient;
     }
     Outflow
     {
-        type        inletOutlet;
-        inletValue  uniform 0.42797;
-        value       uniform 0.42797;
+        type    zeroGradient;
     }
-
     Lower
     {
-        type    fixedValue;
-        value   uniform 0.42797;
+        type    zeroGradient;
     }
     Upper
     {
-        type        inletOutlet;
-        inletValue  uniform 0.42797;
-        value       uniform 0.42797;
-    }
-
-    frontAndBack
-    {
-        type    empty;
+        type    zeroGradient;
     }
 
     airfoil
     {
-        type        omegaWallFunction;
-        refValue    uniform 0;
-        value       uniform 0.42797;
-
-        Cmu         0.09;
-        kappa       0.41;
-        E           9.8;
-        beta1       0.075;
+        type    nutkWallFunction;
+        Cmu     0.09;
+        kappa   0.41;
+        E       9.8;
+        value   uniform 1e-5;
     }
 
     OversetMiddle
     {
         type    emptyOverset;
-        value   uniform 0.42797;
+        value   uniform 1e-5;
     }
     OversetFront
     {
         type    emptyOverset;
-        value   uniform 0.42797;
+        value   uniform 1e-5;
+    }
+    frontAndBack
+    {
+        type    empty;
     }
 }
 

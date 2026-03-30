@@ -3,7 +3,7 @@
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Copy background grid
-\cp -r backgroundMesh/constant/polyMesh constant/.
+\cp -r backgroundMesh/constant/polyMesh constant/
 
 # Merge meshes and clean up
 runApplication mergeMeshes ..\

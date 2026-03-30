@@ -9,72 +9,73 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    location    "0";
-    object      U;
+    class       volScalarField;
+    object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions [0 2 -2 0 0 0 0];
 
-internalField   uniform (26.3389 0 6.5036);
+internalField uniform 0.0005723;
 
 boundaryField
 {
     OversetFaces
     {
-        type  overset;
-        value uniform (0 0 0);
+        type    overset;
+        value   uniform 0.0005723;
+
         coupledFringe yes;
+
         setHoleCellValue  yes;
-        holeCellValue     (0 0 0);
+        holeCellValue     0.0005723;
     }
 
     Inflow
     {
-        type    fixedValue;
-        value   uniform (26.3389 0 6.5036);
+        type turbulentIntensityKineticEnergyInlet;
+        intensity 0.01;
+        value   uniform 0.0005723;
     }
     Outflow
     {
         type        inletOutlet;
-        inletValue  uniform (0 0 0);
-        value       uniform (0 0 0);
+        inletValue  uniform 0.0005723;
+        value       uniform 0.0005723;
     }
 
     Lower
     {
         type    fixedValue;
-        value   uniform (26.3389 0 6.5036);
+        value   uniform 0.0005723;
     }
     Upper
     {
         type        inletOutlet;
-        inletValue  uniform (0 0 0);
-        value       uniform (0 0 0);
-    }
-
-    airfoil
-    {
-        type        fixedValue;
-        value       uniform (0 0 0);
+        inletValue  uniform 0.0005723;
+        value       uniform 0.0005723;
     }
 
     frontAndBack
     {
-        type        empty;
+        type    empty;
+    }
+
+    airfoil
+    {
+        type    kqRWallFunction;
+        value   uniform 0.0005723;
     }
 
     OversetMiddle
     {
-        type        emptyOverset;
-        value       uniform (0 0 0);
+        type    emptyOverset;
+        value   uniform 0.0005723;
     }
-
     OversetFront
     {
-        type        emptyOverset;
-        value       uniform (0 0 0);
+        type    emptyOverset;
+        value   uniform 0.0005723;
     }
 }
 

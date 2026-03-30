@@ -31,24 +31,28 @@ regions
         // Donor regions
         donorRegions ( front );
 
-//         fringe
-//         {
-//             type manual;
-//             holes       "backHole";
-//             acceptors   "backFringe";
-//         }
+        // Manual fringe, using cell sets
+        // fringe
+        // {
+        //     type manual;
+        //     holes "backHole";
+        //     acceptors "backFringe";
+        // }
 
         fringe
         {
             type overlap;
 
-            suitablePairFraction 0.5;
-            cacheFringe          no;
+            suitablePairFraction 0.85;
+            cacheFringe no;
 
             donorSuitability
             {
-                type      noSuitability;
-                threshold 1;
+                type noSuitability;
+                // type cellVolumeDiff;
+
+                // Tune threshold to achieve good overlap
+                threshold 0.1;
             }
         }
     }
