@@ -28,6 +28,7 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "dimensionedLabel.H"
 #include "dimensionedScalar.H"
 #include "dimensionedVector.H"
 #include "dimensionedSphericalTensor.H"

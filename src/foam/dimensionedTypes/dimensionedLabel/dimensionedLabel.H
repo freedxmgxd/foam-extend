@@ -21,27 +21,22 @@ License
     You should have received a copy of the GNU General Public License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    coeffFields
+Typedef
+    Foam::dimensionedLabel
 
 Description
-    Typedefs for coefficient field
+    Dimensioned label obtained from generic dimensioned type.
 
-Author
-    Hrvoje Jasak, Wikki Ltd.  All rights reserved.
+SourceFiles
+    dimensionedLabel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef coeffFields_H
-#define coeffFields_H
+#ifndef dimensionedLabel_H
+#define dimensionedLabel_H
 
-#include "labelCoeffField.H"
-#include "scalarCoeffField.H"
-#include "sphericalTensorCoeffField.H"
-#include "diagTensorCoeffField.H"
-#include "symmTensorCoeffField.H"
-#include "tensorCoeffField.H"
-#include "symmTensor4thOrderCoeffField.H"
+#include "dimensionedType.H"
+#include "label.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,14 +45,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-typedef CoeffField<scalar> scalarCoeffField;
-typedef CoeffField<vector> vectorCoeffField;
-typedef CoeffField<sphericalTensor> sphericalTensorCoeffField;
-typedef CoeffField<symmTensor> diagTensorCoeffField;
-typedef CoeffField<symmTensor> symmTensorCoeffField;
-typedef CoeffField<tensor> tensorCoeffField;
-typedef CoeffField<symmTensor4thOrder> symmTensor4thOrderCoeffField;
-
+typedef dimensioned<label> dimensionedLabel;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

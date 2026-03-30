@@ -39,11 +39,8 @@ Foam::BlockCoeff<Type>::toScalar()
         // Debug check: demotion
         if (linearCoeffPtr_ || squareCoeffPtr_)
         {
-            FatalErrorIn
-            (
-                "BlockCoeff<Type>::scalarType& "
-                "BlockCoeff<Type>::toScalar()"
-            )   << "Detected demotion to scalar.  Probably an error"
+            FatalErrorInFunction
+                << "Detected demotion to scalar.  Probably an error"
                 << abort(FatalError);
         }
 
@@ -63,11 +60,8 @@ Foam::BlockCoeff<Type>::toLinear()
         // Debug check: demotion
         if (squareCoeffPtr_)
         {
-            FatalErrorIn
-            (
-                "BlockCoeff<Type>::linearType& "
-                "BlockCoeff<Type>::toLinear()"
-            )   << "Detected demotion to linear.  Probably an error"
+            FatalErrorInFunction
+                << "Detected demotion to linear.  Probably an error"
                 << abort(FatalError);
         }
 
@@ -259,7 +253,7 @@ void Foam::BlockCoeff<Type>::checkActive() const
 
     if (nActive > 1)
     {
-        FatalErrorIn("void Foam::BlockCoeff<Type>::checkActive() const")
+        FatalErrorInFunction
             << "Activation/deactivation error.  nActive = " << nActive
             << abort(FatalError);
     }
@@ -272,11 +266,8 @@ Foam::BlockCoeff<Type>::asScalar() const
 {
     if (!scalarCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "BlockCoeff<Type>::scalarType& "
-            "BlockCoeff<Type>::asScalar()"
-        )   << "Requested scalar but active type is: "
+        FatalErrorInFunction
+            << "Requested scalar but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -292,11 +283,8 @@ Foam::BlockCoeff<Type>::asLinear() const
 {
     if (!linearCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "BlockCoeff<Type>::linearType& "
-            "BlockCoeff<Type>::asLinear()"
-        )   << "Requested linear but active type is: "
+        FatalErrorInFunction
+            << "Requested linear but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -312,11 +300,8 @@ Foam::BlockCoeff<Type>::asSquare() const
 {
     if (!squareCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "BlockCoeff<Type>::squareType& "
-            "BlockCoeff<Type>::asSquare()"
-        )   << "Requested square but active type is: "
+        FatalErrorInFunction
+            << "Requested square but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -332,11 +317,8 @@ Foam::BlockCoeff<Type>::asScalar()
 {
     if (linearCoeffPtr_ || squareCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "BlockCoeff<Type>::scalarType& "
-            "BlockCoeff<Type>::asScalar()"
-        )   << "Requested scalar but active type is: "
+        FatalErrorInFunction
+            << "Requested scalar but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -357,11 +339,8 @@ Foam::BlockCoeff<Type>::asLinear()
 {
     if (squareCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "BlockCoeff<Type>::linearType& "
-            "BlockCoeff<Type>::asLinear()"
-        )   << "Requested linear but active type is: "
+        FatalErrorInFunction
+            << "Requested linear but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -410,11 +389,8 @@ Foam::BlockCoeff<Type>::component(const direction dir) const
     }
     else
     {
-        FatalErrorIn
-        (
-            "tmp<BlockCoeff<Type>::scalarType>"
-            "BlockCoeff<Type>::component(const direction dir) const"
-        )   << " not allocated."
+        FatalErrorInFunction
+            << " not allocated."
             << abort(FatalError);
     }
 
@@ -430,7 +406,7 @@ void Foam::BlockCoeff<Type>::operator=(const BlockCoeff<Type>& f)
 {
     if (this == &f)
     {
-        FatalErrorIn("BlockCoeff<Type>::operator=(const BlockCoeff<Type>&)")
+        FatalErrorInFunction
             << "attempted assignment to self"
             << abort(FatalError);
     }

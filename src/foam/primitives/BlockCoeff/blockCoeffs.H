@@ -31,6 +31,7 @@ Description
 #ifndef blockCoeffs_H
 #define blockCoeffs_H
 
+#include "labelBlockCoeff.H"
 #include "scalarBlockCoeff.H"
 #include "sphericalTensorBlockCoeff.H"
 #include "symmTensorBlockCoeff.H"
@@ -41,6 +42,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+typedef BlockCoeff<label> labelBlockCoeff;
 typedef BlockCoeff<scalar> scalarBlockCoeff;
 typedef BlockCoeff<vector> vectorBlockCoeff;
 typedef BlockCoeff<sphericalTensor> sphericalTensorBlockCoeff;

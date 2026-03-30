@@ -71,10 +71,8 @@ inline scalar BlockCoeffMaxNorm<tensor>::normalize
     }
     else
     {
-        FatalErrorIn
-        (
-            "scalar BlockCoeffMaxNorm<tensor>(const BlockCoeff<tensor>& a)"
-        )   << "Unknown type" << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown type" << abort(FatalError);
 
         return 0;
     }
@@ -104,10 +102,8 @@ inline void BlockCoeffMaxNorm<tensor>::normalize
     }
     else
     {
-        FatalErrorIn
-        (
-            "scalar BlockCoeffMaxNorm<Type>(const BlockCoeff<tensor>& b)"
-        )   << "Unknown type" << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown type" << abort(FatalError);
     }
 }
 

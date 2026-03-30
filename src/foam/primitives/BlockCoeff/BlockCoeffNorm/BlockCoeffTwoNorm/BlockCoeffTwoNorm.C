@@ -72,11 +72,8 @@ Foam::scalar Foam::BlockCoeffTwoNorm<Type>::normalize
     }
     else
     {
-        FatalErrorIn
-        (
-            "scalar BlockCoeffTwoNorm<Type>::normalize"
-            "(const BlockCoeff<Type>& a)"
-        )   << "Unknown type" << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown type" << abort(FatalError);
 
         return 0;
     }
@@ -118,10 +115,8 @@ void Foam::BlockCoeffTwoNorm<Type>::normalize
     }
     else
     {
-        FatalErrorIn
-        (
-            "scalar BlockCoeffTwoNorm<Type>(const BlockCoeff<Type>& b)"
-        )   << "Unknown type" << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown type" << abort(FatalError);
     }
 }
 

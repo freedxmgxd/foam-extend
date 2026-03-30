@@ -67,10 +67,8 @@ inline scalar BlockCoeffTwoNorm<tensor>::normalize
     }
     else
     {
-        FatalErrorIn
-        (
-            "scalar BlockCoeffTwoNorm<Type>(const BlockCoeff<Type>& a)"
-        )   << "Unknown type" << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown type" << abort(FatalError);
 
         return 0;
     }
@@ -98,10 +96,8 @@ inline void BlockCoeffTwoNorm<tensor>::normalize
     }
     else
     {
-        FatalErrorIn
-        (
-            "scalar BlockCoeffTwoNorm<Type>(const BlockCoeff<Type>& b)"
-        )   << "Unknown type" << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown type" << abort(FatalError);
     }
 }
 

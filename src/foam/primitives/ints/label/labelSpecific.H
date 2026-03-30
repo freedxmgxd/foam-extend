@@ -62,6 +62,12 @@ inline label negPart(const label s)
 }
 
 
+inline label cmptMultiply(const label s1, const label s2)
+{
+    return s1*s2;
+}
+    
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

@@ -25,15 +25,15 @@ Class
     BlockCoeff specialisation for terminal class.
 
 Description
-    Specialisation of a block coefficient for a scalar: always a scalar.
+    Specialisation of a block coefficient for a label: always a label.
 
 Author
     Hrvoje Jasak, Wikki Ltd.  All rights reserved.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef scalarBlockCoeff_H
-#define scalarBlockCoeff_H
+#ifndef labelBlockCoeff_H
+#define labelBlockCoeff_H
 
 #include "BlockCoeff.H"
 
@@ -43,7 +43,7 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-Ostream& operator<<(Ostream&, const BlockCoeff<scalar>&);
+Ostream& operator<<(Ostream&, const BlockCoeff<label>&);
 
 
 /*---------------------------------------------------------------------------*\
@@ -51,7 +51,7 @@ Ostream& operator<<(Ostream&, const BlockCoeff<scalar>&);
 \*---------------------------------------------------------------------------*/
 
 template<>
-class BlockCoeff<scalar>
+class BlockCoeff<label>
 :
     public blockCoeffBase
 {
@@ -60,12 +60,12 @@ public:
     // Public data types
 
         //- Component type
-        typedef scalar Type;
+        typedef label Type;
 
         typedef Type xType;
 
         //- Coefficient type
-        typedef scalar scalarType;
+        typedef label scalarType;
 
 
     //- Multiplication trait
@@ -108,7 +108,7 @@ private:
     // Private data
 
         //- Scalar coefficient
-        scalar scalarCoeff_;
+        label scalarCoeff_;
 
 
 public:
@@ -119,13 +119,13 @@ public:
         explicit BlockCoeff();
 
         //- Construct as copy
-        BlockCoeff(const BlockCoeff<scalar>&);
+        BlockCoeff(const BlockCoeff<label>&);
 
         //- Construct from Istream
         BlockCoeff(Istream&);
 
         //- Clone
-        BlockCoeff<scalar> clone() const;
+        BlockCoeff<label> clone() const;
 
 
     // Destructor
@@ -139,46 +139,46 @@ public:
         blockCoeffBase::activeLevel activeType() const;
 
         //- Return as scalar
-        const scalar& asScalar() const
+        const label& asScalar() const
         {
             return scalarCoeff_;
         }
 
-        scalar& asScalar()
+        label& asScalar()
         {
             return scalarCoeff_;
         }
 
         //- Return as linear
-        const scalar& asLinear() const
+        const label& asLinear() const
         {
             return scalarCoeff_;
         }
 
-        scalar& asLinear()
+        label& asLinear()
         {
             return scalarCoeff_;
         }
 
         //- Return as square
-        const scalar& asSquare() const
+        const label& asSquare() const
         {
             return scalarCoeff_;
         }
 
-        scalar& asSquare()
+        label& asSquare()
         {
             return scalarCoeff_;
         }
 
 
         //- Return component
-        scalar component(const direction) const;
+        label component(const direction) const;
 
 
     // Member operators
 
-        void operator=(const BlockCoeff<scalar>&);
+        void operator=(const BlockCoeff<label>&);
 
 
     // IOstream operators
@@ -186,7 +186,7 @@ public:
         friend Ostream& operator<<
         (
             Ostream&,
-            const BlockCoeff<scalar>&
+            const BlockCoeff<label>&
         );
 };
 

@@ -22,81 +22,81 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    scalarCoeffField
+    labelCoeffField
 
 Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "scalarCoeffField.H"
+#include "labelCoeffField.H"
 
 // * * * * * * * * * * * * * * * Static Members  * * * * * * * * * * * * * * //
 
-const char* const Foam::CoeffField<Foam::scalar>::typeName("CoeffField");
+const char* const Foam::CoeffField<Foam::label>::typeName("CoeffField");
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::blockCoeffBase::activeLevel
-Foam::CoeffField<Foam::scalar>::activeType() const
+Foam::CoeffField<Foam::label>::activeType() const
 {
     return blockCoeffBase::SCALAR;
 }
 
 
-Foam::tmp<Foam::CoeffField<Foam::scalar> >
-Foam::CoeffField<Foam::scalar>::transpose() const
+Foam::tmp<Foam::CoeffField<Foam::label> >
+Foam::CoeffField<Foam::label>::transpose() const
 {
-    return tmp<CoeffField<scalar> >(new CoeffField<scalar>(*this));
+    return tmp<CoeffField<label> >(new CoeffField<label>(*this));
 }
 
 
-const Foam::scalarField&
-Foam::CoeffField<Foam::scalar>::asScalar() const
+const Foam::labelField&
+Foam::CoeffField<Foam::label>::asScalar() const
 {
     return *this;
 }
 
 
-Foam::scalarField&
-Foam::CoeffField<Foam::scalar>::asScalar()
+Foam::labelField&
+Foam::CoeffField<Foam::label>::asScalar()
 {
     return *this;
 }
 
 
-const Foam::scalarField&
-Foam::CoeffField<Foam::scalar>::asLinear() const
+const Foam::labelField&
+Foam::CoeffField<Foam::label>::asLinear() const
 {
     return *this;
 }
 
 
-Foam::scalarField&
-Foam::CoeffField<Foam::scalar>::asLinear()
+Foam::labelField&
+Foam::CoeffField<Foam::label>::asLinear()
 {
     return *this;
 }
 
 
-const Foam::scalarField&
-Foam::CoeffField<Foam::scalar>::asSquare() const
+const Foam::labelField&
+Foam::CoeffField<Foam::label>::asSquare() const
 {
     return *this;
 }
 
 
-Foam::scalarField&
-Foam::CoeffField<Foam::scalar>::asSquare()
+Foam::labelField&
+Foam::CoeffField<Foam::label>::asSquare()
 {
     return *this;
 }
 
 
-Foam::BlockCoeff<Foam::scalar>
-Foam::CoeffField<Foam::scalar>::getCoeff(const label index) const
+Foam::BlockCoeff<Foam::label>
+Foam::CoeffField<Foam::label>::getCoeff(const label index) const
 {
-    BlockCoeff<scalar> result;
+    BlockCoeff<label> result;
 
     result.asScalar() = (operator[](index));
 
@@ -104,19 +104,19 @@ Foam::CoeffField<Foam::scalar>::getCoeff(const label index) const
 }
 
 
-void Foam::CoeffField<Foam::scalar>::setCoeff
+void Foam::CoeffField<Foam::label>::setCoeff
 (
     const label index,
-    const BlockCoeff<scalar>& coeff
+    const BlockCoeff<label>& coeff
 )
 {
     operator[](index) = coeff.asScalar();
 }
 
 
-void Foam::CoeffField<Foam::scalar>::getSubset
+void Foam::CoeffField<Foam::label>::getSubset
 (
-    CoeffField<scalar>& f,
+    CoeffField<label>& f,
     const label start,
     const label size
 ) const
@@ -129,7 +129,7 @@ void Foam::CoeffField<Foam::scalar>::getSubset
             << abort(FatalError);
     }
 
-    const scalarField& localF = *this;
+    const labelField& localF = *this;
 
     forAll (f, fI)
     {
@@ -138,9 +138,9 @@ void Foam::CoeffField<Foam::scalar>::getSubset
 }
 
 
-void Foam::CoeffField<Foam::scalar>::getSubset
+void Foam::CoeffField<Foam::label>::getSubset
 (
-    CoeffField<scalar>& f,
+    CoeffField<label>& f,
     const labelList& addr
 ) const
 {
@@ -152,7 +152,7 @@ void Foam::CoeffField<Foam::scalar>::getSubset
             << abort(FatalError);
     }
 
-    const scalarField& localF = *this;
+    const labelField& localF = *this;
 
     forAll (f, fI)
     {
@@ -161,9 +161,9 @@ void Foam::CoeffField<Foam::scalar>::getSubset
 }
 
 
-void Foam::CoeffField<Foam::scalar>::setSubset
+void Foam::CoeffField<Foam::label>::setSubset
 (
-    const CoeffField<scalar>& f,
+    const CoeffField<label>& f,
     const label start,
     const label size
 )
@@ -176,7 +176,7 @@ void Foam::CoeffField<Foam::scalar>::setSubset
             << abort(FatalError);
     }
 
-    scalarField& localF = *this;
+    labelField& localF = *this;
 
     forAll (f, fI)
     {
@@ -185,9 +185,9 @@ void Foam::CoeffField<Foam::scalar>::setSubset
 }
 
 
-void Foam::CoeffField<Foam::scalar>::setSubset
+void Foam::CoeffField<Foam::label>::setSubset
 (
-    const CoeffField<scalar>& f,
+    const CoeffField<label>& f,
     const labelList& addr
 )
 {
@@ -199,7 +199,7 @@ void Foam::CoeffField<Foam::scalar>::setSubset
             << abort(FatalError);
     }
 
-    scalarField& localF = this->asScalar();
+    labelField& localF = this->asScalar();
 
     forAll (f, fI)
     {
@@ -208,38 +208,38 @@ void Foam::CoeffField<Foam::scalar>::setSubset
 }
 
 
-void Foam::CoeffField<Foam::scalar>::zeroOutSubset
+void Foam::CoeffField<Foam::label>::zeroOutSubset
 (
     const label start,
     const label size
 )
 {
-    scalarField& localF = *this;
+    labelField& localF = *this;
 
     for (label ffI = 0; ffI < size; ffI++)
     {
-        localF[start + ffI] = pTraits<scalar>::zero;
+        localF[start + ffI] = pTraits<label>::zero;
     }
 }
 
 
-void Foam::CoeffField<Foam::scalar>::zeroOutSubset
+void Foam::CoeffField<Foam::label>::zeroOutSubset
 (
     const labelList& addr
 )
 {
-    scalarField& localF = *this;
+    labelField& localF = *this;
 
     forAll (addr, ffI)
     {
-        localF[addr[ffI]] = pTraits<scalar>::zero;
+        localF[addr[ffI]] = pTraits<label>::zero;
     }
 }
 
 
-void Foam::CoeffField<Foam::scalar>::addSubset
+void Foam::CoeffField<Foam::label>::addSubset
 (
-    const CoeffField<scalar>& f,
+    const CoeffField<label>& f,
     const labelList& addr
 )
 {
@@ -251,7 +251,7 @@ void Foam::CoeffField<Foam::scalar>::addSubset
             << abort(FatalError);
     }
 
-    scalarField& localF = this->asScalar();
+    labelField& localF = this->asScalar();
 
     forAll (f, fI)
     {
@@ -262,29 +262,29 @@ void Foam::CoeffField<Foam::scalar>::addSubset
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-void Foam::CoeffField<Foam::scalar>::operator=(const CoeffField<scalar>& f)
+void Foam::CoeffField<Foam::label>::operator=(const CoeffField<label>& f)
 {
-    scalarField::operator=(f.asScalar());
+    labelField::operator=(f.asScalar());
 }
 
 
-void Foam::CoeffField<Foam::scalar>::operator=(const scalarField& f)
+void Foam::CoeffField<Foam::label>::operator=(const labelField& f)
 {
-    scalarField::operator=(f);
+    labelField::operator=(f);
 }
 
 
-void Foam::CoeffField<Foam::scalar>::operator=(const tmp<scalarField>& tf)
+void Foam::CoeffField<Foam::label>::operator=(const tmp<labelField>& tf)
 {
-    scalarField::operator=(tf);
+    labelField::operator=(tf);
 }
 
 
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const CoeffField<scalar>& f)
+Foam::Ostream& Foam::operator<<(Ostream& os, const CoeffField<label>& f)
 {
-    os << static_cast<const scalarField&>(f);
+    os << static_cast<const labelField&>(f);
 
     return os;
 }
@@ -293,7 +293,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const CoeffField<scalar>& f)
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const tmp<CoeffField<scalar> >& tf
+    const tmp<CoeffField<label> >& tf
 )
 {
     os << tf();
@@ -305,22 +305,20 @@ Foam::Ostream& Foam::operator<<
 /* * * * * * * * * * * * * * * * Global functions  * * * * * * * * * * * * * */
 
 template<>
-Foam::tmp<Foam::CoeffField<Foam::scalar> >
-Foam::inv(const CoeffField<scalar>& f)
+Foam::tmp<Foam::CoeffField<Foam::label> >
+Foam::inv(const CoeffField<label>& f)
 {
-    tmp<CoeffField<scalar> > tresult(new CoeffField<scalar>(f.size()));
-    scalarField& result = tresult.ref();
-    result = 1.0/f;
+    notImplemented("Foam::inv(const CoeffField<label>& f)");
 
-    return tresult;
+    return f;
 }
 
 
 template<>
 void Foam::negate
 (
-    CoeffField<scalar>& f,
-    const CoeffField<scalar>& f1
+    CoeffField<label>& f,
+    const CoeffField<label>& f1
 )
 {
     f = f1;
@@ -331,12 +329,12 @@ void Foam::negate
 template<>
 void Foam::multiply
 (
-    scalarField& f,
-    const CoeffField<scalar>& f1,
-    const scalar& f2
+    labelField& f,
+    const CoeffField<label>& f1,
+    const label& f2
 )
 {
-    const scalarField& sf = f1;
+    const labelField& sf = f1;
     f = sf*f2;
 }
 
@@ -344,12 +342,12 @@ void Foam::multiply
 template<>
 void Foam::multiply
 (
-    scalarField& f,
-    const CoeffField<scalar>& f1,
-    const scalarField& f2
+    labelField& f,
+    const CoeffField<label>& f1,
+    const labelField& f2
 )
 {
-    const scalarField& sf = f1;
+    const labelField& sf = f1;
     f = sf*f2;
 }
 
@@ -357,12 +355,12 @@ void Foam::multiply
 template<>
 void Foam::multiply
 (
-    scalarField& f,
-    const scalarField& f1,
-    const CoeffField<scalar>& f2
+    labelField& f,
+    const labelField& f1,
+    const CoeffField<label>& f2
 )
 {
-    const scalarField& sf = f2;
+    const labelField& sf = f2;
     f = f1*sf;
 }
 

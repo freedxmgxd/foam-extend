@@ -78,10 +78,8 @@ void Foam::BlockCoeff<Foam::scalar>::operator=(const BlockCoeff<scalar>& f)
 {
     if (this == &f)
     {
-        FatalErrorIn
-        (
-            "BlockCoeff<scalar>::operator=(const BlockCoeff<scalar>&)"
-        )   << "attempted assignment to self"
+        FatalErrorInFunction
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 

@@ -21,85 +21,79 @@ License
     You should have received a copy of the GNU General Public License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    BlockCoeffMaxNorm
-
 \*---------------------------------------------------------------------------*/
 
-#include "BlockCoeffMaxNorm.H"
+#include "labelBlockCoeff.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::BlockCoeffMaxNorm<Type>::BlockCoeffMaxNorm
-(
-    const dictionary& dict
-)
+Foam::BlockCoeff<Foam::label>::BlockCoeff()
 :
-    BlockCoeffNorm<Type>(dict),
-    dict_(dict)
+    scalarCoeff_(pTraits<label>::zero)
+{}
+
+
+Foam::BlockCoeff<Foam::label>::BlockCoeff(const BlockCoeff<label>& f)
+:
+    scalarCoeff_(f.scalarCoeff_)
+{}
+
+
+Foam::BlockCoeff<Foam::label>::BlockCoeff(Istream& is)
+:
+    scalarCoeff_(readLabel(is))
+{}
+
+
+Foam::BlockCoeff<Foam::label> Foam::BlockCoeff<Foam::label>::clone() const
+{
+    return BlockCoeff<label>(*this);
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::BlockCoeff<Foam::label>::~BlockCoeff()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::scalar Foam::BlockCoeffMaxNorm<Type>::normalize
-(
-    const BlockCoeff<Type>& a
-)
+Foam::blockCoeffBase::activeLevel
+Foam::BlockCoeff<Foam::label>::activeType() const
 {
-    // Note.  This does not properly account for the sign of the
-    // off-diagonal coefficient.  If the off-diag is negative
-    // the function should look for cmptMin and vice-versa
-    // HJ, 28/Feb/2017
-
-    if (a.activeType() == BlockCoeff<Type>::SCALAR)
-    {
-        return mag(a.asScalar());
-    }
-    else if (a.activeType() == BlockCoeff<Type>::LINEAR)
-    {
-        return cmptMax(cmptMag(a.asLinear()));
-    }
-    else if (a.activeType() == BlockCoeff<Type>::SQUARE)
-    {
-        return cmptMax(cmptMag(a.asSquare()));
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Unknown type" << abort(FatalError);
-
-        return 0;
-    }
+    return blockCoeffBase::SCALAR;
 }
 
 
-template<class Type>
-void Foam::BlockCoeffMaxNorm<Type>::normalize
-(
-    Field<scalar>& b,
-    const CoeffField<Type>& a
-)
+Foam::label Foam::BlockCoeff<Foam::label>::component(const direction) const
 {
-    if (a.activeType() == BlockCoeff<Type>::SCALAR)
-    {
-        b = a.asScalar();
-    }
-    else if (a.activeType() == BlockCoeff<Type>::LINEAR)
-    {
-        b = cmptMax(a.asLinear());
-    }
-    else if (a.activeType() == BlockCoeff<Type>::SQUARE)
-    {
-        b = cmptMax(a.asSquare());
-    }
-    else
+    return scalarCoeff_;
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+void Foam::BlockCoeff<Foam::label>::operator=(const BlockCoeff<label>& f)
+{
+    if (this == &f)
     {
         FatalErrorInFunction
-            << "Unknown type" << abort(FatalError);
+            << "attempted assignment to self"
+            << abort(FatalError);
     }
+
+    scalarCoeff_ = f.scalarCoeff_;
+}
+
+
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const BlockCoeff<label>& f)
+{
+    os << f.scalarCoeff_;
+
+    return os;
 }
 
 

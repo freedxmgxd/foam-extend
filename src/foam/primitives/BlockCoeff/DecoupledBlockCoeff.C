@@ -36,11 +36,8 @@ Foam::DecoupledBlockCoeff<Type>::toScalar()
         // Debug check: demotion
         if (linearCoeffPtr_)
         {
-            FatalErrorIn
-            (
-                "DecoupledBlockCoeff<Type>::scalarType& "
-                "DecoupledBlockCoeff<Type>::toScalar()"
-            )   << "Detected demotion to scalar.  Probably an error"
+            FatalErrorInFunction
+                << "Detected demotion to scalar.  Probably an error"
                 << abort(FatalError);
         }
 
@@ -200,10 +197,8 @@ void Foam::DecoupledBlockCoeff<Type>::checkActive() const
 
     if (nActive > 1)
     {
-        FatalErrorIn
-        (
-            "void Foam::DecoupledBlockCoeff<Type>::checkActive() const"
-        )   << "Activation/deactivation error.  nActive = " << nActive
+        FatalErrorInFunction
+            << "Activation/deactivation error.  nActive = " << nActive
             << abort(FatalError);
     }
 }
@@ -215,11 +210,8 @@ Foam::DecoupledBlockCoeff<Type>::asScalar() const
 {
     if (!scalarCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "DecoupledBlockCoeff<Type>::scalarType& "
-            "DecoupledBlockCoeff<Type>::asScalar()"
-        )   << "Requested scalar but active type is: "
+        FatalErrorInFunction
+            << "Requested scalar but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -235,11 +227,8 @@ Foam::DecoupledBlockCoeff<Type>::asLinear() const
 {
     if (!linearCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "DecoupledBlockCoeff<Type>::linearType& "
-            "DecoupledBlockCoeff<Type>::asLinear()"
-        )   << "Requested linear but active type is: "
+        FatalErrorInFunction
+            << "Requested linear but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -255,11 +244,8 @@ Foam::DecoupledBlockCoeff<Type>::asScalar()
 {
     if (linearCoeffPtr_)
     {
-        FatalErrorIn
-        (
-            "DecoupledBlockCoeff<Type>::scalarType& "
-            "DecoupledBlockCoeff<Type>::asScalar()"
-        )   << "Requested scalar but active type is: "
+        FatalErrorInFunction
+            << "Requested scalar but active type is: "
             << blockCoeffBase::activeLevelNames_[this->activeType()]
             << ".  This is not allowed."
             << abort(FatalError);
@@ -301,11 +287,8 @@ Foam::DecoupledBlockCoeff<Type>::component(const direction dir) const
     }
     else
     {
-        FatalErrorIn
-        (
-            "tmp<DecoupledBlockCoeff<Type>::scalarType>"
-            "DecoupledBlockCoeff<Type>::component(const direction dir) const"
-        )   << " not allocated."
+        FatalErrorInFunction
+            << " not allocated."
             << abort(FatalError);
     }
 
@@ -324,11 +307,8 @@ void Foam::DecoupledBlockCoeff<Type>::operator=
 {
     if (this == &f)
     {
-        FatalErrorIn
-        (
-            "DecoupledBlockCoeff<Type>::operator=("
-            "const DecoupledBlockCoeff<Type>&)"
-        )   << "attempted assignment to self"
+        FatalErrorInFunction
+            << "attempted assignment to self"
             << abort(FatalError);
     }
 
