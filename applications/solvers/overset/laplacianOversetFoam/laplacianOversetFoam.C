@@ -60,16 +60,12 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        T.correctBoundaryConditions();
-        Pout<< "T: " << T.internalField() << endl;
-        return 0;
-
         fvScalarMatrix TEqn
         (
             fvm::laplacian(DT, T)
         );
-        Pout<< "TEqn: " << TEqn << endl;
-//         TEqn.solve();
+
+        TEqn.solve();
 
         volScalarField residual
         (
@@ -78,7 +74,7 @@ int main(int argc, char *argv[])
         );
 
         residual.internalField() = TEqn.residual();
-//         residual.boundaryField() == 0;
+        residual.boundaryField() == 0;
         residual.write();
 
         Info<< "residual " << gSumMag(residual.internalField()) << endl;
