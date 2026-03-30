@@ -41,6 +41,5 @@
             gradT.component(vector::Z)
         );
 
-
         runTime.write();
     }
