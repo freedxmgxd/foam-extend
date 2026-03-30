@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "faceArea.H"
+#include "minFaceAreaDiff.H"
 #include "oversetFringe.H"
 #include "oversetRegion.H"
 #include "surfaceFields.H"
@@ -36,11 +36,11 @@ namespace Foam
 namespace donorSuitability
 {
 
-defineTypeNameAndDebug(faceArea, 0);
+defineTypeNameAndDebug(minFaceAreaDiff, 0);
 addToRunTimeSelectionTable
 (
     donorSuitability,
-    faceArea,
+    minFaceAreaDiff,
     dictionary
 );
 
@@ -49,39 +49,94 @@ addToRunTimeSelectionTable
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::donorSuitability::faceArea::faceArea
+Foam::donorSuitability::minFaceAreaDiff::minFaceAreaDiff
 (
     const oversetFringe& oversetFringeAlgorithm,
     const dictionary& dict
 )
 :
-    donorSuitability(oversetFringeAlgorithm, dict)
+    donorSuitability(oversetFringeAlgorithm, dict),
+    threshold_(readScalar(coeffDict().lookup("threshold"))),
+    minFaceArea_(oversetFringeAlgorithm.mesh().nCells(), GREAT)
 {
+    // Sanity check
+    if (threshold_ < SMALL)
+    {
+        FatalIOErrorInFunction(coeffDict())
+            << "Zero or negative threshold specified. This is not allowed"
+            << abort(FatalIOError);
+    }
+
     // Get fvMesh reference
     const fvMesh& mesh = oversetFringeAlgorithm.mesh();
 
     // Get local donor suitability function using minium face area of a cell
-    scalarField localDsf(mesh.nCells(), GREAT);
 
     // Get necessary mesh data
     const scalarField& magSfIn = mesh.magSf().internalField();
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
 
-    // Note: only internal faces of the mesh are considered, there's no need to
+    // Note: only internal faces of the mesh are considered, there is no need to
     // loop through boundary faces
     forAll(magSfIn, faceI)
     {
         const label& own = owner[faceI];
         const label& nei = neighbour[faceI];
 
-        localDsf[own] = min(localDsf[own], magSfIn[faceI]);
-        localDsf[nei] = min(localDsf[nei], magSfIn[faceI]);
+        minFaceArea_[own] = min(minFaceArea_[own], magSfIn[faceI]);
+        minFaceArea_[nei] = min(minFaceArea_[nei], magSfIn[faceI]);
     }
+}
 
-    // Combine donor suitability function data across processors for parallel
-    // run
-    this->combineDonorSuitabilityFunction(localDsf);
+    
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::scalar Foam::donorSuitability::minFaceAreaDiff::value
+(
+    const label& cellID
+) const
+{
+    return minFaceArea_[cellID];
+}
+
+
+Foam::scalar Foam::donorSuitability::minFaceAreaDiff::suitabilityFraction
+(
+    const donorAcceptor& daPair
+) const
+{
+    // Check whether the donor is valid for this pair
+    if (!daPair.donorFound())
+    {
+        // No donor: return zero
+        return 0;
+    }
+    else
+    {
+        // Return relative difference in donor and acceptor value
+
+        const scalar dsfAcceptor = daPair.acceptorSuitability();
+
+        const scalar dsfDonor = daPair.donorSuitability();
+
+        // Calculate suitability from difference between donor and acceptor
+        // min face area
+        return
+        (
+            1 - mag(dsfAcceptor - dsfDonor)/
+            (Foam::max(dsfAcceptor, dsfDonor) + SMALL)
+        );
+    }
+}
+
+
+bool Foam::donorSuitability::minFaceAreaDiff::isDonorSuitable
+(
+    const donorAcceptor& daPair
+) const
+{
+    return (suitabilityFraction(daPair)) > threshold_;
 }
 
 

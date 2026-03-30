@@ -22,7 +22,7 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::donorSuitability::cellBoundingBoxDiagonal
+    Foam::donorSuitability::cellBoundingBoxDiagDiff
 
 Description
     Cell bounding box diagonal suitability. Donor suitability function
@@ -34,15 +34,16 @@ Description
     unstructured tet meshes.
 
 SourceFiles
-    cellBoundingBoxDiagonal.C
+    cellBoundingBoxDiagDiff.C
 
 Author
     Vuko Vukcevic, FMENA Zagreb.  All rights reserved.
+    Rewrite by Hrvoje Jasak
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cellBoundingBoxDiagonal_H
-#define cellBoundingBoxDiagonal_H
+#ifndef cellBoundingBoxDiagDiff_H
+#define cellBoundingBoxDiagDiff_H
 
 #include "donorSuitability.H"
 
@@ -54,24 +55,46 @@ namespace donorSuitability
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class cellBoundingBoxDiagonal Declaration
+                    Class cellBoundingBoxDiagDiff Declaration
 \*---------------------------------------------------------------------------*/
 
-class cellBoundingBoxDiagonal
+class cellBoundingBoxDiagDiff
 :
     public donorSuitability
 {
+private:
+
+    // Private data
+
+        //- Threshold criterion
+        scalar threshold_;
+
+        //- Local suitability criterion: min face area of cell
+        scalarField cellBBDiag_;
+
+
+    // Private Member Functions
+
+        //- Disallow default bitwise copy construct
+        cellBoundingBoxDiagDiff
+        (
+            const cellBoundingBoxDiagDiff&
+        ) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellBoundingBoxDiagDiff&) = delete;
+
 
 public:
 
     //- Runtime type information
-    TypeName("cellBoundingBoxDiagonal");
+    TypeName("cellBoundingBoxDiagDiff");
 
 
     // Constructors
 
         //- Construct from components
-        cellBoundingBoxDiagonal
+        cellBoundingBoxDiagDiff
         (
             const oversetFringe& oversetFringeAlgorithm,
             const dictionary& dict
@@ -79,13 +102,42 @@ public:
 
 
     //- Destructor
-    virtual ~cellBoundingBoxDiagonal() = default;
+    virtual ~cellBoundingBoxDiagDiff() = default;
+
+
+    // Member Functions
+
+        // Access
+
+            //- Return threshold
+            inline const scalar& threshold() const
+            {
+                return threshold_;
+            }
+
+
+        // Overlap minimisation virtual functions
+
+            //- Return suitability parameter
+            virtual scalar value(const label& cellID) const;
+
+            //- Return suitability
+            virtual scalar suitabilityFraction
+            (
+                const donorAcceptor& daPair
+            ) const;
+
+            //- Is this donor/acceptor pair suitable?
+            virtual bool isDonorSuitable
+            (
+                const donorAcceptor& daPair
+            ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace cellBoundingBoxDiagonal
+} // End namespace cellBoundingBoxDiagDiff
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -56,25 +56,22 @@ Foam::donorSuitability::patchDistance::patchDistance
     const dictionary& dict
 )
 :
-    donorSuitability(oversetFringeAlgorithm, dict)
+    donorSuitability(oversetFringeAlgorithm, dict),
+    magDistance_()
 {
     // Get reference to fvMesh
     const fvMesh& mesh = oversetFringeAlgorithm.mesh();
 
     // Get distance patch names for master and donor regions
-    wordList masterRegionPatchNames =
-        coeffDict().lookup("masterRegionDistancePatches");
-    wordList donorRegionPatchNames =
-        coeffDict().lookup("donorRegionDistancePatches");
+    wordList patchNames =
+        coeffDict().lookup("distancePatches");
 
     // Insert patch IDs into hash sets
-    labelHashSet masterPatchIDs(masterRegionPatchNames.size());
-    labelHashSet donorPatchIDs(donorRegionPatchNames.size());
+    labelHashSet masterPatchIDs(patchNames.size());
 
-    // Master region distance patches
-    forAll(masterRegionPatchNames, patchI)
+    forAll (patchNames, patchI)
     {
-        polyPatchID pID(masterRegionPatchNames[patchI], mesh.boundaryMesh());
+        polyPatchID pID(patchNames[patchI], mesh.boundaryMesh());
 
         if (pID.active())
         {
@@ -84,46 +81,73 @@ Foam::donorSuitability::patchDistance::patchDistance
         {
             FatalErrorInFunction
                 << "Cannot find distance patch named: "
-                << masterRegionPatchNames[patchI]
-                << " for master region." << nl
+                << patchNames[patchI]
                 << "Available patch names: " << mesh.boundaryMesh().names()
                 << abort(FatalError);
         }
     }
 
-    // Donor regions distance patches
-    forAll(donorRegionPatchNames, patchI)
-    {
-        polyPatchID pID(donorRegionPatchNames[patchI], mesh.boundaryMesh());
-
-        if (pID.active())
-        {
-            donorPatchIDs.insert(pID.index());
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Cannot find distance patch named: "
-                << donorRegionPatchNames[patchI]
-                << " for donor regions." << nl
-                << "Available patch names: " << mesh.boundaryMesh().names()
-                << abort(FatalError);
-        }
-    }
 
     // Calculate distance from specified patches and do not correct for accurate
     // near wall distance (=false paramater)
     patchWave masterDistance(mesh, masterPatchIDs, false);
-    patchWave donorDistance(mesh, donorPatchIDs, false);
 
     // Combine both master and donor distances into a single field
-    scalarField localDsf = masterDistance.distance();
-    localDsf = min(localDsf, donorDistance.distance());
+    magDistance_ = masterDistance.distance();
 
-    // Combine donor suitability function data across processors for parallel
-    // run
-    this->combineDonorSuitabilityFunction(localDsf);
+    magDistance_ /= gMax(magDistance_);
+
+    Info<< "magDistance_ : " << min(magDistance_) << " " << max(magDistance_ ) << endl;
+}
+    
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::scalar Foam::donorSuitability::patchDistance::value
+(
+    const label& cellID
+) const
+{
+    return 1;
 }
 
 
+Foam::scalar Foam::donorSuitability::patchDistance::suitabilityFraction
+(
+    const donorAcceptor& daPair
+) const
+{
+    // Check whether the donor is valid for this pair
+    if (!daPair.donorFound())
+    {
+        // No donor: return zero
+        return 0;
+    }
+    else
+    {
+        if (daPair.donorProcNo() != Pstream::myProcNo())
+        {
+            FatalErrorInFunction
+                << "Donor on different processor: this cannot happen: "
+                << "myProc = " << Pstream::myProcNo()
+                << " donorProc = " << daPair.donorProcNo()
+                << abort(FatalError);
+        }
+
+        // Get local donor suitability function
+        return magDistance_[daPair.donorCell()];
+    }
+}
+
+
+bool Foam::donorSuitability::patchDistance::isDonorSuitable
+(
+    const donorAcceptor& daPair
+) const
+{
+    // Suitable if donor found
+    return (suitabilityFraction(daPair)) > SMALL;
+}
+
+    
 // ************************************************************************* //

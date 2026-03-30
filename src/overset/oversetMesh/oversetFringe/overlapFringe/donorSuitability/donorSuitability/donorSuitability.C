@@ -51,53 +51,8 @@ Foam::donorSuitability::donorSuitability::donorSuitability
     coeffDict_
     (
         dict.subDict("donorSuitability")
-    ),
-    dsf_(Pstream::nProcs()),
-    threshold_(readScalar(coeffDict_.lookup("threshold")))
-{
-    // Sanity check
-    if (threshold_ < SMALL)
-    {
-        FatalIOErrorIn
-        (
-            "donorSuitability::"
-            "patchDistance::patchDistance()",
-            coeffDict()
-        )   << "Negative threshold specified. This is not allowed"
-            << abort(FatalIOError);
-    }
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor* * * * * * * * * * * * * * * * //
-
-Foam::donorSuitability::donorSuitability::~donorSuitability()
+    )
 {}
-
-
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-void Foam::donorSuitability::donorSuitability::combineDonorSuitabilityFunction
-(
-    const scalarField& localDsf
-)
-{
-    // Perform gather-scatter for parallel run
-    if (Pstream::parRun())
-    {
-        // Copy local donor suitability function into its processor slot
-        dsf_[Pstream::myProcNo()] = localDsf;
-
-        // Gather-scatter donor suitability function
-        Pstream::gatherList(dsf_);
-        Pstream::scatterList(dsf_);
-    }
-    // Serial run
-    else
-    {
-        dsf_[0] = localDsf;
-    }
-}
 
 
 // ************************************************************************* //

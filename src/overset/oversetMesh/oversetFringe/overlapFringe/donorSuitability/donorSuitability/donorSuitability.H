@@ -29,12 +29,7 @@ Description
     used by oversetFringe algorithm to optimise overlap given donor suitability
     function.
 
-    Donor suitability criteria is given in isDonorSuitable member function. The
-    threshold value represents the admissible relative difference between donor
-    and acceptor donor suitability value. For example, if using cellVolumes
-    donor suitability, specifying threshold = 0.1 means that the volume of
-    smaller cell (either donor or acceptor) needs to be within 10% of the
-    other cell's volume.
+    Donor suitability criteria is given in isDonorSuitable member function.
 
 SourceFiles
     donorSuitability.C
@@ -42,6 +37,9 @@ SourceFiles
 
 Author
     Vuko Vukcevic, FMENA Zagreb.  All rights reserved.
+
+Author, complete rewrite
+    Hrvoje Jasak, Wikki Ltd.  All rights reserved.
 
 Contributor
     Josip Katavic, FMENA Zagreb.  All rights reserved.
@@ -83,51 +81,16 @@ class donorSuitability
         //- Subdictionary for acceptor set specification
         const dictionary coeffDict_;
 
-        //- Donor Suitability Function (DSF), a list of scalar fields for each
-        //  processor. In case of serial run, it is a list with a single
-        //  entry. Each field is defined in cell centres and is used
-        //  for overlap minimisation.
-        List<scalarField> dsf_;
-
-        //- Threshold criterion for donor suitability
-        scalar threshold_;
-
 
 private:
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        donorSuitability(const donorSuitability&);
+        donorSuitability(const donorSuitability&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const donorSuitability&);
-
-
-protected:
-
-    // Protected Member Functions
-
-        // Access functions
-
-            //- Return access to the donor suitability function
-            List<scalarField>& donorSuitabilityFunction()
-            {
-                return dsf_;
-            }
-
-            //- Return access to the threshold criterion
-            scalar& threshold()
-            {
-                return threshold_;
-            }
-
-
-        // Constructor helper for derived classes
-
-            //- Perform gather scatter of the donor suitability function for
-            //  parallel runs
-            void combineDonorSuitabilityFunction(const scalarField& localDsf);
+        void operator=(const donorSuitability&) = delete;
 
 
 public:
@@ -172,8 +135,7 @@ public:
 
 
     //- Destructor
-    //  Note: the destructor is pure virtual to make this class abstract
-    virtual ~donorSuitability() = 0;
+    virtual ~donorSuitability() = default;
 
 
     // Member Functions
@@ -192,60 +154,25 @@ public:
                 return coeffDict_;
             }
 
-            //- Return threshold
-            inline const scalar& threshold() const
-            {
-                return threshold_;
-            }
-
 
         // Overlap minimisation via Donor Suitability Function
 
-            //- Donor/acceptor pair suitability fraction.
-            //  Subtract smaller DSF from the greater. Divide difference with
-            //  greater DSF to get relative difference. Return relative
-            //  difference (a value which is always between 0 and 1. Higher
-            //  value means better suitability).
-            scalar suitabilityFraction
+            //- Return suitability parameter
+            //  Meaning depends on suitability function, eg. cell volume
+            virtual scalar value(const label& cellID) const = 0;
+
+            //- Return donor/acceptor pair suitability fraction between 0 and 1
+            //  Higher value means better suitability
+            virtual scalar suitabilityFraction
             (
                 const donorAcceptor& daPair
-            ) const
-            {
-                // Check whether the donor is valid for this pair
-                if (!daPair.donorFound())
-                {
-                    // No donor: return zero
-                    return 0;
-                }
-
-                // Get donor suitability function in acceptor/donor pair
-                const scalar& dsfAcceptor =
-                    dsf_[daPair.acceptorProcNo()][daPair.acceptorCell()];
-                const scalar& dsfDonor =
-                    dsf_[daPair.donorProcNo()][daPair.donorCell()];
-
-                // Note: Donor Suitability Function should be non-negative, no
-                // need to take the absolute value
-                if (dsfAcceptor > dsfDonor)
-                {
-                    return (1 - (dsfAcceptor - dsfDonor)/(dsfAcceptor + SMALL));
-                }
-                else
-                {
-                    return (1 - (dsfDonor - dsfAcceptor)/(dsfDonor + SMALL));
-                }
-            }
-
+            ) const = 0;
 
             //- Is this donor/acceptor pair suitable?
-            //  if sutabilityFraction > threshold
-            bool isDonorSuitable
+            virtual bool isDonorSuitable
             (
                 const donorAcceptor& daPair
-            ) const
-            {
-                return (suitabilityFraction(daPair)) > threshold_;
-            }
+            ) const = 0;
 };
 
 

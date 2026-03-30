@@ -22,24 +22,24 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::donorSuitability::cellVolumes
+    Foam::donorSuitability::cellVolumeDiff
 
 Description
-    Cell volumes suitability. Donor suitability function corresponds to cell
-    volumes in master and donor regions.
+    Cell volumes suitability. Donor suitability function is the minimum
+    difference in cell volume between donor and acceptor cell
 
-    Minimises the overlap by shifting it towards cells with similar size.
+    Minimises the overlap by shifting it towards cells with similar volume.
 
 SourceFiles
-    cellVolumes.C
+    cellVolumeDiff.C
 
 Author
-    Vuko Vukcevic, FMENA Zagreb.  All rights reserved.
+    Hrvoje Jasak, Wikki Ltd.  All rights reserved.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cellVolumes_H
-#define cellVolumes_H
+#ifndef cellVolumeDiff_H
+#define cellVolumeDiff_H
 
 #include "donorSuitability.H"
 
@@ -51,24 +51,40 @@ namespace donorSuitability
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class cellVolumes Declaration
+                       Class cellVolumeDiff Declaration
 \*---------------------------------------------------------------------------*/
 
-class cellVolumes
+class cellVolumeDiff
 :
     public donorSuitability
 {
+private:
+
+    // Private data
+
+        //- Threshold criterion
+        scalar threshold_;
+
+
+    // Private Member Functions
+
+        //- Disallow default bitwise copy construct
+        cellVolumeDiff(const cellVolumeDiff&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellVolumeDiff&) = delete;
+
 
 public:
 
     //- Runtime type information
-    TypeName("cellVolumes");
+    TypeName("cellVolumeDiff");
 
 
     // Constructors
 
         //- Construct from components
-        cellVolumes
+        cellVolumeDiff
         (
             const oversetFringe& oversetFringeAlgorithm,
             const dictionary& dict
@@ -76,13 +92,42 @@ public:
 
 
     //- Destructor
-    virtual ~cellVolumes() = default;
+    virtual ~cellVolumeDiff() = default;
+
+
+    // Member Functions
+
+        // Access
+
+            //- Return threshold
+            inline const scalar& threshold() const
+            {
+                return threshold_;
+            }
+
+
+        // Overlap minimisation virtual functions
+
+            //- Return suitability parameter
+            virtual scalar value(const label& cellID) const;
+
+            //- Return suitability
+            virtual scalar suitabilityFraction
+            (
+                const donorAcceptor& daPair
+            ) const;
+
+            //- Is this donor/acceptor pair suitable?
+            virtual bool isDonorSuitable
+            (
+                const donorAcceptor& daPair
+            ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace cellVolumes
+} // End namespace cellVolumeDiff
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

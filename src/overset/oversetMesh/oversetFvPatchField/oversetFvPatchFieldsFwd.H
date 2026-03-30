@@ -38,6 +38,9 @@ namespace Foam
 
 template<class Type> class oversetFvPatchField;
 
+// Allow label patch type
+typedef oversetFvPatchField<label> oversetFvPatchLabelField;
+
 makePatchTypeFieldTypedefs(overset)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

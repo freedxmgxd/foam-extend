@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cellVolumes.H"
+#include "cellVolumeDiff.H"
 #include "oversetFringe.H"
 #include "oversetRegion.H"
 #include "volFields.H"
@@ -36,11 +36,11 @@ namespace Foam
 namespace donorSuitability
 {
 
-defineTypeNameAndDebug(cellVolumes, 0);
+defineTypeNameAndDebug(cellVolumeDiff, 0);
 addToRunTimeSelectionTable
 (
     donorSuitability,
-    cellVolumes,
+    cellVolumeDiff,
     dictionary
 );
 
@@ -49,20 +49,72 @@ addToRunTimeSelectionTable
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::donorSuitability::cellVolumes::cellVolumes
+Foam::donorSuitability::cellVolumeDiff::cellVolumeDiff
 (
     const oversetFringe& oversetFringeAlgorithm,
     const dictionary& dict
 )
 :
-    donorSuitability(oversetFringeAlgorithm, dict)
+    donorSuitability(oversetFringeAlgorithm, dict),
+    threshold_(readScalar(coeffDict().lookup("threshold")))
 {
-    // Get local donor suitability function using cell volumes
-    const scalarField& localDsf = oversetFringeAlgorithm.mesh().V().field();
+    // Sanity check
+    if (threshold_ < SMALL)
+    {
+        FatalIOErrorInFunction(coeffDict())
+            << "Zero or negative threshold specified. This is not allowed"
+            << abort(FatalIOError);
+    }
+}
 
-    // Combine donor suitability function data across processors for parallel
-    // run
-    this->combineDonorSuitabilityFunction(localDsf);
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::scalar Foam::donorSuitability::cellVolumeDiff::value
+(
+    const label& cellID
+) const
+{
+    return oversetFringeAlgorithm().mesh().V().field()[cellID];
+}
+
+
+Foam::scalar Foam::donorSuitability::cellVolumeDiff::suitabilityFraction
+(
+    const donorAcceptor& daPair
+) const
+{
+    // Check whether the donor is valid for this pair
+    if (!daPair.donorFound())
+    {
+        // No donor: return zero
+        return 0;
+    }
+    else
+    {
+        // Return relative difference in donor and acceptor volumes
+
+        const scalar dsfAcceptor = daPair.acceptorSuitability();
+
+        const scalar dsfDonor = daPair.donorSuitability();
+
+        // Calculate suitability from difference between donor and acceptor
+        // cell volume
+        return
+        (
+            1 - mag(dsfAcceptor - dsfDonor)/
+            (Foam::max(dsfAcceptor, dsfDonor) + SMALL)
+        );
+    }
+}
+
+
+bool Foam::donorSuitability::cellVolumeDiff::isDonorSuitable
+(
+    const donorAcceptor& daPair
+) const
+{
+    return (suitabilityFraction(daPair)) > threshold();
 }
 
 

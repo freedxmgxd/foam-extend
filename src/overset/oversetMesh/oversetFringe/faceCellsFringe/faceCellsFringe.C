@@ -134,37 +134,6 @@ Foam::faceCellsFringe::~faceCellsFringe()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::faceCellsFringe::updateIteration
-(
-    donorAcceptorList& donorAcceptorRegionData
-) const
-{
-    // If the donorAcceptor list has been allocated, something went wrong with
-    // the iteration procedure (not-updated flag): this function has been called
-    // more than once, which should not happen for faceCellsFringe
-    if (finalDonorAcceptorsPtr_)
-    {
-        FatalErrorInFunction
-            << "finalDonorAcceptorPtr_ already allocated. Something went "
-            << "wrong with the iteration procedure (flag was not updated)."
-            << nl << "This should not happen for faceCellsFringe."
-            << abort(FatalError);
-    }
-
-    // Allocate the list by reusing the argument list
-    finalDonorAcceptorsPtr_ = new donorAcceptorList
-    (
-        donorAcceptorRegionData,
-        true
-    );
-
-    // Set the flag to true and return
-    updateSuitableOverlapFlag(true);
-
-    return foundSuitableOverlap();
-}
-
-
 const Foam::labelList& Foam::faceCellsFringe::fringeHoles() const
 {
     if (!fringeHolesPtr_)
@@ -187,7 +156,8 @@ const Foam::labelList& Foam::faceCellsFringe::candidateAcceptors() const
 }
 
 
-Foam::donorAcceptorList& Foam::faceCellsFringe::finalDonorAcceptors() const
+const Foam::donorAcceptorList&
+Foam::faceCellsFringe::finalDonorAcceptors() const
 {
     if (!finalDonorAcceptorsPtr_)
     {
@@ -207,6 +177,89 @@ Foam::donorAcceptorList& Foam::faceCellsFringe::finalDonorAcceptors() const
     }
 
     return *finalDonorAcceptorsPtr_;
+}
+
+
+void Foam::faceCellsFringe::initSearch
+(
+    const labelList& candidateAcceptors,
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // Give all acceptors to suitability to set data
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        // Check processor ID
+        if (daPair.acceptorProcNo() != Pstream::myProcNo())
+        {
+            FatalErrorInFunction
+                << "Donor on different processor: this cannot happen: "
+                << "myProc = " << Pstream::myProcNo()
+                << " acceptorProcNo = " << daPair.acceptorProcNo()
+                << abort(FatalError);
+        }
+    }
+
+    // Check only: faceCells fringe does not require suitability
+}
+
+
+void Foam::faceCellsFringe::setDonorSuitability
+(
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // Give all acceptors to suitability to set data
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        // Check processor ID
+        if (daPair.donorProcNo() != Pstream::myProcNo())
+        {
+            FatalErrorInFunction
+                << "Donor on different processor: this cannot happen: "
+                << "myProc = " << Pstream::myProcNo()
+                << " donorProcNo = " << daPair.donorProcNo()
+                << abort(FatalError);
+        }
+    }
+
+    // Check only: faceCells fringe does not require suitability
+}
+
+
+bool Foam::faceCellsFringe::updateIteration
+(
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // If the donorAcceptor list has been allocated, something went wrong with
+    // the iteration procedure (not-updated flag): this function has been called
+    // more than once, which should not happen for faceCellsFringe
+    if (finalDonorAcceptorsPtr_)
+    {
+        deleteDemandDrivenData(finalDonorAcceptorsPtr_);
+
+        // FatalErrorInFunction
+        //     << "finalDonorAcceptorPtr_ already allocated. Something went "
+        //     << "wrong with the iteration procedure (flag was not updated)."
+        //     << nl << "This should not happen for faceCellsFringe."
+        //     << abort(FatalError);
+    }
+
+    // Allocate the list
+    finalDonorAcceptorsPtr_ = new donorAcceptorList
+    (
+        donorAcceptorRegionData
+    );
+
+    // Set the flag to true and return
+    updateSuitableOverlapFlag(true);
+
+    return foundSuitableOverlap();
 }
 
 

@@ -22,24 +22,25 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::donorSuitability::faceArea
+    Foam::donorSuitability::minFaceAreaDiff
 
 Description
-    Face area suitability. Donor suitability function corresponds to minimum
-    face area of a given cell.
+    Face area suitability. Donor suitability function corresponds to
+    difference in a minimum face area of donor and acceptor cell
 
     Minimises the overlap by shifting it towards cells with similar face sizes.
 
 SourceFiles
-    faceArea.C
+    minFaceAreaDiff.C
 
 Author
     Vuko Vukcevic, FMENA Zagreb.  All rights reserved.
+    Rewrite by Hrvoje Jasak
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef faceArea_H
-#define faceArea_H
+#ifndef minFaceAreaDiff_H
+#define minFaceAreaDiff_H
 
 #include "donorSuitability.H"
 
@@ -51,24 +52,43 @@ namespace donorSuitability
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class faceArea Declaration
+                        Class minFaceAreaDiff Declaration
 \*---------------------------------------------------------------------------*/
 
-class faceArea
+class minFaceAreaDiff
 :
     public donorSuitability
 {
+private:
+    
+    // Private data
+
+        //- Threshold criterion
+        scalar threshold_;
+
+        //- Local suitability criterion: min face area of cell
+        scalarField minFaceArea_;
+
+    
+    // Private Member Functions
+
+        //- Disallow default bitwise copy construct
+        minFaceAreaDiff(const minFaceAreaDiff&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const minFaceAreaDiff&) = delete;
+
 
 public:
 
     //- Runtime type information
-    TypeName("faceArea");
+    TypeName("minFaceAreaDiff");
 
 
     // Constructors
 
         //- Construct from components
-        faceArea
+        minFaceAreaDiff
         (
             const oversetFringe& oversetFringeAlgorithm,
             const dictionary& dict
@@ -76,13 +96,42 @@ public:
 
 
     //- Destructor
-    virtual ~faceArea() = default;
+    virtual ~minFaceAreaDiff() = default;
+
+
+    // Member Functions
+
+        // Access
+
+            //- Return threshold
+            inline const scalar& threshold() const
+            {
+                return threshold_;
+            }
+
+
+        // Overlap minimisation virtual functions
+
+            //- Return suitability parameter
+            virtual scalar value(const label& cellID) const;
+
+            //- Return suitability
+            virtual scalar suitabilityFraction
+            (
+                const donorAcceptor& daPair
+            ) const;
+
+            //- Is this donor/acceptor pair suitable?
+            virtual bool isDonorSuitable
+            (
+                const donorAcceptor& daPair
+            ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace faceArea
+} // End namespace minFaceAreaDiff
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -52,6 +52,7 @@ Description
 Author
     Vuko Vukcevic, Wikki Ltd.  All rights reserved.
     Hrvoje Jasak, Wikki Ltd.  All rights reserved.
+    Full rewrite of interfaces, Mar/2026
 
 SourceFiles
     overlapFringe.C
@@ -156,7 +157,7 @@ public:
         //  overset patch
         static void evaluateNonOversetBoundaries
         (
-            volScalarField::GeometricBoundaryField& psib
+            volLabelField::GeometricBoundaryField& psib
         );
 
 
@@ -177,23 +178,39 @@ public:
 
     // Member Functions
 
-        //- Update iteration.
-        virtual bool updateIteration
-        (
-            donorAcceptorList& donorAcceptorRegionData
-        ) const;
+        // Access to fringe data
 
-        //- Return list of hole cells
-        //  Fringe hole cells are collected in addition to geometric hole
-        //  cells, which fall outside of all donor regions
-        virtual const labelList& fringeHoles() const;
+            //- Return list of hole cells
+            virtual const labelList& fringeHoles() const;
 
-        //- Return list of acceptor cells
-        virtual const labelList& candidateAcceptors() const;
+            //- Return list of acceptor cells
+            virtual const labelList& candidateAcceptors() const;
 
-        //- Return list of final donor acceptor pairs. Note: caller may
-        //  invalidate finalDonorAcceptorsPtr_ for optimisation purposes
-        virtual donorAcceptorList& finalDonorAcceptors() const;
+            //- Return list of final donor acceptor pairs
+            virtual const donorAcceptorList& finalDonorAcceptors() const;
+
+
+        // Iteration control
+
+            //- Initialise donor search, before acceptors are distributed
+            virtual void initSearch
+            (
+                const labelList& candidateAcceptors,
+                donorAcceptorList& donorAcceptorRegionData
+            ) const;
+
+            //- Set donor suitability
+            virtual void setDonorSuitability
+            (
+                donorAcceptorList& donorAcceptorRegionData
+            ) const;
+    
+            //- Update iteration
+            virtual bool updateIteration
+            (
+                donorAcceptorList& donorAcceptorRegionData
+            ) const;
+
 
         //- Update the fringe
         virtual void update() const;

@@ -46,7 +46,7 @@ namespace Foam
 
 void Foam::layeredOverlapFringe::evaluateNonOversetBoundaries
 (
-    volScalarField::GeometricBoundaryField& psib
+    volLabelField::GeometricBoundaryField& psib
 )
 {
     // Code practically copy/pasted from
@@ -61,9 +61,9 @@ void Foam::layeredOverlapFringe::evaluateNonOversetBoundaries
         forAll(psib, patchI)
         {
             // Get fvPatchField
-            fvPatchScalarField& psip = psib[patchI];
+            fvPatchLabelField& psip = psib[patchI];
 
-            if (psip.coupled() && !isA<oversetFvPatchScalarField>(psip))
+            if (psip.coupled() && !isA<oversetFvPatchLabelField>(psip))
             {
                 psip.initEvaluate(Pstream::defaultComms());
             }
@@ -79,9 +79,9 @@ void Foam::layeredOverlapFringe::evaluateNonOversetBoundaries
         forAll(psib, patchI)
         {
             // Get fvPatchField
-            fvPatchScalarField& psip = psib[patchI];
+            fvPatchLabelField& psip = psib[patchI];
 
-            if (psip.coupled() && !isA<oversetFvPatchScalarField>(psip))
+            if (psip.coupled() && !isA<oversetFvPatchLabelField>(psip))
             {
                 psip.evaluate(Pstream::defaultComms());
             }
@@ -99,9 +99,9 @@ void Foam::layeredOverlapFringe::evaluateNonOversetBoundaries
             if (patchSchedule[patchEvalI].init)
             {
                 // Get fvPatchField
-                fvPatchScalarField psip = psib[patchSchedule[patchEvalI].patch];
+                fvPatchLabelField psip = psib[patchSchedule[patchEvalI].patch];
 
-                if (psip.coupled() && !isA<oversetFvPatchScalarField>(psip))
+                if (psip.coupled() && !isA<oversetFvPatchLabelField>(psip))
                 {
                     psip.initEvaluate(Pstream::scheduled);
                 }
@@ -109,9 +109,9 @@ void Foam::layeredOverlapFringe::evaluateNonOversetBoundaries
             else
             {
                 // Get fvPatchField
-                fvPatchScalarField psip = psib[patchSchedule[patchEvalI].patch];
+                fvPatchLabelField psip = psib[patchSchedule[patchEvalI].patch];
 
-                if (psip.coupled() && !isA<oversetFvPatchScalarField>(psip))
+                if (psip.coupled() && !isA<oversetFvPatchLabelField>(psip))
                 {
                     psip.evaluate(Pstream::scheduled);
                 }
@@ -185,7 +185,7 @@ void Foam::layeredOverlapFringe::calcAddressing() const
     // will use this indicator field to transfer the search to the other side.
 
     // Create the indicator field
-    volScalarField processorIndicator
+    volLabelField processorIndicator
     (
         IOobject
         (
@@ -196,9 +196,9 @@ void Foam::layeredOverlapFringe::calcAddressing() const
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar("minusOne", dimless, -1.0)
+        dimensionedLabel("minusOne", dimless, -1)
     );
-    scalarField& processorIndicatorIn = processorIndicator.internalField();
+    labelField& processorIndicatorIn = processorIndicator.internalField();
 
     // Mark all holes
     forAllConstIter (cellSet, allHoles, iter)
@@ -209,7 +209,7 @@ void Foam::layeredOverlapFringe::calcAddressing() const
         eligibleAcceptors[holeCellI] = false;
 
         // Mark cut hole cell in processor indicator field
-        processorIndicatorIn[holeCellI] = 1.0;
+        processorIndicatorIn[holeCellI] = 1;
     }
 
     // Hash set for storing acceptors
@@ -242,13 +242,13 @@ void Foam::layeredOverlapFringe::calcAddressing() const
                     // Append the cell and mask it to avoid duplicate entries
                     candidateAcceptors.insert(nbrCellI);
                     eligibleAcceptors[nbrCellI] = false;
-                    processorIndicatorIn[nbrCellI] = 1.0;
+                    processorIndicatorIn[nbrCellI] = 1;
                 }
             }
         }
 
         // Get boundary field
-        volScalarField::GeometricBoundaryField& processorIndicatorBf =
+        volLabelField::GeometricBoundaryField& processorIndicatorBf =
             processorIndicator.boundaryField();
 
         // Perform update accross coupled boundaries, excluding overset patch
@@ -258,13 +258,13 @@ void Foam::layeredOverlapFringe::calcAddressing() const
         forAll (processorIndicatorBf, patchI)
         {
             // Get patch field
-            const fvPatchScalarField& chipf = processorIndicatorBf[patchI];
+            const fvPatchLabelField& chipf = processorIndicatorBf[patchI];
 
             // Only perform acceptor search if this is a processor boundary
-            if (isA<processorFvPatchScalarField>(chipf))
+            if (isA<processorFvPatchLabelField>(chipf))
             {
                 // Get neighbour field
-                const scalarField nbrProcIndicator =
+                const labelField nbrProcIndicator =
                     chipf.patchNeighbourField();
 
                 // Get face cells
@@ -275,7 +275,7 @@ void Foam::layeredOverlapFringe::calcAddressing() const
                 {
                     if
                     (
-                        nbrProcIndicator[pfaceI] > 0.0
+                        nbrProcIndicator[pfaceI] > 0
                      && eligibleAcceptors[fc[pfaceI]]
                     )
                     {
@@ -287,7 +287,7 @@ void Foam::layeredOverlapFringe::calcAddressing() const
                         // fringe on this side
                         candidateAcceptors.insert(fc[pfaceI]);
                         eligibleAcceptors[fc[pfaceI]] = false;
-                        processorIndicatorIn[fc[pfaceI]] = 1.0;
+                        processorIndicatorIn[fc[pfaceI]] = 1;
                     }
                 }
             }
@@ -298,9 +298,9 @@ void Foam::layeredOverlapFringe::calcAddressing() const
     if (returnReduce(candidateAcceptors.size(), sumOp<label>()) == 0)
     {
         FatalErrorInFunction
-            << "Did not find any acceptors to begin with."
-            << "Check definition of adaptiveOverlap in oversetMeshDict"
-            << " for region: " << this->region().name() << nl
+            << "Did not find any acceptors to begin with." << nl
+            << "Check definition of holes for layeredOverlapFringe "
+            << "in oversetMeshDict for region: " << this->region().name() << nl
             << "More specifically, check definition of:" << nl
             << "1. holePatches (mandatory entry)" << nl
             << "2. holes (optional entry)" << nl
@@ -364,6 +364,55 @@ Foam::layeredOverlapFringe::~layeredOverlapFringe()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+void Foam::layeredOverlapFringe::initSearch
+(
+    const labelList& candidateAcceptors,
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        // Check processor ID
+        if (daPair.acceptorProcNo() != Pstream::myProcNo())
+        {
+            FatalErrorInFunction
+                << "Donor on different processor: this cannot happen: "
+                << "myProc = " << Pstream::myProcNo()
+                << " acceptorProcNo = " << daPair.acceptorProcNo()
+                << abort(FatalError);
+        }
+    }
+
+    // Check only
+}
+
+
+void Foam::layeredOverlapFringe::setDonorSuitability
+(
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        // Check processor ID
+        if (daPair.donorProcNo() != Pstream::myProcNo())
+        {
+            FatalErrorInFunction
+                << "Donor on different processor: this cannot happen: "
+                << "myProc = " << Pstream::myProcNo()
+                << " donorProcNo = " << daPair.donorProcNo()
+                << abort(FatalError);
+        }
+    }
+
+    // Check only
+}
+
+
 bool Foam::layeredOverlapFringe::updateIteration
 (
     donorAcceptorList& donorAcceptorRegionData
@@ -426,14 +475,15 @@ const Foam::labelList& Foam::layeredOverlapFringe::candidateAcceptors() const
 }
 
 
-Foam::donorAcceptorList& Foam::layeredOverlapFringe::finalDonorAcceptors() const
+const Foam::donorAcceptorList&
+Foam::layeredOverlapFringe::finalDonorAcceptors() const
 {
     if (!finalDonorAcceptorsPtr_)
     {
         FatalErrorInFunction
             << "finalDonorAcceptorPtr_ not allocated. Make sure you have "
-            << "called layeredOverlapFringe::updateIteration() before asking for "
-            << "final set of donor/acceptor pairs."
+            << "called layeredOverlapFringe::updateIteration() before "
+            << "asking for final set of donor/acceptor pairs."
             << abort(FatalError);
     }
 

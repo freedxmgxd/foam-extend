@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cellBoundingBoxDiagonal.H"
+#include "cellBoundingBoxDiagDiff.H"
 #include "oversetFringe.H"
 #include "oversetRegion.H"
 #include "addToRunTimeSelectionTable.H"
@@ -35,11 +35,11 @@ namespace Foam
 namespace donorSuitability
 {
 
-defineTypeNameAndDebug(cellBoundingBoxDiagonal, 0);
+defineTypeNameAndDebug(cellBoundingBoxDiagDiff, 0);
 addToRunTimeSelectionTable
 (
     donorSuitability,
-    cellBoundingBoxDiagonal,
+    cellBoundingBoxDiagDiff,
     dictionary
 );
 
@@ -48,14 +48,24 @@ addToRunTimeSelectionTable
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::donorSuitability::cellBoundingBoxDiagonal::cellBoundingBoxDiagonal
+Foam::donorSuitability::cellBoundingBoxDiagDiff::cellBoundingBoxDiagDiff
 (
     const oversetFringe& oversetFringeAlgorithm,
     const dictionary& dict
 )
 :
-    donorSuitability(oversetFringeAlgorithm, dict)
+    donorSuitability(oversetFringeAlgorithm, dict),
+    threshold_(readScalar(coeffDict().lookup("threshold"))),
+    cellBBDiag_(oversetFringeAlgorithm.mesh().nCells())
 {
+    // Sanity check
+    if (threshold_ < SMALL)
+    {
+        FatalIOErrorInFunction(coeffDict())
+            << "Zero or negative threshold specified. This is not allowed"
+            << abort(FatalIOError);
+    }
+
     // Get reference to fvMesh
     const fvMesh& mesh = oversetFringeAlgorithm.mesh();
 
@@ -71,12 +81,60 @@ Foam::donorSuitability::cellBoundingBoxDiagonal::cellBoundingBoxDiagonal
     forAll (cells, cellI)
     {
         const boundBox bb(cells[cellI].points(faces, points), false);
-        localDsf[cellI] = bb.mag();
+        cellBBDiag_[cellI] = bb.mag();
     }
+}
 
-    // Combine donor suitability function data across processors for parallel
-    // run
-    this->combineDonorSuitabilityFunction(localDsf);
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+Foam::scalar
+Foam::donorSuitability::cellBoundingBoxDiagDiff::value
+(
+    const label& cellID
+) const
+{
+    return cellBBDiag_[cellID];
+}
+
+
+Foam::scalar 
+Foam::donorSuitability::cellBoundingBoxDiagDiff::suitabilityFraction
+(
+    const donorAcceptor& daPair
+) const
+{
+    // Check whether the donor is valid for this pair
+    if (!daPair.donorFound())
+    {
+        // No donor: return zero
+        return 0;
+    }
+    else
+    {
+        // Return relative difference in donor and acceptor value
+
+        const scalar dsfAcceptor = daPair.acceptorSuitability();
+
+        const scalar dsfDonor = daPair.donorSuitability();
+
+        // Calculate suitability from difference between donor and acceptor
+        // min face area
+        return
+        (
+            1 - mag(dsfAcceptor - dsfDonor)/
+            (Foam::max(dsfAcceptor, dsfDonor) + SMALL)
+        );
+    }
+}
+
+
+bool Foam::donorSuitability::cellBoundingBoxDiagDiff::isDonorSuitable
+(
+    const donorAcceptor& daPair
+) const
+{
+    return (suitabilityFraction(daPair)) > threshold();
 }
 
 

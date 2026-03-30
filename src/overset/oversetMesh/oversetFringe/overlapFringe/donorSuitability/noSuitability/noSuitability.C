@@ -41,22 +41,39 @@ addToRunTimeSelectionTable(donorSuitability, noSuitability, dictionary);
 }
 }
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::donorSuitability::noSuitability::noSuitability
+Foam::scalar Foam::donorSuitability::noSuitability::value
 (
-    const oversetFringe& oversetFringeAlgorithm,
-    const dictionary& dict
-)
-:
-    donorSuitability(oversetFringeAlgorithm, dict)
+    const label& cellID
+) const
 {
-    // Need to initialise donor suitability function
-    const scalarField localDsf(oversetFringeAlgorithm.mesh().nCells(), 0);
-    this->combineDonorSuitabilityFunction(localDsf);
+    return 1;
+}
 
-    // Set threshold to SMALL such that all the pairs become suitable
-    this->threshold() = SMALL;
+
+Foam::scalar Foam::donorSuitability::noSuitability::suitabilityFraction
+(
+    const donorAcceptor& daPair
+) const
+{
+    if (!daPair.donorFound())
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
+
+bool Foam::donorSuitability::noSuitability::isDonorSuitable
+(
+    const donorAcceptor& daPair
+) const
+{
+    return daPair.donorFound();
 }
 
 
