@@ -36,6 +36,9 @@ namespace Foam
 
 makePatchFields(zeroGradient);
 
+// Allow label patch type
+makeTemplatePatchTypeField(fvPatchLabelField, zeroGradientFvPatchLabelField);
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

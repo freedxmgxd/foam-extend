@@ -36,6 +36,9 @@ namespace Foam
 
 makePatchFieldsTypeName(coupled);
 
+// Allow label patch type
+makePatchTypeFieldTypeName(coupledFvPatchLabelField);
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

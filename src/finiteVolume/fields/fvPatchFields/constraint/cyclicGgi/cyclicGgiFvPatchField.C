@@ -179,7 +179,7 @@ tmp<Field<Type> > cyclicGgiFvPatchField<Type>::patchNeighbourField() const
 
 
 template<class Type>
-tmp<scalarField>
+tmp<Field<typename pTraits<Type>::cmptType> >
 cyclicGgiFvPatchField<Type>::untransformedInterpolate
 (
     const direction cmpt
@@ -190,25 +190,27 @@ cyclicGgiFvPatchField<Type>::untransformedInterpolate
     // Get shadow face-cells and assemble shadow field
     const labelUList& sfc = cyclicGgiPatch_.shadow().faceCells();
 
-    scalarField sField(sfc.size());
+    typedef Field<typename pTraits<Type>::cmptType> cmptTypeField;
+
+    cmptTypeField sField(sfc.size());
 
     forAll (sField, i)
     {
         sField[i] = component(iField[sfc[i]], cmpt);
     }
 
-    tmp<scalarField> tresult
+    tmp<cmptTypeField> tresult
     (
-        new scalarField(cyclicGgiPatch_.size())
+        new cmptTypeField(cyclicGgiPatch_.size())
     );
 
-    scalarField& result = tresult.ref();
+    cmptTypeField& result = tresult.ref();
 
     result = cyclicGgiPatch_.interpolate(sField);
 
     if (cyclicGgiPatch_.bridgeOverlap())
     {
-        scalarField cmptMirrorField =
+        cmptTypeField cmptMirrorField =
             this->patchInternalField()().component(cmpt);
 
         // Set mirror values to fully uncovered faces

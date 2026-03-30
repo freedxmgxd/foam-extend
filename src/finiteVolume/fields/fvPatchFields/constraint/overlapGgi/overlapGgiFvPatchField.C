@@ -153,22 +153,23 @@ tmp<Field<Type> > overlapGgiFvPatchField<Type>::patchNeighbourField() const
 
 
 template<class Type>
-tmp<scalarField>
+tmp<Field<typename pTraits<Type>::cmptType> >
 overlapGgiFvPatchField<Type>::untransformedInterpolate
 (
     const direction cmpt
 ) const
 {
-
     // The easiest way to do interpolation without rotation of vectors is to do
     // interpolation per components
 
+    typedef Field<typename pTraits<Type>::cmptType> cmptTypeField;
+    
     const Field<Type>& iField = this->internalField();
 
     // Get shadow face-cells and assemble shadow field
     const labelUList& sfc = overlapGgiPatch_.shadow().faceCells();
 
-    scalarField sField(sfc.size());
+    cmptTypeField sField(sfc.size());
 
     forAll (sField, i)
     {

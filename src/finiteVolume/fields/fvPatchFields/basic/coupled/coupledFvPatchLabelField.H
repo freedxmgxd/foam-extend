@@ -23,25 +23,47 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zeroGradientFvPatchFields_H
-#define zeroGradientFvPatchFields_H
+#ifndef coupledFvPatchLabelField_H
+#define coupledFvPatchLabelField_H
 
-#include "zeroGradientFvPatchField.H"
-#include "zeroGradientFvPatchFieldsFwd.H"
-#include "fieldTypes.H"
+#include "coupledFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-makePatchTypeFieldTypedefs(zeroGradient)
+// Allow label patch type
+typedef coupledFvPatchField<label> coupledFvPatchLabelField;
+
+// Removed discretisation support for label fields
+// HJ, 19/Mar/2026
+
+template<>
+tmp<labelField> coupledFvPatchField<label>::valueInternalCoeffs
+(
+    const tmp<scalarField>&
+) const;
+
+template<>
+tmp<labelField> coupledFvPatchField<label>::valueBoundaryCoeffs
+(
+    const tmp<scalarField>&
+) const;
+
+template<>
+tmp<labelField> coupledFvPatchField<label>::gradientInternalCoeffs() const;
+
+template<>
+tmp<labelField> coupledFvPatchField<label>::gradientBoundaryCoeffs() const;
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

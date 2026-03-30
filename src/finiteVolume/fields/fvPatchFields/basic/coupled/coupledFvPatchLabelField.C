@@ -23,28 +23,59 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef zeroGradientFvPatchFields_H
-#define zeroGradientFvPatchFields_H
-
-#include "zeroGradientFvPatchField.H"
-#include "zeroGradientFvPatchFieldsFwd.H"
-#include "fieldTypes.H"
+#include "coupledFvPatchLabelField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-makePatchTypeFieldTypedefs(zeroGradient)
+template<>
+tmp<Field<label> > coupledFvPatchField<label>::valueInternalCoeffs
+(
+    const tmp<scalarField>&
+) const
+{
+    NotImplemented;
+
+    return *this;
+}
+
+
+template<>
+tmp<Field<label> > coupledFvPatchField<label>::valueBoundaryCoeffs
+(
+    const tmp<scalarField>&
+) const
+{
+    NotImplemented;
+
+    return *this;
+}
+
+
+template<>
+tmp<Field<label> > coupledFvPatchField<label>::gradientInternalCoeffs() const
+{
+    NotImplemented;
+
+    return *this;
+}
+
+
+template<>
+tmp<Field<label> > coupledFvPatchField<label>::gradientBoundaryCoeffs() const
+{
+    NotImplemented;
+
+    return *this;
+}
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

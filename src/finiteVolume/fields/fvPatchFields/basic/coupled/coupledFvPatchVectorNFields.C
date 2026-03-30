@@ -33,7 +33,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-#define doMakePatchTypeField(type, Type, args...)           \
+#define doMakePatchTypeField(type, Type, args...)                             \
     makePatchTypeFieldTypeName(coupledFvPatch##Type##Field);
 
 forAllVectorNTypes(doMakePatchTypeField)
@@ -43,7 +43,6 @@ forAllTensorNTypes(doMakePatchTypeField)
 forAllDiagTensorNTypes(doMakePatchTypeField)
 
 forAllSphericalTensorNTypes(doMakePatchTypeField)
-
 
 #undef doMakePatchTypeField
 

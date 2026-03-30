@@ -91,6 +91,7 @@ $(basicFvPatchFields)/calculated/calculatedFvPatchVectorNFields.C
 $(basicFvPatchFields)/extrapolatedCalculated/extrapolatedCalculatedFvPatchFields.C
 $(basicFvPatchFields)/extrapolatedCalculated/extrapolatedCalculatedFvPatchVectorNFields.C
 $(basicFvPatchFields)/coupled/coupledFvPatchFields.C
+$(basicFvPatchFields)/coupled/coupledFvPatchLabelField.C
 $(basicFvPatchFields)/coupled/coupledFvPatchVectorNFields.C
 $(basicFvPatchFields)/directionMixed/directionMixedFvPatchFields.C
 $(basicFvPatchFields)/fixedGradient/fixedGradientFvPatchFields.C

@@ -32,6 +32,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
+defineTemplateTypeNameAndDebug(volLabelField::DimensionedInternalField, 0);
 defineTemplateTypeNameAndDebug(volScalarField::DimensionedInternalField, 0);
 defineTemplateTypeNameAndDebug(volVectorField::DimensionedInternalField, 0);
 defineTemplateTypeNameAndDebug(volSphericalTensorField::DimensionedInternalField, 0);
@@ -40,6 +41,7 @@ defineTemplateTypeNameAndDebug(volSymmTensor4thOrderField::DimensionedInternalFi
 defineTemplateTypeNameAndDebug(volDiagTensorField::DimensionedInternalField, 0);
 defineTemplateTypeNameAndDebug(volTensorField::DimensionedInternalField, 0);
 
+defineTemplateTypeNameAndDebug(volLabelField, 0);
 defineTemplateTypeNameAndDebug(volScalarField, 0);
 defineTemplateTypeNameAndDebug(volVectorField, 0);
 defineTemplateTypeNameAndDebug(volSphericalTensorField, 0);
@@ -47,6 +49,27 @@ defineTemplateTypeNameAndDebug(volSymmTensorField, 0);
 defineTemplateTypeNameAndDebug(volSymmTensor4thOrderField, 0);
 defineTemplateTypeNameAndDebug(volDiagTensorField, 0);
 defineTemplateTypeNameAndDebug(volTensorField, 0);
+
+template<>
+tmp<GeometricField<label, fvPatchField, volMesh> >
+GeometricField<label, fvPatchField, volMesh>::component
+(
+    const direction
+) const
+{
+    return *this;
+}
+
+template<>
+void GeometricField<label, fvPatchField, volMesh>::replace
+(
+    const direction,
+    const GeometricField<label, fvPatchField, volMesh>& gsf
+)
+{
+    *this == gsf;
+}
+
 
 template<>
 tmp<GeometricField<scalar, fvPatchField, volMesh> >
@@ -67,6 +90,7 @@ void GeometricField<scalar, fvPatchField, volMesh>::replace
 {
     *this == gsf;
 }
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

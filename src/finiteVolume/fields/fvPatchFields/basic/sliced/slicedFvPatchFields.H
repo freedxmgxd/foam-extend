@@ -27,6 +27,7 @@ License
 #define slicedFvPatchFields_H
 
 #include "slicedFvPatchField.H"
+#include "slicedFvPatchFieldsFwd.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
