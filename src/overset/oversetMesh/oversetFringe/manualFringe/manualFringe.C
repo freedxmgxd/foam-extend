@@ -198,7 +198,7 @@ void Foam::manualFringe::initSearch
     donorAcceptorList& donorAcceptorRegionData
 ) const
 {
-    // Give all acceptors to suitability to set data
+    // Check only
     forAll (donorAcceptorRegionData, aI)
     {
         donorAcceptor& daPair = donorAcceptorRegionData[aI];
@@ -213,8 +213,6 @@ void Foam::manualFringe::initSearch
                 << abort(FatalError);
         }
     }
-
-    // Check only: manual fringe does not require suitability
 }
 
 
@@ -223,23 +221,24 @@ void Foam::manualFringe::setDonorSuitability
     donorAcceptorList& donorAcceptorRegionData
 ) const
 {
-    // Give all acceptors to suitability to set data
+    // Check only
     forAll (donorAcceptorRegionData, aI)
     {
         donorAcceptor& daPair = donorAcceptorRegionData[aI];
 
-        // Check processor ID
-        if (daPair.donorProcNo() != Pstream::myProcNo())
+        if (daPair.donorFound())
         {
-            FatalErrorInFunction
-                << "Donor on different processor: this cannot happen: "
-                << "myProc = " << Pstream::myProcNo()
-                << " donorProcNo = " << daPair.donorProcNo()
-                << abort(FatalError);
+            // Check processor ID
+            if (daPair.donorProcNo() != Pstream::myProcNo())
+            {
+                FatalErrorInFunction
+                    << "Donor on different processor: this cannot happen: "
+                    << "myProc = " << Pstream::myProcNo()
+                    << " donorProcNo = " << daPair.donorProcNo()
+                    << abort(FatalError);
+            }
         }
     }
-
-    // Check only: manual fringe does not require suitability
 }
 
 

@@ -45,7 +45,8 @@ void Foam::overlapFringe::initSearch
         if (daPair.acceptorProcNo() != Pstream::myProcNo())
         {
             FatalErrorInFunction
-                << "Donor on different processor: this cannot happen: "
+                << "Acceptor on different processor: this cannot happen: "
+                << "acceptorCell = " << daPair.acceptorProcNo()
                 << "myProc = " << Pstream::myProcNo()
                 << " acceptorProcNo = " << daPair.acceptorProcNo()
                 << abort(FatalError);
@@ -70,18 +71,22 @@ void Foam::overlapFringe::setDonorSuitability
     {
         donorAcceptor& daPair = donorAcceptorRegionData[aI];
 
-        // Check processor ID
-        if (daPair.donorProcNo() != Pstream::myProcNo())
+        if (daPair.donorFound())
         {
-            FatalErrorInFunction
-                << "Donor on different processor: this cannot happen: "
-                << "myProc = " << Pstream::myProcNo()
-                << " donorProcNo = " << daPair.donorProcNo()
-                << abort(FatalError);
-        }
+            // Check processor ID
+            if (daPair.donorProcNo() != Pstream::myProcNo())
+            {
+                FatalErrorInFunction
+                    << "Donor on different processor: this cannot happen: "
+                    << "donorCell = " << daPair.donorCell()
+                    << " myProc = " << Pstream::myProcNo()
+                    << " donorProcNo = " << daPair.donorProcNo()
+                    << abort(FatalError);
+            }
 
-        daPair.donorSuitability() =
-            donorSuitability_->value(daPair.donorCell());
+            daPair.donorSuitability() =
+                donorSuitability_->value(daPair.donorCell());
+        }
     }
 }
 

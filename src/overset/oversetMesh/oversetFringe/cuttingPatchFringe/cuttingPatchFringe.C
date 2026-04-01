@@ -582,14 +582,51 @@ void Foam::cuttingPatchFringe::initSearch
     const labelList& candidateAcceptors,
     donorAcceptorList& donorAcceptorRegionData
 ) const
-{}
+{
+    // Check only
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        // Check processor ID
+        if (daPair.acceptorProcNo() != Pstream::myProcNo())
+        {
+            FatalErrorInFunction
+                << "Acceptor on different processor: this cannot happen: "
+                << "acceptorCell = " << daPair.acceptorProcNo()
+                << "myProc = " << Pstream::myProcNo()
+                << " acceptorProcNo = " << daPair.acceptorProcNo()
+                << abort(FatalError);
+        }
+    }
+}
 
 
 void Foam::cuttingPatchFringe::setDonorSuitability
 (
     donorAcceptorList& donorAcceptorRegionData
 ) const
-{}
+{
+    // Check only
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        if (daPair.donorFound())
+        {
+            // Check processor ID
+            if (daPair.donorProcNo() != Pstream::myProcNo())
+            {
+                FatalErrorInFunction
+                    << "Donor on different processor: this cannot happen: "
+                    << "donorCell = " << daPair.donorCell()
+                    << " myProc = " << Pstream::myProcNo()
+                    << " donorProcNo = " << daPair.donorProcNo()
+                    << abort(FatalError);
+            }
+        }
+    }
+}
 
 
 bool Foam::cuttingPatchFringe::updateIteration

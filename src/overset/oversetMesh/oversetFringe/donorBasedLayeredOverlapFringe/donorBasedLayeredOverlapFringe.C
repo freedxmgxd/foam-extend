@@ -803,6 +803,7 @@ void Foam::donorBasedLayeredOverlapFringe::initSearch
     donorAcceptorList& donorAcceptorRegionData
 ) const
 {
+    // Check only
     forAll (donorAcceptorRegionData, aI)
     {
         donorAcceptor& daPair = donorAcceptorRegionData[aI];
@@ -817,8 +818,6 @@ void Foam::donorBasedLayeredOverlapFringe::initSearch
                 << abort(FatalError);
         }
     }
-
-    // Check only
 }
 
 
@@ -827,22 +826,25 @@ void Foam::donorBasedLayeredOverlapFringe::setDonorSuitability
     donorAcceptorList& donorAcceptorRegionData
 ) const
 {
+    // Check only
     forAll (donorAcceptorRegionData, aI)
     {
         donorAcceptor& daPair = donorAcceptorRegionData[aI];
 
-        // Check processor ID
-        if (daPair.donorProcNo() != Pstream::myProcNo())
+        if (daPair.donorFound())
         {
-            FatalErrorInFunction
-                << "Donor on different processor: this cannot happen: "
-                << "myProc = " << Pstream::myProcNo()
-                << " donorProcNo = " << daPair.donorProcNo()
-                << abort(FatalError);
+            // Check processor ID
+            if (daPair.donorProcNo() != Pstream::myProcNo())
+            {
+                FatalErrorInFunction
+                    << "Donor on different processor: this cannot happen: "
+                    << "donorCell = " << daPair.donorCell()
+                    << " myProc = " << Pstream::myProcNo()
+                    << " donorProcNo = " << daPair.donorProcNo()
+                    << abort(FatalError);
+            }
         }
     }
-
-    // Check only
 }
 
 
