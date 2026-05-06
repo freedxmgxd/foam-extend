@@ -53,7 +53,7 @@ template<class T>
 class autoPtr;
 
 /*---------------------------------------------------------------------------*\
-                     Class lduInterface Declaration
+                         Class lduInterface Declaration
 \*---------------------------------------------------------------------------*/
 
 class lduInterface
@@ -61,10 +61,10 @@ class lduInterface
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        lduInterface(const lduInterface&);
+        lduInterface(const lduInterface&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const lduInterface&);
+        void operator=(const lduInterface&) = delete;
 
 
 public:
@@ -76,12 +76,11 @@ public:
     // Constructors
 
         //- Construct null
-        lduInterface()
-        {}
+        lduInterface() = default;
 
 
     //- Destructor
-    virtual ~lduInterface();
+    virtual ~lduInterface() = default;
 
 
     // Member Functions
