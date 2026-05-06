@@ -218,7 +218,8 @@ void Foam::coarseAmgLevel::solve
     if (matrixPtr_->matrix().symmetric())
     {
         coarseSolverPerf =
-            cgSolver
+            // cgSolver
+            gmresSolver
             (
                 "topLevelCorr",
                 matrixPtr_->matrix(),
