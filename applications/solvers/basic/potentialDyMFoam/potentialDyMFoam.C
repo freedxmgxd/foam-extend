@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 
             fvScalarMatrix pEqn
             (
-                fvm::laplacian
+              - fvm::laplacian
                 (
                     dimensionedScalar
                     (
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
 
             if (potential.finalNonOrthogonalIter())
             {
-                phi -= pEqn.flux();
+                phi += pEqn.flux();
             }
             else
             {
