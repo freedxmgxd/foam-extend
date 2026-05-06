@@ -124,11 +124,11 @@ void Foam::faPatch::makeEdgeTransformTensors
         // Edge transformation tensor
         vector il = E - efc[edgeI];
 
-        il -= en[edgeI]*(en[edgeI] & il);
+        il -= efn[edgeI]*(efn[edgeI] & il);
 
         il /= mag(il);
 
-        vector kl = en[edgeI];
+        vector kl = efn[edgeI];
         vector jl = kl ^ il;
 
         edgeTransformTensors[start() + edgeI][0] =
