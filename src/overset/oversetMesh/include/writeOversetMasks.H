@@ -19,7 +19,7 @@
         ),
         mesh,
         dimless,
-        "zeroGradient"
+        zeroGradientFvPatchScalarField::typeName
     );
     scalarField& regionIndexIn = regionIndex.internalField();
 

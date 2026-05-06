@@ -74,7 +74,7 @@ void Foam::adaptiveOverlapFringe::suitabilityFractionSlope
     FIFOStack<iterationData> iterHist,
     scalar& alpha,
     scalar& beta
-) const
+)
 {
     // Linear regression coefficients y = alpha + beta*x
     // beta = sum((x_i - x_mean)*(y_i - y_mean))/sum(x_i - x_mean)^2
@@ -148,7 +148,7 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
     // will use this indicator field to transfer the search to the other side.
 
     // Create the indicator field
-    volScalarField processorIndicator
+    volLabelField processorIndicator
     (
         IOobject
         (
@@ -159,9 +159,9 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
             IOobject::NO_WRITE
         ),
         mesh,
-        dimensionedScalar("minusOne", dimless, -1.0)
+        dimensionedLabel("minusOne", dimless, -1)
     );
-    scalarField& processorIndicatorIn = processorIndicator.internalField();
+    labelField& processorIndicatorIn = processorIndicator.internalField();
 
     // Get cut holes from overset region
     const labelList& cutHoles = region().cutHoles();
@@ -214,7 +214,7 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
         eligibleAcceptors[holeCellI] = false;
 
         // Mark cut hole cell in processor indicator field
-        processorIndicatorIn[holeCellI] = 1.0;
+        processorIndicatorIn[holeCellI] = 1;
     }
 
 
@@ -286,7 +286,7 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
             const label& cellI = curFaceCells[fcI];
 
             // Mark acceptor face cell in processor indicator field
-            processorIndicatorIn[cellI] = 1.0;
+            processorIndicatorIn[cellI] = 1;
 
             // Check if the cell is eligible and if it is in region zone
             // (Note: the second check is costly)
@@ -303,7 +303,7 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
     }
 
     // Get boundary field
-    volScalarField::GeometricBoundaryField& processorIndicatorBf =
+    volLabelField::GeometricBoundaryField& processorIndicatorBf =
         processorIndicator.boundaryField();
 
     // Perform update accross coupled boundaries, excluding overset patch
@@ -313,13 +313,13 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
     forAll (processorIndicatorBf, patchI)
     {
         // Get patch field
-        const fvPatchScalarField& chipf = processorIndicatorBf[patchI];
+        const fvPatchLabelField& chipf = processorIndicatorBf[patchI];
 
         // Only perform acceptor search if this is a processor boundary
-        if (isA<processorFvPatchScalarField>(chipf))
+        if (isA<processorFvPatchLabelField>(chipf))
         {
             // Get neighbour field
-            const scalarField nbrProcIndicator =
+            const labelField nbrProcIndicator =
                 chipf.patchNeighbourField();
 
             // Get face cells
@@ -330,7 +330,7 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
             {
                 if
                 (
-                    nbrProcIndicator[pfaceI] > 0.0
+                    nbrProcIndicator[pfaceI] > 0
                  && eligibleAcceptors[fc[pfaceI]]
                 )
                 {
@@ -350,9 +350,9 @@ void Foam::adaptiveOverlapFringe::calcAddressing() const
     if (returnReduce(candidateAcceptors.size(), sumOp<label>()) == 0)
     {
         FatalErrorInFunction
-            << "Did not find any acceptors to begin with."
-            << "Check definition of adaptiveOverlap in oversetMeshDict"
-            << " for region: " << this->region().name() << nl
+            << "Did not find any acceptors to begin with." << nl
+            << "Check definition of holes for adaptiveOverlapFringe "
+            << "in oversetMeshDict for region: " << this->region().name() << nl
             << "More specifically, check definition of:" << nl
             << "1. holePatches (mandatory entry)" << nl
             << "2. holes (optional entry)" << nl
@@ -431,7 +431,6 @@ Foam::adaptiveOverlapFringe::adaptiveOverlapFringe
         dict.lookupOrDefault<scalar>("orphanSuitability", 1)
     ),
     suitablePairsSuit_(0)
-
 {}
 
 
@@ -444,6 +443,67 @@ Foam::adaptiveOverlapFringe::~adaptiveOverlapFringe()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::adaptiveOverlapFringe::initSearch
+(
+    const labelList& candidateAcceptors,
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // Give all acceptors to suitability to set data
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        // Check processor ID
+        if (daPair.acceptorProcNo() != Pstream::myProcNo())
+        {
+            FatalErrorInFunction
+                << "Acceptor on different processor: this cannot happen: "
+                << "acceptorCell = " << daPair.acceptorProcNo()
+                << "myProc = " << Pstream::myProcNo()
+                << " acceptorProcNo = " << daPair.acceptorProcNo()
+                << abort(FatalError);
+        }
+
+        daPair.acceptorSuitability() =
+            donorSuitability_->value
+            (
+                candidateAcceptors[daPair.acceptorCell()]
+            );
+    }
+}
+
+
+void Foam::adaptiveOverlapFringe::setDonorSuitability
+(
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // Give all acceptors to suitability to set data
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        if (daPair.donorFound())
+        {
+            // Check processor ID
+            if (daPair.donorProcNo() != Pstream::myProcNo())
+            {
+                FatalErrorInFunction
+                    << "Donor on different processor: this cannot happen: "
+                    << "donorCell = " << daPair.donorCell()
+                    << " myProc = " << Pstream::myProcNo()
+                    << " donorProcNo = " << daPair.donorProcNo()
+                    << abort(FatalError);
+            }
+
+            daPair.donorSuitability() =
+                donorSuitability_->value(daPair.donorCell());
+        }
+    }
+}
+
 
 bool Foam::adaptiveOverlapFringe::updateIteration
 (
@@ -504,7 +564,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
         // Get current donor/acceptor pair
         const donorAcceptor& curDA = donorAcceptorRegionData[daPairI];
 
-        if (!curDA.withinCell())
+        if (!curDA.withinBB())
         {
             // Donor of this acceptor is not within cell.
             // Append this pair to unsuitableDAPairs list.
@@ -519,7 +579,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
         else
         {
             // Those donor/acceptor pairs are valid, i.e. donor is within
-            // cell
+            // cell BB
 
             // Calculate donor acceptor suitability
             const scalar donorAcceptorSuit =
@@ -605,7 +665,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
         label iterNum = fringeIter_;
 
         // Acceptors field from max object
-        volScalarField storedAcc
+        volLabelField storedAcc
         (
             IOobject
             (
@@ -616,12 +676,12 @@ bool Foam::adaptiveOverlapFringe::updateIteration
                 IOobject::AUTO_WRITE
             ),
             mesh(),
-            dimensionedScalar("one", dimless, 1)
+            dimensionedLabel("one", dimless, 1)
         );
-        scalarField& acceptorsIn = storedAcc.internalField();
+        labelField& acceptorsIn = storedAcc.internalField();
 
         // Holes field from max object
-        volScalarField holes
+        volLabelField holes
         (
             IOobject
             (
@@ -632,9 +692,9 @@ bool Foam::adaptiveOverlapFringe::updateIteration
                 IOobject::AUTO_WRITE
             ),
             mesh(),
-            dimensionedScalar("one", dimless, 1)
+            dimensionedLabel("one", dimless, 1)
         );
-        scalarField& holesIn = holes.internalField();
+        labelField& holesIn = holes.internalField();
 
         // Mark all valid acceptors
         forAll(suitableDAPairs_, aI)
@@ -745,7 +805,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
 
         // Create the processor indicator field to transfer the unsuitable
         // acceptors to the other side
-        volScalarField processorIndicator
+        volLabelField processorIndicator
         (
             IOobject
             (
@@ -756,9 +816,9 @@ bool Foam::adaptiveOverlapFringe::updateIteration
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("minusOne", dimless, -1.0)
+            dimensionedLabel("minusOne", dimless, -1)
         );
-        scalarField& processorIndicatorIn = processorIndicator.internalField();
+        labelField& processorIndicatorIn = processorIndicator.internalField();
 
         // Transfer fringeHolesPtr into the dynamic list for efficiency. Note:
         // will be transfered back at the end of the scope.
@@ -776,7 +836,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
             freeCells[accCellI] = false;
 
             // Mark unsuitable pair for possible processor transfer
-            processorIndicatorIn[accCellI] = 1.0;
+            processorIndicatorIn[accCellI] = 1;
         }
 
         // Mask all current suitable acceptor pairs
@@ -787,7 +847,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
             freeCells[accCellI] = false;
 
             // Mark suitable pair for possible processor transfer
-            processorIndicatorIn[accCellI] = 1.0;
+            processorIndicatorIn[accCellI] = 1;
         }
 
         // Mask all fringe holes
@@ -798,7 +858,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
             freeCells[fhCellI] = false;
 
             // Mark fringe hole for possible processor transfer
-            processorIndicatorIn[fhCellI] = 1.0;
+            processorIndicatorIn[fhCellI] = 1;
         }
 
         // Create dynamic list to efficiently append new batch of
@@ -835,7 +895,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
         // Transfer the fringe accross possible processor boundaries
 
         // Get boundary field
-        volScalarField::GeometricBoundaryField& processorIndicatorBf =
+        volLabelField::GeometricBoundaryField& processorIndicatorBf =
             processorIndicator.boundaryField();
 
         // Perform update accross coupled boundaries, excluding overset patch
@@ -845,13 +905,13 @@ bool Foam::adaptiveOverlapFringe::updateIteration
         forAll (processorIndicatorBf, patchI)
         {
             // Get patch field
-            const fvPatchScalarField& chipf = processorIndicatorBf[patchI];
+            const fvPatchLabelField& chipf = processorIndicatorBf[patchI];
 
             // Only perform acceptor search if this is a processor boundary
-            if (isA<processorFvPatchScalarField>(chipf))
+            if (isA<processorFvPatchLabelField>(chipf))
             {
                 // Get neighbour field
-                const scalarField nbrProcIndicator =
+                const labelField nbrProcIndicator =
                     chipf.patchNeighbourField();
 
                 // Get face cells
@@ -862,7 +922,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
                 {
                     if
                     (
-                        nbrProcIndicator[pfaceI] > 0.0
+                        nbrProcIndicator[pfaceI] > 0
                      && freeCells[fc[pfaceI]]
                     )
                     {
@@ -942,7 +1002,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
 
         // Create the processor indicator field to transfer hole cells to the
         // other side
-        volScalarField holeIndicator
+        volLabelField holeIndicator
         (
             IOobject
             (
@@ -953,9 +1013,9 @@ bool Foam::adaptiveOverlapFringe::updateIteration
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensionedScalar("minusOne", dimless, -1.0)
+            dimensionedLabel("minusOne", dimless, -1)
         );
-        scalarField& holeIndicatorIn = holeIndicator.internalField();
+        labelField& holeIndicatorIn = holeIndicator.internalField();
 
         // Get fringe holes
         dynamicLabelList fringeHoles(maxObject().fringeHoles());
@@ -963,17 +1023,17 @@ bool Foam::adaptiveOverlapFringe::updateIteration
         // Loop through all fringe holes and mark them
         forAll (fringeHoles, hcI)
         {
-            holeIndicatorIn[fringeHoles[hcI]] = 1.0;
+            holeIndicatorIn[fringeHoles[hcI]] = 1;
         }
 
         // Loop through all acceptors and mark them
         forAll (unfilteredDAPairs, daPairI)
         {
-            holeIndicatorIn[unfilteredDAPairs[daPairI].acceptorCell()] = 1.0;
+            holeIndicatorIn[unfilteredDAPairs[daPairI].acceptorCell()] = 1;
         }
 
         // Get boundary field
-        volScalarField::GeometricBoundaryField& holeIndicatorb =
+        volLabelField::GeometricBoundaryField& holeIndicatorb =
             holeIndicator.boundaryField();
 
         // Perform update accross coupled boundaries, excluding overset patch
@@ -1012,7 +1072,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
                     if (own[gfI] == accI)
                     {
                         // I'm owner, check whether the neighbour is live
-                        if (holeIndicatorIn[nei[gfI]] < 0.0)
+                        if (holeIndicatorIn[nei[gfI]] < 0)
                         {
                             // This acceptor has a live cell for neighbour,
                             // update the flag and continue
@@ -1023,7 +1083,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
                     else
                     {
                         // I'm neighbour, check whether the owner is live
-                        if (holeIndicatorIn[own[gfI]] < 0.0)
+                        if (holeIndicatorIn[own[gfI]] < 0)
                         {
                             // This acceptor has a live cell for neighbour,
                             // update the flag and continue
@@ -1043,7 +1103,7 @@ bool Foam::adaptiveOverlapFringe::updateIteration
                     if (isA<processorPolyPatch>(mesh.boundaryMesh()[patchI]))
                     {
                         // Note: patch stores neighbour field after evaluation
-                        if (holeIndicatorb[patchI][pfI] < 0.0)
+                        if (holeIndicatorb[patchI][pfI] < 0)
                         {
                             // This acceptor has a live cell for neighbour on
                             // the other processor, update the flag and continue
@@ -1188,7 +1248,7 @@ const Foam::labelList& Foam::adaptiveOverlapFringe::candidateAcceptors() const
 }
 
 
-Foam::donorAcceptorList&
+const Foam::donorAcceptorList&
 Foam::adaptiveOverlapFringe::finalDonorAcceptors() const
 {
     if (!finalDonorAcceptorsPtr_)

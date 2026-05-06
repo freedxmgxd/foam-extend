@@ -38,6 +38,9 @@ namespace Foam
 
 template<class Type> class slicedFvPatchField;
 
+// Allow label patch type
+typedef slicedFvPatchField<label> slicedFvPatchLabelField;
+
 makePatchTypeFieldTypedefs(sliced)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

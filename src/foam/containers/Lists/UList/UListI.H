@@ -38,7 +38,7 @@ const Foam::UList<T> Foam::UList<T>::zero;
 template<class T>
 inline Foam::UList<T>::UList()
 :
-    v_(0),
+    v_(nullptr),
     size_(0)
 {}
 

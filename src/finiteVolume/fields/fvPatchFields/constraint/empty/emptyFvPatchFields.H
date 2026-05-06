@@ -27,6 +27,7 @@ License
 #define emptyFvPatchFields_H
 
 #include "emptyFvPatchField.H"
+#include "emptyFvPatchFieldsFwd.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

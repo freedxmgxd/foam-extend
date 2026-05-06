@@ -38,6 +38,9 @@ namespace Foam
 
 template<class Type> class emptyFvPatchField;
 
+// Allow label patch type
+typedef emptyFvPatchField<label> emptyFvPatchLabelField;
+
 makePatchTypeFieldTypedefs(empty)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

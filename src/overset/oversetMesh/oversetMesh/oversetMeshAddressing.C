@@ -47,6 +47,12 @@ void Foam::oversetMesh::calcHoleCells() const
             << abort(FatalError);
     }
 
+    // Note:
+    // Adaptive fringe may create additional hole cells
+    // Therefore, before collecting holes, force calculation of
+    // donors and acceptors
+    // HJ, 23/Mar/2026
+
     label nHoleCells = 0;
 
     forAll (regions_, regionI)
@@ -204,6 +210,9 @@ void Foam::oversetMesh::calcDomainMarkup() const
             << "Domain markup already calculated"
             << abort(FatalError);
     }
+
+    InfoInFunction
+        << "Calculating domain markup" << endl;
 
     // Overset types
     oversetTypesPtr_ = new volScalarField

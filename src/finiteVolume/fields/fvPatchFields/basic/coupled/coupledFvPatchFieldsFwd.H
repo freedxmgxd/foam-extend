@@ -38,6 +38,9 @@ namespace Foam
 
 template<class Type> class coupledFvPatchField;
 
+// Allow label patch type
+// typedef coupledFvPatchField<label> coupledFvPatchLabelField;
+
 makePatchTypeFieldTypedefs(coupled)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

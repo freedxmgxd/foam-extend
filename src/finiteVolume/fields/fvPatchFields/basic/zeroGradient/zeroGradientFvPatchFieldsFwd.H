@@ -38,6 +38,9 @@ namespace Foam
 
 template<class Type> class zeroGradientFvPatchField;
 
+// Allow label patch type
+typedef zeroGradientFvPatchField<label> zeroGradientFvPatchLabelField;
+
 makePatchTypeFieldTypedefs(zeroGradient)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

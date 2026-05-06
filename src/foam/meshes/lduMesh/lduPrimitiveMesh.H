@@ -25,7 +25,7 @@ Class
     Foam::lduPrimitiveMesh
 
 Description
-    Simplest contrete lduMesh which stores the addressing needed by the
+    Simplest concrete lduMesh which stores the addressing needed by the
     lduMatrix.  Addressing is contained locally
 
 \*---------------------------------------------------------------------------*/

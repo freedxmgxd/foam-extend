@@ -661,8 +661,8 @@ void Foam::donorBasedLayeredOverlapFringe::calcAddressing() const
         // Connected fringes are not ready, allocate empty lists for acceptors
         // and holes, which will be deleted when asked for again from the
         // iterative procedure (see candidateAcceptors() and fringeHoles())
-        acceptorsPtr_ = new labelList;
-        fringeHolesPtr_ = new labelList;
+        acceptorsPtr_ = new labelList();
+        fringeHolesPtr_ = new labelList();
     }
 
     if (debug)
@@ -712,17 +712,8 @@ Foam::donorBasedLayeredOverlapFringe::donorBasedLayeredOverlapFringe
     // Sanity check number of layers: must be greater than 0
     if (nLayers_ < 1)
     {
-        FatalIOErrorIn
-        (
-            "donorBasedLayeredOverlapFringe::"
-            "donorBasedLayeredOverlapFringe\n"
-            "(\n"
-            "    const fvMesh& mesh,\n"
-            "    const oversetRegion& region,\n"
-            "    const dictionary& dict\n"
-            ")",
-            dict
-        )   << "Invalid number of layers specified, nLayers = " << nLayers_
+        FatalIOErrorInFunction(dict)
+            << "Invalid number of layers specified, nLayers = " << nLayers_
             << nl
             << "The number should be greater than 0."
             << abort(FatalError);
@@ -732,20 +723,10 @@ Foam::donorBasedLayeredOverlapFringe::donorBasedLayeredOverlapFringe
     // acceptors on the wrong side and filling in the whole region with holes
     if (nLayers_ == 1)
     {
-        WarningIn
-        (
-            "donorBasedLayeredOverlapFringe::"
-            "donorBasedLayeredOverlapFringe\n"
-            "(\n"
-            "    const fvMesh& mesh,\n"
-            "    const oversetRegion& region,\n"
-            "    const dictionary& dict\n"
-            ")"
-        )   << "It is recommended to use at least 2 layers (nLayers = 2) in"
+        WarningInFunction
+            << "It is recommended to use at least 2 layers (nLayers = 2) in"
             << " order to avoid defining acceptor cells on the wrong side"
             << " of the region."
-            << nl
-            << "Be sure to check the fringe layer for this region."
             << endl;
     }
 }
@@ -760,61 +741,6 @@ Foam::donorBasedLayeredOverlapFringe::~donorBasedLayeredOverlapFringe()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::donorBasedLayeredOverlapFringe::updateIteration
-(
-    donorAcceptorList& donorAcceptorRegionData
-) const
-{
-    // If the donorAcceptor list has been allocated, something went wrong with
-    // the iteration procedure (not-updated flag): this function has been called
-    // more than once, which should not happen for
-    // donorBasedLayeredOverlapFringe
-    if (finalDonorAcceptorsPtr_)
-    {
-        FatalErrorIn
-        (
-            "donorBasedLayeredOverlapFringe::"
-            "updateIteration(donorAcceptorList&) const"
-        )   << "finalDonorAcceptorPtr_ already allocated. Something went "
-            << "wrong with the iteration procedure (flag was not updated)."
-            << nl
-            << "This should not happen for donorBasedLayeredOverlapFringe."
-            << abort(FatalError);
-    }
-
-    if
-    (
-        fringeHolesPtr_ && acceptorsPtr_
-     && returnReduce(!acceptorsPtr_->empty(), orOp<bool>())
-    )
-    {
-        // Note: we first check whether fringeHoles and acceptors pointers are
-        // allocated. If they are, there must be at least one processor with
-        // more than 0 acceptors in order for this fringe to be valid.
-
-        // Allocate the list by reusing the argument list
-        finalDonorAcceptorsPtr_ = new donorAcceptorList
-        (
-            donorAcceptorRegionData,
-            true
-        );
-
-        // Set the flag to true (for all processors due to reduction in the if
-        // statement)
-        updateSuitableOverlapFlag(true);
-    }
-    else
-    {
-        // Delete fringeHolesPtr and acceptorsPtr to trigger calculation of
-        // addressing, this time with other fringes up-to-date
-        deleteDemandDrivenData(fringeHolesPtr_);
-        deleteDemandDrivenData(acceptorsPtr_);
-    }
-
-    return foundSuitableOverlap();
-}
-
 
 const Foam::labelList& Foam::donorBasedLayeredOverlapFringe::fringeHoles() const
 {
@@ -847,27 +773,128 @@ Foam::donorBasedLayeredOverlapFringe::candidateAcceptors() const
 }
 
 
-Foam::donorAcceptorList&
+const Foam::donorAcceptorList&
 Foam::donorBasedLayeredOverlapFringe::finalDonorAcceptors() const
 {
     if (!finalDonorAcceptorsPtr_)
     {
-        FatalErrorIn("donorBasedLayeredOverlapFringe::finalDonorAcceptors()")
-            << "finalDonorAcceptorPtr_ not allocated. Make sure you have"
-            << " called donorBasedLayeredOverlapFringe::updateIteration() before"
-            << " asking for final set of donor/acceptor pairs."
+        FatalErrorInFunction
+            << "finalDonorAcceptorPtr_ not allocated. Make sure you "
+            << "call donorBasedLayeredOverlapFringe::updateIteration() before "
+            << "asking for final set of donor/acceptor pairs."
             << abort(FatalError);
     }
 
     if (!foundSuitableOverlap())
     {
-        FatalErrorIn("donorBasedLayeredOverlapFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "Attemted to access finalDonorAcceptors but suitable overlap "
             << "has not been found. This is not allowed. "
             << abort(FatalError);
     }
 
     return *finalDonorAcceptorsPtr_;
+}
+
+
+void Foam::donorBasedLayeredOverlapFringe::initSearch
+(
+    const labelList& candidateAcceptors,
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // Check only
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        // Check processor ID
+        if (daPair.acceptorProcNo() != Pstream::myProcNo())
+        {
+            FatalErrorInFunction
+                << "Donor on different processor: this cannot happen: "
+                << "myProc = " << Pstream::myProcNo()
+                << " acceptorProcNo = " << daPair.acceptorProcNo()
+                << abort(FatalError);
+        }
+    }
+}
+
+
+void Foam::donorBasedLayeredOverlapFringe::setDonorSuitability
+(
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // Check only
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        if (daPair.donorFound())
+        {
+            // Check processor ID
+            if (daPair.donorProcNo() != Pstream::myProcNo())
+            {
+                FatalErrorInFunction
+                    << "Donor on different processor: this cannot happen: "
+                    << "donorCell = " << daPair.donorCell()
+                    << " myProc = " << Pstream::myProcNo()
+                    << " donorProcNo = " << daPair.donorProcNo()
+                    << abort(FatalError);
+            }
+        }
+    }
+}
+
+
+bool Foam::donorBasedLayeredOverlapFringe::updateIteration
+(
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // If the donorAcceptor list has been allocated, something went wrong with
+    // the iteration procedure (not-updated flag): this function has been called
+    // more than once, which should not happen for
+    // donorBasedLayeredOverlapFringe
+    if (finalDonorAcceptorsPtr_)
+    {
+        FatalErrorInFunction
+            << "finalDonorAcceptorPtr_ already allocated. Something went "
+            << "wrong with the iteration procedure (flag was not updated)."
+            << nl
+            << "This should not happen for donorBasedLayeredOverlapFringe."
+            << abort(FatalError);
+    }
+
+    if
+    (
+        fringeHolesPtr_ && acceptorsPtr_
+     && returnReduce(!acceptorsPtr_->empty(), orOp<bool>())
+    )
+    {
+        // Note: we first check whether fringeHoles and acceptors pointers are
+        // allocated. If they are, there must be at least one processor with
+        // more than 0 acceptors in order for this fringe to be valid.
+
+        finalDonorAcceptorsPtr_ = new donorAcceptorList
+        (
+            donorAcceptorRegionData
+        );
+
+        // Set the flag to true (for all processors due to reduction in the if
+        // statement)
+        updateSuitableOverlapFlag(true);
+    }
+    else
+    {
+        // Delete fringeHolesPtr and acceptorsPtr to trigger calculation of
+        // addressing, this time with other fringes up-to-date
+        deleteDemandDrivenData(fringeHolesPtr_);
+        deleteDemandDrivenData(acceptorsPtr_);
+    }
+
+    return foundSuitableOverlap();
 }
 
 

@@ -93,6 +93,9 @@ private:
             //- Acceptor location
             point acceptorPoint_;
 
+            //- Acceptor suitability.  Usage depends on suitability function
+            scalar acceptorSuitability_;
+
 
         // Donor side
 
@@ -105,6 +108,9 @@ private:
             //- Donor location
             point donorPoint_;
 
+            //- Donor suitability.  Usage depends on suitability function
+            scalar donorSuitability_;
+
             //- Extended donor cell numbers
             DynamicLabelList extendedDonorCells_;
 
@@ -115,9 +121,9 @@ private:
             // Note that the processor number is the same for all extended
             // donors
 
-            //- Whether donor (or acceptor) is within acceptor cell
+            //- Whether donor (or acceptor) is within bounding box of acceptor
             //  (or donor)
-            bool withinCell_;
+            bool withinBB_;
 
 
 public:
@@ -130,12 +136,14 @@ public:
             acceptorCell_(-1),
             acceptorProcNo_(-1),
             acceptorPoint_(vector::zero),
+            acceptorSuitability_(scalar(0)),
             donorCell_(-1),
             donorProcNo_(-1),
             donorPoint_(vector::zero),
+            donorSuitability_(scalar(0)),
             extendedDonorCells_(),
             extendedDonorPoints_(),
-            withinCell_(false)
+            withinBB_(false)
         {}
 
         //- Construct from acceptor data
@@ -149,12 +157,14 @@ public:
             acceptorCell_(acceptorCell),
             acceptorProcNo_(acceptorProcNo),
             acceptorPoint_(acceptorPoint),
+            acceptorSuitability_(scalar(0)),
             donorCell_(-1),
             donorProcNo_(-1),
             donorPoint_(vector::zero),
+            donorSuitability_(scalar(0)),
             extendedDonorCells_(),
             extendedDonorPoints_(),
-            withinCell_(false)
+            withinBB_(false)
         {}
 
         //- Construct from Istream
@@ -163,12 +173,14 @@ public:
             acceptorCell_(readLabel(is)),
             acceptorProcNo_(readLabel(is)),
             acceptorPoint_(is),
+            acceptorSuitability_(readScalar(is)),
             donorCell_(readLabel(is)),
             donorProcNo_(readLabel(is)),
             donorPoint_(is),
+            donorSuitability_(readScalar(is)),
             extendedDonorCells_(is),
             extendedDonorPoints_(is),
-            withinCell_(is)
+            withinBB_(is)
         {}
 
         //- Copy constructor
@@ -217,6 +229,18 @@ public:
             point& acceptorPoint()
             {
                 return acceptorPoint_;
+            }
+
+            //- Return acceptor suitability
+            const scalar& acceptorSuitability() const
+            {
+                return acceptorSuitability_;
+            }
+
+            //- Return access to acceptor suitability
+            scalar& acceptorSuitability()
+            {
+                return acceptorSuitability_;
             }
 
 
@@ -271,6 +295,21 @@ public:
                 return donorPoint_;
             }
 
+            //- Return donor suitability
+            const scalar& donorSuitability() const
+            {
+                return donorSuitability_;
+            }
+
+            //- Return access to donor suitability
+            scalar& donorSuitability()
+            {
+                return donorSuitability_;
+            }
+
+    
+        // Extended addressing
+
             //- Return extended donor cell numbers
             const DynamicLabelList& extendedDonorCells() const
             {
@@ -308,19 +347,19 @@ public:
                 }
             }
 
-            //- Return whether the donor is within bounding box
-            bool withinCell() const
+            //- Return whether the acceptor is within donor bounding box
+            inline bool withinBB() const
             {
-                return withinCell_;
+                return withinBB_;
             }
 
 
         // Edit
 
-            //- Set withinCell
-            void setWithinCell(const bool withinCell)
+            //- Set within bounding box
+            void setWithinBB(const bool withinBB)
             {
-                withinCell_ = withinCell;
+                withinBB_ = withinBB;
             }
 
             //- Set hit: donor found
@@ -329,13 +368,13 @@ public:
                 const label& donorCell,
                 const label& donorProcNo,
                 const point& donorPoint,
-                const bool withinCell
+                const bool withinBB
             )
             {
                 donorCell_ = donorCell;
                 donorProcNo_ = donorProcNo;
                 donorPoint_ = donorPoint;
-                withinCell_ = withinCell;
+                withinBB_ = withinBB;
             }
 
             //- Set extended donors by going through neighbours of currently set
@@ -386,7 +425,7 @@ public:
                 donorCell_ = -1;
                 donorProcNo_ = -1;
                 donorPoint_ = vector::zero;
-                withinCell_ = false;
+                withinBB_ = false;
             }
 
 
@@ -401,10 +440,12 @@ public:
             return
                 a.acceptorCell_ == b.acceptorCell_
              && a.acceptorProcNo_ == b.acceptorProcNo_
-             && a.acceptorPoint_ == b.acceptorPoint_
+             // && a.acceptorPoint_ == b.acceptorPoint_
+                // Do not check acceptor suitability?
              && a.donorCell_ == b.donorCell_
              && a.donorProcNo_ == b.donorProcNo_
-             && a.withinCell_ == b.withinCell_;
+                // Do not check donor suitability?
+             && a.withinBB_ == b.withinBB_;
 
              // Note: do not check whether extended neighbours are the same, we
              // assume they will be if donor data is the same
@@ -428,12 +469,14 @@ public:
             is  >> rd.acceptorCell_
                 >> rd.acceptorProcNo_
                 >> rd.acceptorPoint_
+                >> rd.acceptorSuitability_
                 >> rd.donorCell_
                 >> rd.donorProcNo_
                 >> rd.donorPoint_
+                >> rd.donorSuitability_
                 >> rd.extendedDonorCells_
                 >> rd.extendedDonorPoints_
-                >> rd.withinCell_;
+                >> rd.withinBB_;
 
             return is;
         }
@@ -444,12 +487,14 @@ public:
             os  << rd.acceptorCell_ << token::SPACE
                 << rd.acceptorProcNo_ << token::SPACE
                 << rd.acceptorPoint_ << token::SPACE
+                << rd.acceptorSuitability_ << token::SPACE
                 << rd.donorCell_ << token::SPACE
                 << rd.donorProcNo_ << token::SPACE
                 << rd.donorPoint_ << token::SPACE
+                << rd.donorSuitability_ << token::SPACE
                 << rd.extendedDonorCells_ << token::SPACE
                 << rd.extendedDonorPoints_ << token::SPACE
-                << rd.withinCell_;
+                << rd.withinBB_;
 
             return os;
         }

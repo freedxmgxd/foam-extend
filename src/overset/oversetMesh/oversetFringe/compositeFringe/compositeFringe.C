@@ -155,38 +155,6 @@ Foam::compositeFringe::~compositeFringe()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::compositeFringe::updateIteration
-(
-    donorAcceptorList& donorAcceptorRegionData
-) const
-{
-    Info<< "donorAcceptorRegionData: " << donorAcceptorRegionData.size() << endl;
-    
-    // If the donorAcceptor list has been allocated, something went wrong with
-    // the iteration procedure (not-updated flag): this function has been called
-    // more than once, which should not happen for compositeFringe
-    if (finalDonorAcceptorsPtr_)
-    {
-        FatalErrorInFunction
-            << "finalDonorAcceptorPtr_ already allocated. Something went "
-            << "wrong with the iteration procedure (flag was not updated)."
-            << nl << "This should not happen for compositeFringe."
-            << abort(FatalError);
-    }
-
-    // Allocate the list
-    finalDonorAcceptorsPtr_ = new donorAcceptorList
-    (
-        donorAcceptorRegionData
-    );
-
-    // Set the flag to true and return
-    updateSuitableOverlapFlag(true);
-
-    return foundSuitableOverlap();
-}
-
-
 const Foam::labelList& Foam::compositeFringe::fringeHoles() const
 {
     if (!fringeHolesPtr_)
@@ -209,7 +177,8 @@ const Foam::labelList& Foam::compositeFringe::candidateAcceptors() const
 }
 
 
-Foam::donorAcceptorList& Foam::compositeFringe::finalDonorAcceptors() const
+const Foam::donorAcceptorList&
+Foam::compositeFringe::finalDonorAcceptors() const
 {
     if (!finalDonorAcceptorsPtr_)
     {
@@ -229,6 +198,82 @@ Foam::donorAcceptorList& Foam::compositeFringe::finalDonorAcceptors() const
     }
 
     return *finalDonorAcceptorsPtr_;
+}
+
+
+void Foam::compositeFringe::initSearch
+(
+    const labelList& candidateAcceptors,
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    forAll (baseFringes_, bfI)
+    {
+        baseFringes_[bfI].initSearch
+        (
+            candidateAcceptors,
+            donorAcceptorRegionData
+        );
+    }
+}
+
+
+void Foam::compositeFringe::setDonorSuitability
+(
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    forAll (baseFringes_, bfI)
+    {
+        baseFringes_[bfI].setDonorSuitability
+        (
+            donorAcceptorRegionData
+        );
+    }
+}
+
+
+bool Foam::compositeFringe::updateIteration
+(
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // If the donorAcceptor list has been allocated, something went wrong with
+    // the iteration procedure (not-updated flag): this function has been called
+    // more than once, which should not happen for compositeFringe
+    if (finalDonorAcceptorsPtr_)
+    {
+        FatalErrorInFunction
+            << "finalDonorAcceptorPtr_ already allocated. Something went "
+            << "wrong with the iteration procedure (flag was not updated)."
+            << nl << "This should not happen for compositeFringe."
+            << abort(FatalError);
+    }
+
+    // Update all fringes and report on overlap
+    bool findSuitableOverlap = true;
+    
+    forAll (baseFringes_, bfI)
+    {
+        bool foundOverlap =
+            baseFringes_[bfI].updateIteration(donorAcceptorRegionData);
+
+        findSuitableOverlap &= foundOverlap;
+    }
+
+    if (findSuitableOverlap)
+    {
+        // Allocate the list
+        finalDonorAcceptorsPtr_ = new donorAcceptorList
+        (
+            donorAcceptorRegionData
+        );
+    }
+
+    // Set the suitable overlap flag
+    updateSuitableOverlapFlag(findSuitableOverlap);
+
+    return foundSuitableOverlap();
 }
 
 

@@ -124,6 +124,7 @@ Foam::label Foam::primitiveMesh::findCell(const point& location) const
                 n++;
             }
         }
+
         if (cellFound)
         {
             return celli;

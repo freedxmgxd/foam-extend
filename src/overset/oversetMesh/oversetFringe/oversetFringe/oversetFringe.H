@@ -37,6 +37,7 @@ Description
 
 Author
     Hrvoje Jasak, Wikki Ltd.  All rights reserved.
+    Full rewrite of interfaces, Mar/2026
 
 Contributor
     Vuko Vukcevic, Wikki Ltd.  All rights reserved.
@@ -167,22 +168,6 @@ public:
             }
 
 
-        // Iteration control
-
-            //- Has a suitable overlap been found for this fringe (region)?
-            bool foundSuitableOverlap() const
-            {
-                return foundSuitableOverlap_;
-            }
-
-            //- Update iteration, returns whether a suitable fringe has been
-            //  found
-            virtual bool updateIteration
-            (
-                donorAcceptorList& donorAcceptorRegionData
-            ) const = 0;
-
-
         // Access to fringe data
 
             //- Return list of deactivated (hole) cells
@@ -194,7 +179,39 @@ public:
             virtual const labelList& candidateAcceptors() const = 0;
 
             //- Return reference to final donor acceptor pairs
-            virtual donorAcceptorList& finalDonorAcceptors() const = 0;
+            virtual const donorAcceptorList& finalDonorAcceptors() const = 0;
+
+
+        // Iteration control
+
+            //- Has a suitable overlap been found for this fringe (region)?
+            bool foundSuitableOverlap() const
+            {
+                return foundSuitableOverlap_;
+            }
+
+            //- Initialise donor search, before acceptors are distributed
+            //  Search is initialised with acceptor suitability data (if needed)
+            //  At this stage, all acceptors are on local processor
+            virtual void initSearch
+            (
+                const labelList& candidateAcceptors,
+                donorAcceptorList& donorAcceptorRegionData
+            ) const = 0;
+
+            //- Set donor suitability
+            //  At this stage, identified donors are on local processor
+            virtual void setDonorSuitability
+            (
+                donorAcceptorList& donorAcceptorRegionData
+            ) const = 0;
+    
+            //- Update iteration, returns whether a suitable fringe has been
+            //  found
+            virtual bool updateIteration
+            (
+                donorAcceptorList& donorAcceptorRegionData
+            ) const = 0;
 
 
         //- Update the fringe

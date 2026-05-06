@@ -51,6 +51,7 @@ class fvPatchField;
 template<class Type, template<class> class PatchField, class GeoMesh>
 class GeometricField;
 
+typedef GeometricField<label, fvPatchField, volMesh> volLabelField;
 typedef GeometricField<scalar, fvPatchField, volMesh> volScalarField;
 typedef GeometricField<vector, fvPatchField, volMesh> volVectorField;
 typedef GeometricField<sphericalTensor, fvPatchField, volMesh>

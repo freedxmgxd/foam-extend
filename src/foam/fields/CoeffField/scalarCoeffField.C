@@ -124,15 +124,8 @@ void Foam::CoeffField<Foam::scalar>::getSubset
     // Check sizes
     if (f.size() != size)
     {
-        FatalErrorIn
-        (
-            "void Foam::CoeffField<Foam::scalar>::getSubset\n"
-            "(\n"
-            "    CoeffField<scalar>& f,\n"
-            "    const label start,\n"
-            "    const label size\n"
-            ") const"
-        )   << "Incompatible sizes: " << f.size() << " and " << size
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << size
             << abort(FatalError);
     }
 
@@ -154,14 +147,8 @@ void Foam::CoeffField<Foam::scalar>::getSubset
     // Check sizes
     if (f.size() != addr.size())
     {
-        FatalErrorIn
-        (
-            "void Foam::CoeffField<Foam::scalar>::getSubset\n"
-            "(\n"
-            "    CoeffField<scalar>& f,\n"
-            "    const labelList addr\n"
-            ") const"
-        )   << "Incompatible sizes: " << f.size() << " and " << addr.size()
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << addr.size()
             << abort(FatalError);
     }
 
@@ -184,15 +171,8 @@ void Foam::CoeffField<Foam::scalar>::setSubset
     // Check sizes
     if (f.size() != size)
     {
-        FatalErrorIn
-        (
-            "void Foam::CoeffField<Foam::scalar>::setSubset\n"
-            "(\n"
-            "     const CoeffField<scalar>& f,\n"
-            "    const label start,\n"
-            "    const label size\n"
-            ")"
-        )   << "Incompatible sizes: " << f.size() << " and " << size
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << size
             << abort(FatalError);
     }
 
@@ -214,14 +194,8 @@ void Foam::CoeffField<Foam::scalar>::setSubset
     // Check sizes
     if (f.size() != addr.size())
     {
-        FatalErrorIn
-        (
-            "void Foam::CoeffField<Foam::scalar>::setSubset\n"
-            "(\n"
-            "    const CoeffField<scalar>& f,\n"
-            "    const labelList addr\n"
-            ")"
-        )   << "Incompatible sizes: " << f.size() << " and " << addr.size()
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << addr.size()
             << abort(FatalError);
     }
 
@@ -272,14 +246,8 @@ void Foam::CoeffField<Foam::scalar>::addSubset
     // Check sizes
     if (f.size() != addr.size())
     {
-        FatalErrorIn
-        (
-            "void Foam::CoeffField<Foam::scalar>::addSubset\n"
-            "(\n"
-            "    const CoeffField<scalar>& f,\n"
-            "    const labelList addr\n"
-            ")"
-        )   << "Incompatible sizes: " << f.size() << " and " << addr.size()
+        FatalErrorInFunction
+            << "Incompatible sizes: " << f.size() << " and " << addr.size()
             << abort(FatalError);
     }
 

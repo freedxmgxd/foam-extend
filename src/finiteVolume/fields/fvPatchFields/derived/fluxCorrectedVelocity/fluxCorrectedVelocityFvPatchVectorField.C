@@ -117,9 +117,18 @@ void Foam::fluxCorrectedVelocityFvPatchVectorField::evaluate
     vectorField n = patch().nf();
     const scalarField& magS = patch().magSf();
 
+    // Get reference to patch velocity
+    vectorField& U = *this;
+    
     if (phi.dimensions() == dimVelocity*dimArea)
     {
-        operator==(*this - n*(n & *this) + n*phip/magS);
+        operator==
+        (
+            pos(phip)*(U - n*(n & U) + n*phip/magS)
+            + neg(phip)*(U)
+        );
+        
+        // operator==(U - n*(n & U) + n*phip/magS);
     }
     else if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
     {
@@ -132,7 +141,13 @@ void Foam::fluxCorrectedVelocityFvPatchVectorField::evaluate
         const fvPatchField<scalar>& rhop =
             lookupPatchField<volScalarField, scalar>(rhoName_);
 
-        operator==(*this - n*(n & *this) + n*phip/(rhop*magS));
+        operator==
+        (
+            pos(phip)*(U - n*(n & U) + n*phip/(rhop*magS))
+          + neg(phip)*U
+        );
+        
+        // operator==(U - n*(n & U) + n*phip/(rhop*magS));
     }
     else
     {

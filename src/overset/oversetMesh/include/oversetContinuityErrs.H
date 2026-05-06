@@ -32,7 +32,7 @@ Description
 
 {
     volScalarField contErr = cellOversetMask*fvc::div(phi);
-
+    contErr.write();
     sumLocalContErr = runTime.deltaT().value()*
         mag(contErr)().weightedAverage(mesh.V()).value();
 

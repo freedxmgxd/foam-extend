@@ -271,7 +271,7 @@ Foam::label Foam::refineImmersedBoundaryMesh::twoDNess() const
 
         if (!isA<wedgePolyPatch>(patch))
         {
-            const vectorField& n = patch.faceAreas();
+            const vectorField::subField n = patch.faceAreas();
 
             scalarField cosAngle = mag(n/mag(n) & cellPlane.normal());
 

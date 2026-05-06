@@ -690,6 +690,7 @@ $(writers)/xmgrGraph/xmgrGraph.C
 $(writers)/jplotGraph/jplotGraph.C
 
 primitives/BlockCoeff/blockCoeffBase.C
+primitives/BlockCoeff/labelBlockCoeff.C
 primitives/BlockCoeff/scalarBlockCoeff.C
 primitives/BlockCoeff/sphericalTensorBlockCoeff.C
 primitives/BlockCoeff/symmTensorBlockCoeff.C
@@ -704,6 +705,7 @@ $(BlockCoeffNorm)/BlockCoeffComponentNorm/blockCoeffComponentNorms.C
 
 fields/expandContract/expandTensorField.C
 
+fields/CoeffField/labelCoeffField.C
 fields/CoeffField/scalarCoeffField.C
 fields/CoeffField/sphericalTensorCoeffField.C
 fields/CoeffField/diagTensorCoeffField.C

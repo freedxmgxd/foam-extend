@@ -27,6 +27,7 @@ License
 #define coupledFvPatchFields_H
 
 #include "coupledFvPatchField.H"
+#include "coupledFvPatchLabelField.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

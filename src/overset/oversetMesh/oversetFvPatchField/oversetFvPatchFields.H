@@ -27,6 +27,7 @@ License
 #define oversetFvPatchFields_H
 
 #include "oversetFvPatchField.H"
+#include "oversetFvPatchFieldsFwd.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -53,6 +53,10 @@ Authors
     Josip Katavic, FMENA Zagreb.  All rights reserved.
     Vuko Vukcevic, FMENA Zagreb.  All rights reserved.
 
+Contributor
+    Hrvoje Jasak, Wikki Ltd.  All rights reserved.
+    Full rewrite of interfaces, Mar/2026
+
 SourceFiles
     adaptiveOverlapFringe.C
 
@@ -169,7 +173,7 @@ class adaptiveOverlapFringe
             //- Clear hole-acceptor addressing
             void clearAddressing() const;
 
-
+    
     // Private Static Functions
 
         //- Sort function - third parameter for max_element function
@@ -183,6 +187,16 @@ class adaptiveOverlapFringe
         (
             FIFOStack<iterationData>::iterator& lhsObject,
             FIFOStack<iterationData>::iterator& rhsObject
+        );
+
+        //- Loop through all iteration data objects from history
+        //  data member and calculate suitability fraction values
+        //  trend using linear least squares method
+        static void suitabilityFractionSlope
+        (
+            FIFOStack<iterationData>,
+            scalar& alpha,
+            scalar& beta
         );
 
 
@@ -209,36 +223,42 @@ public:
 
     // Member Functions
 
-        //- Update iteration.
-        virtual bool updateIteration
-        (
-            donorAcceptorList& donorAcceptorRegionData
-        ) const;
+        // Access to fringe data
 
-        //- Return list of hole cells
-        //  Fringe hole cells are collected in addition to geometric hole
-        //  cells, which fall outside of all donor regions
-        virtual const labelList& fringeHoles() const;
+            //- Return list of hole cells
+            virtual const labelList& fringeHoles() const;
 
-        //- Return list of acceptor cells
-        virtual const labelList& candidateAcceptors() const;
+            //- Return list of acceptor cells
+            virtual const labelList& candidateAcceptors() const;
 
-        //- Return list of final donor acceptor pairs. Note: caller may
-        //  invalidate finalDonorAcceptorsPtr_ for optimisation purposes
-        virtual donorAcceptorList& finalDonorAcceptors() const;
+            //- Return list of final donor acceptor pairs
+            virtual const donorAcceptorList& finalDonorAcceptors() const;
+
+
+        // Iteration control
+
+            //- Initialise donor search, before acceptors are distributed
+            virtual void initSearch
+            (
+                const labelList& candidateAcceptors,
+                donorAcceptorList& donorAcceptorRegionData
+            ) const;
+
+            //- Set donor suitability
+            virtual void setDonorSuitability
+            (
+                donorAcceptorList& donorAcceptorRegionData
+            ) const;
+    
+            //- Update iteration
+            virtual bool updateIteration
+            (
+                donorAcceptorList& donorAcceptorRegionData
+            ) const;
+
 
         //- Update the fringe
         virtual void update() const;
-
-        //- Loop through all iteration data objects from iterationDataHistory_
-        //  data member and calculate slope, i.e. suitability fraction values
-        //  trend using linear least squares method.
-        void suitabilityFractionSlope
-        (
-            FIFOStack<iterationData>,
-            scalar& alpha,
-            scalar& beta
-        ) const;
 };
 
 

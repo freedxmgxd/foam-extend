@@ -41,6 +41,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
+defineTemplateTypeNameAndDebug(BlockLduInterfaceField<label>, 0);
 defineTemplateTypeNameAndDebug(BlockLduInterfaceField<scalar>, 0);
 defineTemplateTypeNameAndDebug(BlockLduInterfaceField<vector>, 0);
 defineTemplateTypeNameAndDebug(BlockLduInterfaceField<tensor>, 0);

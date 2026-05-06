@@ -51,6 +51,21 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<>
+tmp<GeometricField<label, fvPatchField, volMesh> >
+GeometricField<label, fvPatchField, volMesh>::component
+(
+    const direction
+) const;
+
+template<>
+void GeometricField<label, fvPatchField, volMesh>::replace
+(
+    const direction,
+    const GeometricField<label, fvPatchField, volMesh>& sf
+);
+
+
+template<>
 tmp<GeometricField<scalar, fvPatchField, volMesh> >
 GeometricField<scalar, fvPatchField, volMesh>::component
 (

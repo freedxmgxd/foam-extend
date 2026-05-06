@@ -37,7 +37,7 @@ namespace Foam
 
 template<class Type> class coupledFvPatchField;
 
-#define makeTypedef(type, Type, args...)                            \
+#define makeTypedef(type, Type, args...)                                     \
     typedef coupledFvPatchField<type> coupledFvPatch##Type##Field;
 
 forAllVectorNTypes(makeTypedef)

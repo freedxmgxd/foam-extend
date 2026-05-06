@@ -1,0 +1,114 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     5.0                                |
+|   \\  /    A nd           | Web:         http://www.foam-extend.org         |
+|    \\/     M anipulation  | For copyright notice see file Copyright         |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     simpleOversetFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1000;
+
+deltaT          1;
+
+writeControl    runTime;
+
+writeInterval   50;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  8;
+
+writeCompression yes;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+libs
+(
+    "liblduSolvers.so"
+);
+
+functions
+(
+    minMaxU
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name U;
+    }
+    minMaxP
+    {
+        type        minMaxField;
+
+        // Where to load it from (if not already in solver)
+        functionObjectLibs ("libfieldFunctionObjects.so");
+
+        name p;
+    }
+    forces
+    {
+        type forces;
+        functionObjectLibs ("libforces.so");
+        patches (airfoil);
+
+        pName p;
+        UName U;
+        rhoName rhoInf;
+        rhoInf 1;
+
+        outputControl timeStep;
+        outputInterval 1;
+        log    true;
+
+        CofR (0.25 0 0);
+    }
+    forceCoeffs
+    {
+        type forceCoeffs;
+        functionObjectLibs ("libforces.so");
+        patches (airfoil);
+
+        pName p;
+        UName U;
+        rhoName rhoInf;
+        rhoInf 1;
+
+        outputControl timeStep;
+        outputInterval 1;
+        log    true;
+
+        CofR (0.25 0 0); // Note sure because of scaling
+        liftDir (-0.239719744 0 0.970842132);
+        dragDir (0.970842132  0 0.239719744);
+        magUInf 27.13;
+        lRef    0.901;
+        Aref    0.815866; // Not sure because of scaling
+        pitchAxis (0 1 0);
+    }
+);
+
+// ************************************************************************* //

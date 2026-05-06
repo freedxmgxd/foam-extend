@@ -69,10 +69,8 @@ inline const Cmpt& VectorSpace<Form, Cmpt, nCmpt>::component
 #   ifdef FULLDEBUG
     if (d >= nCmpt)
     {
-        FatalErrorIn
-        (
-            "VectorSpace<Form, Cmpt, nCmpt>::component(direction) const"
-        )   << "index out of range"
+        FatalErrorInFunction
+            << "index out of range"
             << abort(FatalError);
     }
 #   endif
@@ -90,7 +88,7 @@ inline Cmpt& VectorSpace<Form, Cmpt, nCmpt>::component
 #   ifdef FULLDEBUG
     if (d >= nCmpt)
     {
-        FatalErrorIn("VectorSpace<Form, Cmpt, nCmpt>::component(direction)")
+        FatalErrorInFunction
             << "index out of range"
             << abort(FatalError);
     }
@@ -110,10 +108,8 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::component
 #   ifdef FULLDEBUG
     if (d >= nCmpt)
     {
-        FatalErrorIn
-        (
-            "VectorSpace<Form, Cmpt, nCmpt>::component(Cmpt&, direction) const"
-        )   << "index out of range"
+        FatalErrorInFunction
+            << "index out of range"
             << abort(FatalError);
     }
 #   endif
@@ -132,11 +128,8 @@ inline void VectorSpace<Form, Cmpt, nCmpt>::replace
 #   ifdef FULLDEBUG
     if (d >= nCmpt)
     {
-        FatalErrorIn
-        (
-            "VectorSpace<Form, Cmpt, nCmpt>::"
-            "replace(direction, const Cmpt&) const"
-        )   << "index out of range"
+        FatalErrorInFunction
+            << "index out of range"
             << abort(FatalError);
     }
 #   endif
@@ -156,10 +149,8 @@ inline const Cmpt& VectorSpace<Form, Cmpt, nCmpt>::operator[]
 #   ifdef FULLDEBUG
     if (d >= nCmpt)
     {
-        FatalErrorIn
-        (
-            "VectorSpace<Form, Cmpt, nCmpt>::operator[](direction d) const"
-        )   << "index out of range"
+        FatalErrorInFunction
+            << "index out of range"
             << abort(FatalError);
     }
 #   endif
@@ -177,7 +168,7 @@ inline Cmpt& VectorSpace<Form, Cmpt, nCmpt>::operator[]
 #   ifdef FULLDEBUG
     if (d >= nCmpt)
     {
-        FatalErrorIn("VectorSpace<Form, Cmpt, nCmpt>::operator[](direction d)")
+        FatalErrorInFunction
             << "index out of range"
             << abort(FatalError);
     }

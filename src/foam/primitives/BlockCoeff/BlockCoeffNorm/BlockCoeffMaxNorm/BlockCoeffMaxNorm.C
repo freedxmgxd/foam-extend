@@ -68,10 +68,8 @@ Foam::scalar Foam::BlockCoeffMaxNorm<Type>::normalize
     }
     else
     {
-        FatalErrorIn
-        (
-            "scalar BlockCoeffMaxNorm<Type>(const BlockCoeff<Type>& b)"
-        )   << "Unknown type" << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown type" << abort(FatalError);
 
         return 0;
     }
@@ -99,10 +97,8 @@ void Foam::BlockCoeffMaxNorm<Type>::normalize
     }
     else
     {
-        FatalErrorIn
-        (
-            "scalar BlockCoeffMaxNorm<Type>(const BlockCoeff<Type>& b)"
-        )   << "Unknown type" << abort(FatalError);
+        FatalErrorInFunction
+            << "Unknown type" << abort(FatalError);
     }
 }
 

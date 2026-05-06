@@ -148,7 +148,7 @@ public:
             virtual tmp<Field<Type> > patchNeighbourField() const;
 
             //- Return neighbour field of internal field, untransformed
-            virtual tmp<scalarField>
+            virtual tmp<Field<typename pTraits<Type>::cmptType> >
             untransformedInterpolate(const direction cmpt) const;
 
             //- Initialise the evaluation of the patch field

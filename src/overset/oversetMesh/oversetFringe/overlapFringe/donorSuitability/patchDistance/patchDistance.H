@@ -25,17 +25,14 @@ Class
     Foam::donorSuitability::patchDistance
 
 Description
-    Patch distance suitability. For master region (acceptors) and all donor
-    regions (donors), a list of patches is specified and the donor suitability
-    function is the least distance from cell centre to nearest patch.
-
-    Attempts to minimise the overlap midway between patches.
+    Patch distance suitability.  Acceptor should be as close to a given set of
+    patches as possible.
 
 SourceFiles
     patchDistance.C
 
 Author
-    Vuko Vukcevic, FMENA Zagreb.  All rights reserved.
+    Hrvoje Jasak, Wikki Ltd.  All rights reserved.
 
 \*---------------------------------------------------------------------------*/
 
@@ -59,6 +56,22 @@ class patchDistance
 :
     public donorSuitability
 {
+private:
+
+    // Private data
+
+        //- Local suitability criterion: min distance to patch
+        scalarField magDistance_;
+
+
+    // Private Member Functions
+
+        //- Disallow default bitwise copy construct
+        patchDistance(const patchDistance&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const patchDistance&) = delete;
+
 
 public:
 
@@ -78,6 +91,26 @@ public:
 
     //- Destructor
     virtual ~patchDistance() = default;
+
+
+    // Member Functions
+
+        // Overlap minimisation virtual functions
+
+            //- Return suitability parameter
+            virtual scalar value(const label& cellID) const;
+
+            //- Return suitability
+            virtual scalar suitabilityFraction
+            (
+                const donorAcceptor& daPair
+            ) const;
+
+            //- Is this donor/acceptor pair suitable?
+            virtual bool isDonorSuitable
+            (
+                const donorAcceptor& daPair
+            ) const;
 };
 
 

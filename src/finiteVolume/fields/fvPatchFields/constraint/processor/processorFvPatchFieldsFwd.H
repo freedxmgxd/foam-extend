@@ -38,6 +38,9 @@ namespace Foam
 
 template<class Type> class processorFvPatchField;
 
+// Allow label patch type
+typedef processorFvPatchField<label> processorFvPatchLabelField;
+    
 makePatchTypeFieldTypedefs(processor)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

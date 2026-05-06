@@ -32,6 +32,7 @@ SourceFiles
 
 Author
     Vuko Vukcevic, FMENA Zagreb.  All rights reserved.
+    Rewrite by Hrvoje Jasak
 
 \*---------------------------------------------------------------------------*/
 
@@ -55,6 +56,16 @@ class noSuitability
 :
     public donorSuitability
 {
+private:
+
+    // Private Member Functions
+
+        //- Disallow default bitwise copy construct
+        noSuitability(const noSuitability&) = delete;
+
+        //- Disallow default bitwise assignment
+        void operator=(const noSuitability&) = delete;
+
 
 public:
 
@@ -69,11 +80,33 @@ public:
         (
             const oversetFringe& oversetFringeAlgorithm,
             const dictionary& dict
-        );
+        ):
+            donorSuitability(oversetFringeAlgorithm, dict)
+        {}
 
 
     //- Destructor
     virtual ~noSuitability() = default;
+
+
+    // Member Functions
+
+        // Overlap minimisation virtual functions
+
+            //- Return suitability parameter
+            virtual scalar value(const label& cellID) const;
+
+            //- Return suitability
+            virtual scalar suitabilityFraction
+            (
+                const donorAcceptor& daPair
+            ) const;
+
+            //- Is this donor/acceptor pair suitable?
+            virtual bool isDonorSuitable
+            (
+                const donorAcceptor& daPair
+            ) const;
 };
 
 

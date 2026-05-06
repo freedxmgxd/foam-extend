@@ -38,6 +38,9 @@ namespace Foam
 
 template<class Type> class calculatedFvPatchField;
 
+// Allow label patch type
+typedef calculatedFvPatchField<label> calculatedFvPatchLabelField;
+
 makePatchTypeFieldTypedefs(calculated)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

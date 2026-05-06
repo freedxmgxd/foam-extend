@@ -27,6 +27,7 @@ License
 #define processorFvPatchFields_H
 
 #include "processorFvPatchScalarField.H"
+#include "processorFvPatchFieldsFwd.H"
 #include "fieldTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

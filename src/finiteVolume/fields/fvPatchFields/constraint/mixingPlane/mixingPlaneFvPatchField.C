@@ -440,7 +440,7 @@ tmp<Field<Type> > mixingPlaneFvPatchField<Type>::patchNeighbourField() const
 
 
 template<class Type>
-tmp<scalarField>
+tmp<Field<typename pTraits<Type>::cmptType> >
 mixingPlaneFvPatchField<Type>::untransformedInterpolate
 (
     const direction cmpt

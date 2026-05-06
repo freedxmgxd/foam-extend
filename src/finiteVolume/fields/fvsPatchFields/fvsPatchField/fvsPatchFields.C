@@ -46,6 +46,7 @@ defineTemplateRunTimeSelectionTable(fvsPatchTypeField, patch);                \
 defineTemplateRunTimeSelectionTable(fvsPatchTypeField, patchMapper);          \
 defineTemplateRunTimeSelectionTable(fvsPatchTypeField, dictionary);
 
+makeFvsPatchField(fvsPatchLabelField)
 makeFvsPatchField(fvsPatchScalarField)
 makeFvsPatchField(fvsPatchVectorField)
 makeFvsPatchField(fvsPatchSphericalTensorField)

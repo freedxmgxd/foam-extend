@@ -48,14 +48,12 @@ namespace Foam
 
 void Foam::cuttingPatchFringe::calcAddressing() const
 {
-    // Make sure that either acceptorsPtr is unnalocated or if it is allocated,
+    // Make sure that either acceptorsPtr is unallocated or if it is allocated,
     // that it is empty
     if (acceptorsPtr_ && !acceptorsPtr_->empty())
     {
-        FatalErrorIn
-        (
-            "void Foam::cuttingPatchFringe::calcAddressing() const"
-        )   << "Addressing already calculated"
+        FatalErrorInFunction
+            << "Addressing already calculated"
             << abort(FatalError);
     }
 
@@ -76,10 +74,8 @@ void Foam::cuttingPatchFringe::calcAddressing() const
 
         if (!cutPatch.active())
         {
-            FatalErrorIn
-            (
-                "void cuttingPatchFringe::calcAddressing const"
-            )   << "Cutting patch " << cuttingPatchNames_[nameI]
+            FatalErrorInFunction
+                << "Cutting patch " << cuttingPatchNames_[nameI]
                 << " cannot be found."
                 << abort(FatalError);
         }
@@ -504,17 +500,8 @@ Foam::cuttingPatchFringe::cuttingPatchFringe
     // Sanity check number of layers: must be greater than 0
     if (nLayers_ < 1)
     {
-        FatalIOErrorIn
-        (
-            "cuttingPatchFringe::"
-            "cuttingPatchFringe\n"
-            "(\n"
-            "    const fvMesh& mesh,\n"
-            "    const oversetRegion& region,\n"
-            "    const dictionary& dict\n"
-            ")",
-            dict
-        )   << "Invalid number of layers specified, nLayers = " << nLayers_
+        FatalIOErrorInFunction(dict)
+            << "Invalid number of layers specified, nLayers = " << nLayers_
             << nl
             << "The number should be greater than 0."
             << exit(FatalError);
@@ -523,16 +510,8 @@ Foam::cuttingPatchFringe::cuttingPatchFringe
     // Preferably, the number of layers should be at least 2
     if (nLayers_ == 1)
     {
-        WarningIn
-        (
-            "cuttingPatchFringe::"
-            "cuttingPatchFringe\n"
-            "(\n"
-            "    const fvMesh& mesh,\n"
-            "    const oversetRegion& region,\n"
-            "    const dictionary& dict\n"
-            ")"
-        )   << "You have specified nLayers = " << nLayers_
+        WarningInFunction
+            << "You have specified nLayers = " << nLayers_
             << nl
             << "We strongly advise to use at least 2 layers to avoid" << nl
             << "possibility of having acceptors that cannot find decent" << nl
@@ -551,41 +530,6 @@ Foam::cuttingPatchFringe::~cuttingPatchFringe()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::cuttingPatchFringe::updateIteration
-(
-    donorAcceptorList& donorAcceptorRegionData
-) const
-{
-    // If the donorAcceptor list has been allocated, something went wrong with
-    // the iteration procedure (not-updated flag): this function has been called
-    // more than once, which should not happen for cuttingPatchFringe
-    if (finalDonorAcceptorsPtr_)
-    {
-        FatalErrorIn
-        (
-            "cuttingPatchFringe::"
-            "updateIteration(donorAcceptorList&) const"
-        )   << "finalDonorAcceptorPtr_ already allocated. Something went "
-            << "wrong with the iteration procedure (flag was not updated)."
-            << nl
-            << "This should not happen for cuttingPatchFringe."
-            << abort(FatalError);
-    }
-
-    // Allocate the list by reusing the argument list
-    finalDonorAcceptorsPtr_ = new donorAcceptorList
-    (
-        donorAcceptorRegionData,
-        true
-    );
-
-    // Set the flag to true and return
-    updateSuitableOverlapFlag(true);
-
-    return foundSuitableOverlap();
-}
-
 
 const Foam::labelList& Foam::cuttingPatchFringe::fringeHoles() const
 {
@@ -609,12 +553,12 @@ const Foam::labelList& Foam::cuttingPatchFringe::candidateAcceptors() const
 }
 
 
-Foam::donorAcceptorList&
+const Foam::donorAcceptorList&
 Foam::cuttingPatchFringe::finalDonorAcceptors() const
 {
     if (!finalDonorAcceptorsPtr_)
     {
-        FatalErrorIn("cuttingPatchFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "finalDonorAcceptorPtr_ not allocated. Make sure you have"
             << " called cuttingPatchFringe::updateIteration() before"
             << " asking for final set of donor/acceptor pairs."
@@ -623,7 +567,7 @@ Foam::cuttingPatchFringe::finalDonorAcceptors() const
 
     if (!foundSuitableOverlap())
     {
-        FatalErrorIn("cuttingPatchFringe::finalDonorAcceptors()")
+        FatalErrorInFunction
             << "Attemted to access finalDonorAcceptors but suitable overlap "
             << "has not been found. This is not allowed. "
             << abort(FatalError);
@@ -633,10 +577,88 @@ Foam::cuttingPatchFringe::finalDonorAcceptors() const
 }
 
 
+void Foam::cuttingPatchFringe::initSearch
+(
+    const labelList& candidateAcceptors,
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // Check only
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        // Check processor ID
+        if (daPair.acceptorProcNo() != Pstream::myProcNo())
+        {
+            FatalErrorInFunction
+                << "Acceptor on different processor: this cannot happen: "
+                << "acceptorCell = " << daPair.acceptorProcNo()
+                << "myProc = " << Pstream::myProcNo()
+                << " acceptorProcNo = " << daPair.acceptorProcNo()
+                << abort(FatalError);
+        }
+    }
+}
+
+
+void Foam::cuttingPatchFringe::setDonorSuitability
+(
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // Check only
+    forAll (donorAcceptorRegionData, aI)
+    {
+        donorAcceptor& daPair = donorAcceptorRegionData[aI];
+
+        if (daPair.donorFound())
+        {
+            // Check processor ID
+            if (daPair.donorProcNo() != Pstream::myProcNo())
+            {
+                FatalErrorInFunction
+                    << "Donor on different processor: this cannot happen: "
+                    << "donorCell = " << daPair.donorCell()
+                    << " myProc = " << Pstream::myProcNo()
+                    << " donorProcNo = " << daPair.donorProcNo()
+                    << abort(FatalError);
+            }
+        }
+    }
+}
+
+
+bool Foam::cuttingPatchFringe::updateIteration
+(
+    donorAcceptorList& donorAcceptorRegionData
+) const
+{
+    // If the donorAcceptor list has been allocated, something went wrong with
+    // the iteration procedure (not-updated flag): this function has been called
+    // more than once, which should not happen for cuttingPatchFringe
+    if (finalDonorAcceptorsPtr_)
+    {
+        FatalErrorInFunction
+            << "finalDonorAcceptorPtr_ already allocated. Something went "
+            << "wrong with the iteration procedure (flag was not updated)."
+            << abort(FatalError);
+    }
+
+    finalDonorAcceptorsPtr_ = new donorAcceptorList
+    (
+        donorAcceptorRegionData
+    );
+
+    // Set the flag to true and return
+    updateSuitableOverlapFlag(true);
+
+    return foundSuitableOverlap();
+}
+
+
 void Foam::cuttingPatchFringe::update() const
 {
-    Info<< "cuttingPatchFringe::update() const" << endl;
-
     // Clear out
     clearAddressing();
 

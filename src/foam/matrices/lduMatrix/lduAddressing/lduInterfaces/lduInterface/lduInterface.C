@@ -36,11 +36,6 @@ namespace Foam
 } // End namespace Foam
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::lduInterface::~lduInterface()
-{}
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::crMatrix> Foam::lduInterface::prolongationTransfer

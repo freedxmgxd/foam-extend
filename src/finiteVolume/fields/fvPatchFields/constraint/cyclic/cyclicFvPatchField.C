@@ -177,14 +177,16 @@ tmp<Field<Type> > cyclicFvPatchField<Type>::patchNeighbourField() const
 
 
 template<class Type>
-tmp<scalarField>
+tmp<Field<typename pTraits<Type>::cmptType> >
 cyclicFvPatchField<Type>::untransformedInterpolate(const direction cmpt) const
 {
+    typedef Field<typename pTraits<Type>::cmptType> cmptTypeField;
+    
     const Field<Type>& iField = this->internalField();
     const labelUList& faceCells = cyclicPatch_.faceCells();
 
-    tmp<scalarField> tpnf(new scalarField(this->size()));
-    scalarField& pnf = tpnf.ref();
+    tmp<cmptTypeField> tpnf(new cmptTypeField(this->size()));
+    cmptTypeField& pnf = tpnf.ref();
 
     label sizeby2 = this->size()/2;
 

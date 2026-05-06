@@ -35,6 +35,7 @@ Author
 #ifndef coeffFields_H
 #define coeffFields_H
 
+#include "labelCoeffField.H"
 #include "scalarCoeffField.H"
 #include "sphericalTensorCoeffField.H"
 #include "diagTensorCoeffField.H"

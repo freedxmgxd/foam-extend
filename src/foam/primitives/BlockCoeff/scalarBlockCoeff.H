@@ -25,7 +25,7 @@ Class
     BlockCoeff specialisation for terminal class.
 
 Description
-    Specialisation of a block coefficient for a scalar: always a scalae.
+    Specialisation of a block coefficient for a scalar: always a scalar.
 
 Author
     Hrvoje Jasak, Wikki Ltd.  All rights reserved.

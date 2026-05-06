@@ -144,7 +144,7 @@ public:
             //- Return neighbour field of internal field, untransformed
             //  This is used for source compensation in the segregated
             //  solver.  HJ and GC, 22/Aug/2018
-            virtual tmp<scalarField>
+            virtual tmp<Field<typename pTraits<Type>::cmptType> >
             untransformedInterpolate(const direction cmpt) const
             {
                 return this->patchNeighbourField()().component(cmpt);

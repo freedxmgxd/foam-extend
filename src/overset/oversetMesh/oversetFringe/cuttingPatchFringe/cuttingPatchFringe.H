@@ -32,6 +32,8 @@ Description
 
 Author
     Vuko Vukcevic, Wikki Ltd.  All rights reserved.
+    Rewrite by Hrvoje Jasak.
+    Full rewrite of interfaces, Mar/2026
 
 SourceFiles
     cuttingPatchFringe.C
@@ -110,30 +112,45 @@ public:
         void operator=(const cuttingPatchFringe&) = delete;
 
 
-    // Destructor
-
-        virtual ~cuttingPatchFringe();
+    //- Destructor
+    virtual ~cuttingPatchFringe();
 
 
     // Member Functions
 
-        //- Update iteration. Note: invalidates parameter
-        virtual bool updateIteration
-        (
-            donorAcceptorList& donorAcceptorRegionData
-        ) const;
+        // Access to fringe data
 
-        //- Return list of deactivated (hole) cells
-        //  Fringe hole cells are collected in addition to geometric hole
-        //  cells, which fall outside of all donor regions
-        virtual const labelList& fringeHoles() const;
+            //- Return list of hole cells
+            virtual const labelList& fringeHoles() const;
 
-        //- Return list of acceptor cells
-        virtual const labelList& candidateAcceptors() const;
+            //- Return list of acceptor cells
+            virtual const labelList& candidateAcceptors() const;
 
-        //- Return list of final donor acceptor pairs. Note: caller may
-        //  invalidate finalDonorAcceptorsPtr_ for optimisation purposes
-        virtual donorAcceptorList& finalDonorAcceptors() const;
+            //- Return list of final donor acceptor pairs
+            virtual const donorAcceptorList& finalDonorAcceptors() const;
+
+    
+        // Iteration control
+
+            //- Initialise donor search, before acceptors are distributed
+            virtual void initSearch
+            (
+                const labelList& candidateAcceptors,
+                donorAcceptorList& donorAcceptorRegionData
+            ) const;
+    
+            //- Set donor suitability
+            virtual void setDonorSuitability
+            (
+                donorAcceptorList& donorAcceptorRegionData
+            ) const;
+    
+            //- Update iteration
+            virtual bool updateIteration
+            (
+                donorAcceptorList& donorAcceptorRegionData
+            ) const;
+
 
         //- Update the fringe
         virtual void update() const;

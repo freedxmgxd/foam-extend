@@ -82,12 +82,16 @@ Ideas to further improve efficiency
 
 Author
     Hrvoje Jasak, Wikki Ltd.  All rights reserved.
+    Major rewrite Mar/2026
 
 Contributor
     Vuko Vukcevic, Wikki Ltd.  All rights reserved.
 
 SourceFiles
     oversetRegion.C
+    oversetRegionHoles.C
+    oversetRegionCellSearch.C
+    oversetRegionDonorAcceptors.C
 
 \*---------------------------------------------------------------------------*/
 
