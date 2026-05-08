@@ -351,7 +351,7 @@ bool Foam::faceZoneHeatFluxFunctionObject::execute(const bool forceWrite)
                 << endl;
         }
 
-        Info<< "Flux through " << faceZoneName_
+        Info<< "Flux " << phiName_ << " through " << faceZoneName_
             << " (convective, diffusive, total): "
             << faceZoneConvectiveHeatFlux << tab
             << -faceZoneDiffusiveHeatFlux << tab

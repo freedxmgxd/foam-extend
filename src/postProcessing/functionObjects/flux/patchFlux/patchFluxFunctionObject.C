@@ -70,8 +70,9 @@ Foam::patchFluxFunctionObject::patchFluxFunctionObject
         dict.lookup("region") >> regionName_;
     }
 
-    Info<< "Creating patchFluxFunctionObject for patch "
-        << patchName_  << " on region " << regionName_ << endl;
+    Info<< "Creating patchFluxFunctionObject for flux " << phiName_
+        << " on patch " << patchName_  
+        << " on region " << regionName_ << endl;
 
     // Set stream pointer: only master writes
     if (Pstream::master())
