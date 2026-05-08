@@ -86,9 +86,9 @@ bool Foam::simpleControl::criteriaSatisfied()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::simpleControl::simpleControl(fvMesh& mesh)
+Foam::simpleControl::simpleControl(fvMesh& mesh, const word& dictName)
 :
-    solutionControl(mesh, "SIMPLE"),
+    solutionControl(mesh, dictName),
     initialised_(false)
 {
     read();

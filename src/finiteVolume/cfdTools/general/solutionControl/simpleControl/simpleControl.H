@@ -83,7 +83,7 @@ public:
     // Constructors
 
         //- Construct from mesh
-        simpleControl(fvMesh& mesh);
+        simpleControl(fvMesh& mesh, const word& dictName = "SIMPLE");
 
 
     //- Destructor
