@@ -118,9 +118,11 @@ void Foam::fluxCorrectedVelocityFvPatchVectorField::evaluate
     const scalarField& magS = patch().magSf();
 
     // Get reference to patch velocity
+    dimensionSet dimU = this->dimensionedInternalField().dimensions();
+    
     vectorField& U = *this;
     
-    if (phi.dimensions() == dimVelocity*dimArea)
+    if (phi.dimensions() == dimU*dimArea)
     {
         operator==
         (
@@ -130,7 +132,7 @@ void Foam::fluxCorrectedVelocityFvPatchVectorField::evaluate
         
         // operator==(U - n*(n & U) + n*phip/magS);
     }
-    else if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
+    else if (phi.dimensions() == dimDensity*dimU*dimArea)
     {
         if (!this->db().objectRegistry::found(rhoName_))
         {
