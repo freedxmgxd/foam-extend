@@ -315,17 +315,17 @@ Foam::label Foam::checkTopology
 
             if (pp.empty())
             {
-                Pout<< setw(34) << "ok (empty)";
+                Pout<< setw(34) << " ok (empty)";
             }
             else if (pTyp == primitivePatch::MANIFOLD)
             {
                 if (pp.checkPointManifold(true, &points))
                 {
-                    Pout<< setw(34) << "multiply connected (shared point)";
+                    Pout<< setw(34) << " multiply connected (shared point)";
                 }
                 else
                 {
-                    Pout<< setw(34) << "ok (closed singly connected)";
+                    Pout<< setw(34) << " ok (closed singly connected)";
                 }
 
                 // Add points on non-manifold edges to make set complete
@@ -337,11 +337,11 @@ Foam::label Foam::checkTopology
 
                 if (pTyp == primitivePatch::OPEN)
                 {
-                    Pout<< setw(34) << "ok (non-closed singly connected)";
+                    Pout<< setw(34) << " ok (non-closed singly connected)";
                 }
                 else
                 {
-                    Pout<< setw(34) << "multiply connected (shared edge)";
+                    Pout<< setw(34) << " multiply connected (shared edge)";
                 }
             }
 
