@@ -226,24 +226,20 @@ inline direction TensorN<Cmpt, length>::cmpt
     const direction j
 )
 {
+#   ifdef FULLDEBUG
     if
     (
         i > TensorN<Cmpt, length>::rowLength - 1
      || j > TensorN<Cmpt, length>::rowLength - 1
     )
     {
-        FatalErrorIn
-        (
-            "direction TensorN<Cmpt, length>::cmpt()\n"
-            "(\n"
-            "    const direction i,\n"
-            "    const direction j\n"
-            ") const"
-        )   << "Direction out of range (0 "
+        FatalErrorInFunction
+            << "Direction out of range (0 "
             << TensorN<Cmpt, length>::rowLength - 1 << ")"
             << " and (i j) = ("  << i << " " << j << ")"
             << abort(FatalError);
     }
+#   endif
 
     return i*TensorN<Cmpt, length>::rowLength + j;
 }
@@ -919,11 +915,8 @@ inline TensorN<Cmpt, length> inv(const TensorN<Cmpt, length>& t)
         srcIter = &result(iCol, iCol);  // Dummy pointer to reduce indexing
         if ((*srcIter) == Cmpt(0))
         {
-            FatalErrorIn
-            (
-                "inline TensorN<Cmpt, length> inv("
-                "const TensorN<Cmpt, length>& t)"
-            )   << "Singular tensor" << length << Foam::abort(FatalError);
+            FatalErrorInFunction
+                << "Singular tensor" << length << Foam::abort(FatalError);
         }
 
         // Divide the pivot row by pivot element
