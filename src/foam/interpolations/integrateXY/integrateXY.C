@@ -51,7 +51,7 @@ Type integrateXY
 
     const label n = x.size();
 
-#   ifdef FULL_DEBUG
+#   ifdef FULLDEBUG
     // Check ascending order of x
     scalarField diffs(n - 1);
 
