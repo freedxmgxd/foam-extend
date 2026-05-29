@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
 #   include "createMesh.H"
 
     pisoControl piso(mesh);
+    pisoControl bPiso(mesh, "BPISO");
 
 #   include "createFields.H"
 #   include "initContinuityErrs.H"
@@ -73,8 +74,6 @@ int main(int argc, char *argv[])
 
     while (runTime.loop())
     {
-#       include "readBPISOControls.H"
-
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
 #       include "CourantNo.H"
@@ -128,7 +127,7 @@ int main(int argc, char *argv[])
 
         // --- B-PISO loop
 
-        for (int Bcorr=0; Bcorr<nBcorr; Bcorr++)
+        while (bPiso.correct())
         {
             fvVectorMatrix BEqn
             (
@@ -145,15 +144,19 @@ int main(int argc, char *argv[])
             phiB = (fvc::interpolate(B) & mesh.Sf())
                 + fvc::ddtPhiCorr(rBA, B, phiB);
 
-            fvScalarMatrix pBEqn
-            (
-                fvm::laplacian(rBA, pB) == fvc::div(phiB)
-            );
-            pBEqn.solve();
+            while (bPiso.correctNonOrthogonal())
+            {
+                fvScalarMatrix pBEqn
+                (
+                    fvm::laplacian(rBA, pB) == fvc::div(phiB)
+                );
 
-            phiB -= pBEqn.flux();
+                pBEqn.solve();
 
-#           include "magneticFieldErr.H"
+                phiB -= pBEqn.flux();
+
+#               include "magneticFieldErr.H"
+            }
         }
 
         runTime.write();
