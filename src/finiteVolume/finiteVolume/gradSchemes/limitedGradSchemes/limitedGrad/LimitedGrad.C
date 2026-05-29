@@ -54,6 +54,10 @@ LimitedGrad<Type, GradientLimiter>::limiter
     const labelUList& owner = mesh.owner();
     const labelUList& neighbour = mesh.neighbour();
 
+    // updateCoupledPatchFields for patchNeighbourField update
+    // HJ, 10/Sep/2021
+    vf.boundaryField().updateCoupledPatchFields();
+
     // Calculate min/max of field
 
     Field<Type> maxVf(vf.internalField());
@@ -137,7 +141,7 @@ LimitedGrad<Type, GradientLimiter>::limiter
             zeroGradientFvPatchField<Type>::typeName
         )
     );
-    GeoFieldType& limitField = tlimitField();
+    GeoFieldType& limitField = tlimitField.ref();
 
     const volVectorField& C = mesh.C();
     const vectorField& CIn = C.internalField();
@@ -233,7 +237,7 @@ LimitedGrad<Type, GradientLimiter>::gradientField
 {
     // Get base gradient
     tmp<GeoGradFieldType> tGrad = basicGradScheme_().calcGrad(vf, name);
-    GeoGradFieldType& gradVf = tGrad();
+    GeoGradFieldType& gradVf = tGrad.ref();
 
     // Apply the limiter
     GeoFieldType limitField(this->limiter(vf, gradVf));
@@ -260,7 +264,7 @@ LimitedGrad<Type, GradientLimiter>::gradientMatrix
 {
     // Calculate base gradient matrix
     tmp<GradMatrixType> tbs = basicGradScheme_().fvmGrad(vf);
-    GradMatrixType& bs = tbs();
+    GradMatrixType& bs = tbs.ref();
 
     // Calculate limiter.  Using explicit gradient
     // Using cached gradient?  Check.  HJ, 4/Jun/2016
@@ -272,6 +276,10 @@ LimitedGrad<Type, GradientLimiter>::gradientMatrix
             basicGradScheme_().grad(vf)()
         )
     );
+
+    // updateCoupledPatchFields for patchNeighbourField update
+    // HJ, 10/Sep/2021
+    limitField.boundaryField().updateCoupledPatchFields();
 
     const Field<Type>& lfIn = limitField.internalField();
 
