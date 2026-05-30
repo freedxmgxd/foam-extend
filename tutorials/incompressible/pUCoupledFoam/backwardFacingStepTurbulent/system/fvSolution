@@ -30,7 +30,7 @@ solvers
         nMaxLevels      100;
         scale           on;
         smoother        ILUC0;
-        minIter         0;
+        minIter         1;
         maxIter         100;
         tolerance       1e-7;
         relTol          0.0;
