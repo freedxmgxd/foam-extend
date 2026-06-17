@@ -119,8 +119,8 @@ bool Foam::patchFluxFunctionObject::execute(const bool forceWrite)
     if (patchID < 0)
     {
         InfoInFunction
-            << "Patch named: " << patchName_ << " not found."
-            << " Returning."
+            << "Patch named: " << patchName_ << " for region "
+            << regionName_ << " not found.  Returning."
             << endl;
 
         return false;
@@ -152,7 +152,7 @@ bool Foam::patchFluxFunctionObject::execute(const bool forceWrite)
         }
 
         Info<< "Flux " << phiName_ << " through " << patchName_
-            << " region " << regionName_
+            << " for region " << regionName_
             << ": " << patchFlux << endl;
 
         return true;
@@ -161,7 +161,7 @@ bool Foam::patchFluxFunctionObject::execute(const bool forceWrite)
     {
         InfoInFunction
             << "Flux " << phiName_ << " for region "
-            << " region " << regionName_ << " not found. Returning."
+            << regionName_ << " not found. Returning."
             << endl;
 
         return false;
