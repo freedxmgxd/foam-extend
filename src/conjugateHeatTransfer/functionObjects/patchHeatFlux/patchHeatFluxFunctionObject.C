@@ -148,8 +148,8 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
     if (patchID < 0)
     {
         InfoInFunction
-            << "Patch named: " << patchName_ << " not found."
-            << " Returning."
+            << "Patch named: " << patchName_ << " for region "
+            << regionName_ << " not found.  Returning."
             << endl;
 
         return false;
@@ -372,7 +372,7 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
         }
 
         Info<< "Heat flux through " << patchName_
-            << " region " << regionName_
+            << " for region " << regionName_
             << " (convective, diffusive, radiative, total): "
             << convectiveFlux << tab
             << -diffusiveFlux << tab
@@ -385,8 +385,8 @@ bool Foam::patchHeatFluxFunctionObject::execute(const bool forceWrite)
     else
     {
         InfoInFunction
-            << "Defining field "
-            << TName_ << " not found. Returning."
+            << "Defining field " << TName_ << " for region "
+            << regionName_ << " not found. Returning."
             << endl;
 
         return false;
