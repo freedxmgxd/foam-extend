@@ -670,7 +670,7 @@ public:
 #endif
 
 
-#define addToPatchFieldRunTimeSelection(PatchTypeField, typePatchTypeField)   \
+#define addToPatchFieldRunTimeSelection(PatchTypeField, typePatchTypeField) \
                                                                               \
 addToRunTimeSelectionTable                                                    \
 (                                                                             \
@@ -700,9 +700,9 @@ defineNamedTemplateTypeNameAndDebug(type, 0);
 makePatchTypeFieldTypeName(type##FvPatchScalarField);                         \
 makePatchTypeFieldTypeName(type##FvPatchVectorField);                         \
 makePatchTypeFieldTypeName(type##FvPatchSphericalTensorField);                \
+makePatchTypeFieldTypeName(type##FvPatchDiagTensorField);                     \
 makePatchTypeFieldTypeName(type##FvPatchSymmTensorField);                     \
 makePatchTypeFieldTypeName(type##FvPatchSymmTensor4thOrderField);             \
-makePatchTypeFieldTypeName(type##FvPatchDiagTensorField);                     \
 makePatchTypeFieldTypeName(type##FvPatchTensorField);
 
 
@@ -736,6 +736,11 @@ makeTemplatePatchTypeField                                                    \
     type##FvPatchSphericalTensorField                                         \
 );                                                                            \
 makeTemplatePatchTypeField                                                    \
+ (                                                                            \
+    fvPatchDiagTensorField,                                                   \
+    type##FvPatchDiagTensorField                                              \
+);                                                                            \
+makeTemplatePatchTypeField                                                    \
 (                                                                             \
     fvPatchSymmTensorField,                                                   \
     type##FvPatchSymmTensorField                                              \
@@ -744,11 +749,6 @@ makeTemplatePatchTypeField                                                    \
 (                                                                             \
     fvPatchSymmTensor4thOrderField,                                           \
     type##FvPatchSymmTensor4thOrderField                                      \
-);                                                                            \
-makeTemplatePatchTypeField                                                    \
- (                                                                            \
-    fvPatchDiagTensorField,                                                   \
-    type##FvPatchDiagTensorField                                              \
 );                                                                            \
 makeTemplatePatchTypeField(fvPatchTensorField, type##FvPatchTensorField);
 
@@ -759,11 +759,11 @@ typedef type##FvPatchField<scalar> type##FvPatchScalarField;                  \
 typedef type##FvPatchField<vector> type##FvPatchVectorField;                  \
 typedef type##FvPatchField<sphericalTensor>                                   \
     type##FvPatchSphericalTensorField;                                        \
+typedef type##FvPatchField<diagTensor>                                        \
+    type##FvPatchDiagTensorField;                                             \
 typedef type##FvPatchField<symmTensor> type##FvPatchSymmTensorField;          \
 typedef type##FvPatchField<symmTensor4thOrder>                                \
     type##FvPatchSymmTensor4thOrderField;                                     \
-typedef type##FvPatchField<diagTensor>                                        \
-    type##FvPatchDiagTensorField;                                             \
 typedef type##FvPatchField<tensor> type##FvPatchTensorField;
 
 

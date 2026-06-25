@@ -37,7 +37,7 @@ namespace Foam
 
 template<class Type> class fvPatchField;
 
-#define doMakeTypedef(type, Type, args...)                      \
+#define doMakeTypedef(type, Type, args...)                                   \
     typedef fvPatchField<type > fvPatch##Type##Field;
 
 forAllVectorNTypes(doMakeTypedef)

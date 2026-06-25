@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class fluxCorrectedVelocityFvPatch Declaration
+            Class fluxCorrectedVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
 class fluxCorrectedVelocityFvPatchVectorField

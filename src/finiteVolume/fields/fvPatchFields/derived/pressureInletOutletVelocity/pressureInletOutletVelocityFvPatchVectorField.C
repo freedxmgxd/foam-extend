@@ -54,25 +54,6 @@ pressureInletOutletVelocityFvPatchVectorField
 pressureInletOutletVelocityFvPatchVectorField::
 pressureInletOutletVelocityFvPatchVectorField
 (
-    const pressureInletOutletVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    directionMixedFvPatchVectorField(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_)
-{
-    if (ptf.tangentialVelocity_.size())
-    {
-        tangentialVelocity_ = mapper(ptf.tangentialVelocity_);
-    }
-}
-
-
-pressureInletOutletVelocityFvPatchVectorField::
-pressureInletOutletVelocityFvPatchVectorField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -97,6 +78,25 @@ pressureInletOutletVelocityFvPatchVectorField
 
     refGrad() = vector::zero;
     valueFraction() = symmTensor::zero;
+}
+
+
+pressureInletOutletVelocityFvPatchVectorField::
+pressureInletOutletVelocityFvPatchVectorField
+(
+    const pressureInletOutletVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    directionMixedFvPatchVectorField(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_)
+{
+    if (ptf.tangentialVelocity_.size())
+    {
+        tangentialVelocity_ = mapper(ptf.tangentialVelocity_);
+    }
 }
 
 
