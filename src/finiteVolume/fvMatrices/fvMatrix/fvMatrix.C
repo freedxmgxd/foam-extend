@@ -41,9 +41,9 @@ template<class Type>
 template<class Type2>
 void Foam::fvMatrix<Type>::addToInternalField
 (
-    const labelUList& addr,
+    Field<Type2>& intf,
     const Field<Type2>& pf,
-    Field<Type2>& intf
+    const labelUList& addr
 ) const
 {
     if (addr.size() != pf.size())
@@ -65,12 +65,12 @@ template<class Type>
 template<class Type2>
 void Foam::fvMatrix<Type>::addToInternalField
 (
-    const labelUList& addr,
+    Field<Type2>& intf,
     const tmp<Field<Type2> >& tpf,
-    Field<Type2>& intf
+    const labelUList& addr
 ) const
 {
-    addToInternalField(addr, tpf(), intf);
+    addToInternalField(intf, tpf(), addr);
     tpf.clear();
 }
 
@@ -79,9 +79,9 @@ template<class Type>
 template<class Type2>
 void Foam::fvMatrix<Type>::subtractFromInternalField
 (
-    const labelUList& addr,
+    Field<Type2>& intf,
     const Field<Type2>& pf,
-    Field<Type2>& intf
+    const labelUList& addr
 ) const
 {
     if (addr.size() != pf.size())
@@ -103,12 +103,12 @@ template<class Type>
 template<class Type2>
 void Foam::fvMatrix<Type>::subtractFromInternalField
 (
-    const labelUList& addr,
+    Field<Type2>& intf,
     const tmp<Field<Type2> >& tpf,
-    Field<Type2>& intf
+    const labelUList& addr
 ) const
 {
-    subtractFromInternalField(addr, tpf(), intf);
+    subtractFromInternalField(intf, tpf(), addr);
     tpf.clear();
 }
 
@@ -124,9 +124,9 @@ void Foam::fvMatrix<Type>::addBoundaryDiag
     {
         addToInternalField
         (
-            lduAddr().patchAddr(patchI),
+            diag,
             internalCoeffs_[patchI].component(solveCmpt),
-            diag
+            lduAddr().patchAddr(patchI)
         );
     }
 }
@@ -139,9 +139,9 @@ void Foam::fvMatrix<Type>::addCmptAvBoundaryDiag(scalarField& diag) const
     {
         addToInternalField
         (
-            lduAddr().patchAddr(patchI),
+            diag,
             cmptAv(internalCoeffs_[patchI]),
-            diag
+            lduAddr().patchAddr(patchI)
         );
     }
 }
@@ -166,7 +166,7 @@ void Foam::fvMatrix<Type>::addBoundarySource
 
         if (!ptf.coupled())
         {
-            addToInternalField(lduAddr().patchAddr(patchI), pbc, source);
+            addToInternalField(source, pbc, lduAddr().patchAddr(patchI));
         }
         else if (couples)
         {
@@ -823,9 +823,9 @@ Foam::tmp<Foam::Field<Type> > Foam::fvMatrix<Type>::DD() const
         {
             addToInternalField
             (
-                lduAddr().patchAddr(patchI),
+                tdiag.ref(),
                 internalCoeffs_[patchI],
-                tdiag.ref()
+                lduAddr().patchAddr(patchI)
             );
         }
     }
