@@ -1,0 +1,50 @@
+name: Sync mirror branches from SourceForge
+
+# foam-extend is developed on SourceForge. This job keeps the mirror branches
+# here identical to upstream, and touches nothing else.
+#
+# It pushes without --force on purpose. If upstream ever rewrites history the
+# push is rejected and the job fails, which is the outcome we want: a loud
+# failure rather than a silent rewrite of what we mirrored.
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror upstream branches and tags
+        env:
+          UPSTREAM: https://git.code.sf.net/p/foam-extend/foam-extend-5.0
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          echo "::group::Cloning upstream"
+          git clone --bare --quiet "$UPSTREAM" upstream.git
+          cd upstream.git
+          echo "::endgroup::"
+
+          echo "Upstream branches:"
+          git for-each-ref --format='  %(refname:short)  %(objectname:short)  %(committerdate:short)' refs/heads/
+
+          # Only refs that exist upstream are pushed, so branches that live
+          # solely in this fork -- our fix/* work -- are never touched, and
+          # nothing here can delete them.
+          mapfile -t refspecs < <(git for-each-ref --format='%(refname):%(refname)' refs/heads/)
+
+          if [ ${#refspecs[@]} -eq 0 ]; then
+            echo "No upstream branches found -- refusing to push." >&2
+            exit 1
+          fi
+
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "${refspecs[@]}" 'refs/tags/*:refs/tags/*'
+
+          echo "Mirror is in sync with $UPSTREAM"
