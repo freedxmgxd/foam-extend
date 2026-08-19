@@ -1347,12 +1347,21 @@ void dynamicTopoFvMesh::moveCoupledSubMeshes()
         // Reset underlying mesh.
         //  - Use null lists for addressing to avoid over-writes
         //  - Specify non-valid boundary to avoid globalData creation
+        // These three used to be null references built with reinterpret_cast.
+        // polyMesh::resetPrimitives guarded them with if (&fcs) until commit
+        // 078f96f80 (2015-08-07) replaced that with if (!fcs().empty()), which
+        // dereferences. The caller was never updated, so every parallel run
+        // segfaults -- including the shipped circCylinder3d tutorial.
+        const faceList  emptyFaces;
+        const labelList emptyOwner;
+        const labelList emptyNeighbour;
+
         mesh.resetPrimitives
         (
             xferCopy(rcMap.oldPointBuffer()),
-            (*reinterpret_cast<Xfer<faceList>*>(0)),
-            (*reinterpret_cast<Xfer<labelList>*>(0)),
-            (*reinterpret_cast<Xfer<labelList>*>(0)),
+            xferCopy(emptyFaces),
+            xferCopy(emptyOwner),
+            xferCopy(emptyNeighbour),
             patchSizes,
             patchStarts,
             false
