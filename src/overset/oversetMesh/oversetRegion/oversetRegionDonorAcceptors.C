@@ -474,19 +474,25 @@ bool Foam::oversetRegion::updateDonorAcceptors() const
             }
         }
 
+        // Bug fix: handle acceptor candidates outside of all donor regions
         if (foundHits == 0)
         {
-            FatalErrorInFunction
-                << "OversetRegion " << name()
-                << ": cannot find any donor bounding box for acceptor "
-                << localAcceptorDonorList[aI]
-                << ".  Please check oversetFringe definition" << nl
-                << "Donor regions: " << dr << nl
-                << "Processor bounding boxes: " << procRegionBB
-                << abort(FatalError);
+            // Proposed acceptor is outside of all donor bounding boxes
+            // It will be sent to all processors
+            // If it is genuinely outside of all donor regions, it will be
+            // rejected in the usual way
+            // HJ, 4/Sep/2026
+            forAll (sendAcceptorMap, procI)
+            {
+                // Acceptor may find donor on this processor, append it
+                sendAcceptorMap[procI].append(aI);
+                
+                // Increment the number of acceptors I am sending to this
+                // processor
+                ++numberOfLocalAcceptorsToProcs[procI];
+            }
         }
     }
-
 
     // STAGE 3: Count number of points I am receiving from all other
     // processors
