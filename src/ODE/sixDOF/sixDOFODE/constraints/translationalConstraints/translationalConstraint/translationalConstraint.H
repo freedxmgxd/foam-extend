@@ -164,9 +164,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~translationalConstraint();
+    //- Destructor
+    virtual ~translationalConstraint() = default;
 
 
     // Member Functions

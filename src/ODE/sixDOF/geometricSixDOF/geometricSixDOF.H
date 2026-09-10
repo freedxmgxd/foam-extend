@@ -183,8 +183,15 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary
+        //- Construct from IOobject
         geometricSixDOF(const IOobject& io);
+
+        //- Construct from dictionary
+        geometricSixDOF
+        (
+	    const IOobject& io,
+	    const dictionary& pyDict
+	);
 
         //- Construct geometricSixDOF object, changing name
         geometricSixDOF

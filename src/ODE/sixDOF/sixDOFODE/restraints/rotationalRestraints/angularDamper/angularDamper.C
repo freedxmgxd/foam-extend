@@ -64,12 +64,6 @@ Foam::angularDamper::clone() const
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::angularDamper::~angularDamper()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::vector Foam::angularDamper::restrainingMoment

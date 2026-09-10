@@ -89,9 +89,8 @@ public:
         virtual autoPtr<rotationalConstraint> clone() const;
 
 
-    // Destructor
-
-        virtual ~constantAngularAcceleration();
+    //-Destructor
+    virtual ~constantAngularAcceleration() = default;
 
 
     // Member Functions
@@ -117,12 +116,10 @@ public:
             //- Stabilise the constraint
             virtual void stabilise
             (
-                const scalar,
-                vector&
-            ) const
-            {
-                // Does nothing: no need to stabilise this constraint
-            }
+                const scalar t,
+                vector& rot,
+                vector& omega
+            ) const;
 
 
     // I-O Functions

@@ -83,12 +83,6 @@ Foam::constantTranslationalAcceleration::clone() const
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::constantTranslationalAcceleration::~constantTranslationalAcceleration()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::vector Foam::constantTranslationalAcceleration::matrixContribution

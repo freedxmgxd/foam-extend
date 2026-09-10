@@ -36,6 +36,7 @@ namespace Foam
 
 defineTypeNameAndDebug(sixDOFODE, 0);
 defineRunTimeSelectionTable(sixDOFODE, dictionary);
+defineRunTimeSelectionTable(sixDOFODE, pyDictionary);
 
 }
 
@@ -465,6 +466,140 @@ Foam::sixDOFODE::sixDOFODE(const IOobject& io)
         PtrList<combinedRestraint> rcList
         (
             dict().lookup("combinedRestraints"),
+            combinedRestraint::iNew(*this)
+        );
+        combinedRestraints_.transfer(rcList);
+    }
+}
+
+
+Foam::sixDOFODE::sixDOFODE
+(
+    const IOobject& io,
+    const dictionary& pyDict
+)
+:
+    ODE(),
+    dict_(io, *this),
+
+    mass_(pyDict.lookup("mass")),
+    momentOfInertia_(pyDict.lookup("momentOfInertia")),
+
+    Xequilibrium_(pyDict.lookup("equilibriumPosition")),
+
+    aitkensRelaxation_
+    (
+        pyDict.lookupOrDefault<Switch>("useAitkensRelaxation", false)
+    ),
+    minRelaxFactor_(pyDict.lookupOrDefault<scalar>("minRelaxFactor", 0.1)),
+    maxRelaxFactor_(pyDict.lookupOrDefault<scalar>("maxRelaxFactor", 0.5)),
+
+    relaxFactorT_(1.0),
+    relaxFactorR_(1.0),
+    oldRelaxFactorT_(1.0),
+    oldRelaxFactorR_(1.0),
+
+    A_(3, vector::zero),
+    OmegaDot_(3, vector::zero),
+    An_(3, vector::zero),
+    OmegaDotn_(3, vector::zero),
+
+    force_(pyDict.lookup("force")),
+    moment_(pyDict.lookup("moment")),
+
+    curTimeIndex_(-1),
+    oldStatePtr_(),
+
+    translationalConstraints_(),
+    rotationalConstraints_(),
+
+    translationalRestraints_(),
+    rotationalRestraints_(),
+    combinedRestraints_()
+{
+    // Sanity checks
+    if (mass_.value() < SMALL)
+    {
+        FatalIOErrorInFunction(pyDict)
+            << "Zero or negative mass detected: " << mass_.value()
+            << nl << "Please check " << dict_.name() << "dictionary."
+            << exit(FatalIOError);
+    }
+
+    if (cmptMin(momentOfInertia_.value()) < SMALL)
+    {
+        FatalIOErrorInFunction(dict_)
+            << "Zero or negative moment of inertia detected: "
+            << momentOfInertia_.value()
+            << nl << "Please check " << dict_.name() << "dictionary."
+            << exit(FatalIOError);
+    }
+
+    if
+    (
+        (minRelaxFactor_ < SMALL)
+     || (maxRelaxFactor_ > 1.0)
+     || ((maxRelaxFactor_ - minRelaxFactor_) < 0)
+    )
+    {
+        FatalIOErrorInFunction(dict_)
+            << "Invalid minRelaxFactor and maxRelaxFactor specified."
+            << nl << "Please use values within 0 and 1."
+            << exit(FatalIOError);
+    }
+
+    // Read and construct constraints and restraints
+
+    // Read translation constraints if they are present
+    if (pyDict.found("translationalConstraints"))
+    {
+        PtrList<translationalConstraint> tcList
+        (
+            pyDict.lookup("translationalConstraints"),
+            translationalConstraint::iNew(*this)
+        );
+        translationalConstraints_.transfer(tcList);
+    }
+
+    // Read rotation constraints if they are present
+    if (pyDict.found("rotationalConstraints"))
+    {
+        PtrList<rotationalConstraint> rcList
+        (
+            pyDict.lookup("rotationalConstraints"),
+            rotationalConstraint::iNew(*this)
+        );
+        rotationalConstraints_.transfer(rcList);
+    }
+
+    // Read translation restraints if they are present
+    if (pyDict.found("translationalRestraints"))
+    {
+        PtrList<translationalRestraint> tcList
+        (
+            pyDict.lookup("translationalRestraints"),
+            translationalRestraint::iNew(*this)
+        );
+        translationalRestraints_.transfer(tcList);
+    }
+
+    // Read rotation restraints if they are present
+    if (pyDict.found("rotationalRestraints"))
+    {
+        PtrList<rotationalRestraint> rcList
+        (
+            pyDict.lookup("rotationalRestraints"),
+            rotationalRestraint::iNew(*this)
+        );
+        rotationalRestraints_.transfer(rcList);
+    }
+
+    // Read rotation restraints if they are present
+    if (pyDict.found("combinedRestraints"))
+    {
+        PtrList<combinedRestraint> rcList
+        (
+            pyDict.lookup("combinedRestraints"),
             combinedRestraint::iNew(*this)
         );
         combinedRestraints_.transfer(rcList);

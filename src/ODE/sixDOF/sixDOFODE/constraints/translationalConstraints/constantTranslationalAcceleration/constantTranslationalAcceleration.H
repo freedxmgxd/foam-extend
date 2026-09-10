@@ -85,9 +85,8 @@ public:
         virtual autoPtr<translationalConstraint> clone() const;
 
 
-    // Destructor
-
-        virtual ~constantTranslationalAcceleration();
+    //- Destructor
+    virtual ~constantTranslationalAcceleration() = default;
 
 
     // Member Functions

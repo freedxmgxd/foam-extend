@@ -48,12 +48,6 @@ Foam::translationalConstraint::translationalConstraint
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::translationalConstraint::~translationalConstraint()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 const Foam::word& Foam::translationalConstraint::name() const
@@ -82,14 +76,8 @@ Foam::autoPtr<Foam::translationalConstraint> Foam::translationalConstraint::New
 
     if (cstrIter == wordConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "translationalConstraint::New"
-            "\n("
-            "\n    const word& name,"
-            "\n    const dictionary& dict,"
-            "\n)"
-        )   << "Unknown translation constraint type: " << constraintType
+        FatalErrorInFunction
+            << "Unknown translation constraint type: " << constraintType
             << endl << endl
             << "Valid translation constraint types are: " << endl
             << wordConstructorTablePtr_->sortedToc()

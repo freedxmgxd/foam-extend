@@ -64,12 +64,6 @@ Foam::linearSpringDamper::clone() const
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::linearSpringDamper::~linearSpringDamper()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::vector Foam::linearSpringDamper::restrainingForce

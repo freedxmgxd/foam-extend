@@ -512,17 +512,10 @@ void Foam::quaternionSixDOF::update(const scalar delta)
     omegaVal.y() = coeffs_[7];
     omegaVal.z() = coeffs_[8];
 
-
-    rotation_.updateRotation
-    (
-        HamiltonRodriguezRot
-        (
-            coeffs_[9],
-            coeffs_[10],
-            coeffs_[11],
-            coeffs_[12]
-        )
-    );
+    // Note
+    // Untested change in constrained rotation
+    // HJ, 26/Aug/2026
+    vector rotationVal(coeffs_[9], coeffs_[10], coeffs_[11]);
 
     // Stabilise rotational constraints if necessary
     forAll(rotationalConstraints(), rcI)
@@ -533,13 +526,28 @@ void Foam::quaternionSixDOF::update(const scalar delta)
         // VV, 10/Mar/2017.
         const scalar t = dict().time().value();
 
-        rotationalConstraints()[rcI].stabilise(t, omegaVal);
+        rotationalConstraints()[rcI].stabilise(t, rotationVal, omegaVal);
     }
 
     // Update (possibly constrained) omega
     coeffs_[6] = omegaVal.x();
     coeffs_[7] = omegaVal.y();
     coeffs_[8] = omegaVal.z();
+
+    coeffs_[9] = rotationVal.x();
+    coeffs_[10] = rotationVal.y();
+    coeffs_[11] = rotationVal.z();
+    
+    rotation_.updateRotation
+    (
+        HamiltonRodriguezRot
+        (
+            coeffs_[9],
+            coeffs_[10],
+            coeffs_[11],
+            coeffs_[12]
+        )
+    );
 
     // Update average omega
     omegaAverage_.value() = rotation_.omegaAverage(delta);

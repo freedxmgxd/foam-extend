@@ -38,6 +38,7 @@ namespace Foam
 
 defineTypeNameAndDebug(geometricSixDOF, 0);
 addToRunTimeSelectionTable(sixDOFODE, geometricSixDOF, dictionary);
+addToRunTimeSelectionTable(sixDOFODE, geometricSixDOF, pyDictionary);
 
 }
 
@@ -374,6 +375,53 @@ Foam::geometricSixDOF::geometricSixDOF(const IOobject& io)
     coeffs_[11] = 0;
 }
 
+Foam::geometricSixDOF::geometricSixDOF
+(
+    const IOobject& io,
+    const dictionary& floatingBodyDict
+)
+:
+    sixDOFODE(io, floatingBodyDict),
+
+    Xrel_(floatingBodyDict.lookup("Xrel")),
+    U_(floatingBodyDict.lookup("U")),
+    Uaverage_("Uaverage", U_),
+    rotation_(tensor(floatingBodyDict.lookup("rotationTensor"))),
+    rotIncrement_
+    (
+        floatingBodyDict.lookupOrDefault<tensor>("rotationIncrementTensor", tensor::zero)
+    ),
+    omega_(floatingBodyDict.lookup("omega")),
+    omegaAverage_("omegaAverage", omega_),
+
+    coeffs_(12, 0.0)
+{
+    // Set ODE coefficients from position and rotation
+
+    // Linear displacement relative to spring equilibrium
+    const vector& Xval = Xrel_.value();
+    coeffs_[0] = Xval.x();
+    coeffs_[1] = Xval.y();
+    coeffs_[2] = Xval.z();
+
+    // Linear velocity
+    const vector& Uval = U_.value();
+    coeffs_[3] = Uval.x();
+    coeffs_[4] = Uval.y();
+    coeffs_[5] = Uval.z();
+
+    // Rotational velocity in non - inertial coordinate system
+    const vector& omegaVal = omega_.value();
+    coeffs_[6] = omegaVal.x();
+    coeffs_[7] = omegaVal.y();
+    coeffs_[8] = omegaVal.z();
+
+    // Increment of the rotation vector (zero for initial condition)
+    coeffs_[9] = 0;
+    coeffs_[10] = 0;
+    coeffs_[11] = 0;
+}
+
 
 Foam::geometricSixDOF::geometricSixDOF
 (
@@ -594,12 +642,8 @@ void Foam::geometricSixDOF::update(const scalar delta)
     omegaVal.y() = coeffs_[7];
     omegaVal.z() = coeffs_[8];
 
-    // Update rotational increment tensor
-    rotIncrement_ = expMap(vector(coeffs_[9], coeffs_[10], coeffs_[11]));
-
-    // Update rotational tensor
-    rotation_ = (rotation_ & rotIncrement_);
-
+    vector rotationVal(coeffs_[9], coeffs_[10], coeffs_[11]);
+    Info<< "rotationVal = " << rotationVal;
     // Stabilise rotational constraints if necessary
     forAll(rotationalConstraints(), rcI)
     {
@@ -609,8 +653,14 @@ void Foam::geometricSixDOF::update(const scalar delta)
         // VV, 10/Mar/2017.
         const scalar t = dict().time().value();
 
-        rotationalConstraints()[rcI].stabilise(t, omegaVal);
+        rotationalConstraints()[rcI].stabilise(t, rotationVal, omegaVal);
     }
+    Info<< " corr = " << rotationVal << endl;
+    // Update rotational increment tensor
+    rotIncrement_ = expMap(rotationVal);
+
+    // Update rotational tensor
+    rotation_ = (rotation_ & rotIncrement_);
 
     // Update (possibly constrained) omega
     coeffs_[6] = omegaVal.x();

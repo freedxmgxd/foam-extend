@@ -48,12 +48,6 @@ Foam::rotationalConstraint::rotationalConstraint
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::rotationalConstraint::~rotationalConstraint()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 const Foam::word& Foam::rotationalConstraint::name() const

@@ -83,9 +83,8 @@ public:
         virtual autoPtr<translationalRestraint> clone() const;
 
 
-    // Destructor
-
-        virtual ~linearSpringDamper();
+    //- Destructor
+    virtual ~linearSpringDamper() = default;
 
 
     // Member Functions

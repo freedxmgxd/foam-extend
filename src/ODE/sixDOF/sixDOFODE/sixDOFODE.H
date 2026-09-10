@@ -239,6 +239,7 @@ public:
 
     // Declare run-time constructor selection table
 
+        // Construct from Ioobject
         declareRunTimeSelectionTable
         (
             autoPtr,
@@ -248,11 +249,24 @@ public:
             (io)
         );
 
+        //- Construct from dictionary
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            sixDOFODE,
+            pyDictionary,
+            (const IOobject& io, const dictionary& pyDict),
+            (io, pyDict)
+        );
+
 
     // Constructors
 
-        //- Construct from dictionary
+        //- Construct from Ioobject
         sixDOFODE(const IOobject& io);
+
+        //- Construct from dictionary
+        sixDOFODE(const IOobject& io, const dictionary& pyDict);
 
         //- Copy construct given new name
         sixDOFODE(const word& name, const sixDOFODE& sd);
@@ -265,6 +279,8 @@ public:
 
         //- Return autoPtr to the selected sixDOFODE
         static autoPtr<sixDOFODE> New(const IOobject& io);
+
+        static autoPtr<sixDOFODE> New(const IOobject& io, const dictionary& pyDict);
 
 
     //- Destructor

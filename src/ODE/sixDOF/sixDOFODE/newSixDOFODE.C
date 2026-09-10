@@ -72,4 +72,46 @@ Foam::autoPtr<Foam::sixDOFODE> Foam::sixDOFODE::New(const IOobject& io)
 }
 
 
+Foam::autoPtr<Foam::sixDOFODE> Foam::sixDOFODE::New
+(
+    const IOobject& io,
+    const dictionary& pyDict
+)
+{
+    word sixDOFODETypeName;
+
+    // Get object registry
+    const objectRegistry& database = io.db();
+
+    // Check whether the dictionary is in the database
+    if (database.foundObject<IOdictionary>(io.name()))
+    {
+        sixDOFODETypeName =
+            word
+            (
+                database.lookupObject<IOdictionary>(io.name()).lookup("type")
+            );
+    }
+    else
+    {
+        sixDOFODETypeName = word(IOdictionary(io).lookup("type"));
+    }
+
+    pyDictionaryConstructorTable::iterator cstrIter =
+        pyDictionaryConstructorTablePtr_->find(sixDOFODETypeName);
+
+    if (cstrIter == pyDictionaryConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown sixDOFODE " << sixDOFODETypeName
+            << endl << endl
+            << "Valid sixDOFODE types are:" << endl
+            << pyDictionaryConstructorTablePtr_->toc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<sixDOFODE>(cstrIter()(io, pyDict));
+}
+
+
 // ************************************************************************* //

@@ -84,12 +84,6 @@ Foam::constantAngularAcceleration::clone() const
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::constantAngularAcceleration::~constantAngularAcceleration()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::vector Foam::constantAngularAcceleration::matrixContribution
@@ -125,6 +119,21 @@ Foam::scalar Foam::constantAngularAcceleration::sourceContribution
 ) const
 {
     return alpha_;
+}
+
+
+void Foam::constantAngularAcceleration::stabilise
+(
+    const scalar t,
+    vector& rot,
+    vector& omega
+) const
+{
+    // Specify rotation
+    rot = ((I - sqr(dir_)) & rot) + dir_*alpha_*t;
+
+    // Specify rotational velocity
+    omega = ((I - sqr(dir_)) & omega) + dir_*alpha_;
 }
 
 

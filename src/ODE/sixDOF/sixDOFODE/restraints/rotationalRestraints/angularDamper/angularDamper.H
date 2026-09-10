@@ -83,9 +83,8 @@ public:
         virtual autoPtr<rotationalRestraint> clone() const;
 
 
-    // Destructor
-
-        virtual ~angularDamper();
+    //- Destructor
+    virtual ~angularDamper() = default;
 
 
     // Member Functions

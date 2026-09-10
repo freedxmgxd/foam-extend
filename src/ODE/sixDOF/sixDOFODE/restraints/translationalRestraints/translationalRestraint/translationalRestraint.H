@@ -77,6 +77,7 @@ class translationalRestraint
         //- Reference to underlying sixDOFODE
         const sixDOFODE& sixDOF_;
 
+
 public:
 
     //- Runtime type information
@@ -146,9 +147,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~translationalRestraint();
+    //- Destructor
+    virtual ~translationalRestraint() = default;
 
 
     // Member Functions

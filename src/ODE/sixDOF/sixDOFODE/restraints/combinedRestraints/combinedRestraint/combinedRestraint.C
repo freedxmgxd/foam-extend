@@ -48,12 +48,6 @@ Foam::combinedRestraint::combinedRestraint
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::combinedRestraint::~combinedRestraint()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 const Foam::word& Foam::combinedRestraint::name() const
@@ -82,14 +76,8 @@ Foam::autoPtr<Foam::combinedRestraint> Foam::combinedRestraint::New
 
     if (cstrIter == wordConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "combinedRestraint::New"
-            "\n("
-            "\n    const word& name,"
-            "\n    const dictionary& dict"
-            "\n)"
-        )   << "Unknown combined restraint type: " << restraintType
+        FatalErrorInFunction
+            << "Unknown combined restraint type: " << restraintType
             << endl << endl
             << "Valid combined restraint types are: " << endl
             << wordConstructorTablePtr_->sortedToc()

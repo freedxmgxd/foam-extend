@@ -146,9 +146,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~rotationalRestraint();
+    //- Destructor
+    virtual ~rotationalRestraint() = default;
 
 
     // Member Functions

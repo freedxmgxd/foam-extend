@@ -164,9 +164,8 @@ public:
         );
 
 
-    // Destructor
-
-        virtual ~rotationalConstraint();
+    //- Destructor
+    virtual ~rotationalConstraint() = default;
 
 
     // Member Functions
@@ -203,6 +202,7 @@ public:
             virtual void stabilise
             (
                 const scalar t,
+                vector& rot,
                 vector& omega
             ) const = 0;
 

@@ -48,12 +48,6 @@ Foam::rotationalRestraint::rotationalRestraint
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::rotationalRestraint::~rotationalRestraint()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 const Foam::word& Foam::rotationalRestraint::name() const
@@ -82,14 +76,8 @@ Foam::autoPtr<Foam::rotationalRestraint> Foam::rotationalRestraint::New
 
     if (cstrIter == wordConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "rotationalRestraint::New"
-            "\n("
-            "\n    const word& name,"
-            "\n    const dictionary& dict"
-            "\n)"
-        )   << "Unknown translation restraint type: " << restraintType
+        FatalErrorInFunction
+            << "Unknown translation restraint type: " << restraintType
             << endl << endl
             << "Valid translation restraint types are: " << endl
             << wordConstructorTablePtr_->sortedToc()
