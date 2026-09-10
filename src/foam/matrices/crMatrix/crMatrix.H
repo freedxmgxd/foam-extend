@@ -137,6 +137,15 @@ public:
             }
 
 
+        // Edit
+
+            //- Return access to addressing
+            crAddressing& crAddr()
+            {
+                return crAddr_;
+            }
+
+
         // Matrix operations
 
             //- Return transpose matrix

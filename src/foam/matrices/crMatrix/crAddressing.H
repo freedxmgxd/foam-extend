@@ -152,7 +152,7 @@ public:
 
         // Edit
 
-            //- Return column array
+            //- Return access to column array
             labelList& column()
             {
                 return column_;

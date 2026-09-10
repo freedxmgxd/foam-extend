@@ -48,7 +48,7 @@ SourceFiles
 #define BlockLduMatrix_H
 
 #include "coeffFields.H"
-#include "FieldField.H"
+#include "FieldFields.H"
 #include "lduMesh.H"
 #include "HashSet.H"
 #include "BlockLduInterfaceFieldPtrsList.H"
