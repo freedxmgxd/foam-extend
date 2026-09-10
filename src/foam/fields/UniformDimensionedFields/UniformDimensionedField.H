@@ -71,7 +71,11 @@ public:
         UniformDimensionedField(const IOobject&, const dimensioned<Type>&);
 
         //- Construct from IOobject and optional dictionary
-        UniformDimensionedField(const IOobject&, const dictionary& pyDict);
+        UniformDimensionedField
+        (
+            const IOobject&,
+            const dictionary& pyDict = dictionary()
+        );
 
         //- Construct as copy
         UniformDimensionedField(const UniformDimensionedField<Type>&);
