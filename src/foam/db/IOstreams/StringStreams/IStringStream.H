@@ -124,7 +124,7 @@ public:
         //- Return a non-const reference to const Istream
         //  Needed for read-constructors where the stream argument is temporary:
         //  e.g. thing thisThing(IFstream("thingFileName")());
-        Istream& operator()() const
+        IStringStream& operator()() const
         {
             return const_cast<IStringStream&>(*this);
         }
