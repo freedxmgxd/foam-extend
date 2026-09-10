@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
     while (runTime.run())
     {
 #       include "readTimeControls.H"
+#       include "readFieldBounds.H"
 #       include "CourantNo.H"
 #       include "setDeltaT.H"
 

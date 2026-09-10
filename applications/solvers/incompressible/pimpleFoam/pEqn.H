@@ -41,6 +41,8 @@
         }
     }
 
+#   include "limitP.H"
+
     // Explicitly relax pressure for momentum corrector except for last
     // corrector
     if (!pimple.finalIter())
@@ -53,4 +55,6 @@
     // Consistently reconstruct velocity after pressure equation. Note: flux is
     // made relative inside the function
     pimple.reconstructTransientVelocity(U, phi, ddtUEqn, rAU, p);
+
+#   include "limitU.H"
 }
