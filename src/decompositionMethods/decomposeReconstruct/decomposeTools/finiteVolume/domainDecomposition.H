@@ -227,7 +227,9 @@ public:
                 const label procI,
                 const Time& procDb,
                 const word& regionName,
-                const bool createPassiveProcPatches = false
+                const bool createPassiveProcPatches = false,
+                const dictionary& fvSchemesPyDict = dictionary(),
+                const dictionary& fvSolutionPyDict = dictionary()
             ) const;
 
             //- Create and return global point index

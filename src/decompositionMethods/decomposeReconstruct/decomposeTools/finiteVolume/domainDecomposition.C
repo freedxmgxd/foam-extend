@@ -92,7 +92,9 @@ Foam::autoPtr<Foam::fvMesh> Foam::domainDecomposition::processorMesh
     const label procI,
     const Time& processorDb,
     const word& regionName,
-    const bool createPassiveProcPatches
+    const bool createPassiveProcPatches,
+    const dictionary& fvSchemesPyDict,
+    const dictionary& fvSolutionPyDict
 ) const
 {
     // Create processor points
@@ -225,7 +227,9 @@ Foam::autoPtr<Foam::fvMesh> Foam::domainDecomposition::processorMesh
             xferMove(procFaces),
             xferMove(procOwner),
             xferMove(procNeighbour),
-            false          // Do not sync par
+            false,          // Do not sync par
+	    fvSchemesPyDict,
+	    fvSolutionPyDict
         )
     );
     fvMesh& procMesh = procMeshPtr();
