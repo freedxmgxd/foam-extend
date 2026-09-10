@@ -189,6 +189,9 @@ private:
         //- Have support for threads?
         static bool haveThreads_;
 
+        //- Owns mpi process
+        static bool mpiMaster_;
+
         //- Default message type info
         static const int msgType_;
 
@@ -212,9 +215,6 @@ private:
 
 
     // Private member functions
-
-        //- Set data for parallel running
-        static void setParRun(const label nProcs, const bool haveThreads);
 
         //- Allocate a communicator with index
         static void allocatePstreamCommunicator
@@ -305,6 +305,9 @@ public:
 
     // Member functions
 
+        //- Set data for parallel running
+        static void setParRun(const label nProcs, const bool haveThreads);
+
         //- Allocate a new communicator
         static label allocateCommunicator
         (
@@ -390,7 +393,7 @@ public:
 
         //- Initialisation function called from main
         //  Spawns slave processes and initialises inter-communication
-        static bool init(int& argc, char**& argv, const bool needsThread);
+        static bool init(int& argc, char**& argv, bool needsThread);
 
 
         // Non-blocking comms

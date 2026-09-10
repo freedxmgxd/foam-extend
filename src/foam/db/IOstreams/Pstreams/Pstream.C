@@ -395,28 +395,32 @@ bool Foam::Pstream::init(int& argc, char**& argv, const bool needsThread)
 {
     int provided_thread_support;
 
-    MPI_Init_thread
-    (
-        &argc,
-        &argv,
+    // Initialise MPI if owned by Pstream
+    if (mpiMaster_)
+    {
+        MPI_Init_thread
         (
-            needsThread
-          ? MPI_THREAD_MULTIPLE
-          : MPI_THREAD_SINGLE
-        ),
-        &provided_thread_support
-    );
+            &argc,
+            &argv,
+            (
+                needsThread
+                ? MPI_THREAD_MULTIPLE
+                : MPI_THREAD_SINGLE
+            ),
+            &provided_thread_support
+        );
 
-    int myGlobalRank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &myGlobalRank);
+        int myGlobalRank;
+        MPI_Comm_rank(MPI_COMM_WORLD, &myGlobalRank);
 
-    MPI_Comm_split
-    (
-        MPI_COMM_WORLD,
-        1,
-        myGlobalRank,
-        &PstreamGlobals::MPI_COMM_FOAM
-    );
+        MPI_Comm_split
+        (
+            MPI_COMM_WORLD,
+            1,
+            myGlobalRank,
+            &PstreamGlobals::MPI_COMM_FOAM
+        );
+    }
 
     int numprocs;
     MPI_Comm_size(PstreamGlobals::MPI_COMM_FOAM, &numprocs);
@@ -508,21 +512,27 @@ void Foam::Pstream::exit(int errnum)
         }
     }
 
-    if (errnum == 0)
+    if (mpiMaster_)
     {
-        MPI_Finalize();
-        ::exit(errnum);
-    }
-    else
-    {
-        MPI_Abort(PstreamGlobals::MPI_COMM_FOAM, errnum);
+        if (errnum == 0)
+        {
+            MPI_Finalize();
+            ::exit(errnum);
+        }
+        else
+        {
+            MPI_Abort(PstreamGlobals::MPI_COMM_FOAM, errnum);
+        }
     }
 }
 
 
 void Foam::Pstream::abort()
 {
-    MPI_Abort(PstreamGlobals::MPI_COMM_FOAM, 1);
+    if (mpiMaster_)
+    {
+        MPI_Abort(PstreamGlobals::MPI_COMM_FOAM, 1);
+    }
 }
 
 
@@ -840,6 +850,9 @@ bool Foam::Pstream::parRun_(false);
 
 // By default threads are not available
 bool Foam::Pstream::haveThreads_(false);
+
+// By default owns and manages mpi process
+bool Foam::Pstream::mpiMaster_(true);
 
 // Free communicators
 Foam::LIFOStack<Foam::label> Foam::Pstream::freeComms_;
