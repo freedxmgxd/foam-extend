@@ -194,7 +194,8 @@ void Foam::coarseAmgLevel::solve
     topLevelDict.add("minIter", 0);
     topLevelDict.add("maxIter", 500);
     topLevelDict.add("tolerance", tolerance);
-    topLevelDict.add("relTol", relTol);
+    // topLevelDict.add("relTol", relTol);
+    topLevelDict.add("relTol", 0);
 
     // Top-level round-off error control.  HJ, 28/May/2018
     x = 0;

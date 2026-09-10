@@ -1478,7 +1478,7 @@ Foam::autoPtr<Foam::amgMatrix> Foam::selectionAmgPolicy::restrictMatrix() const
                         }
                         else if (ir == jp)
                         {
-                           // Found COARSE diagonal
+                            // Found COARSE diagonal
                             coarseDiag[ir] += ra*coeffP[indexP];
                         }
                         else
