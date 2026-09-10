@@ -42,7 +42,7 @@ SourceFiles
 #include "regIOobject.H"
 #include "dimensionedTypes.H"
 #include "DimensionedField.H"
-#include "FieldField.H"
+#include "FieldFields.H"
 #include "lduInterfaceFieldPtrsList.H"
 #include "BlockLduInterfaceFieldPtrsList.H"
 

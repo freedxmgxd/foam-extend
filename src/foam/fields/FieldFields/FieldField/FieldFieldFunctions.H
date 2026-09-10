@@ -23,8 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "scalarFieldField.H"
-
 #define TEMPLATE template<template<class> class Field, class Type>
 #include "FieldFieldFunctionsM.H"
 
