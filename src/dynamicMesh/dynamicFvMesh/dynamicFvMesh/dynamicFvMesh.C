@@ -34,9 +34,19 @@ defineRunTimeSelectionTable(Foam::dynamicFvMesh, IOobject);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::dynamicFvMesh::dynamicFvMesh(const IOobject& io)
+Foam::dynamicFvMesh::dynamicFvMesh
+(
+    const IOobject& io,
+    const dictionary& fvSchemesPyDict,
+    const dictionary& fvSolutionPyDict
+)
 :
-    fvMesh(io)
+    fvMesh
+    (
+        io,
+        fvSchemesPyDict,
+        fvSolutionPyDict
+    )
 {}
 
 
@@ -79,12 +89,6 @@ Foam::dynamicFvMesh::dynamicFvMesh
         cells,
         syncPar
     )
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::dynamicFvMesh::~dynamicFvMesh()
 {}
 
 

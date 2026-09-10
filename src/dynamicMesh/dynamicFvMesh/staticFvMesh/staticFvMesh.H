@@ -53,10 +53,10 @@ class staticFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        staticFvMesh(const staticFvMesh&);
+        staticFvMesh(const staticFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const staticFvMesh&);
+        void operator=(const staticFvMesh&) = delete;
 
 
 public:
@@ -70,10 +70,18 @@ public:
         //- Construct from IOobject
         staticFvMesh(const IOobject& io);
 
+        //- Construct from IOobject with optional dictionaries
+        staticFvMesh
+       (
+            const IOobject& io,
+            const dictionary& dynamicMeshPyDict,
+            const dictionary& fvSchemesPyDict = dictionary(),
+            const dictionary& fvSolutionPyDict = dictionary()
+        );
 
-    // Destructor
 
-        ~staticFvMesh();
+    //- Destructor
+    virtual ~staticFvMesh() = default;
 
 
     // Member Functions

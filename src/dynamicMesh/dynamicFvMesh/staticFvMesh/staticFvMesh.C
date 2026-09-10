@@ -36,6 +36,7 @@ namespace Foam
 defineTypeNameAndDebug(staticFvMesh, 0);
 
 addToRunTimeSelectionTable(dynamicFvMesh, staticFvMesh, IOobject);
+addToRunTimeSelectionTable(dynamicFvMesh, staticFvMesh, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -46,9 +47,21 @@ staticFvMesh::staticFvMesh(const IOobject& io)
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-staticFvMesh::~staticFvMesh()
+staticFvMesh::staticFvMesh
+(
+    const IOobject& io,
+    const dictionary& dynamicMeshPyDict,
+    const dictionary& fvSchemesPyDict,
+    const dictionary& fvSolutionPyDict
+)
+:
+    dynamicFvMesh
+    (
+	io,
+        fvSchemesPyDict,
+        fvSolutionPyDict
+    )
+    // Does not use dynamicMeshPyDict
 {}
 
 

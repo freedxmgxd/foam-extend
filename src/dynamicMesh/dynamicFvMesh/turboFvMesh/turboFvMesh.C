@@ -202,14 +202,6 @@ Foam::turboFvMesh::turboFvMesh
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::turboFvMesh::~turboFvMesh()
-{
-    deleteDemandDrivenData(movingPointsPtr_);
-}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 // Return moving points mask

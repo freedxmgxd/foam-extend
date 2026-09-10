@@ -56,10 +56,10 @@ class dynamicFvMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        dynamicFvMesh(const dynamicFvMesh&);
+        dynamicFvMesh(const dynamicFvMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const dynamicFvMesh&);
+        void operator=(const dynamicFvMesh&) = delete;
 
 
 public:
@@ -70,6 +70,7 @@ public:
 
     // Declare run-time constructor selection table
 
+        //- Legacy run-time selection without dictionaries
         declareRunTimeSelectionTable
         (
             autoPtr,
@@ -79,11 +80,35 @@ public:
             (io)
         );
 
+        //- New run-time selection with dictionaries
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            dynamicFvMesh,
+            dictionary,
+	    (
+                const IOobject& io,
+                const dictionary& dynamicMeshPyDict,
+                const dictionary& fvSchemesPyDict,
+                const dictionary& fvSolutionPyDict
+            ),
+            (
+                io,
+	       	dynamicMeshPyDict,
+	       	fvSchemesPyDict,
+	       	fvSolutionPyDict
+            )
+        );
 
     // Constructors
 
         //- Construct from objectRegistry, and read/write options
-        explicit dynamicFvMesh(const IOobject& io);
+        dynamicFvMesh
+        (
+	    const IOobject& io,
+	    const dictionary& fvSchemesPyDict = dictionary(),
+            const dictionary& fvSolutionPyDict = dictionary()
+	);
 
 
         //- Construct from components without boundary.
@@ -114,12 +139,21 @@ public:
 
     // Selectors
 
-        //- Select null constructed
+        //- Select constructed from IOobject
         static autoPtr<dynamicFvMesh> New(const IOobject& io);
+
+        //- Select constructed from IOobject with optional dictionaries
+        static autoPtr<dynamicFvMesh> New
+        (
+	    const IOobject& io,
+            const dictionary& dynamicMeshPyDict,
+            const dictionary& fvSchemesPyDict,
+            const dictionary& fvSolutionPyDict
+	);
 
 
     //- Destructor
-    virtual ~dynamicFvMesh();
+    virtual ~dynamicFvMesh() = default;
 
 
     // Member Functions

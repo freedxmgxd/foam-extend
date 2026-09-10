@@ -115,9 +115,8 @@ public:
         explicit turboFvMesh(const IOobject& io);
 
 
-    // Destructor
-
-        virtual ~turboFvMesh();
+    //- Destructor
+    virtual ~turboFvMesh() = default;
 
 
     // Member Functions

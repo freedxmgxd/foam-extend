@@ -31,27 +31,6 @@ License
 
 Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New(const IOobject& io)
 {
-    wordList libNames(1);
-    libNames[0]=word("mesquiteMotionSolver");
-
-    forAll(libNames,i) {
-        const word libName("lib"+libNames[i]+".so");
-
-        dlLibraryTable& ll = const_cast<Time&>(io.time()).libs();
-
-        if (!ll.findLibrary(libName))
-        {
-            if(!ll.open(libName))
-            {
-                WarningIn("dynamicFvMesh::New(const IOobject& io)")
-                    << "Loading of dynamic mesh library " << libName
-                    << " unsuccesful. Some dynamic mesh  methods may not be "
-                    << " available"
-                    << endl;
-            }
-        }
-    }
-
     // Enclose the creation of the dynamicMesh to ensure it is
     // deleted before the dynamicFvMesh is created otherwise the dictionary
     // is entered in the database twice
@@ -82,10 +61,8 @@ Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New(const IOobject& io)
 
     if (!IOobjectConstructorTablePtr_)
     {
-        FatalErrorIn
-        (
-            "dynamicFvMesh::New(const IOobject&)"
-        )   << "dynamicFvMesh table is empty"
+        FatalErrorInFunction
+            << "dynamicFvMesh table is empty"
             << exit(FatalError);
     }
 
@@ -94,10 +71,8 @@ Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New(const IOobject& io)
 
     if (cstrIter == IOobjectConstructorTablePtr_->end())
     {
-        FatalErrorIn
-        (
-            "dynamicFvMesh::New(const IOobject&)"
-        )   << "Unknown dynamicFvMesh type " << dynamicFvMeshTypeName
+        FatalErrorInFunction
+            << "Unknown dynamicFvMesh type " << dynamicFvMeshTypeName
             << endl << endl
             << "Valid dynamicFvMesh types are :" << endl
             << IOobjectConstructorTablePtr_->sortedToc()
@@ -107,5 +82,64 @@ Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New(const IOobject& io)
     return autoPtr<dynamicFvMesh>(cstrIter()(io));
 }
 
+
+Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New
+(
+    const IOobject& io,
+    const dictionary& dynamicMeshPyDict,
+    const dictionary& fvSchemesPyDict,
+    const dictionary& fvSolutionPyDict
+)
+{
+    IOdictionary dynamicMeshDict
+    (
+        IOobject
+        (
+            "dynamicMeshDict",
+            io.time().constant(),
+            (io.name() == dynamicFvMesh::defaultRegion ? "" : io.name() ),
+            io.db(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ),
+	dynamicMeshPyDict
+    );
+
+    word dynamicFvMeshTypeName(dynamicMeshDict.lookup("dynamicFvMesh"));
+
+    Info<< "Selecting dynamicFvMesh " << dynamicFvMeshTypeName << endl;
+
+    const_cast<Time&>(io.time()).libs().open
+    (
+        dynamicMeshDict,
+        "dynamicFvMeshLibs",
+        dictionaryConstructorTablePtr_
+    );
+
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(dynamicFvMeshTypeName);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown dynamicFvMesh type " << dynamicFvMeshTypeName
+            << endl << endl
+            << "Valid dynamicFvMesh types are :" << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<dynamicFvMesh>
+    (
+        cstrIter()
+        (
+            io,
+            dynamicMeshPyDict,
+            fvSchemesPyDict,
+            fvSolutionPyDict
+        )
+    );
+}
 
 // ************************************************************************* //
