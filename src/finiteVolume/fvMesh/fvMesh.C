@@ -123,10 +123,15 @@ void Foam::fvMesh::clearOut()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fvMesh::fvMesh(const IOobject& io)
+Foam::fvMesh::fvMesh
+(
+    const IOobject& io,
+    const dictionary& fvSchemesPyDict,
+    const dictionary& fvSolutionPyDict
+)
 :
     polyMesh(io),
-    surfaceInterpolation(*this),
+    surfaceInterpolation(*this, fvSchemesPyDict, fvSolutionPyDict),
     boundary_(*this),
     lduPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),
@@ -223,11 +228,13 @@ Foam::fvMesh::fvMesh
     const Xfer<faceList>& faces,
     const Xfer<labelList>& allOwner,
     const Xfer<labelList>& allNeighbour,
-    const bool syncPar
+    const bool syncPar,
+    const dictionary& fvSchemesPyDict,
+    const dictionary& fvSolutionPyDict
 )
 :
     polyMesh(io, points, faces, allOwner, allNeighbour, syncPar),
-    surfaceInterpolation(*this),
+    surfaceInterpolation(*this, fvSchemesPyDict, fvSolutionPyDict),
     boundary_(*this),
     lduPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),

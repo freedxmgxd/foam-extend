@@ -143,10 +143,10 @@ class fvMesh
 
 
         //- Disallow construct as copy
-        fvMesh(const fvMesh&);
+        fvMesh(const fvMesh&) = delete;
 
         //- Disallow assignment
-        void operator=(const fvMesh&);
+        void operator=(const fvMesh&) = delete;
 
 
         // Storage management
@@ -175,8 +175,13 @@ public:
 
     // Constructors
 
-        //- Construct from IOobject
-        explicit fvMesh(const IOobject& io);
+        //- Construct from IOobject with optional dictionaries
+        fvMesh
+        (
+            const IOobject& io,
+	    const dictionary& fvSchemesPyDict = dictionary(),
+	    const dictionary& fvSolutionPyDict = dictionary()
+        );
 
         //- Construct from Istream
         fvMesh
@@ -195,7 +200,9 @@ public:
             const Xfer<faceList>& faces,
             const Xfer<labelList>& allOwner,
             const Xfer<labelList>& allNeighbour,
-            const bool syncPar = true
+            const bool syncPar = true,
+	    const dictionary& fvSchemesPyDict = dictionary(),
+	    const dictionary& fvSolutionPyDict = dictionary()
         );
 
         //- Construct without boundary from cells rather than owner/neighbour.

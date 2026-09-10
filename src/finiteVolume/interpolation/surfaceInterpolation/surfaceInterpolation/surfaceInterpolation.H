@@ -117,8 +117,13 @@ public:
 
     // Constructors
 
-        //- Construct given an fvMesh
-        explicit surfaceInterpolation(const fvMesh&);
+        //- Construct given an fvMesh with optional dictionaries
+        explicit surfaceInterpolation
+	(
+	    const fvMesh&,
+	    const dictionary& fvSchemesPyDict = dictionary(),
+	    const dictionary& fvSolutionPyDict = dictionary()
+	);
 
 
     //- Destructor

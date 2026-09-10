@@ -52,21 +52,29 @@ class fvSolution
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        fvSolution(const fvSolution&);
+        fvSolution(const fvSolution&) = delete;
 
         //- Disallow default bitwise copy construct
-        void operator=(const fvSolution&);
+        void operator=(const fvSolution&) = delete;
 
 
 public:
 
     // Constructors
 
-        //- Construct for objectRegistry
-        fvSolution(const objectRegistry& obr)
+        //- Construct for objectRegistry and optional dictionary
+        fvSolution
+        (
+	    const objectRegistry& obr,
+	    const dictionary& pyDict = dictionary()
+	)
         :
             solution(obr, "fvSolution")
         {}
+
+
+    //- Destructor
+    ~fvSolution() = default;
 };
 
 

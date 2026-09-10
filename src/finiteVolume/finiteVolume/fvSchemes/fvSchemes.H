@@ -86,10 +86,10 @@ class fvSchemes
         void clear();
 
         //- Disallow default bitwise copy construct
-        fvSchemes(const fvSchemes&);
+        fvSchemes(const fvSchemes&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const fvSchemes&);
+        void operator=(const fvSchemes&) = delete;
 
 
 public:
@@ -100,8 +100,16 @@ public:
 
     // Constructors
 
-        //- Construct for objectRegistry
-        fvSchemes(const objectRegistry& obr);
+        //- Construct for objectRegistry and optional initilisation dictionary
+        fvSchemes
+        (
+            const objectRegistry& obr,
+            const dictionary& pyDict = dictionary()
+        );
+
+
+    //- Destructor
+    ~fvSchemes() = default;
 
 
     // Member Functions
@@ -183,7 +191,7 @@ public:
         // Read
 
             //- Read the fvSchemes
-            bool read();
+            bool readSchemes(const dictionary& pyDict = dictionary());
 
 
         // Write

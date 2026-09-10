@@ -53,11 +53,16 @@ void Foam::surfaceInterpolation::clearOut()
 
 // * * * * * * * * * * * * * * * * Constructors * * * * * * * * * * * * * * //
 
-Foam::surfaceInterpolation::surfaceInterpolation(const fvMesh& fvm)
+Foam::surfaceInterpolation::surfaceInterpolation
+(
+    const fvMesh& fvm,
+    const dictionary& fvSchemesPyDict,
+    const dictionary& fvSolutionPyDict
+)
 :
     mesh_(fvm),
-    schemesDict_(fvm),
-    solutionDict_(fvm),
+    schemesDict_(fvm, fvSchemesPyDict),
+    solutionDict_(fvm, fvSolutionPyDict),
     weightingFactorsPtr_(nullptr),
     deltaCoeffsPtr_(nullptr),
     magLongDeltasPtr_(nullptr),
