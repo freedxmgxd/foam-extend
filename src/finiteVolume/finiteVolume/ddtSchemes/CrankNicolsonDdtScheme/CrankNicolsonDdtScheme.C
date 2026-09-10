@@ -191,6 +191,7 @@ bool CrankNicolsonDdtScheme<Type>::evaluate
     return ddt0.timeIndex() != this->mesh().time().timeIndex();
 }
 
+
 template<class Type>
 template<class GeoField>
 scalar CrankNicolsonDdtScheme<Type>::coef_
