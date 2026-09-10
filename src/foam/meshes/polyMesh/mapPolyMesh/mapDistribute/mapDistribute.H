@@ -294,10 +294,12 @@ public:
                 const int tag = Pstream::msgType()
             ) const
             {
+                // Note: non-contiguous distribute now handled in
+                // non-blocking comms.  There are still problems
+                // HJ, 23/May/2024
                 if
                 (
                     Pstream::defaultComms() == Pstream::nonBlocking
-                 && contiguous<T>()
                 )
                 {
                     distribute
@@ -322,7 +324,7 @@ public:
                         fld
                     );
                 }
-                else
+                else if (Pstream::defaultComms() == Pstream::blocking)
                 {
                     distribute
                     (
@@ -333,6 +335,13 @@ public:
                         constructMap_,
                         fld
                     );
+                }
+                else
+                {
+                    FatalErrorInFunction
+                        << "Unsuported communications type "
+                        << Pstream::commsTypeNames[Pstream::defaultComms()]
+                        << exit(FatalError);
                 }
             }
 

@@ -77,12 +77,6 @@ Foam::cellModeller::cellModeller()
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::cellModeller::~cellModeller()
-{}
-
-
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 // Returns a pointer to a model which matches the string symbol

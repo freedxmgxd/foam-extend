@@ -89,20 +89,14 @@ class solution
 
     // Private Member Functions
 
-        //- Read settings from the dictionary
-        void read(const dictionary&);
+        //- Disallow default bitwise copy construct
+        solution(const solution&) = delete;
 
-        //- Disallow default bitwise copy construct and assignment
-        solution(const solution&);
-        void operator=(const solution&);
+        //- Disallow default bitwise  assignment
+        void operator=(const solution&) = delete;
 
 
 public:
-
-    //- Update from older solver controls syntax
-    //  Usually verbose, since we want to know about the changes
-    //  Returns the number of settings changed
-    static label upgradeSolverDict(dictionary& dict, const bool verbose=true);
 
     //- Debug switch
     static debug::debugSwitch debug;
@@ -110,17 +104,25 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary
+        //- Construct for given objectRegistry and optional dictionary
         solution
         (
             const objectRegistry& obr,
-            const fileName& dictName
+            const fileName& dictName,
+            const dictionary& pyDict = dictionary()
         );
+
+
+    //- Destructor
+    ~solution() = default;
 
 
     // Member Functions
 
         // Access
+
+            //- Read settings from the dictionary
+            void read(const dictionary&);
 
             //- Return true if the given field should be cached
             bool cache(const word& name) const;

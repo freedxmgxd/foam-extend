@@ -42,27 +42,30 @@ Foam::UniformDimensionedField<Type>::UniformDimensionedField
 template<class Type>
 Foam::UniformDimensionedField<Type>::UniformDimensionedField
 (
+    const IOobject& io,
+    const dictionary& pyDict
+)
+:
+    regIOobject(io),
+    dimensioned<Type>(regIOobject::name(), dimless, pTraits<Type>::zero)
+{
+    if (!pyDict.empty())
+    {
+        this->dimensions().reset(pyDict.lookup("dimensions"));
+        this->value() = pTraits<Type>(pyDict.lookup("value"));
+    }
+}
+
+
+template<class Type>
+Foam::UniformDimensionedField<Type>::UniformDimensionedField
+(
     const UniformDimensionedField<Type>& rdt
 )
 :
     regIOobject(rdt),
     dimensioned<Type>(rdt)
 {}
-
-
-template<class Type>
-Foam::UniformDimensionedField<Type>::UniformDimensionedField
-(
-    const IOobject& io
-)
-:
-    regIOobject(io),
-    dimensioned<Type>(regIOobject::name(), dimless, pTraits<Type>::zero)
-{
-    dictionary dict(readStream(typeName));
-    this->dimensions().reset(dict.lookup("dimensions"));
-    this->value() = pTraits<Type>(dict.lookup("value"));
-}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

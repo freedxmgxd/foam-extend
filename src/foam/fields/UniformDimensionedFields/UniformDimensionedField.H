@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class UniformDimensionedField Declaration
+                 Class UniformDimensionedField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -70,11 +70,12 @@ public:
         //- Construct from components
         UniformDimensionedField(const IOobject&, const dimensioned<Type>&);
 
+        //- Construct from IOobject and optional dictionary
+        UniformDimensionedField(const IOobject&, const dictionary& pyDict);
+
         //- Construct as copy
         UniformDimensionedField(const UniformDimensionedField<Type>&);
 
-        //- Construct from Istream
-        UniformDimensionedField(const IOobject&);
 
 
     //- Destructor

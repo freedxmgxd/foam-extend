@@ -62,6 +62,7 @@ void Foam::mapDistribute::distribute
             field[map[i]] = subField[i];
         }
 
+        // No parallel comms.  Return
         return;
     }
 
@@ -82,23 +83,26 @@ void Foam::mapDistribute::distribute
             }
         }
 
-        // Subset myself
-        const labelList& mySubMap = subMap[Pstream::myProcNo()];
-
-        List<T> subField(mySubMap.size());
-        forAll(mySubMap, i)
-        {
-            subField[i] = field[mySubMap[i]];
-        }
-
-        // Receive sub field from myself (subField)
-        const labelList& map = constructMap[Pstream::myProcNo()];
-
+        // Resize field
         field.setSize(constructSize);
 
-        forAll(map, i)
+        // Subset myself
         {
-            field[map[i]] = subField[i];
+            const labelList& mySubMap = subMap[Pstream::myProcNo()];
+
+            List<T> subField(mySubMap.size());
+            forAll(mySubMap, i)
+            {
+                subField[i] = field[mySubMap[i]];
+            }
+
+            // Receive sub field from myself (subField)
+            const labelList& map = constructMap[Pstream::myProcNo()];
+
+            forAll(map, i)
+            {
+                field[map[i]] = subField[i];
+            }
         }
 
         // Receive sub field from neighbour
@@ -200,60 +204,102 @@ void Foam::mapDistribute::distribute
 
         if (!contiguous<T>())
         {
-            // Stream data into buffer
+            // Set up sends to neighbours
+
+            List<List<T> > sendFields(Pstream::nProcs());
+
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
                 const labelList& map = subMap[domain];
 
                 if (domain != Pstream::myProcNo() && map.size())
                 {
+                    List<T>& subField = sendFields[domain];
+                    subField.setSize(map.size());
+                    forAll(map, i)
+                    {
+                        subField[i] = field[map[i]];
+                    }
+
                     // Put data into send buffer
-                    OPstream toDomain(Pstream::nonBlocking, domain, 0, tag);
-                    toDomain << UIndirectList<T>(field, map);
+                    // Note
+                    // For some reason, non-contiguous data non-blocking
+                    // exchange does not work: buffers are not ready for read
+                    // Reverting to blocking exchange
+                    // HJ, 22/May/2024
+                    // OPstream toDomain(Pstream::nonBlocking, domain, 0, tag);
+                    OPstream toDomain(Pstream::blocking, domain, 0, tag);
+                    toDomain << subField;
+                }
+            }
+
+            // Set up 'send' to myself
+            {
+                const labelList& map = subMap[Pstream::myProcNo()];
+
+                List<T>& subField = sendFields[Pstream::myProcNo()];
+                subField.setSize(map.size());
+
+                forAll(map, i)
+                {
+                    subField[i] = field[map[i]];
+                }
+            }
+
+            // Combine bits. Note that can reuse field storage
+
+            field.setSize(constructSize);
+
+            // Receive sub field from myself (sendFields[Pstream::myProcNo()])
+            {
+                const labelList& map = constructMap[Pstream::myProcNo()];
+                const List<T>& subField = sendFields[Pstream::myProcNo()];
+
+                forAll(map, i)
+                {
+                    field[map[i]] = subField[i];
                 }
             }
 
             // Start receiving. Do not block.
 
-            {
-                // Set up 'send' to myself
-                const labelList& mySubMap = subMap[Pstream::myProcNo()];
-                List<T> mySubField(mySubMap.size());
-                forAll(mySubMap, i)
-                {
-                    mySubField[i] = field[mySubMap[i]];
-                }
-                // Combine bits. Note that can reuse field storage
-                field.setSize(constructSize);
-                // Receive sub field from myself
-                {
-                    const labelList& map = constructMap[Pstream::myProcNo()];
+            List<List<T> > recvFields(Pstream::nProcs());
 
-                    forAll(map, i)
-                    {
-                        field[map[i]] = mySubField[i];
-                    }
-                }
-            }
-
-            // Block ourselves, waiting only for the current comms
-            Pstream::waitRequests(nOutstanding);
-
-            // Consume
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
                 const labelList& map = constructMap[domain];
 
                 if (domain != Pstream::myProcNo() && map.size())
                 {
-                    IPstream str(Pstream::nonBlocking, domain, 0, tag);
-                    List<T> recvField(str);
+                    // Note
+                    // For some reason, non-contiguous data non-blocking
+                    // exchange does not work: buffers are not ready for read
+                    // Reverting to blocking exchange
+                    // HJ, 22/May/2024
+                    // IPstream str(Pstream::nonBlocking, domain, 0, tag);
+                    IPstream str(Pstream::blocking, domain, 0, tag);
 
-                    checkReceivedSize(domain, map.size(), recvField.size());
+                    str >> recvFields[domain];
+                }
+            }
+
+            // Block ourselves, waiting only for the current comms
+            Pstream::waitRequests(nOutstanding);
+
+            // Collect neighbour fields
+            for (label domain = 0; domain < Pstream::nProcs(); domain++)
+            {
+                const labelList& map = constructMap[domain];
+
+                if (domain != Pstream::myProcNo() && map.size())
+                {
+                    const List<T>& subField = recvFields[domain];
+
+                    checkReceivedSize(domain, map.size(), subField.size());
 
                     forAll(map, i)
                     {
-                        field[map[i]] = recvField[i];
+                        field[map[i]] = subField[i];
                     }
                 }
             }
@@ -262,7 +308,7 @@ void Foam::mapDistribute::distribute
         {
             // Set up sends to neighbours
 
-            List<List<T > > sendFields(Pstream::nProcs());
+            List<List<T> > sendFields(Pstream::nProcs());
 
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
@@ -290,7 +336,7 @@ void Foam::mapDistribute::distribute
 
             // Set up receives from neighbours
 
-            List<List<T > > recvFields(Pstream::nProcs());
+            List<List<T> > recvFields(Pstream::nProcs());
 
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
             {
@@ -310,9 +356,7 @@ void Foam::mapDistribute::distribute
                 }
             }
 
-
             // Set up 'send' to myself
-
             {
                 const labelList& map = subMap[Pstream::myProcNo()];
 
@@ -324,7 +368,6 @@ void Foam::mapDistribute::distribute
                     subField[i] = field[map[i]];
                 }
             }
-
 
             // Combine bits. Note that can reuse field storage
 
@@ -340,7 +383,6 @@ void Foam::mapDistribute::distribute
                     field[map[i]] = subField[i];
                 }
             }
-
 
             // Wait for all to finish
             Pstream::waitRequests(nOutstanding);
@@ -410,6 +452,8 @@ void Foam::mapDistribute::distribute
         {
             cop(field[map[i]], subField[i]);
         }
+
+        // No parallel comms.  Return
         return;
     }
 
@@ -431,26 +475,28 @@ void Foam::mapDistribute::distribute
         }
 
         // Subset myself
-        const labelList& mySubMap = subMap[Pstream::myProcNo()];
-
-        List<T> subField(mySubMap.size());
-        forAll(mySubMap, i)
         {
-            subField[i] = field[mySubMap[i]];
+            const labelList& mySubMap = subMap[Pstream::myProcNo()];
+
+            List<T> subField(mySubMap.size());
+            forAll(mySubMap, i)
+            {
+                subField[i] = field[mySubMap[i]];
+            }
+
+            // Receive sub field from myself (subField)
+            const labelList& map = constructMap[Pstream::myProcNo()];
+
+            field.setSize(constructSize);
+            field = nullValue;
+
+            forAll(map, i)
+            {
+                cop(field[map[i]], subField[i]);
+            }
         }
 
-        // Receive sub field from myself (subField)
-        const labelList& map = constructMap[Pstream::myProcNo()];
 
-        field.setSize(constructSize);
-        field = nullValue;
-
-        forAll(map, i)
-        {
-            cop(field[map[i]], subField[i]);
-        }
-
-        // Receive sub field from neighbour
         for (label domain = 0; domain < Pstream::nProcs(); domain++)
         {
             const labelList& map = constructMap[domain];
@@ -555,7 +601,13 @@ void Foam::mapDistribute::distribute
                 if (domain != Pstream::myProcNo() && map.size())
                 {
                     // Put data into send buffer
-                    OPstream toDomain(Pstream::nonBlocking, domain, 0, tag);
+                    // Note
+                    // For some reason, non-contiguous data non-blocking
+                    // exchange does not work: buffers are not ready for read
+                    // Reverting to blocking exchange
+                    // HJ, 22/May/2024
+                    // OPstream toDomain(Pstream::nonBlocking, domain, 0, tag);
+                    OPstream toDomain(Pstream::blocking, domain, 0, tag);
                     toDomain << UIndirectList<T>(field, map);
                 }
             }
@@ -589,7 +641,13 @@ void Foam::mapDistribute::distribute
 
                 if (domain != Pstream::myProcNo() && map.size())
                 {
-                    IPstream str(Pstream::nonBlocking, domain, 0, tag);
+                    // Note
+                    // For some reason, non-contiguous data non-blocking
+                    // exchange does not work: buffers are not ready for read
+                    // Reverting to blocking exchange
+                    // HJ, 22/May/2024
+                    // IPstream str(Pstream::nonBlocking, domain, 0, tag);
+                    IPstream str(Pstream::blocking, domain, 0, tag);
                     List<T> recvField(str);
 
                     checkReceivedSize(domain, map.size(), recvField.size());

@@ -26,11 +26,6 @@ License
 #include "solution.H"
 #include "objectRegistry.H"
 
-// These are for old syntax compatibility:
-#include "BICCG.H"
-#include "ICCG.H"
-#include "IStringStream.H"
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 Foam::debug::debugSwitch
@@ -120,7 +115,6 @@ void Foam::solution::read(const dictionary& dict)
     if (dict.found("solvers"))
     {
         solvers_ = dict.subDict("solvers");
-        upgradeSolverDict(solvers_);
     }
 
     if (dict.found("solverPerformance"))
@@ -141,7 +135,12 @@ void Foam::solution::read(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solution::solution(const objectRegistry& obr, const fileName& dictName)
+Foam::solution::solution
+(
+    const objectRegistry& obr,
+    const fileName& dictName,
+    const dictionary& pyDict
+)
 :
     IOdictionary
     (
@@ -165,104 +164,31 @@ Foam::solution::solution(const objectRegistry& obr, const fileName& dictName)
     prevTimeIndex_(0),
     storeAllResiduals_(false)
 {
-    if (!headerOk())
+    if (!pyDict.empty())
     {
-        if (debug)
-        {
-            InfoIn
-            (
-                "Foam::solution::solution(const objectRegistry& obr, "
-                "const fileName& dictName)"
-            )   << "Solution dictionary not found.  Adding default entries"
-                << endl;
-        }
+        // Initialise from pyDict
+        read(pyDict);
     }
+    else
+    {
+        if (!headerOk())
+        {
+            if (debug)
+            {
+                InfoInFunction
+                    << "Solution dictionary not found.  Adding default entries"
+                    << endl;
+            }
+        }
 
-    read(solutionDict());
+        read(solutionDict());
+    }
 
     set("solverPerformance", dictionary());
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::label Foam::solution::upgradeSolverDict
-(
-    dictionary& dict,
-    const bool verbose
-)
-{
-    label nChanged = 0;
-
-    // backward compatibility:
-    // recast primitive entries into dictionary entries
-    forAllIter(dictionary, dict, iter)
-    {
-        if (!iter().isDict())
-        {
-            Istream& is = iter().stream();
-            word name(is);
-            dictionary subdict;
-
-            if (name == "BICCG")
-            {
-                // special treatment for very old syntax
-                subdict = BICCG::solverDict(is);
-            }
-            else if (name == "ICCG")
-            {
-                // special treatment for very old syntax
-                subdict = ICCG::solverDict(is);
-            }
-            else
-            {
-                subdict.add("solver", name);
-                subdict <<= dictionary(is);
-
-                // preconditioner and smoother entries can be
-                // 1) primitiveEntry w/o settings,
-                // 2) or a dictionaryEntry.
-                // transform primitiveEntry with settings -> dictionaryEntry
-                forAll(subDictNames, dictI)
-                {
-                    const word& dictName = subDictNames[dictI];
-                    entry* ePtr = subdict.lookupEntryPtr(dictName,false,false);
-
-                    if (ePtr && !ePtr->isDict())
-                    {
-                        Istream& is = ePtr->stream();
-                        is >> name;
-
-                        if (!is.eof())
-                        {
-                            dictionary newDict;
-                            newDict.add(dictName, name);
-                            newDict <<= dictionary(is);
-
-                            subdict.set(dictName, newDict);
-                        }
-                    }
-                }
-            }
-
-
-            // write out information to help people adjust to the new syntax
-            if (verbose && Pstream::master())
-            {
-                Info<< "// using new solver syntax:\n"
-                    << iter().keyword() << subdict << endl;
-            }
-
-            // overwrite with dictionary entry
-            dict.set(iter().keyword(), subdict);
-
-            nChanged++;
-        }
-    }
-
-    return nChanged;
-}
-
 
 bool Foam::solution::cache(const word& name) const
 {
@@ -354,11 +280,8 @@ Foam::scalar Foam::solution::equationRelaxationFactor(const word& name) const
     }
     else
     {
-        FatalIOErrorIn
-        (
-            "Foam::solution::eqnRelaxationFactor(const word&)",
-            eqnRelaxDict_
-        )   << "Cannot find equation relaxation factor for '" << name
+        FatalIOErrorInFunction(eqnRelaxDict_)
+            << "Cannot find equation relaxation factor for '" << name
             << "' or a suitable default value."
             << exit(FatalIOError);
 
@@ -384,7 +307,7 @@ const Foam::dictionary& Foam::solution::solverDict(const word& name) const
 {
     if (debug)
     {
-        InfoIn("solution::solverDict(const word&)")
+        InfoInFunction
             << "Lookup solver for " << name << endl;
     }
 
@@ -396,7 +319,7 @@ const Foam::dictionary& Foam::solution::solver(const word& name) const
 {
     if (debug)
     {
-        InfoIn("solution::solver(const word&)")
+        InfoInFunction
             << "Lookup solver for " << name << endl;
     }
 
@@ -426,6 +349,7 @@ bool Foam::solution::writeData(Ostream& os) const
 
     return true;
 }
+
 
 Foam::dictionary& Foam::solution::solverPerformanceDict() const
 {

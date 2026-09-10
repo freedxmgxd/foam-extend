@@ -71,9 +71,9 @@ public:
         //- Construct from central "cellModels" file
         cellModeller();
 
-    // Destructor
 
-        ~cellModeller();
+    //- Destructor
+    ~cellModeller() = default;
 
 
     // Member functions
