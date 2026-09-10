@@ -74,7 +74,7 @@ public:
         UniformDimensionedField
         (
             const IOobject&,
-            const dictionary& pyDict = dictionary()
+            const dictionary& pyDict = dictionary::null
         );
 
         //- Construct as copy

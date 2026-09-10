@@ -104,7 +104,7 @@ public:
         fvSchemes
         (
             const objectRegistry& obr,
-            const dictionary& pyDict = dictionary()
+            const dictionary& pyDict = dictionary::null
         );
 
 
@@ -191,7 +191,7 @@ public:
         // Read
 
             //- Read the fvSchemes
-            bool readSchemes(const dictionary& pyDict = dictionary());
+            bool readSchemes(const dictionary& pyDict = dictionary::null);
 
 
         // Write

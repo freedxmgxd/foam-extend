@@ -109,7 +109,7 @@ public:
         (
             const objectRegistry& obr,
             const fileName& dictName,
-            const dictionary& pyDict = dictionary()
+            const dictionary& pyDict = dictionary::null
         );
 
 

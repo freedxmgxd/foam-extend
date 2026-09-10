@@ -31,6 +31,8 @@ defineTypeNameAndDebug(Foam::dynamicFvMesh, 0);
 
 defineRunTimeSelectionTable(Foam::dynamicFvMesh, IOobject);
 
+defineRunTimeSelectionTable(Foam::dynamicFvMesh, dictionary);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

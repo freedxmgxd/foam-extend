@@ -179,8 +179,8 @@ public:
         fvMesh
         (
             const IOobject& io,
-	    const dictionary& fvSchemesPyDict = dictionary(),
-	    const dictionary& fvSolutionPyDict = dictionary()
+	    const dictionary& fvSchemesPyDict = dictionary::null,
+	    const dictionary& fvSolutionPyDict = dictionary::null
         );
 
         //- Construct from Istream
@@ -201,8 +201,8 @@ public:
             const Xfer<labelList>& allOwner,
             const Xfer<labelList>& allNeighbour,
             const bool syncPar = true,
-	    const dictionary& fvSchemesPyDict = dictionary(),
-	    const dictionary& fvSolutionPyDict = dictionary()
+	    const dictionary& fvSchemesPyDict = dictionary::null,
+	    const dictionary& fvSolutionPyDict = dictionary::null
         );
 
         //- Construct without boundary from cells rather than owner/neighbour.

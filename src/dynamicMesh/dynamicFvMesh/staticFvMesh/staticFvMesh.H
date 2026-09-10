@@ -75,8 +75,8 @@ public:
        (
             const IOobject& io,
             const dictionary& dynamicMeshPyDict,
-            const dictionary& fvSchemesPyDict = dictionary(),
-            const dictionary& fvSolutionPyDict = dictionary()
+            const dictionary& fvSchemesPyDict = dictionary::null,
+            const dictionary& fvSolutionPyDict = dictionary::null
         );
 
 

@@ -70,7 +70,8 @@ public:
         transportModel
         (
             const volVectorField& U,
-            const surfaceScalarField& phi
+            const surfaceScalarField& phi,
+            const dictionary& pyDict = dictionary::null
         );
 
 

@@ -66,7 +66,7 @@ public:
         fvSolution
         (
 	    const objectRegistry& obr,
-	    const dictionary& pyDict = dictionary()
+	    const dictionary& pyDict = dictionary::null
 	)
         :
             solution(obr, "fvSolution")

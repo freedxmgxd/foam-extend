@@ -114,7 +114,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& phi,
             const word& alpha1Name = "alpha1",
-	    const dictionary& pyDict = dictionary()
+	    const dictionary& pyDict = dictionary::null
         );
 
 
