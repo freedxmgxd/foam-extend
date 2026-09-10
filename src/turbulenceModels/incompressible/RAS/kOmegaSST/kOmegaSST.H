@@ -264,6 +264,19 @@ public:
             const word& modelName = typeName
         );
 
+        kOmegaSST
+        (
+            const volVectorField& U,
+            const surfaceScalarField& phi,
+            transportModel& transport,
+            const dictionary& turbulenceModelDict,
+            const dictionary& generationDict,
+            const dictionary& disipationDict,
+            const dictionary& turbulentViscosityDict,
+            const word& turbulenceModelName = turbulenceModel::typeName,
+            const word& modelName = typeName
+        );
+
 
     //- Destructor
     virtual ~kOmegaSST() = default;

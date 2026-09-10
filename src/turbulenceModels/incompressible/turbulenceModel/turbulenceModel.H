@@ -132,6 +132,33 @@ public:
             (U, phi, transport, turbulenceModelName)
         );
 
+        declareRunTimeNewSelectionTable
+        (
+            autoPtr,
+            turbulenceModel,
+            turbulenceModelDictionary,
+            (
+                const volVectorField& U,
+                const surfaceScalarField& phi,
+                transportModel& transport,
+                const dictionary& turbulenceModelDict,
+                const dictionary& generationDict,
+                const dictionary& disipationDict,
+                const dictionary& turbulentViscosityDict,
+                const word& turbulenceModelName
+            ),
+            (
+                U,
+                phi,
+                transport,
+                turbulenceModelDict,
+                generationDict,
+                disipationDict,
+                turbulentViscosityDict,
+                turbulenceModelName
+            )
+        );
+
 
     // Constructors
 
@@ -153,6 +180,19 @@ public:
             const volVectorField& U,
             const surfaceScalarField& phi,
             transportModel& transport,
+            const word& turbulenceModelName = typeName
+        );
+
+        static autoPtr<incompressible::turbulenceModel> New
+        (
+            const volVectorField& U,
+            const surfaceScalarField& phi,
+            transportModel& transport,
+            const dictionary& turbulenceModelProperties,
+            const dictionary& turbulenceModelDict,
+            const dictionary& generationDict,
+            const dictionary& disipationDict,
+            const dictionary& turbulentViscosityDict,
             const word& turbulenceModelName = typeName
         );
 

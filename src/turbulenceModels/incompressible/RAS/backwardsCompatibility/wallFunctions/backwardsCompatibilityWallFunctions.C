@@ -112,6 +112,35 @@ tmp<volScalarField> autoCreateNut
     }
 }
 
+tmp<volScalarField> autoCreateNut
+(
+    const word& fieldName,
+    const fvMesh& mesh,
+    const objectRegistry& obj,
+    const dictionary& dict
+)
+{
+    tmp<volScalarField> nut
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                fieldName,
+                mesh.time().timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            dict
+        )
+    );
+
+    return nut;
+}
+
 
 tmp<volScalarField> autoCreateNut
 (
@@ -120,6 +149,16 @@ tmp<volScalarField> autoCreateNut
 )
 {
     return autoCreateNut(fieldName, mesh, mesh);
+}
+
+tmp<volScalarField> autoCreateNut
+(
+    const word& fieldName,
+    const fvMesh& mesh,
+    const dictionary& dict
+)
+{
+    return autoCreateNut(fieldName, mesh, mesh, dict);
 }
 
 
@@ -245,6 +284,28 @@ tmp<volScalarField> autoCreateEpsilon
 }
 
 
+tmp<volScalarField> autoCreateEpsilon
+(
+    const word& fieldName,
+    const fvMesh& mesh,
+    const dictionary& dict
+)
+{
+    return
+        autoCreateWallFunctionField
+        <
+            scalar,
+            RASModels::epsilonWallFunctionFvPatchScalarField
+        >
+        (
+            fieldName,
+            mesh,
+            mesh,
+            dict
+        );
+}
+
+
 tmp<volScalarField> autoCreateOmega
 (
     const word& fieldName,
@@ -265,6 +326,26 @@ tmp<volScalarField> autoCreateOmega
         );
 }
 
+tmp<volScalarField> autoCreateOmega
+(
+    const word& fieldName,
+    const fvMesh& mesh,
+    const dictionary& dict
+)
+{
+    return
+        autoCreateWallFunctionField
+        <
+            scalar,
+            RASModels::omegaWallFunctionFvPatchScalarField
+        >
+        (
+            fieldName,
+            mesh,
+            mesh,
+	    dict
+        );
+}
 
 tmp<volScalarField> autoCreateOmega
 (
@@ -323,6 +404,28 @@ tmp<volScalarField> autoCreateK
             fieldName,
             mesh,
             mesh
+        );
+}
+
+
+tmp<volScalarField> autoCreateK
+(
+    const word& fieldName,
+    const fvMesh& mesh,
+    const dictionary& dict
+)
+{
+    return
+        autoCreateWallFunctionField
+        <
+            scalar,
+            RASModels::kqRWallFunctionFvPatchField<scalar>
+        >
+        (
+            fieldName,
+            mesh,
+            mesh,
+            dict
         );
 }
 

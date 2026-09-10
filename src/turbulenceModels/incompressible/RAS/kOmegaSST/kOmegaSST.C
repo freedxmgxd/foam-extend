@@ -41,6 +41,7 @@ namespace RASModels
 
 defineTypeNameAndDebug(kOmegaSST, 0);
 addToRunTimeSelectionTable(RASModel, kOmegaSST, dictionary);
+addToRunTimeSelectionTable(RASModel, kOmegaSST, turbulenceModelDictionaryRAS);
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -112,6 +113,209 @@ tmp<volScalarField> kOmegaSST::F23() const
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+kOmegaSST::kOmegaSST
+(
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    transportModel& transport,
+    const dictionary& turbulenceModelDict,
+    const dictionary& generationDict,
+    const dictionary& disipationDict,
+    const dictionary& turbulentViscosityDict,
+    const word& turbulenceModelName,
+    const word& modelName
+)
+:
+    RASModel
+    (
+        modelName,
+        U,
+        phi,
+        transport,
+        turbulenceModelDict,
+        generationDict,
+        disipationDict,
+        turbulentViscosityDict,
+        turbulenceModelName
+    ),
+    alphaK1_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "alphaK1",
+            coeffDict_,
+            0.85
+        )
+    ),
+    alphaK2_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "alphaK2",
+            coeffDict_,
+            1.0
+        )
+    ),
+    alphaOmega1_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "alphaOmega1",
+            coeffDict_,
+            0.5
+        )
+    ),
+    alphaOmega2_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "alphaOmega2",
+            coeffDict_,
+            0.856
+        )
+    ),
+    gamma1_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "gamma1",
+            coeffDict_,
+            5.0/9.0
+        )
+    ),
+    gamma2_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "gamma2",
+            coeffDict_,
+            0.44
+        )
+    ),
+    beta1_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "beta1",
+            coeffDict_,
+            0.075
+        )
+    ),
+    beta2_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "beta2",
+            coeffDict_,
+            0.0828
+        )
+    ),
+    betaStar_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "betaStar",
+            coeffDict_,
+            0.09
+        )
+    ),
+    a1_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "a1",
+            coeffDict_,
+            0.31
+        )
+    ),
+    b1_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "b1",
+            coeffDict_,
+            1.0
+        )
+    ),
+    c1_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "c1",
+            coeffDict_,
+            10.0
+        )
+    ),
+    F3_
+    (
+        Switch::lookupOrAddToDict
+        (
+            "F3",
+            coeffDict_,
+            false
+        )
+    ),
+
+    y_(mesh_),
+
+    k_
+    (
+        IOobject
+        (
+            "k",
+            runTime_.timeName(),
+            U_.db(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+	autoCreateK("k", mesh_, generationDict)
+    ),
+    omega_
+    (
+        IOobject
+        (
+            "omega",
+            runTime_.timeName(),
+            U_.db(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+	autoCreateOmega("omega", mesh_, disipationDict)
+    ),
+    nut_
+    (
+        IOobject
+        (
+            "nut",
+            runTime_.timeName(),
+            U_.db(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+	autoCreateNut("nut", mesh_, turbulentViscosityDict)
+    )
+{
+    const volScalarField S2(2*magSqr(symm(fvc::grad(U_))));
+    volScalarField G("RASModel::G", nut_*S2);
+
+    bound(k_, k0_);
+    bound(omega_, omega0_);
+
+    nut_ =
+    (
+        a1_*k_/
+        max
+        (
+            a1_*omega_,
+            b1_*F23()*sqrt(2.0)*mag(symm(fvc::grad(U_)))
+        )
+    );
+    nut_.correctBoundaryConditions();
+    printCoeffs();
+}
+
+
 
 kOmegaSST::kOmegaSST
 (

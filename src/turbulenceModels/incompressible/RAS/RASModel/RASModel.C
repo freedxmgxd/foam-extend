@@ -37,7 +37,9 @@ namespace incompressible
 
 defineTypeNameAndDebug(RASModel, 0);
 defineRunTimeSelectionTable(RASModel, dictionary);
+defineRunTimeSelectionTable(RASModel, turbulenceModelDictionaryRAS);
 addToRunTimeSelectionTable(turbulenceModel, RASModel, turbulenceModel);
+addToRunTimeSelectionTable(turbulenceModel, RASModel, turbulenceModelDictionary);
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -73,6 +75,50 @@ RASModel::RASModel
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
+    ),
+
+    turbulence_(lookup("turbulence")),
+    printCoeffs_(lookupOrDefault<Switch>("printCoeffs", false)),
+    coeffDict_(subOrEmptyDict(type + "Coeffs")),
+
+    k0_("k0", dimVelocity*dimVelocity, SMALL),
+    epsilon0_("epsilon0", k0_.dimensions()/dimTime, SMALL),
+    epsilonSmall_("epsilonSmall", epsilon0_.dimensions(), SMALL),
+    omega0_("omega0", dimless/dimTime, SMALL),
+    omegaSmall_("omegaSmall", omega0_.dimensions(), SMALL),
+    nuRatio_(lookupOrDefault<scalar>("nuRatio", 1e6))
+{
+    // Force the construction of the mesh deltaCoeffs which may be needed
+    // for the construction of the derived models and BCs
+    mesh_.deltaCoeffs();
+}
+
+RASModel::RASModel
+(
+    const word& type,
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    transportModel& transport,
+    const dictionary& turbulenceModelDict,
+    const dictionary& generationDict,
+    const dictionary& disipationDict,
+    const dictionary& turbulentViscosityDict,
+    const word& turbulenceModelName
+)
+:
+    turbulenceModel(U, phi, transport, turbulenceModelName),
+
+    IOdictionary
+    (
+        IOobject
+        (
+            "RASProperties",
+            U.time().constant(),
+            U.db(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        turbulenceModelDict
     ),
 
     turbulence_(lookup("turbulence")),
@@ -141,6 +187,70 @@ autoPtr<RASModel> RASModel::New
     return autoPtr<RASModel>
     (
         cstrIter()(U, phi, transport, turbulenceModelName)
+    );
+}
+
+autoPtr<RASModel> RASModel::New
+(
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    transportModel& transport,
+    const dictionary& turbulenceModelDict,
+    const dictionary& generationDict,
+    const dictionary& disipationDict,
+    const dictionary& turbulentViscosityDict,
+    const word& turbulenceModelName
+)
+{
+    word modelName;
+
+    // Enclose the creation of the dictionary to ensure it is deleted
+    // before the turbulenceModel is created otherwise the dictionary is
+    // entered in the database twice
+    {
+        IOdictionary dict
+        (
+            IOobject
+            (
+                "RASProperties",
+                U.time().constant(),
+                U.db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            turbulenceModelDict
+        );
+
+        dict.lookup("RASModel") >> modelName;
+    }
+
+    Info<< "Selecting RAS turbulence model " << modelName << endl;
+
+    turbulenceModelDictionaryRASConstructorTable::iterator cstrIter =
+        turbulenceModelDictionaryRASConstructorTablePtr_->find(modelName);
+
+    if (cstrIter == turbulenceModelDictionaryRASConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown RASModel type " << modelName
+            << endl << endl
+            << "Valid RASModel types are :" << endl
+            << turbulenceModelDictionaryRASConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<RASModel>
+    (
+        cstrIter()(
+            U,
+            phi,
+            transport,
+            turbulenceModelDict,
+            generationDict,
+            disipationDict,
+            turbulentViscosityDict,
+            turbulenceModelName
+        )
     );
 }
 

@@ -160,6 +160,38 @@ autoCreateWallFunctionField
 }
 
 
+template<class Type, class PatchType>
+tmp<GeometricField<Type, fvPatchField, volMesh> >
+autoCreateWallFunctionField
+(
+    const word& fieldName,
+    const fvMesh& mesh,
+    const objectRegistry& obj,
+    const dictionary& dict
+)
+{
+    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
+
+    return tmp<fieldType>
+    (
+        new fieldType
+        (
+            IOobject
+            (
+                fieldName,
+                mesh.time().timeName(),
+                obj,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            mesh,
+            dict
+        )
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace incompressible

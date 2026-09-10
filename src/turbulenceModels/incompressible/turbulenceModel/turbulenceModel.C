@@ -38,6 +38,7 @@ namespace incompressible
 
 defineTypeNameAndDebug(turbulenceModel, 0);
 defineRunTimeSelectionTable(turbulenceModel, turbulenceModel);
+defineRunTimeSelectionTable(turbulenceModel, turbulenceModelDictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -119,6 +120,68 @@ autoPtr<turbulenceModel> turbulenceModel::New
     return autoPtr<turbulenceModel>
     (
         cstrIter()(U, phi, transport, turbulenceModelName)
+    );
+}
+
+autoPtr<turbulenceModel> turbulenceModel::New
+(
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    transportModel& transport,
+    const dictionary& turbulenceProperties,
+    const dictionary& turbulenceModelDict,
+    const dictionary& generationDict,
+    const dictionary& disipationDict,
+    const dictionary& turbulentViscosityDict,
+    const word& turbulenceModelName
+)
+{
+    word modelName;
+
+    {
+        IOdictionary dict
+        (
+            IOobject
+            (
+                "turbulenceProperties",
+                U.time().constant(),
+                U.db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            turbulenceProperties
+        );
+
+        dict.lookup("simulationType") >> modelName;
+    }
+
+    Info<< "Selecting turbulence model type " << modelName << endl;
+
+    turbulenceModelDictionaryConstructorTable::iterator cstrIter =
+        turbulenceModelDictionaryConstructorTablePtr_->find(modelName);
+
+    if (cstrIter == turbulenceModelDictionaryConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown turbulenceModel type " << modelName
+            << endl << endl
+            << "Valid turbulenceModel types are :" << endl
+            << turbulenceModelDictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<turbulenceModel>
+    (
+        cstrIter()(
+            U,
+            phi,
+            transport,
+            turbulenceModelDict,
+            generationDict,
+            disipationDict,
+            turbulentViscosityDict,
+            turbulenceModelName
+        )
     );
 }
 

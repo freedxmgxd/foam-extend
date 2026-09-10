@@ -43,6 +43,7 @@ namespace incompressible
 
 defineTypeNameAndDebug(laminar, 0);
 addToRunTimeSelectionTable(turbulenceModel, laminar, turbulenceModel);
+addToRunTimeSelectionTable(turbulenceModel, laminar, turbulenceModelDictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -51,6 +52,22 @@ laminar::laminar
     const volVectorField& U,
     const surfaceScalarField& phi,
     transportModel& transport,
+    const word& turbulenceModelName
+)
+:
+    turbulenceModel(U, phi, transport, turbulenceModelName)
+{}
+
+
+laminar::laminar
+(
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    transportModel& transport,
+    const dictionary& turbulenceModelDict,
+    const dictionary& generationDict,
+    const dictionary& disipationDict,
+    const dictionary& turbulentViscosityDict,
     const word& turbulenceModelName
 )
 :
@@ -74,6 +91,23 @@ autoPtr<laminar> laminar::New
     );
 }
 
+autoPtr<laminar> laminar::New
+(
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    transportModel& transport,
+    const dictionary& turbulenceModelDict,
+    const dictionary& generationDict,
+    const dictionary& disipationDict,
+    const dictionary& turbulentViscosityDict,
+    const word& turbulenceModelName
+)
+{
+    return autoPtr<laminar>
+    (
+        new laminar(U, phi, transport, turbulenceModelName)
+    );
+}
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 

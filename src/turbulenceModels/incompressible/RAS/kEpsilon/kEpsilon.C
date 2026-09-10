@@ -41,6 +41,8 @@ namespace RASModels
 
 defineTypeNameAndDebug(kEpsilon, 0);
 addToRunTimeSelectionTable(RASModel, kEpsilon, dictionary);
+addToRunTimeSelectionTable(RASModel, kEpsilon, turbulenceModelDictionaryRAS);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -135,6 +137,113 @@ kEpsilon::kEpsilon
 
     printCoeffs();
 }
+
+kEpsilon::kEpsilon
+(
+    const volVectorField& U,
+    const surfaceScalarField& phi,
+    transportModel& transport,
+    const dictionary& turbulenceModelDict,
+    const dictionary& generationDict,
+    const dictionary& disipationDict,
+    const dictionary& turbulentViscosityDict,
+    const word& turbulenceModelName,
+    const word& modelName
+)
+:
+    RASModel
+    (
+        modelName,
+        U,
+        phi,
+        transport,
+        turbulenceModelDict,
+        generationDict,
+        disipationDict,
+        turbulentViscosityDict,
+        turbulenceModelName
+    ),
+
+    Cmu_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "Cmu",
+            coeffDict_,
+            0.09
+        )
+    ),
+    C1_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "C1",
+            coeffDict_,
+            1.44
+        )
+    ),
+    C2_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "C2",
+            coeffDict_,
+            1.92
+        )
+    ),
+    sigmaEps_
+    (
+        dimensionedScalar::lookupOrAddToDict
+        (
+            "sigmaEps",
+            coeffDict_,
+            1.3
+        )
+    ),
+    k_
+    (
+        IOobject
+        (
+            "k",
+            runTime_.timeName(),
+            U_.db(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        autoCreateK("k", mesh_, generationDict)
+    ),
+    epsilon_
+    (
+        IOobject
+        (
+            "epsilon",
+            runTime_.timeName(),
+            U_.db(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        autoCreateEpsilon("epsilon", mesh_, disipationDict)
+    ),
+    nut_
+    (
+        IOobject
+        (
+            "nut",
+            runTime_.timeName(),
+            U_.db(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        autoCreateNut("nut", mesh_, turbulentViscosityDict)
+    )
+{
+    nut_ = Cmu_*sqr(k_)/(epsilon_ + epsilonSmall_);
+    nut_ = min(nut_, nuRatio()*nu());
+    nut_.correctBoundaryConditions();
+
+    printCoeffs();
+}
+
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -253,7 +362,6 @@ void kEpsilon::correct()
     solve(epsEqn);
     bound(epsilon_, epsilon0_);
 
-
     // Turbulent kinetic energy equation
     fvScalarMatrix kEqn
     (
@@ -269,7 +377,6 @@ void kEpsilon::correct()
     kEqn.relax();
     solve(kEqn);
     bound(k_, k0_);
-
 
     // Re-calculate viscosity
     nut_ = Cmu_*sqr(k_)/epsilon_;

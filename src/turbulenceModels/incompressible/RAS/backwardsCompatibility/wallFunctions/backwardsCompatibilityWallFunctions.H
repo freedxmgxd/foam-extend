@@ -59,6 +59,13 @@ namespace incompressible
         const fvMesh& mesh
     );
 
+    tmp<volScalarField> autoCreateNut
+    (
+        const word& fieldName,
+        const fvMesh& mesh,
+        const dictionary& dict
+    );
+
     //- nut for Low-Reynolds number models
     tmp<volScalarField> autoCreateLowReNut
     (
@@ -87,6 +94,13 @@ namespace incompressible
         const fvMesh& mesh
     );
 
+    tmp<volScalarField> autoCreateEpsilon
+    (
+        const word& fieldName,
+        const fvMesh& mesh,
+        const dictionary& dict
+    );
+
     //- omega
     tmp<volScalarField> autoCreateOmega
     (
@@ -101,6 +115,13 @@ namespace incompressible
         const fvMesh& mesh
     );
 
+    tmp<volScalarField> autoCreateOmega
+    (
+        const word& fieldName,
+        const fvMesh& mesh,
+        const dictionary& dict
+    );
+
     //- k
     tmp<volScalarField> autoCreateK
     (
@@ -113,6 +134,13 @@ namespace incompressible
     (
         const word& fieldName,
         const fvMesh& mesh
+    );
+
+    tmp<volScalarField> autoCreateK
+    (
+        const word& fieldName,
+        const fvMesh& mesh,
+        const dictionary& dict
     );
 
     //- Q
@@ -151,6 +179,16 @@ namespace incompressible
         const word& fieldName,
         const fvMesh& mesh,
         const objectRegistry& obj
+    );
+
+    template<class Type, class PatchType>
+    tmp<GeometricField<Type, fvPatchField, volMesh> >
+    autoCreateWallFunctionField
+    (
+        const word& fieldName,
+        const fvMesh& mesh,
+        const objectRegistry& obj,
+        const dictionary& dict
     );
 
 

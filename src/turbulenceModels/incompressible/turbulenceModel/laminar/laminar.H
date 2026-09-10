@@ -80,6 +80,18 @@ public:
             const word& turbulenceModelName = turbulenceModel::typeName
         );
 
+        laminar
+        (
+            const volVectorField& U,
+            const surfaceScalarField& phi,
+            transportModel& transport,
+            const dictionary& turbulenceModelDict,
+            const dictionary& generationDict,
+            const dictionary& disipationDict,
+            const dictionary& turbulentViscosityDict,
+            const word& turbulenceModelName = turbulenceModel::typeName
+        );
+
 
     // Selectors
 
@@ -89,6 +101,18 @@ public:
             const volVectorField& U,
             const surfaceScalarField& phi,
             transportModel& transport,
+            const word& turbulenceModelName = turbulenceModel::typeName
+        );
+
+        static autoPtr<laminar> New
+        (
+            const volVectorField& U,
+            const surfaceScalarField& phi,
+            transportModel& transport,
+            const dictionary& turbulenceModelDict,
+            const dictionary& generationDict,
+            const dictionary& disipationDict,
+            const dictionary& turbulentViscosityDict,
             const word& turbulenceModelName = turbulenceModel::typeName
         );
 

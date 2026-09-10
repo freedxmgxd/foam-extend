@@ -155,6 +155,20 @@ public:
             const word& turbulenceModelName = turbulenceModel::typeName
         );
 
+        //- Construct from components
+        RASModel
+        (
+            const word& type,
+            const volVectorField& U,
+            const surfaceScalarField& phi,
+            transportModel& transport,
+	          const dictionary& turbulenceModelDict,
+            const dictionary& generationDict,
+            const dictionary& disipationDict,
+            const dictionary& turbulentViscosityDict,
+            const word& turbulenceModelName = turbulenceModel::typeName
+        );
+
 
     // Selectors
 
@@ -167,6 +181,18 @@ public:
             const word& turbulenceModelName = turbulenceModel::typeName
         );
 
+        //- Return a reference to the selected RAS model
+        static autoPtr<RASModel> New
+        (
+            const volVectorField& U,
+            const surfaceScalarField& phi,
+            transportModel& transport,
+            const dictionary& turbulenceModelDict,
+            const dictionary& generationDict,
+            const dictionary& disipationDict,
+            const dictionary& turbulentViscosityDict,
+            const word& turbulenceModelName = turbulenceModel::typeName
+        );
 
     //- Destructor
     virtual ~RASModel() = default;
