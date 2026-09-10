@@ -37,7 +37,8 @@ namespace Foam
 transportModel::transportModel
 (
     const volVectorField& U,
-    const surfaceScalarField& phi
+    const surfaceScalarField& phi,
+    const dictionary& pyDict
 )
 :
     IOdictionary
@@ -51,7 +52,13 @@ transportModel::transportModel
             IOobject::NO_WRITE
         )
     )
-{}
+{
+    if (!pyDict.empty())
+    {
+        // Initialise from pyDict
+        dictionary::operator=(pyDict);
+    }
+}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //

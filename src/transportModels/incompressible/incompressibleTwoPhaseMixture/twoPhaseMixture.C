@@ -70,10 +70,11 @@ twoPhaseMixture::twoPhaseMixture
 (
     const volVectorField& U,
     const surfaceScalarField& phi,
-    const word& alpha1Name
+    const word& alpha1Name,
+    const dictionary& pyDict
 )
 :
-    transportModel(U, phi),
+    transportModel(U, phi, pyDict),
 
     phase1Name_(getPhaseName("phase1")),
     phase2Name_(getPhaseName("phase2")),
