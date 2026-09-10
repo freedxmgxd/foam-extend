@@ -65,7 +65,9 @@ Foam::XiEqModels::Gulder::~Gulder()
 Foam::tmp<Foam::volScalarField> Foam::XiEqModels::Gulder::XiEq() const
 {
     volScalarField up = sqrt((2.0/3.0)*turbulence_.k());
-    const volScalarField& epsilon = turbulence_.epsilon();
+
+    // Must take copy to avoid dangling reference
+    const volScalarField epsilon = turbulence_.epsilon();
 
     volScalarField tauEta = sqrt(mag(thermo_.muu()/(thermo_.rhou()*epsilon)));
 

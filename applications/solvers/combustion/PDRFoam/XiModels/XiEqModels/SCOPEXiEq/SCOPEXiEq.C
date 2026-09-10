@@ -80,8 +80,9 @@ Foam::XiEqModels::SCOPEXiEq::~SCOPEXiEq()
 
 Foam::tmp<Foam::volScalarField> Foam::XiEqModels::SCOPEXiEq::XiEq() const
 {
-    const volScalarField& k = turbulence_.k();
-    const volScalarField& epsilon = turbulence_.epsilon();
+    // Must take copy to avoid dangling reference
+    const volScalarField k = turbulence_.k();
+    const volScalarField epsilon = turbulence_.epsilon();
 
     volScalarField up = sqrt((2.0/3.0)*k);
     volScalarField l = (lCoef*sqrt(3.0/2.0))*up*k/epsilon;
