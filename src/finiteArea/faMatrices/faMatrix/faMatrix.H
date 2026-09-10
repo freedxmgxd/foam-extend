@@ -99,34 +99,34 @@ class faMatrix
         template<class Type2>
         void addToInternalField
         (
-            const labelUList& addr,
+            Field<Type2>& intf,
             const Field<Type2>& pf,
-            Field<Type2>& intf
+            const labelUList& addr
         ) const;
 
         template<class Type2>
         void addToInternalField
         (
-            const labelUList& addr,
+            Field<Type2>& intf,
             const tmp<Field<Type2> >& tpf,
-            Field<Type2>& intf
+            const labelUList& addr
         ) const;
 
         //- Subtract patch contribution from internal field
         template<class Type2>
         void subtractFromInternalField
         (
-            const labelUList& addr,
+            Field<Type2>& intf,
             const Field<Type2>& pf,
-            Field<Type2>& intf
+            const labelUList& addr
         ) const;
 
         template<class Type2>
         void subtractFromInternalField
         (
-            const labelUList& addr,
+            Field<Type2>& intf,
             const tmp<Field<Type2> >& tpf,
-            Field<Type2>& intf
+            const labelUList& addr
         ) const;
 
 
