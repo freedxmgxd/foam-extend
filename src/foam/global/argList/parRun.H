@@ -65,7 +65,12 @@ public:
         }
     }
 
-    void runPar(int& argc, char**& argv, const bool needsThread)
+    void runPar
+    (
+        int& argc,
+        char**& argv,
+        bool needsThread
+    )
     {
         RunPar = true;
 

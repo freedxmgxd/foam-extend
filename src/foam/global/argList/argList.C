@@ -58,6 +58,11 @@ Foam::argList::initValidTables::initValidTables()
     validParOptions.set("parallel", "");
     argList::addOption
     (
+        "nProcs", "N",
+        "number of processors for distributed running"
+    );
+    argList::addOption
+    (
         "roots", "(dir1 .. dirN)",
         "slave root directories for distributed running"
     );
@@ -86,7 +91,11 @@ Foam::argList::initValidTables::initValidTables()
         validOptions.set(switchSetName, "key1=val1,key2=val2,...");
     }
 
-    validOptions.set("dumpControlSwitches", "all|debug|info|optimisation|tolerances|constants");
+    validOptions.set
+    (
+        "dumpControlSwitches",
+        "all|debug|info|optimisation|tolerances|constants"
+    );
 
     Pstream::addValidParOptions(validParOptions);
 }
@@ -164,6 +173,7 @@ void Foam::argList::noBanner()
 void Foam::argList::noParallel()
 {
     removeOption("parallel");
+    removeOption("nProcs");
     removeOption("roots");
     validParOptions.clear();
 }
@@ -392,7 +402,7 @@ Foam::argList::argList
     char**& argv,
     bool checkArgs,
     bool checkOpts,
-    const bool initialise
+    bool initialise
 )
 :
     args_(argc),
@@ -592,9 +602,8 @@ void Foam::argList::parse
     // Case is a single processor run unless it is running parallel
     int nProcs = 1;
 
-    // Roots if running distributed
+    // Roots if running distributed: only through arg option
     fileNameList roots;
-
 
     // If this actually is a parallel run
     if (parRunControl_.parRun())
@@ -609,6 +618,22 @@ void Foam::argList::parse
             label dictNProcs = -1;
             fileName source;
 
+            // Note: do not read decomposeParDict
+            // Roots are provided by option only
+            // HJ, 8/Sep/2026
+
+            // Get number of processors if specified on command line
+            if (options_.found("nProcs"))
+            {
+                source = "-nProcs";
+                IStringStream is(options_["nProcs"]);
+                dictNProcs = readLabel(is);
+            }
+            else
+            {
+                dictNProcs = Pstream::nProcs();
+            }
+            
             if (options_.found("roots"))
             {
                 source = "-roots";
@@ -617,32 +642,7 @@ void Foam::argList::parse
 
                 if (roots.size() != 1)
                 {
-                    dictNProcs = roots.size()+1;
-                }
-            }
-            else
-            {
-                source = rootPath_/globalCase_/"system/decomposeParDict";
-                IFstream decompDictStream(source);
-
-                if (!decompDictStream.good())
-                {
-                    FatalError
-                        << "Cannot read "
-                        << decompDictStream.name()
-                        << exit(FatalError);
-                }
-
-                dictionary decompDict(decompDictStream);
-
-                dictNProcs = readLabel
-                (
-                    decompDict.lookup("numberOfSubdomains")
-                );
-
-                if (decompDict.lookupOrDefault("distributed", false))
-                {
-                    decompDict.lookup("roots") >> roots;
+                    dictNProcs = roots.size() + 1;
                 }
             }
 
@@ -651,19 +651,19 @@ void Foam::argList::parse
             if (roots.size() == 1)
             {
                 const fileName rootName(roots[0]);
-                roots.setSize(Pstream::nProcs()-1, rootName);
+                roots.setSize(Pstream::nProcs() - 1, rootName);
 
                 // adjust dictNProcs for command-line '-roots' option
                 if (dictNProcs < 0)
                 {
-                    dictNProcs = roots.size()+1;
+                    dictNProcs = roots.size() + 1;
                 }
             }
 
 
             // Check number of processors.
             // nProcs     => number of actual procs
-            // dictNProcs => number of procs specified in decompositionDict
+            // dictNProcs => number of procs specified on command line
             // nProcDirs  => number of processor directories
             //               (n/a when running distributed)
             //
@@ -684,7 +684,7 @@ void Foam::argList::parse
             // Distributed data
             if (roots.size())
             {
-                if (roots.size() != Pstream::nProcs()-1)
+                if (roots.size() != Pstream::nProcs() - 1)
                 {
                     FatalError
                         << "number of entries in roots "
@@ -694,7 +694,7 @@ void Foam::argList::parse
                         << exit(FatalError);
                 }
 
-                forAll(roots, i)
+                forAll (roots, i)
                 {
                     roots[i].expand();
                 }
@@ -788,24 +788,8 @@ void Foam::argList::parse
     // Here is the order of precedence for the definition/overriding of the
     // control switches, from lowest to highest:
     //  - source code definitions from the various libraries/solvers
-    //  - file specified by the env. variable FOAM_GLOBAL_CONTROLDICT
     //  - case's system/controlDict file
     //  - command-line parameters
-    //
-    // First, we allow the users to specify the location of a centralized
-    // global controlDict dictionary using the environment variable
-    // FOAM_GLOBAL_CONTROLDICT.
-    fileName optionalGlobControlDictFileName =
-    getEnv("FOAM_GLOBAL_CONTROLDICT");
-
-    if (optionalGlobControlDictFileName.size() )
-    {
-        debug::updateCentralDictVars
-        (
-            optionalGlobControlDictFileName,
-            Pstream::master() && bannerEnabled
-        );
-    }
 
     // Now that the rootPath_/globalCase_ directory is known (following the
     // call to getRootCase()), we grab any global control switches overrides
@@ -1124,7 +1108,7 @@ void Foam::argList::printUsage() const
     Info<< "\noptions:\n";
 
     wordList opts = validOptions.sortedToc();
-    forAll(opts, optI)
+    forAll (opts, optI)
     {
         const word& optionName = opts[optI];
 
@@ -1198,7 +1182,7 @@ void Foam::argList::displayDoc(bool source) const
     // For source code: change foo_8C.html to foo_8C_source.html
     if (source)
     {
-        forAll(docExts, extI)
+        forAll (docExts, extI)
         {
             docExts[extI].replace(".", "_source.");
         }
@@ -1207,9 +1191,9 @@ void Foam::argList::displayDoc(bool source) const
     fileName docFile;
     bool found = false;
 
-    forAll(docDirs, dirI)
+    forAll (docDirs, dirI)
     {
-        forAll(docExts, extI)
+        forAll (docExts, extI)
         {
             docFile = docDirs[dirI]/executable_ + docExts[extI];
             docFile.expand();
