@@ -127,6 +127,26 @@ void Foam::Time::adjustDeltaT()
 }
 
 
+void Foam::Time::setControls(const dictionary& controlDict)
+{
+    controlDict_ = IOdictionary
+    (
+        IOobject
+        (
+            controlDictName,
+            system(),
+            *this,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ),
+        controlDict
+    );
+
+    setControls();
+}
+
+
 void Foam::Time::setControls()
 {
     // default is to resume calculation from "latestTime"
@@ -493,6 +513,115 @@ Foam::Time::Time
     // Explicitly set read flags on objectRegistry so anything constructed
     // from it reads as well (e.g. fvSolution).
     readOpt() = IOobject::MUST_READ_IF_MODIFIED;
+
+    setControls();
+
+    // Time objects not registered so do like objectRegistry::checkIn ourselves.
+    if (runTimeModifiable_)
+    {
+        monitorPtr_.reset
+        (
+            new fileMonitor
+            (
+                regIOobject::fileModificationChecking == inotify
+             || regIOobject::fileModificationChecking == inotifyMaster
+            )
+        );
+
+        // File might not exist yet.
+        fileName f(controlDict_.filePath());
+
+        if (!f.size())
+        {
+            // We don't have this file but would like to re-read it.
+            // Possibly if in master-only reading mode. Use a non-existing
+            // file to keep fileMonitor synced.
+            f = controlDict_.objectPath();
+        }
+
+        controlDict_.watchIndex() = addWatch(f);
+    }
+
+    profilingPool::initProfiling
+    (
+        IOobject
+        (
+            "profilingInfo",
+            timeName(),
+            "uniform",
+            *this,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        *this
+    );
+}
+
+
+Foam::Time::Time
+(
+    const dictionary& controlDict,
+    const argList& args,
+    const word& systemName,
+    const word& constantName,
+    const bool enableFunctionObjects
+)
+:
+    TimePaths
+    (
+        args.parRunControl().parRun(),
+        args.rootPath(),
+        args.globalCaseName(),
+        args.caseName(),
+        systemName,
+        constantName
+    ),
+
+    objectRegistry(*this),
+
+    libs_(),
+
+    controlDict_
+    (
+        IOobject
+        (
+            controlDictName,
+            system(),
+            *this,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        ),
+        controlDict
+    ),
+
+    startTimeIndex_(0),
+    startTime_(0),
+    endTime_(0),
+
+    stopAt_(saEndTime),
+    writeControl_(wcTimeStep),
+    writeInterval_(GREAT),
+    purgeWrite_(0),
+    writeOnce_(false),
+    subCycling_(false),
+
+    writeFormat_(IOstream::ASCII),
+    writeVersion_(IOstream::currentVersion),
+    writeCompression_(IOstream::UNCOMPRESSED),
+    graphFormat_("raw"),
+    runTimeModifiable_(true),
+
+    functionObjects_(*this, enableFunctionObjects)
+{
+    libs_.open(controlDict_, "libs");
+
+    // Explicitly set read flags on objectRegistry so anything constructed
+    // from it reads as well (e.g. fvSolution).
+    readOpt() = IOobject::MUST_READ_IF_MODIFIED;
+
+    // Since could not construct regIOobject with setting:
+    controlDict_.readOpt() = IOobject::MUST_READ_IF_MODIFIED;
 
     setControls();
 

@@ -121,6 +121,12 @@ public:
         static const NamedEnum<writeControls, 5> writeControlNames_;
 
 
+        // Private member functions
+
+            //- Set the controls from a modified dictionary
+            void setControls(const dictionary& controlDict);
+
+
 protected:
 
     // Protected data
@@ -261,6 +267,17 @@ public:
             const word& constantName = "constant",
             const bool enableFunctionObjects = true
         );
+
+        //- Construct from dictionary and argList
+	Time
+	(
+	    const dictionary& controlDict,
+	    const argList& args,
+            const word& systemName = "system",
+            const word& constantName = "constant",
+            const bool enableFunctionObjects = false
+	);
+
 
 
     //- Destructor
