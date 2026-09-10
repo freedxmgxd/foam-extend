@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class directionMixedFvPatch Declaration
+                   Class directionMixedFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
