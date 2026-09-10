@@ -392,6 +392,12 @@ public:
                 return boundary_;
             }
 
+            //- Update boundary mesh data
+            void updateBoundaryMesh()
+            {
+                boundary_.updateMesh();
+            }
+
 
         // Mesh state and form
 
