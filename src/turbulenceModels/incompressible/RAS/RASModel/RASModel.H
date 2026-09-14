@@ -142,6 +142,33 @@ public:
             (U, phi, transport, turbulenceModelName)
         );
 
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            RASModel,
+            turbulenceModelDictionaryRAS,
+            (
+                const volVectorField& U,
+                const surfaceScalarField& phi,
+                transportModel& transport,
+                const dictionary& turbulenceModelDict,
+                const dictionary& generationDict,
+                const dictionary& disipationDict,
+                const dictionary& turbulentViscosityDict,
+                const word& turbulenceModelName
+            ),
+            (
+                U,
+                phi,
+                transport,
+                turbulenceModelDict,
+                generationDict,
+                disipationDict,
+                turbulentViscosityDict,
+                turbulenceModelName
+            )
+        );
+
 
     // Constructors
 
