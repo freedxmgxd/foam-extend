@@ -48,13 +48,13 @@ solvers
 
 PISO
 {
-    nCorrectors     3;
+    nCorrectors     4;
     nNonOrthogonalCorrectors 0;
 }
 
 BPISO
 {
-    nCorrectors     3;
+    nCorrectors     2;
 }
 
 // ************************************************************************* //
