@@ -54,6 +54,12 @@ Foam::UniformDimensionedField<Type>::UniformDimensionedField
         this->dimensions().reset(pyDict.lookup("dimensions"));
         this->value() = pTraits<Type>(pyDict.lookup("value"));
     }
+    else
+    {
+        dictionary dict(readStream(typeName));
+        this->dimensions().reset(dict.lookup("dimensions"));
+        this->value() = pTraits<Type>(dict.lookup("value"));
+    }
 }
 
 
