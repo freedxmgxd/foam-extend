@@ -51,7 +51,10 @@ class IndirectList
 {
     // Private data
 
+        //- Reference to complete list
         UList<T>& completeList_;
+
+        //- Addressing into complete list
         List<label> addressing_;
 
 
@@ -62,17 +65,28 @@ public:
         //- Construct given the complete list and the addressing array
         inline IndirectList(const UList<T>&, const UList<label>&);
 
+    
+    //- Destructur
+    ~IndirectList() = default;
+    
 
     // Member Functions
 
         // Access
 
+            //- Return size of incomplete 
             inline label size() const;
+
+            //- Is the indirect list empty?
             inline bool  empty() const;
 
+            //- Return complete list
             inline const UList<T>& completeList() const;
+
+            //- Return addressing
             inline const List<label>& addressing() const;
 
+    
         // Edit
 
             //- Reset addressing

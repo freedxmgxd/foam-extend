@@ -38,14 +38,8 @@ inline Foam::IndirectList<T>::IndirectList
 #   ifdef FULLDEBUG
     if (completeList_.empty() && !addressing_.empty())
     {
-        FatalErrorIn
-        (
-            "inline Foam::IndirectList<T>::IndirectList\n"
-            "(\n"
-            "    const UList<T>& completeList,\n"
-            "    const UList<label>& addr\n"
-            ")"
-        )   << "Incorrect definition of indirect list.  "
+        FatalErrorInFunction
+            << "Incorrect definition of indirect list.  "
             << "Complete list is empty and addressing is not"
             << abort(FatalError);
     }
