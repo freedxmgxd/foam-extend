@@ -258,11 +258,13 @@ Foam::fvMesh::fvMesh
 (
     const IOobject& io,
     Istream& is,
-    const bool syncPar
+    const bool syncPar,
+    const dictionary& fvSchemesPyDict,
+    const dictionary& fvSolutionPyDict
 )
 :
     polyMesh(io, is, syncPar),
-    surfaceInterpolation(*this),
+    surfaceInterpolation(*this, fvSchemesPyDict, fvSolutionPyDict),
     boundary_(*this),
     lduPtr_(nullptr),
     curTimeIndex_(time().timeIndex()),

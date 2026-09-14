@@ -86,17 +86,21 @@ public:
             autoPtr,
             dynamicFvMesh,
             dictionary,
-	    (
+            (
                 const IOobject& io,
+                Istream& is,
+                const bool syncPar,
                 const dictionary& dynamicMeshPyDict,
                 const dictionary& fvSchemesPyDict,
                 const dictionary& fvSolutionPyDict
             ),
             (
                 io,
-	       	dynamicMeshPyDict,
-	       	fvSchemesPyDict,
-	       	fvSolutionPyDict
+                is,
+                syncPar,
+                dynamicMeshPyDict,
+                fvSchemesPyDict,
+                fvSolutionPyDict
             )
         );
 
@@ -105,10 +109,10 @@ public:
         //- Construct from objectRegistry, and read/write options
         dynamicFvMesh
         (
-	    const IOobject& io,
-	    const dictionary& fvSchemesPyDict = dictionary::null,
+            const IOobject& io,
+            const dictionary& fvSchemesPyDict = dictionary::null,
             const dictionary& fvSolutionPyDict = dictionary::null
-	);
+        );
 
 
         //- Construct from components without boundary.
@@ -123,6 +127,16 @@ public:
             const bool syncPar = true
         );
 
+        //- Construct from Istream
+        dynamicFvMesh
+        (
+            const IOobject& io,
+            Istream& is,
+            const bool syncPar = true,
+            const dictionary& dynamicMeshPyDict = dictionary::null,
+            const dictionary& fvSchemesPyDict = dictionary::null,
+            const dictionary& fvSolutionPyDict = dictionary::null
+        );
 
         //- Construct from components with cells rather than owner
         //  and neighbour without boundary.
@@ -145,11 +159,22 @@ public:
         //- Select constructed from IOobject with optional dictionaries
         static autoPtr<dynamicFvMesh> New
         (
-	    const IOobject& io,
+            const IOobject& io,
             const dictionary& dynamicMeshPyDict,
             const dictionary& fvSchemesPyDict,
             const dictionary& fvSolutionPyDict
-	);
+        );
+
+        //- Select constructed from Istream with optional dictionaries
+        static autoPtr<dynamicFvMesh> New
+        (
+            const IOobject& io,
+            Istream& is,
+            const bool syncPar,
+            const dictionary& dynamicMeshPyDict,
+            const dictionary& fvSchemesPyDict,
+            const dictionary& fvSolutionPyDict
+        );
 
 
     //- Destructor

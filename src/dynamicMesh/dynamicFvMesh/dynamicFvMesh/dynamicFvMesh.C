@@ -94,4 +94,25 @@ Foam::dynamicFvMesh::dynamicFvMesh
 {}
 
 
+Foam::dynamicFvMesh::dynamicFvMesh
+(
+    const IOobject& io,
+    Istream& is,
+    const bool syncPar,
+    const dictionary& dynamicMeshPyDict,
+    const dictionary& fvSchemesPyDict,
+    const dictionary& fvSolutionPyDict
+)
+:
+    fvMesh
+    (
+        io,
+	is,
+        syncPar,
+	fvSchemesPyDict,
+	fvSolutionPyDict
+    )
+{}
+
+
 // ************************************************************************* //

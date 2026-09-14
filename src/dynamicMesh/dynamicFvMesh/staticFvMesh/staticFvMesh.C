@@ -50,6 +50,8 @@ staticFvMesh::staticFvMesh(const IOobject& io)
 staticFvMesh::staticFvMesh
 (
     const IOobject& io,
+    Istream& is,
+    const bool syncPar,
     const dictionary& dynamicMeshPyDict,
     const dictionary& fvSchemesPyDict,
     const dictionary& fvSolutionPyDict
@@ -58,6 +60,8 @@ staticFvMesh::staticFvMesh
     dynamicFvMesh
     (
 	io,
+        is,
+        syncPar,
         fvSchemesPyDict,
         fvSolutionPyDict
     )

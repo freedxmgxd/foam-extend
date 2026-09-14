@@ -188,7 +188,9 @@ public:
         (
             const IOobject& io,
             Istream& is,
-            const bool syncPar = true
+            const bool syncPar = true,
+	    const dictionary& fvSchemesPyDict = dictionary::null,
+	    const dictionary& fvSolutionPyDict = dictionary::null
         );
 
         //- Construct from components without boundary.

@@ -74,7 +74,9 @@ public:
         staticFvMesh
        (
             const IOobject& io,
-            const dictionary& dynamicMeshPyDict,
+            Istream& is,
+            const bool syncPar = true,
+            const dictionary& dynamicMeshPyDict = dictionary::null,
             const dictionary& fvSchemesPyDict = dictionary::null,
             const dictionary& fvSolutionPyDict = dictionary::null
         );

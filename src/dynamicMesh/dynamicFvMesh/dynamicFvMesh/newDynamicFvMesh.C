@@ -86,6 +86,8 @@ Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New(const IOobject& io)
 Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New
 (
     const IOobject& io,
+    Istream& is,
+    const bool syncPar,
     const dictionary& dynamicMeshPyDict,
     const dictionary& fvSchemesPyDict,
     const dictionary& fvSolutionPyDict
@@ -135,6 +137,8 @@ Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New
         cstrIter()
         (
             io,
+            is,
+            syncPar,
             dynamicMeshPyDict,
             fvSchemesPyDict,
             fvSolutionPyDict
