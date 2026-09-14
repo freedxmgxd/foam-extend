@@ -297,7 +297,7 @@ kOmegaSST::kOmegaSST
     )
 {
     const volScalarField S2(2*magSqr(symm(fvc::grad(U_))));
-    volScalarField G("RASModel::G", nut_*S2);
+    volScalarField G(GName(), nut_*S2);
 
     bound(k_, k0_);
     bound(omega_, omega0_);
