@@ -189,9 +189,6 @@ private:
         //- Have support for threads?
         static bool haveThreads_;
 
-        //- Owns mpi process
-        static bool mpiMaster_;
-
         //- Default message type info
         static const int msgType_;
 
@@ -257,6 +254,9 @@ public:
 
 
     // Static data
+
+        //- Owns mpi process
+        static bool mpiMaster_;
 
         //- Number of processors at which the sum algorithm changes from linear
         //  to tree
