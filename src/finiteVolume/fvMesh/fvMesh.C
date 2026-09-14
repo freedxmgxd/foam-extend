@@ -50,7 +50,7 @@ void Foam::fvMesh::clearGeomNotOldVol()
 {
     if (debug)
     {
-        InfoIn("void Foam::fvMesh::clearGeomNotOldVol()")
+        InfoInFunction
             << "Clearing geometry but not old volumes"
             << endl;
     }
@@ -72,7 +72,7 @@ void Foam::fvMesh::clearGeom()
 {
     if (debug)
     {
-        InfoIn("void Foam::fvMesh::clearGeomNotOldVol()")
+        InfoInFunction
             << "Clearing geometry"
             << endl;
     }
@@ -95,7 +95,7 @@ void Foam::fvMesh::clearAddressing()
 {
     if (debug)
     {
-        InfoIn("void Foam::fvMesh::clearAddressing()")
+        InfoInFunction
             << "Clearing addressing"
             << endl;
     }
@@ -281,6 +281,9 @@ Foam::fvMesh::fvMesh
     {
         Info<< "Constructing fvMesh from Istream" << endl;
     }
+
+    // This is a functional mesh: update boundary.  MH and HJ, 14/Sep/2026
+    updateBoundaryMesh();
 }
 
 
@@ -379,10 +382,8 @@ void Foam::fvMesh::addFvPatches
 {
     if (boundary().size())
     {
-        FatalErrorIn
-        (
-            "fvMesh::addFvPatches(const List<polyPatch*>&, const bool)"
-        )   << " boundary already exists"
+        FatalErrorInFunction
+            << " boundary already exists"
             << abort(FatalError);
     }
 
@@ -396,7 +397,7 @@ void Foam::fvMesh::removeFvBoundary()
 {
     if (debug)
     {
-        Info<< "void fvMesh::removeFvBoundary(): "
+        InfoInFunction
             << "Removing boundary patches."
             << endl;
     }
@@ -448,7 +449,7 @@ Foam::polyMesh::readUpdateState Foam::fvMesh::readUpdate()
 {
     if (debug)
     {
-        Info<< "polyMesh::readUpdateState fvMesh::readUpdate() : "
+        InfoInFunction
             << "Updating fvMesh.  ";
     }
 
@@ -519,7 +520,7 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap) const
 {
     if (debug)
     {
-        Info<< "void fvMesh::mapFields(const mapPolyMesh& meshMap) const: "
+        InfoInFunction
             << "Mapping fv fields."
             << endl;
     }
@@ -609,7 +610,7 @@ void Foam::fvMesh::mapOldVolumes(const mapPolyMesh& meshMap)
     {
         if (debug)
         {
-            InfoIn("void fvMesh::mapOldVolumes(const mapPolyMesh& meshMap)")
+            InfoInFunction
                 << "Mapping old-old cell volumes." << endl;
         }
 
@@ -698,7 +699,7 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
         {
             if (debug)
             {
-                InfoIn("void fvMesh::movePoints(const pointField& p)")
+                InfoInFunction
                     << "Grabbing old-old cell volumes." << endl;
             }
 
