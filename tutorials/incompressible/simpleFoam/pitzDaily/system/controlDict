@@ -41,12 +41,34 @@ writeFormat     ascii;
 
 writePrecision  6;
 
-writeCompression uncompressed;
+writeCompression yes;
 
 timeFormat      general;
 
 timePrecision   6;
 
 runTimeModifiable yes;
+
+functions
+(
+    outlet
+    {
+        type patchFlux;
+        functionObjectLibs ("libfluxFunctionObjects.so");
+        allPatches no;
+        patch outlet;
+        phi phi;
+        file "outlet.dat";
+    }
+    lowerWall
+    {
+        type patchFlux;
+        functionObjectLibs ("libfluxFunctionObjects.so");
+        allPatches no;
+        patch lowerWall;
+        phi phi;
+        file "lowerWall.dat";
+    }
+);
 
 // ************************************************************************* //
