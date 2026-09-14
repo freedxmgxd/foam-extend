@@ -56,11 +56,20 @@ Foam::OutputControlDictionary<PolicyType>::OutputControlDictionary
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
 template <class PolicyType>
-Foam::OutputControlDictionary<PolicyType>::~OutputControlDictionary()
-{}
+Foam::OutputControlDictionary<PolicyType>::OutputControlDictionary
+(
+    const IOobject& io,
+    const PolicyType& pt,
+    const dictionary& pyDict
+)
+:
+    IOdictionary(io, pyDict),
+    pt_(pt)
+{
+    // Note: parameter pt may be incomplete here, must not call its member
+    // functions inside the constructor body.
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

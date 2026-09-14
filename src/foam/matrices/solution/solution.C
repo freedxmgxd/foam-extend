@@ -151,7 +151,8 @@ Foam::solution::solution
             obr,
             IOobject::READ_IF_PRESENT_IF_MODIFIED,  // Allow default dictionary creation
             IOobject::NO_WRITE
-        )
+        ),
+        pyDict
     ),
     cache_(dictionary::null),
     caching_(false),

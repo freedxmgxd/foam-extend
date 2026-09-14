@@ -72,10 +72,17 @@ public:
         //- Construct from IOobject and policy
         OutputControlDictionary(const IOobject& io, const PolicyType& pt);
 
+        //- Construct from IOobject, policy and dictionary
+        OutputControlDictionary
+        (
+            const IOobject& io,
+            const PolicyType& pt,
+            const dictionary& pyDict
+        );
 
-    // Destructor
 
-        virtual ~OutputControlDictionary();
+    //- Destructor
+    virtual ~OutputControlDictionary() = default;
 
 
         // Write control

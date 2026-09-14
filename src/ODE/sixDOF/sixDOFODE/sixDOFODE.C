@@ -383,11 +383,8 @@ Foam::sixDOFODE::sixDOFODE(const IOobject& io)
     // Sanity checks
     if (mass_.value() < SMALL)
     {
-        FatalIOErrorIn
-        (
-            "sixDOFODE::sixDOFODE(const IOobject& io)",
-            dict_
-        )   << "Zero or negative mass detected: " << mass_.value()
+        FatalIOErrorInFunction(dict_)
+            << "Zero or negative mass detected: " << mass_.value()
             << nl << "Please check " << dict_.name() << "dictionary."
             << exit(FatalIOError);
     }
@@ -480,7 +477,7 @@ Foam::sixDOFODE::sixDOFODE
 )
 :
     ODE(),
-    dict_(io, *this),
+    dict_(io, *this, pyDict),
 
     mass_(pyDict.lookup("mass")),
     momentOfInertia_(pyDict.lookup("momentOfInertia")),

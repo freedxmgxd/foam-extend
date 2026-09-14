@@ -69,7 +69,7 @@ public:
 	    const dictionary& pyDict = dictionary::null
 	)
         :
-            solution(obr, "fvSolution")
+            solution(obr, "fvSolution", pyDict)
         {}
 
 

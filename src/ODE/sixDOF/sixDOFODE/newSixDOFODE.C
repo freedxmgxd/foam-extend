@@ -94,7 +94,7 @@ Foam::autoPtr<Foam::sixDOFODE> Foam::sixDOFODE::New
     }
     else
     {
-        sixDOFODETypeName = word(IOdictionary(io).lookup("type"));
+        sixDOFODETypeName = word(pyDict.lookup("type"));
     }
 
     pyDictionaryConstructorTable::iterator cstrIter =

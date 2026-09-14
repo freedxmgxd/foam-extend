@@ -76,7 +76,8 @@ Foam::fvSchemes::fvSchemes
             obr,
             IOobject::READ_IF_PRESENT_IF_MODIFIED,  // Allow default dictionary creation
             IOobject::NO_WRITE
-        )
+        ),
+        pyDict
     ),
     ddtSchemes_
     (
