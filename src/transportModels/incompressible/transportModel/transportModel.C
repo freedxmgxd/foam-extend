@@ -48,9 +48,10 @@ transportModel::transportModel
             "transportProperties",
             U.time().constant(),
             U.db(),
-            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::READ_IF_PRESENT_IF_MODIFIED,
             IOobject::NO_WRITE
-        )
+        ),
+        pyDict
     )
 {
     if (!pyDict.empty())
