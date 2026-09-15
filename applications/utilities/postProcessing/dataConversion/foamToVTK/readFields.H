@@ -44,7 +44,7 @@ SourceFiles
 namespace Foam
 {
 
-// Read the fields and optionally subset and put on the pointer list
+//- Read the fields and optionally subset and put on the pointer list
 template<class GeoField>
 void readFields
 (
@@ -55,7 +55,7 @@ void readFields
     PtrList<GeoField>& fields
 );
 
-// Read the fields and optionally subset and put on the pointer list
+//- Read the fields and optionally subset and put on the pointer list
 template<class GeoField>
 void readFieldsNoSubset
 (

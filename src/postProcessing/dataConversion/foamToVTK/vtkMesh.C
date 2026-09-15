@@ -22,6 +22,7 @@ License
     along with foam-extend.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
+    VTK mesh class wrapper with subset capability
 
 \*---------------------------------------------------------------------------*/
 
@@ -30,37 +31,34 @@ Description
 #include "foamTime.H"
 #include "cellSet.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from components
 Foam::vtkMesh::vtkMesh
 (
-    const IOobject& io,
+    fvMesh& mesh,
     const word& setName
 )
 :
-    fvMesh(io),
+    mesh_(mesh),
     subsetMesh_
     (
         IOobject
         (
             "subset",
-            io.time().constant(),
-            *this,
+            mesh.time().constant(),
+            mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        *this
+        mesh_
     ),
     setName_(setName)
 {
     if (setName.size())
     {
         // Read cellSet using whole mesh
-        cellSet currentSet(*this, setName_);
+        cellSet currentSet(mesh_, setName_);
 
         // Set current subset
         subsetMesh_.setLargeCellSubset(currentSet);
@@ -68,17 +66,11 @@ Foam::vtkMesh::vtkMesh
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::vtkMesh::~vtkMesh()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::polyMesh::readUpdateState Foam::vtkMesh::readUpdate()
 {
-    polyMesh::readUpdateState meshState = fvMesh::readUpdate();
+    polyMesh::readUpdateState meshState = mesh_.readUpdate();
 
     if (meshState != polyMesh::UNCHANGED)
     {
@@ -92,7 +84,7 @@ Foam::polyMesh::readUpdateState Foam::vtkMesh::readUpdate()
             Info<< "Subsetting mesh based on cellSet " << setName_ << endl;
 
             // Read cellSet using whole mesh
-            cellSet currentSet(*this, setName_);
+            cellSet currentSet(mesh_, setName_);
 
             subsetMesh_.setLargeCellSubset(currentSet);
         }

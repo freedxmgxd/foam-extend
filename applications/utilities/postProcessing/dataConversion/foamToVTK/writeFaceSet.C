@@ -44,7 +44,7 @@ void writeFaceSet
     const fileName& fileName
 )
 {
-    const faceList& faces = vMesh.faces();
+    const faceList& faces = vMesh.mesh().faces();
 
     std::ofstream pStream(fileName.c_str());
 
@@ -86,7 +86,7 @@ void writeFaceSet
         setFaces[setFaceI] = faces[iter.key()];
         setFaceI++;
     }
-    primitiveFacePatch fp(setFaces, vMesh.points());
+    primitiveFacePatch fp(setFaces, vMesh.mesh().points());
 
 
     // Write points and faces as polygons

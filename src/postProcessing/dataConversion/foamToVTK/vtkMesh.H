@@ -36,6 +36,7 @@ SourceFiles
 #ifndef vtkMesh_H
 #define vtkMesh_H
 
+#include "vtkMesh.H"
 #include "vtkTopo.H"
 #include "fvMeshSubset.H"
 
@@ -52,10 +53,11 @@ class Time;
 \*---------------------------------------------------------------------------*/
 
 class vtkMesh
-:
-    public fvMesh
 {
     // Private data
+
+        //- Reference to fvMesh
+        fvMesh& mesh_;
 
         //- Mesh subset
         fvMeshSubset subsetMesh_;
@@ -71,10 +73,10 @@ class vtkMesh
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        vtkMesh(const vtkMesh&);
+        vtkMesh(const vtkMesh&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const vtkMesh&);
+        void operator=(const vtkMesh&) = delete;
 
 
 public:
@@ -82,11 +84,11 @@ public:
     // Constructors
 
         //- Construct from components
-        vtkMesh(const IOobject& io, const word& setName = "");
+        vtkMesh(fvMesh& mesh, const word& setName);
 
 
     //- Destructor
-    virtual ~vtkMesh();
+    ~vtkMesh() = default;
 
 
     // Member Functions
@@ -123,7 +125,7 @@ public:
                 }
                 else
                 {
-                    return *this;
+                    return mesh_;
                 }
             }
 
@@ -136,7 +138,7 @@ public:
                 }
                 else
                 {
-                    return pointMesh::New(*this);
+                    return pointMesh::New(mesh_);
                 }
             }
 
@@ -166,9 +168,9 @@ public:
             {
                 if (useSubMesh())
                 {
-                    tmp<GeoField> tsubFld = subsetMesh_.interpolate(fld);
-                    tsubFld.ref().rename(fld.name());
-                    return tsubFld;
+                    tmp<GeoField> subFld = subsetMesh_.interpolate(fld);
+                    subFld.ref().rename(fld.name());
+                    return subFld;
                 }
                 else
                 {

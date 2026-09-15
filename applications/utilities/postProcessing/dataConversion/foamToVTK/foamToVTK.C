@@ -336,19 +336,8 @@ int main(int argc, char *argv[])
 
     mkDir(fvPath);
 
-
     // Mesh wrapper; does subsetting and decomposition
-    vtkMesh vMesh
-    (
-        IOobject
-        (
-            regionName,
-            runTime.timeName(),
-            runTime,
-            IOobject::MUST_READ
-        ),
-        cellSetName
-    );
+    vtkMesh vMesh(mesh, cellSetName);
 
     // Scan for all possible lagrangian clouds
     HashSet<fileName> allCloudDirs;
@@ -407,7 +396,7 @@ int main(int argc, char *argv[])
         // decomposition.
         polyMesh::readUpdateState meshState = vMesh.readUpdate();
 
-        const fvMesh& mesh = vMesh.mesh();
+        // const fvMesh& mesh = vMesh.mesh();
 
         if
         (
@@ -479,24 +468,24 @@ int main(int argc, char *argv[])
         // Construct the vol fields (on the original mesh if subsetted)
 
         PtrList<volScalarField> vsf;
-        readFields(vMesh, vMesh, objects, selectedFields, vsf);
-        readFields(vMesh, vMesh, objects, selectedFields, vsf);
+        readFields(vMesh, mesh, objects, selectedFields, vsf);
+        readFields(vMesh, mesh, objects, selectedFields, vsf);
         print("    volScalarFields            :", Info, vsf);
 
         PtrList<volVectorField> vvf;
-        readFields(vMesh, vMesh, objects, selectedFields, vvf);
+        readFields(vMesh, mesh, objects, selectedFields, vvf);
         print("    volVectorFields            :", Info, vvf);
 
         PtrList<volSphericalTensorField> vSpheretf;
-        readFields(vMesh, vMesh, objects, selectedFields, vSpheretf);
+        readFields(vMesh, mesh, objects, selectedFields, vSpheretf);
         print("    volSphericalTensorFields   :", Info, vSpheretf);
 
         PtrList<volSymmTensorField> vSymmtf;
-        readFields(vMesh, vMesh, objects, selectedFields, vSymmtf);
+        readFields(vMesh, mesh, objects, selectedFields, vSymmtf);
         print("    volSymmTensorFields        :", Info, vSymmtf);
 
         PtrList<volTensorField> vtf;
-        readFields(vMesh, vMesh, objects, selectedFields, vtf);
+        readFields(vMesh, mesh, objects, selectedFields, vtf);
         print("    volTensorFields            :", Info, vtf);
 
         const label nVolFields =
@@ -528,7 +517,7 @@ int main(int argc, char *argv[])
             readFields
             (
                 vMesh,
-                pointMesh::New(vMesh),
+                pointMesh::New(mesh),
                 objects,
                 selectedFields,
                 psf
@@ -538,7 +527,7 @@ int main(int argc, char *argv[])
             readFields
             (
                 vMesh,
-                pointMesh::New(vMesh),
+                pointMesh::New(mesh),
                 objects,
                 selectedFields,
                 pvf
@@ -548,7 +537,7 @@ int main(int argc, char *argv[])
             readFields
             (
                 vMesh,
-                pointMesh::New(vMesh),
+                pointMesh::New(mesh),
                 objects,
                 selectedFields,
                 pSpheretf
@@ -558,7 +547,7 @@ int main(int argc, char *argv[])
             readFields
             (
                 vMesh,
-                pointMesh::New(vMesh),
+                pointMesh::New(mesh),
                 objects,
                 selectedFields,
                 pSymmtf
@@ -568,7 +557,7 @@ int main(int argc, char *argv[])
             readFields
             (
                 vMesh,
-                pointMesh::New(vMesh),
+                pointMesh::New(mesh),
                 objects,
                 selectedFields,
                 ptf
@@ -658,7 +647,7 @@ int main(int argc, char *argv[])
             readFields
             (
                 vMesh,
-                vMesh,
+                mesh,
                 objects,
                 selectedFields,
                 ssf
@@ -669,7 +658,7 @@ int main(int argc, char *argv[])
             readFields
             (
                 vMesh,
-                vMesh,
+                mesh,
                 objects,
                 selectedFields,
                 svf
